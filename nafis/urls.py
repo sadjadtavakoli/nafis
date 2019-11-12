@@ -15,10 +15,16 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-
+from rest_framework import routers
+from django.urls import path, include
+from bill.views import BillsViewSet
 from nafis.views import LoginAPIView
+
+router = routers.DefaultRouter()
+router.register(r'bills', BillsViewSet, 'bill')
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^login/', LoginAPIView.as_view(), name='login')
+    url(r'^login/', LoginAPIView.as_view(), name='login'),
+    path('api/', include(router.urls)),
 ]

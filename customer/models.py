@@ -13,3 +13,4 @@ class Customer(models.Model):
     marriage_date = models.DateField(null=True, blank=True)
     points = models.IntegerField(default=0)
     class_type = models.CharField(choices=settings.CUSTOMER_TYPE, max_length=20)
+

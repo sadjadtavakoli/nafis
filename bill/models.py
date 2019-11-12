@@ -14,6 +14,10 @@ class Bill(models.Model):
     used_points = models.IntegerField(default=0, null=True)
     branch = models.ForeignKey('branch.Branch', related_name='bills', on_delete=DO_NOTHING)
 
+    def make_done(self):
+        self.status = "done"
+        self.save()
+
 
 class BillItem(models.Model):
     product = models.ManyToManyField('product.Product', related_name='bill_items')
@@ -43,10 +47,21 @@ class Payment(models.Model):
                             max_length=10, default="نقد")
 
 
+class CustomerPaymentManager(models.Manager):
+    def create(self, **kwargs):
+        bill_id = kwargs.get('bill')
+        amount = kwargs.get('amount')
+        create_date = kwargs.get('create_date')
+        type = kwargs.get('type')
+        if type in ['چک', 'نقد و چک']:
+            pass
+
+
 class CustomerPayment(Payment):
     cheque = models.OneToOneField('bill.CustomerCheque', blank=True, null=True, related_name="+",
                                   on_delete=models.DO_NOTHING)
     bill = models.ForeignKey('bill.Bill', related_name="payments", on_delete=models.CASCADE)
+    objects = CustomerPaymentManager()
 
 
 class OurPayment(Payment):

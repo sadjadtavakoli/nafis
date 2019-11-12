@@ -50,16 +50,16 @@ class BillItemSerializer(serializers.ModelSerializer):
 
 
 class BillSerializer(serializers.ModelSerializer):
-    items = BillItemSerializer(many=True)
+    items = BillItemSerializer(many=True, required=False)
     buyer = CustomerSerializer()
     seller = StaffSerializer()
     branch = BranchSerializer()
-    payments = CustomerPaymentSerializer(many=True)
+    payments = CustomerPaymentSerializer(many=True, required=False)
 
     class Meta:
         model = Bill
         fields = ('create_date', 'close_date', 'buyer', 'seller', 'straight_discount',
-                  'percentage_discount', 'used_points', 'branch', 'payments')
+                  'percentage_discount', 'used_points', 'branch', 'payments', 'items')
 
 
 class SupplierBillItemSerializer(serializers.ModelSerializer):
