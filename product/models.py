@@ -19,6 +19,10 @@ class Product(models.Model):
     f_type = models.CharField(choices=settings.TYPE_CHOICES, max_length=32, blank=False,
                               null=False)
 
+    def update_stock_amount(self, amount):
+        self.stock_amount -= amount
+        self.save()
+
 
 class Color(models.Model):
     rgb = models.CharField(max_length=6, blank=True, null=True)

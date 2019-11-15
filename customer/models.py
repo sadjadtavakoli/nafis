@@ -14,3 +14,8 @@ class Customer(models.Model):
     points = models.IntegerField(default=0)
     class_type = models.CharField(choices=settings.CUSTOMER_TYPE, max_length=20)
 
+    def special_discount(self, value):
+        discount = 0
+        for item in self.special_discounts.all():
+            discount += item.value(value)
+        return discount

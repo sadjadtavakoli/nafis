@@ -123,7 +123,8 @@ MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media')
 
 BILL_STATUS = (
     ('done', 'done'),
-    ('active', 'active'))
+    ('active', 'active'),
+    ('remained', 'remained'))
 
 STAFF_JOB_CHOICES = (
     ("salesperson", "salesperson"),
@@ -139,13 +140,14 @@ CUSTOMER_TYPE = (
     ("جدید", "جدید"))
 
 PAYMENT_TYPES = (
-    ('چک', 'چک'),
-    ('نقد', 'نقد'),
-    ('نقد و چک', 'نقد و چک'),
-    ('کارت', 'کارت'))
+    ('cheque', 'cheque'),
+    ('cash', 'cash'),
+    ('card', 'card'))
 
 TYPE_CHOICES = (
     ("مجلسی", "مجلسی"),
     ("مانتویی", "مانتویی"),
     ("اسپورت", "اسپورت"),
 )
+
+POINT_PERCENTAGE = 0

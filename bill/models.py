@@ -1,6 +1,7 @@
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
-from django.db.models import DO_NOTHING, CASCADE
+from django.db.models import DO_NOTHING, CASCADE, Sum
 
 
 class Bill(models.Model):
@@ -9,22 +10,128 @@ class Bill(models.Model):
     status = models.CharField(choices=settings.BILL_STATUS, max_length=32, default='active')
     buyer = models.ForeignKey('customer.Customer', related_name='bills', on_delete=DO_NOTHING)
     seller = models.ForeignKey('staff.Staff', related_name='bills', on_delete=DO_NOTHING)
-    straight_discount = models.FloatField(default=0)
-    percentage_discount = models.IntegerField(default=0)
-    used_points = models.IntegerField(default=0, null=True)
+    discount = models.FloatField(default=0)
+    used_points = models.FloatField(default=0)
     branch = models.ForeignKey('branch.Branch', related_name='bills', on_delete=DO_NOTHING)
+    bill_image = models.ImageField(null=True, blank=True)
 
-    def make_done(self):
-        self.status = "done"
+    def check_status(self):
+        if round(self.remaining_payment) > 5000:
+            self.status = 'remained'
+        else:
+            self.status = 'done'
         self.save()
+
+    @property
+    def price(self):
+        price = 0
+        for item in self.items.filter(rejected=False).all():
+            if item.end_of_roll:
+                price += item.end_of_roll_price
+            else:
+                price += item.price
+        return price
+
+    @property
+    def total_discount(self):
+        return self.discount + self.items_discount + self.buyer_special_discount
+
+    @property
+    def buyer_special_discount(self):
+        return self.buyer.special_discount(self.price)
+
+    @property
+    def items_discount(self):
+        discount = 0
+        for item in self.items.all():
+            discount += item.discount
+            discount += item.special_discount
+        return discount
+
+    @property
+    def final_price(self):
+        if self.total_discount >= self.price:
+            return self
+        return self.price - self.total_discount
+
+    @property
+    def paid(self):
+        if self.payments.count():
+            return self.payments.aggregate(Sum('amount'))['amount__sum']
+        return 0
+
+    @property
+    def cheque_paid(self):
+        if self.payments.count():
+            return self.payments.filter(type='cheque').aggregate(Sum('amount'))['amount__sum']
+        return 0
+
+    @property
+    def cash_paid(self):
+        if self.payments.count():
+            return self.payments.filter(type='cash').aggregate(Sum('amount'))['amount__sum']
+        return 0
+
+    @property
+    def card_paid(self):
+        if self.payments.count():
+            return self.payments.filter(type='card').aggregate(Sum('amount'))['amount__sum']
+        return 0
+
+    @property
+    def remaining_payment(self):
+        return self.price - self.paid
+
+
+class BillItemManager(models.Manager):
+    def create(self, product, amount,
+               discount,
+               end_of_roll,
+               end_of_roll_amount):
+        if product.stock_amount < amount:
+            raise ValidationError("مقدار کافی از این پارچه موجود نمی‌باشد")
+
+        item = super(BillItemManager, self).create(product=product, amount=amount,
+                                                   discount=discount,
+                                                   end_of_roll=end_of_roll,
+                                                   end_of_roll_amount=end_of_roll_amount)
+        product.update_stock_amount(amount + float(0.05))
+        return item
 
 
 class BillItem(models.Model):
     product = models.ManyToManyField('product.Product', related_name='bill_items')
     amount = models.FloatField(blank=False, null=False)
-    straight_discount = models.FloatField(default=0)
-    percentage_discount = models.IntegerField(default=0)
+    discount = models.FloatField(default=0)
     bill = models.ForeignKey('bill.Bill', related_name='items', on_delete=CASCADE)
+    end_of_roll = models.BooleanField(default=False)
+    end_of_roll_amount = models.FloatField(default=0)
+    rejected = models.BooleanField(default=False)
+    objects = BillItemManager()
+
+    @property
+    def special_discount(self):
+        discount = 0
+        for item in self.product.special_discounts.all():
+            discount += item.value(self.product.selling_price)
+        return discount
+
+    @property
+    def price(self):
+        if self.end_of_roll:
+            return self.end_of_roll_amount * self.product.selling_price
+        return self.amount * self.product.selling_price
+
+    @property
+    def final_price(self):
+        if self.discount > self.price:
+            return 0
+        return self.price - self.discount
+
+    def reject(self):
+        self.rejected = True
+        self.product.update_stock_amount(-1 * self.amount)
+        self.save()
 
 
 class SupplierBill(models.Model):
@@ -53,8 +160,6 @@ class CustomerPaymentManager(models.Manager):
         amount = kwargs.get('amount')
         create_date = kwargs.get('create_date')
         type = kwargs.get('type')
-        if type in ['چک', 'نقد و چک']:
-            pass
 
 
 class CustomerPayment(Payment):
@@ -88,3 +193,21 @@ class CustomerCheque(Cheque):
 
 class OurCheque(models.Model):
     supplier = models.ForeignKey('supplier.Supplier', related_name="cheques", on_delete=DO_NOTHING)
+
+
+class SpecialDiscount(models.Model):
+    percentage = models.IntegerField(default=0)
+    straight = models.FloatField(default=0)
+
+    def value(self, price):
+        if self.percentage > 0:
+            return price * self.percentage
+        return self.straight
+
+
+class SpecialProductDiscount(SpecialDiscount):
+    customers = models.ManyToManyField('customer.Customer', related_name='special_discounts')
+
+
+class SpecialProductsDiscount(SpecialDiscount):
+    products = models.ManyToManyField('product.Product', related_name='special_discounts')
