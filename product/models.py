@@ -1,6 +1,6 @@
-from django.conf import settings
 from django.db import models
 from django.db.models import DO_NOTHING
+from rest_framework.decorators import action
 
 
 class Product(models.Model):
@@ -16,12 +16,15 @@ class Product(models.Model):
     selling_price = models.FloatField()
     buying_price = models.FloatField()
     stock_amount = models.FloatField()
-    f_type = models.CharField(choices=settings.TYPE_CHOICES, max_length=32, blank=False,
-                              null=False)
+    f_type = models.ForeignKey('product.FType', related_name='products', on_delete=DO_NOTHING)
 
     def update_stock_amount(self, amount):
         self.stock_amount -= amount
         self.save()
+
+    @property
+    def supplier(self):
+        return self.supplier_bill_item.bill.supplier
 
 
 class Color(models.Model):
@@ -35,3 +38,11 @@ class Design(models.Model):
 
 class Material(models.Model):
     name = models.CharField(max_length=32, null=False, blank=False)
+
+
+class FType(models.Model):
+    name = models.CharField(max_length=32, null=False, blank=False)
+
+
+class ProductId(models.Model):
+    pass

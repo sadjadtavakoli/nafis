@@ -10,6 +10,7 @@ from bill.models import Bill, BillItem, CustomerPayment
 from bill.permissions import LoginRequired
 from bill.serializers import BillSerializer, CustomerPaymentSerializer, BillItemSerializer
 from customer.models import Customer
+from nafis.paginations import PaginationClass
 from nafis.views import NafisBase
 from product.models import Product
 from staff.models import Staff
@@ -21,8 +22,9 @@ class BillsViewSet(NafisBase, ModelViewSet):
     queryset = Bill.objects.all()
     non_updaters = ["cashier"]
     non_destroyers = ['cashier']
+    pagination_class = PaginationClass
 
-    @action(url_path='close_all', detail=False, methods=['post'], permission_classes=())
+    @action(url_path='close-all', detail=False, methods=['post'], permission_classes=())
     def close_all(self, request):
         Bill.objects.filter(status="active").update(status='done')
         return Response({'ok': True})

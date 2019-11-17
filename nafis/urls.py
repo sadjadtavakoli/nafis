@@ -19,6 +19,7 @@ from rest_framework import routers
 from django.urls import path, include
 from bill.views import BillsViewSet
 from nafis.views import LoginAPIView
+from product.views import ProductIdCreateApiView
 
 router = routers.DefaultRouter()
 router.register(r'bills', BillsViewSet, 'bill')
@@ -26,5 +27,6 @@ router.register(r'bills', BillsViewSet, 'bill')
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^login/', LoginAPIView.as_view(), name='login'),
+    url(r'^product-id/', ProductIdCreateApiView.as_view(), name='create-product-id'),
     path('api/', include(router.urls)),
 ]

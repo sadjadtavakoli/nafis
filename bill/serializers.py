@@ -94,4 +94,4 @@ class SupplierBillSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SupplierBill
-        fields = ('create_date', 'supplier', 'payments')
+        fields = ('create_date', 'supplier', 'status', 'items', 'payments')
