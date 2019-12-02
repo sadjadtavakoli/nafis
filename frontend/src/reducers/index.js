@@ -6,7 +6,7 @@ import { combineReducers } from "redux";
 // import customersReducer from "./customersReducer";
 // import productsReducer from './productsReducer';
 // import providerReducer from './providerReducer'
-// import authReducer from './authReducer';
+import authReducer from './authReducer';
 // import billReducer from './billReducer';
 // import billReportsReducer from './billReportsReducer';
 // import chartsReportsReducer from './chartsReportsReducer';

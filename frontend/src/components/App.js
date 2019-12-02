@@ -29,6 +29,7 @@ import Login from "./auth/login";
 // import ProviderStats from '../providerStats';
 
 const App = (props) => {
+  console.log(props);
     return (
         <div className="App__container">
             {props.token ? (
@@ -65,10 +66,11 @@ const App = (props) => {
 };
 
 const mapStateToProps = state => {
-    if (localStorage.getItem('token') !== null) {
+    if (localStorage.getItem('token')) {
         return {type: localStorage.getItem('type'), user: localStorage.getItem('user'), token: localStorage.getItem('token')}
     }
-    return {type: state.auth.type, user: state.auth.currentUser, token: state.auth.token};
+    // return {type: state.auth.type, user: state.auth.currentUser, token: state.auth.token};
+    return {type: null, user: null, token: null};
 };
 
 export default connect(mapStateToProps)(App);
