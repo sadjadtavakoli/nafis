@@ -1,4 +1,4 @@
 from django.contrib import admin
-from supplier.models import Supplier
+from backend.supplier.models import Supplier
 
 admin.site.register(Supplier)

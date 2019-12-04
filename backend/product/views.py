@@ -3,11 +3,11 @@ from rest_framework.decorators import action
 from rest_framework.generics import CreateAPIView
 from rest_framework.viewsets import GenericViewSet
 
-from bill.permissions import LoginRequired
+from backend.bill.permissions import LoginRequired
 from nafis.paginations import PaginationClass
 from nafis.views import NafisBase
-from product.models import Product, ProductId
-from product.serializers import ProductSerializer, ProductIdSerializer
+from backend.product.models import Product, ProductId
+from backend.product.serializers import ProductSerializer, ProductIdSerializer
 
 
 class ProductViewSet(NafisBase, mixins.CreateModelMixin,

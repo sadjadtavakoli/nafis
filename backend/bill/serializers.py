@@ -1,12 +1,12 @@
 from rest_framework import serializers
 
-from bill.models import Bill, BillItem, SupplierBill, SupplierBillItem, CustomerPayment, \
+from backend.bill.models import Bill, BillItem, SupplierBill, SupplierBillItem, CustomerPayment, \
     OurPayment, CustomerCheque, OurCheque
-from branch.serializers import BranchSerializer
-from customer.serializers import CustomerSerializer
-from product.serializers import ProductSerializer
-from staff.serializers import StaffSerializer
-from supplier.serializers import SupplierSerializer
+from backend.branch.serializers import BranchSerializer
+from backend.customer.serializers import CustomerSerializer
+from backend.product.serializers import ProductSerializer
+from backend.staff.serializers import StaffSerializer
+from backend.supplier.serializers import SupplierSerializer
 
 
 class CustomerChequeSerializer(serializers.ModelSerializer):
