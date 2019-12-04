@@ -1,5 +1,7 @@
 import React from "react";
-import {connect} from "react-redux";
+import { connect } from "react-redux";
+import { Button, Container, Divider, Form, Grid, Segment } from 'semantic-ui-react'
+import logo from '../../assets/logo.png'
 // import logo from '../../../assets/logo.png'; // Tell Webpack this JS file uses this image
 
 // import "./index.scss";
@@ -35,19 +37,40 @@ class Login extends React.Component {
 
     render() {
         return (
-            <div className="login__container">
-                <div className="login__content-container">
-                    {/* <img src={logo} width="200" className="autoShadow" /> */}
-                    MASALAN LOGIINE
-                    {/* <Form
-                        direction={"column"}
-                        formValues={FORM_VALUES.form_inputs}
-                        onSubmit={this.onSubmit}
-                        submitText={FORM_VALUES.submitText}
-                        title={FORM_VALUES.title}
-                    /> */}
-                </div>
-            </div>
+        <Container id="login" className="rtl">
+           <Segment placeholder>
+                <Grid columns={2} relaxed='very' stackable>
+                <Grid.Column>
+                    <Form>
+                    <Form.Input
+                        className="placeholder-rtl"
+                        icon='user'
+                        iconPosition='left'
+                        label='نام کاربری'
+                        placeholder='نام کاربری'
+                    />
+                    <Form.Input
+                        className="placeholder-rtl"
+                        icon='lock'
+                        iconPosition='left'
+                        label='گذرواژه'
+                        type='password'
+                        placeholder='گذرواژه'            
+                    />
+
+                    <Button content='ورود به سامانه' primary />
+                    </Form>
+                </Grid.Column>
+
+                        <Grid.Column className="ltr" verticalAlign='middle'>
+                            <img src={logo} height="230"/>
+                    {/* <Button content='ثبت نام' icon='signup' size='big' /> */}
+                </Grid.Column>
+                </Grid>
+
+                <Divider vertical></Divider>
+            </Segment>
+        </Container>
         );
     }
 }

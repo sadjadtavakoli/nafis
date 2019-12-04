@@ -2,7 +2,8 @@ import React from "react";
 import {Router, Route} from "react-router-dom";
 import {connect} from "react-redux";
 
-import "../scss/normalize.css";
+import 'semantic-ui-css/semantic.min.css'
+import "../scss/global.scss";
 
 import history from "../history";
 import mainPage from "./mainPage";
