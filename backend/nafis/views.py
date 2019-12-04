@@ -36,7 +36,7 @@ class LoginAPIView(APIView):
         except Staff.DoesNotExist:
             raise ValidationError(
                 {'non_field_errors': ['Member does not exist.']})
-        if authenticate(username=member.username, password=password):
+        if authenticate(request=request, username=member.username, password=password):
             login(request, member)
         if request.user.is_authenticated:
             token, created = Token.objects.get_or_create(user=member)
