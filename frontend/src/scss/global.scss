@@ -1,3 +1,33 @@
+@import './normalize.css';
+@import './pagesSpecial.scss';
+@font-face {
+    font-family: "yekan";
+    src: url(../assets/fonts/yekan/Yekan.eot);
+    src: url(../assets/fonts/yekan/Yekan.eot?#iefix) format("embedded-opentype"), url(../assets/fonts/yekan/Yekan.woff) format("woff"), url(../assets/fonts/yekan/Yekan.ttf) format("truetype"), url(../assets/fonts/yekan/Yekan.svg#BYekan) format("svg");
+    font-weight: normal;
+    font-style: normal;
+}
 *{
     margin: 0;
+    font-family: yekan;
+}
+.rtl{
+    direction: rtl;
+}
+.ltr{
+    direction: ltr;
+}
+.placeholder-rtl{
+  &::placeholder{
+    text-align: right !important;
+    direction: rtl !important;
+    font-family: yekan;
+  }
+}
+.placeholder-ltr{
+  &::placeholder{
+    text-align: left !important;
+    direction: ltr !important;
+    font-family: yekan;
+  }
 }
