@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from backend.branch.models import Branch
+from branch.models import Branch
 
 
 class BranchSerializer(serializers.ModelSerializer):

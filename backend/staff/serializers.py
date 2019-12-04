@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from backend.staff.models import Staff
+from staff.models import Staff
 
 
 class StaffSerializer(serializers.ModelSerializer):

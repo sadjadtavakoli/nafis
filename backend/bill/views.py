@@ -6,14 +6,14 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from backend.bill.models import Bill, BillItem, CustomerPayment
-from backend.bill.permissions import LoginRequired
-from backend.bill.serializers import BillSerializer, CustomerPaymentSerializer, BillItemSerializer
-from backend.customer.models import Customer
+from bill.models import Bill, BillItem, CustomerPayment
+from bill.permissions import LoginRequired
+from bill.serializers import BillSerializer, CustomerPaymentSerializer, BillItemSerializer
+from customer.models import Customer
 from nafis.paginations import PaginationClass
 from nafis.views import NafisBase
-from backend.product.models import Product
-from backend.staff.models import Staff
+from product.models import Product
+from staff.models import Staff
 
 
 class BillsViewSet(NafisBase, ModelViewSet):

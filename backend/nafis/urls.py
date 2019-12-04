@@ -18,9 +18,9 @@ from django.contrib import admin
 from rest_framework import routers
 from django.urls import path, include
 
-from backend.bill.views import BillsViewSet
-from backend.nafis.views import LoginAPIView
-from backend.product.views import ProductIdCreateApiView
+from bill.views import BillsViewSet
+from nafis.views import LoginAPIView
+from product.views import ProductIdCreateApiView
 
 router = routers.DefaultRouter()
 router.register(r'bills', BillsViewSet, 'bill')

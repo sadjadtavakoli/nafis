@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from backend.bill.models import Bill, SupplierBill, BillItem, SupplierBillItem, OurPayment, \
+from bill.models import Bill, SupplierBill, BillItem, SupplierBillItem, OurPayment, \
     CustomerPayment, OurCheque, CustomerCheque
 
 admin.site.register(Bill)
