@@ -32,7 +32,7 @@ class LoginAPIView(APIView):
         username = request.data.get('username', '')
         password = request.data.get('password', '')
         try:
-            member = Staff.objects.get(username=username).user
+            member = Staff.objects.get(username=username)
         except Staff.DoesNotExist:
             raise ValidationError(
                 {'non_field_errors': ['Member does not exist.']})
