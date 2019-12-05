@@ -31,11 +31,11 @@ class BillsViewSet(NafisBase, ModelViewSet):
 
     @action(url_path='actives', detail=False, methods=['get'], permission_classes=())
     def get_actives(self, request):
-        return Bill.objects.filter(status='active')
+        return Response(BillSerializer(Bill.objects.filter(status='active'), many=True).data)
 
     @action(url_path='dones', detail=False, methods=['get'], permission_classes=())
     def get_dones(self, request):
-        return Bill.objects.filter(status='done')
+        return Response(BillSerializer(Bill.objects.filter(status='done'), many=True).data)
 
     @action(methods=['post'], detail=True, url_path='add-payments', permission_classes=())
     def add_payments(self, request):

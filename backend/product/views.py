@@ -1,5 +1,4 @@
 from rest_framework import mixins
-from rest_framework.decorators import action
 from rest_framework.generics import CreateAPIView
 from rest_framework.viewsets import GenericViewSet
 
