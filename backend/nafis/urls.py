@@ -20,10 +20,11 @@ from django.urls import path, include
 
 from bill.views import BillsViewSet
 from nafis.views import LoginAPIView
-from product.views import ProductIdCreateApiView
+from product.views import ProductIdCreateApiView, ProductViewSet
 
 router = routers.DefaultRouter()
 router.register(r'bills', BillsViewSet, 'bill')
+router.register(r'products', ProductViewSet, 'product')
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
