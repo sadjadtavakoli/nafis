@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d5742bce-7ad8-4550-baf5-7c851e53a010" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/nafis/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/nafis/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/bill/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/bill/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/product/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/product/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -33,7 +33,7 @@
           <entry key="code-workspace" value="1" />
           <entry key="gitignore" value="1" />
           <entry key="html" value="1" />
-          <entry key="py" value="108" />
+          <entry key="py" value="110" />
           <entry key="txt" value="1" />
         </counts>
       </usages-collector>
@@ -41,20 +41,20 @@
         <counts>
           <entry key="HTML" value="1" />
           <entry key="PLAIN_TEXT" value="3" />
-          <entry key="Python" value="108" />
+          <entry key="Python" value="110" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="dummy" value="7" />
-          <entry key="py" value="13132" />
-          <entry key="txt" value="235" />
+          <entry key="py" value="13182" />
+          <entry key="txt" value="254" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PLAIN_TEXT" value="242" />
-          <entry key="Python" value="13132" />
+          <entry key="PLAIN_TEXT" value="261" />
+          <entry key="Python" value="13182" />
         </counts>
       </usages-collector>
     </session>
@@ -98,28 +98,43 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../nafisenv/Lib/site-packages/django/contrib/auth/admin.py">
+        <entry file="file://$PROJECT_DIR$/backend/nafis/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="26">
-              <caret line="40" column="6" selection-start-line="40" selection-start-column="6" selection-end-line="40" selection-end-column="6" />
+            <state relative-caret-position="-8">
+              <caret line="113" lean-forward="true" selection-start-line="113" selection-end-line="113" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../nafisenv/Lib/site-packages/django/contrib/auth/models.py">
+        <entry file="file://$PROJECT_DIR$/backend/nafis/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="179">
-              <caret line="288" column="6" selection-start-line="288" selection-start-column="6" selection-end-line="288" selection-end-column="6" />
+            <state relative-caret-position="283">
+              <caret line="25" column="38" selection-start-line="25" selection-start-column="26" selection-end-line="25" selection-end-column="38" />
+              <folding>
+                <element signature="e#639#671#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/backend/product/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="323">
+              <caret line="19" column="38" lean-forward="true" selection-start-line="19" selection-start-column="38" selection-end-line="19" selection-end-column="38" />
+              <folding>
+                <element signature="e#0#33#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/backend/bill/models.py">
+        <entry file="file://$PROJECT_DIR$/backend/bill/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="11" column="4" selection-start-line="11" selection-start-column="4" selection-end-line="11" selection-end-column="4" />
+            <state relative-caret-position="187">
+              <caret line="83" column="29" lean-forward="true" selection-start-line="83" selection-start-column="29" selection-end-line="83" selection-end-column="29" />
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
               </folding>
@@ -128,42 +143,12 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../nafisenv/Lib/site-packages/rest_framework/authtoken/models.py">
+        <entry file="file://$PROJECT_DIR$/backend/bill/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="8" column="6" selection-start-line="8" selection-start-column="6" selection-end-line="8" selection-end-column="6" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/backend/nafis/settings.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="147">
-              <caret line="44" column="14" lean-forward="true" selection-start-line="44" selection-start-column="14" selection-end-line="44" selection-end-column="14" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/backend/nafis/urls.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="266">
-              <caret line="24" selection-start-line="24" selection-end-line="24" />
+            <state relative-caret-position="1479">
+              <caret line="87" column="8" selection-start-line="87" selection-start-column="8" selection-end-line="87" selection-end-column="8" />
               <folding>
-                <element signature="e#639#671#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/backend/product/views.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="12" column="20" selection-start-line="12" selection-start-column="6" selection-end-line="12" selection-end-column="20" />
-              <folding>
-                <element signature="e#0#33#0" expanded="true" />
+                <element signature="e#0#32#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -253,6 +238,8 @@
         <option value="$PROJECT_DIR$/backend/nafis/views.py" />
         <option value="$PROJECT_DIR$/backend/nafis/settings.py" />
         <option value="$PROJECT_DIR$/backend/nafis/urls.py" />
+        <option value="$PROJECT_DIR$/backend/product/views.py" />
+        <option value="$PROJECT_DIR$/backend/bill/views.py" />
       </list>
     </option>
   </component>
@@ -316,6 +303,12 @@
               <item name="nafis" type="b2602c69:ProjectViewProjectNode" />
               <item name="nafis" type="462c0819:PsiDirectoryNode" />
               <item name="backend" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="nafis" type="b2602c69:ProjectViewProjectNode" />
+              <item name="nafis" type="462c0819:PsiDirectoryNode" />
+              <item name="backend" type="462c0819:PsiDirectoryNode" />
+              <item name="bill" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="nafis" type="b2602c69:ProjectViewProjectNode" />
@@ -481,7 +474,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="SearchEverywhereHistoryKey" value="Staff&#9;null&#9;null&#10;seller&#9;null&#9;null&#10;user_permissions&#9;null&#9;null&#10;UserCreationForm&#9;null&#9;null&#10;UserChangeForm&#9;null&#9;null&#10;add_form&#9;FILE&#9;file://D:/nafis/nafisenv/Lib/site-packages/django/contrib/admin/templates/admin/auth/user/add_form.html&#10;LoginAPIView&#9;null&#9;null&#10;selling_price&#9;null&#9;null&#10;supplierBill&#9;null&#9;null&#10;PRoduc&#9;null&#9;null&#10;check_status&#9;null&#9;null&#10;setting&#9;FILE&#9;file://D:/nafis/nafis/nafis/settings.py&#10;settings&#9;FILE&#9;file://D:/nafis/nafis/nafis/settings.py" />
+    <property name="SearchEverywhereHistoryKey" value="BILL_STATUS&#9;null&#9;null&#10;Bill&#9;null&#9;null&#10;BillsViewSet&#9;null&#9;null&#10;Staff&#9;null&#9;null&#10;seller&#9;null&#9;null&#10;user_permissions&#9;null&#9;null&#10;UserCreationForm&#9;null&#9;null&#10;UserChangeForm&#9;null&#9;null&#10;add_form&#9;FILE&#9;file://D:/nafis/nafisenv/Lib/site-packages/django/contrib/admin/templates/admin/auth/user/add_form.html&#10;LoginAPIView&#9;null&#9;null&#10;selling_price&#9;null&#9;null&#10;supplierBill&#9;null&#9;null&#10;PRoduc&#9;null&#9;null&#10;check_status&#9;null&#9;null&#10;setting&#9;FILE&#9;file://D:/nafis/nafis/nafis/settings.py&#10;settings&#9;FILE&#9;file://D:/nafis/nafis/nafis/settings.py" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -654,14 +647,21 @@
       <option name="project" value="LOCAL" />
       <updated>1575483161717</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="productsViewSet url">
+      <created>1575537687426</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1575537687426</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.47545218" visible="true" weight="0.22012103" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.47545218" visible="true" weight="0.22012103" />
       <window_info id="Structure" order="1" sideWeight="0.5245478" side_tool="true" weight="0.2677761" />
       <window_info id="Favorites" order="2" sideWeight="0.5245478" side_tool="true" weight="0.2677761" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -699,7 +699,8 @@
     <MESSAGE value="Merge branch 'master' of github.com:sadjad-tavakoli/nafis&#10;&#10;# Conflicts:&#10;#&#9;backend/bill/migrations/0002_auto_20191112_2316.py&#10;#&#9;backend/bill/migrations/0002_auto_20191117_2232.py&#10;#&#9;bill/migrations/0002_auto_20191112_2316.py" />
     <MESSAGE value="imports" />
     <MESSAGE value="imports back to old one" />
-    <option name="LAST_COMMIT_MESSAGE" value="imports back to old one" />
+    <MESSAGE value="productsViewSet url" />
+    <option name="LAST_COMMIT_MESSAGE" value="productsViewSet url" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/supplier/admin.py" />
@@ -836,16 +837,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/backend/bill/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-118">
-          <caret line="77" column="61" selection-start-line="77" selection-start-column="43" selection-end-line="77" selection-end-column="61" />
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../nafisenv/Lib/site-packages/django/contrib/admin/templates/admin/auth/user/add_form.html">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -860,16 +851,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="145">
           <caret line="125" selection-start-line="125" selection-end-line="133" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/backend/bill/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="11" column="4" selection-start-line="11" selection-start-column="4" selection-end-line="11" selection-end-column="4" />
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -924,29 +905,49 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/backend/nafis/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="283">
+          <caret line="25" column="38" selection-start-line="25" selection-start-column="26" selection-end-line="25" selection-end-column="38" />
+          <folding>
+            <element signature="e#639#671#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/backend/nafis/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="147">
-          <caret line="44" column="14" lean-forward="true" selection-start-line="44" selection-start-column="14" selection-end-line="44" selection-end-column="14" />
+        <state relative-caret-position="-8">
+          <caret line="113" lean-forward="true" selection-start-line="113" selection-end-line="113" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/backend/bill/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1479">
+          <caret line="87" column="8" selection-start-line="87" selection-start-column="8" selection-end-line="87" selection-end-column="8" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/backend/bill/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="83" column="29" lean-forward="true" selection-start-line="83" selection-start-column="29" selection-end-line="83" selection-end-column="29" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/backend/product/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="20" selection-start-line="12" selection-start-column="6" selection-end-line="12" selection-end-column="20" />
+        <state relative-caret-position="323">
+          <caret line="19" column="38" lean-forward="true" selection-start-line="19" selection-start-column="38" selection-end-line="19" selection-end-column="38" />
           <folding>
             <element signature="e#0#33#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/backend/nafis/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="266">
-          <caret line="24" selection-start-line="24" selection-end-line="24" />
-          <folding>
-            <element signature="e#639#671#0" expanded="true" />
           </folding>
         </state>
       </provider>

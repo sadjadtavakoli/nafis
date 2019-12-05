@@ -7,6 +7,8 @@ from rest_framework.authtoken.models import Token
 
 from staff.models import Staff
 
+from staff.serializers import StaffSerializer
+
 
 class NafisBase:
     non_updaters = []
@@ -43,6 +45,7 @@ class LoginAPIView(APIView):
             return Response({
                 'token': token.key,
                 'is_admin': getattr(member, 'is_admin', False),
+                'user': StaffSerializer(member).data
             })
         raise ValidationError(
             {'non_field_errors': ['Unable to login with provided credentials.']})
