@@ -35,13 +35,22 @@ class Color(models.Model):
 class Design(models.Model):
     name = models.CharField(max_length=32, null=False, blank=False)
 
+    def __str__(self):
+        return self.name
+
 
 class Material(models.Model):
     name = models.CharField(max_length=32, null=False, blank=False)
 
+    def __str__(self):
+        return self.name
+
 
 class FType(models.Model):
     name = models.CharField(max_length=32, null=False, blank=False)
+
+    def __str__(self):
+        return self.name
 
 
 class ProductId(models.Model):

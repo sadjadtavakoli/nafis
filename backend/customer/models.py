@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.db.models import DO_NOTHING
 from django.utils.translation import gettext_lazy as _
 
 
@@ -12,10 +13,14 @@ class Customer(models.Model):
     birth_date = models.DateField(null=True, blank=True)
     marriage_date = models.DateField(null=True, blank=True)
     points = models.IntegerField(default=0)
-    class_type = models.CharField(choices=settings.CUSTOMER_TYPE, max_length=20)
+    class_type = models.ForeignKey('customer.CustomerType', related_name='customers', on_delete=DO_NOTHING)
 
     def special_discount(self, value):
         discount = 0
         for item in self.special_discounts.all():
             discount += item.value(value)
         return discount
+
+
+class CustomerType(models.Model):
+    name = models.CharField(max_length=32, null=False, blank=False)

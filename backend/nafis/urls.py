@@ -18,12 +18,13 @@ from django.contrib import admin
 from rest_framework import routers
 from django.urls import path, include
 
-from bill.views import BillsViewSet
+from bill.views import BillsViewSet, BillItemViewSet
 from nafis.views import LoginAPIView
 from product.views import ProductIdCreateApiView, ProductViewSet
 
 router = routers.DefaultRouter()
 router.register(r'bills', BillsViewSet, 'bill')
+router.register(r'bill-items', BillItemViewSet, 'bill-item')
 router.register(r'products', ProductViewSet, 'product')
 
 urlpatterns = [
