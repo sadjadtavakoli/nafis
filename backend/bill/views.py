@@ -2,12 +2,12 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, PermissionDenied
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from bill.models import Bill, BillItem, CustomerPayment
-from bill.permissions import LoginRequired
+from bill.permissions import LoginRequired, CloseBillPermission, AddPaymentPermission
 from bill.serializers import BillSerializer, CustomerPaymentSerializer, BillItemSerializer
 from customer.models import Customer
 from nafis.paginations import PaginationClass
@@ -24,7 +24,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
     non_destroyers = ['cashier']
     pagination_class = PaginationClass
 
-    @action(url_path='close-all', detail=False, methods=['post'], permission_classes=())
+    @action(url_path='close-all', detail=False, methods=['post'], permission_classes=(CloseBillPermission,))
     def close_all(self, request):
         Bill.objects.filter(status="active").update(status='done')
         return Response({'ok': True})
@@ -37,13 +37,13 @@ class BillsViewSet(NafisBase, ModelViewSet):
     def get_dones(self, request):
         return Response(BillSerializer(Bill.objects.filter(status='done'), many=True).data)
 
-    @action(methods=['post'], detail=True, url_path='add-payments', permission_classes=())
+    @action(methods=['post'], detail=True, url_path='add-payments', permission_classes=(AddPaymentPermission,))
     def add_payments(self, request):
         data = self.request.data
         payment = CustomerPayment.objects.create(**data, bill=self.get_object())
         return Response(CustomerPaymentSerializer(payment).data)
 
-    @action(methods=['post'], detail=True, url_path='done', permission_classes=())
+    @action(methods=['post'], detail=True, url_path='done', permission_classes=(CloseBillPermission,))
     def close_bill(self, request):
         instance = self.get_object()
         instance.check_status()
@@ -95,8 +95,9 @@ class BillItemViewSet(NafisBase, ModelViewSet):
     serializer_class = BillItemSerializer
     permission_classes = (LoginRequired,)
     queryset = BillItem.objects.all()
-    non_updaters = ["cashier"]
-    non_destroyers = ['cashier']
+    non_updaters = ["cashier", "accountant"]
+    non_destroyers = ['cashier', "accountant"]
+    non_creator = ['cashier', "accountant"]
 
     @action(methods=['post'], detail=True, url_path='reject', permission_classes=())
     def reject(self):
@@ -105,7 +106,49 @@ class BillItemViewSet(NafisBase, ModelViewSet):
         return Response({'done': True})
 
     def destroy(self, request, *args, **kwargs):
+        bill = self.get_object().bill
+        if bill.seller.username != request.user.username or bill.status != "active":
+            raise PermissionDenied
         response = super(BillItemViewSet, self).destroy(request, *args, **kwargs)
         bill_item = self.get_object()
         bill_item.product.update_stock_amount(-1 * bill_item.amount)
         return response
+
+    def update(self, request, *args, **kwargs):
+        bill = self.get_object().bill
+        if bill.seller.username != request.user.username or bill.status != "active":
+            raise PermissionDenied
+        return super(BillItemViewSet, self).update(request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        bill = Bill.objects.get(pk=self.request.data.get('bill', None))
+        if bill.status != "active":
+            raise PermissionDenied
+        return super(BillItemViewSet, self).create(request, *args, **kwargs)
+
+
+class CustomerPaymentViewSet(NafisBase, ModelViewSet):
+    serializer_class = CustomerPaymentSerializer
+    queryset = CustomerPayment.objects.all()
+    permission_classes = (LoginRequired,)
+    non_updaters = ["salesperson", "storekeeper", 'accountant']
+    non_destroyers = ['salesperson', "storekeeper", 'accountant']
+    non_creator = ['salesperson', "storekeeper", 'accountant']
+
+    def destroy(self, request, *args, **kwargs):
+        bill = self.get_object().bill
+        if bill.status == "done":
+            raise PermissionDenied
+        return super(CustomerPaymentViewSet, self).destroy(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        bill = self.get_object().bill
+        if bill.status == "done":
+            raise PermissionDenied
+        return super(CustomerPaymentViewSet, self).update(request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        bill = Bill.objects.get(pk=self.request.data.get('bill', None))
+        if bill.status == "done":
+            raise PermissionDenied
+        return super(CustomerPaymentViewSet, self).create(request, *args, **kwargs)

@@ -182,19 +182,10 @@ class Payment(models.Model):
                             max_length=10, default="نقد")
 
 
-class CustomerPaymentManager(models.Manager):
-    def create(self, **kwargs):
-        bill_id = kwargs.get('bill')
-        amount = kwargs.get('amount')
-        create_date = kwargs.get('create_date')
-        type = kwargs.get('type')
-
-
 class CustomerPayment(Payment):
     cheque = models.OneToOneField('bill.CustomerCheque', blank=True, null=True, related_name="+",
                                   on_delete=models.DO_NOTHING)
     bill = models.ForeignKey('bill.Bill', related_name="payments", on_delete=models.CASCADE)
-    objects = CustomerPaymentManager()
 
 
 class OurPayment(Payment):

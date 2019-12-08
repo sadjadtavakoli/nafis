@@ -13,16 +13,25 @@ from staff.serializers import StaffSerializer
 class NafisBase:
     non_updaters = []
     non_destroyers = []
+    non_creator = []
 
     def destroy(self, request, *args, **kwargs):
-        if request.user.profile.group_type in self.non_destroyers:
+        staff = Staff.objects.get(username=request.user.username)
+        if staff.job in self.non_destroyers:
             raise PermissionDenied
         return super().destroy(request, *args, **kwargs)
 
     def update(self, request, *args, **kwargs):
-        if request.user.profile.group_type in self.non_updaters:
+        staff = Staff.objects.get(username=request.user.username)
+        if staff.job in self.non_updaters:
             raise PermissionDenied
         return super().update(request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        staff = Staff.objects.get(username=request.user.username)
+        if staff.job in self.non_creator:
+            raise PermissionDenied
+        return super().create(request, *args, **kwargs)
 
 
 class LoginAPIView(APIView):
