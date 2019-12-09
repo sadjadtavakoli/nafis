@@ -7,12 +7,12 @@ import { combineReducers } from "redux";
 // import productsReducer from './productsReducer';
 // import providerReducer from './providerReducer'
 import authReducer from './authReducer';
-// import billReducer from './billReducer';
+import saleReducer from './saleReducer';
 // import billReportsReducer from './billReportsReducer';
 // import chartsReportsReducer from './chartsReportsReducer';
 // import notificationsReducer from './notificationsReducer';
 // import reportReducer from "./reportReducer";
-// import {reducer as toastrReducer} from 'react-redux-toastr'
+import {reducer as toastrReducer} from 'react-redux-toastr'
 // import billByPhoneNumberReducer from "./billByPhoneNumberReducer";
 // import navBarDisplayReducer from "./navBarDisplayReducer";
 // import printDataReducer from "./printDataReducer";
@@ -24,14 +24,14 @@ export default combineReducers({
   // receipts: receiptsReducer,
   // products: productsReducer,
   // providers: providerReducer,
-  // auth: authReducer,
-  // bills: billReducer,
+  auth: authReducer,
+  activeBill: saleReducer,
   // billReports: billReportsReducer,
   // billByPhoneNumber: billByPhoneNumberReducer,
   // charts: chartsReportsReducer,
   // notifications: notificationsReducer,
   // reports: reportReducer,
-  // toastr: toastrReducer,
+  toastr: toastrReducer,
   // navBar: navBarDisplayReducer,
   // print: printDataReducer,
 });
