@@ -10,7 +10,7 @@ class AddBillModal extends React.Component {
         super(props);
     }
     componentDidMount() {
-        toastr.success('asdf','sadfsdfdfssdf')
+        // toastr.success('asdf','sadfsdfdfssdf')
         this.props.getActiveBill();
     }
     state = {
