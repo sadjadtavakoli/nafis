@@ -26,10 +26,7 @@ class Bill(models.Model):
     def price(self):
         price = 0
         for item in self.items.filter(rejected=False).all():
-            if item.end_of_roll:
-                price += item.end_of_roll_price
-            else:
-                price += item.price
+            price += item.price
         return price
 
     @property
@@ -51,7 +48,7 @@ class Bill(models.Model):
     @property
     def final_price(self):
         if self.total_discount >= self.price:
-            return self
+            return 0
         return self.price - self.total_discount
 
     @property
