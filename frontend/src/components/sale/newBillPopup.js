@@ -14,7 +14,7 @@ class NewBillPopup extends React.Component {
         end_of_roll_amount: ''
     }
     changeInput = (event, inputName)=>{
-        this.setState({ [inputName]: event.target.value });
+        this.setState({ [inputName]: Number(event.target.value) });
     }
     toggleIsEndOfRoll = () => {
         this.setState((prevState)=>({end_of_roll: !prevState.end_of_roll,end_of_roll_amount:''}))
