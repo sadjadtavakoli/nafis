@@ -24,3 +24,6 @@ class Customer(models.Model):
 
 class CustomerType(models.Model):
     name = models.CharField(max_length=32, null=False, blank=False)
+
+    def __str__(self):
+        return self.name
