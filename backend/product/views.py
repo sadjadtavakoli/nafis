@@ -10,8 +10,9 @@ from branch.serializers import BranchSerializer
 from nafis.paginations import PaginationClass
 from nafis.views import NafisBase
 from product.models import Product, ProductId, Material, Design, Color, FType
-from product.serializers import ProductSerializer, ProductIdSerializer, MaterialDropDownSerializer, DesignDropDownSerializer, \
-    ColorDropDownSerializer, FTypeDropDownSerializer
+from product.serializers import ProductSerializer, ProductIdSerializer, MaterialDropDownSerializer, \
+    DesignDropDownSerializer, \
+    ColorDropDownSerializer, FTypeDropDownSerializer, ProductDetailSerializer
 
 
 class ProductViewSet(NafisBase, mixins.CreateModelMixin,
@@ -23,6 +24,12 @@ class ProductViewSet(NafisBase, mixins.CreateModelMixin,
     permission_classes = (LoginRequired,)
     queryset = Product.objects.all()
     pagination_class = PaginationClass
+
+    def get_serializer_class(self):
+        if self.action in ["list", "retrieve"]:
+            return ProductDetailSerializer
+        else:
+            return ProductSerializer
 
 
 class ProductIdCreateApiView(NafisBase, CreateAPIView):

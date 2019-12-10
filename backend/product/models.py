@@ -31,6 +31,9 @@ class Color(models.Model):
     rgb = models.CharField(max_length=6, blank=True, null=True)
     name = models.CharField(max_length=32, null=False, blank=False)
 
+    def __str__(self):
+        return self.name + " " + self.rgb
+
 
 class Design(models.Model):
     name = models.CharField(max_length=32, null=False, blank=False)
