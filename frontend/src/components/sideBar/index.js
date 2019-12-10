@@ -100,8 +100,8 @@ class SideBar extends React.Component {
                             <Icon name='fax' />
                             <span>صندوق</span>
                     </Menu.Item>
-                    <Menu.Item as='a'>
-                            <Icon onClick={()=>{this.goTo('/depository/')}} name='factory' />
+                    <Menu.Item onClick={()=>{this.goTo('/depository/')}} as='a'>
+                            <Icon name='factory' />
                             <span>انبارداری</span>
                     </Menu.Item>
                     </Sidebar>

@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { Table, Pagination } from 'semantic-ui-react'
 import { getProductsList } from '../../actions/DepositoryActions'
-
+import { digitToComma } from '../utils/numberUtils'
 class ProductTable extends React.Component {
     constructor(props) {
         super(props);
@@ -12,16 +12,19 @@ class ProductTable extends React.Component {
         totalPageCount:1
     }
     componentDidMount() {
-        this.props.getProductsList().then(() => {
+       this.getProductsList()
+    }
+    getProductsList = (page = 1) => {
+        this.props.getProductsList(page).then(() => {
             console.log('xlksdjflksdkljflksdjflkjsdflksd', this.props);
             this.setState({
                 productsList: this.props.productsList.results,
                 totalPageCount: Math.ceil(this.props.productsList.count / 25),
             });
-        })
+        });
     }
     changePage = (event,{activePage}) => {
-        console.log('xxxxx',activePage);
+        this.getProductsList(activePage);
     }
     render() {
         return (
@@ -54,11 +57,11 @@ class ProductTable extends React.Component {
                                     <Table.Cell className="norm-latin text-center"><span className="yekan">{item.f_type.name}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center"><span className="yekan">{item.design.name}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center rtl">
-                                    <span>{item.stock_amount}</span>
+                                    <span>{digitToComma(item.stock_amount)}</span><span>&nbsp;</span>
                                     <span className="yekan">متر</span>
                                     </Table.Cell>
-                                    <Table.Cell className="norm-latin text-center rtl"><span>{item.selling_price}</span> <span className="yekan">تومان</span></Table.Cell>
-                                    <Table.Cell className="norm-latin text-center rtl"><span>{item.buying_price}</span> <span className="yekan">تومان</span></Table.Cell>
+                                    <Table.Cell className="norm-latin text-center rtl"><span>{digitToComma(item.selling_price)}</span> <span className="yekan">تومان</span></Table.Cell>
+                                    <Table.Cell className="norm-latin text-center rtl"><span>{digitToComma(item.buying_price)}</span> <span className="yekan">تومان</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center"><span>{item.code}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center" textAlign='right'>
                                     <span>{item.code}</span>
@@ -70,7 +73,7 @@ class ProductTable extends React.Component {
                 <Table.Footer fullWidth>
                 <Table.Row>
                     <Table.HeaderCell colSpan='10' className="norm-latin">
-                      <Pagination className="norm-latin" defaultActivePage={1} onPageChange={this.changePage} totalPages={this.state.totalPageCount*23} />
+                      <Pagination className="norm-latin" defaultActivePage={1} onPageChange={this.changePage} totalPages={this.state.totalPageCount} />
                     </Table.HeaderCell>
                 </Table.Row>
                 </Table.Footer>
