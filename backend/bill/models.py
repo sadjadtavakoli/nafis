@@ -103,7 +103,7 @@ class BillItem(models.Model):
     discount = models.FloatField(default=0)
     bill = models.ForeignKey('bill.Bill', related_name='items', on_delete=CASCADE)
     end_of_roll = models.BooleanField(default=False)
-    end_of_roll_amount = models.FloatField(default=0)
+    end_of_roll_amount = models.FloatField(default=0, null=True, blank=True)
     rejected = models.BooleanField(default=False)
     objects = BillItemManager()
 
