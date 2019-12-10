@@ -54,7 +54,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
     def create(self, request, *args, **kwargs):
         data = self.request.data
         phone_number = data.get('phone_number')
-        buyer = Customer.objects.get_or_create(phone_number=phone_number)
+        buyer, created = Customer.objects.get_or_create(phone_number=phone_number)
         seller = Staff.objects.get(username=self.request.user.username)
         discount = data.get('discount', 0)
         used_points = data.get('used_points', 0)
