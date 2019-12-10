@@ -65,6 +65,9 @@ class BillsViewSet(NafisBase, ModelViewSet):
         if int(used_points) > buyer.points:
             raise ValidationError('امتیاز استفاده شده بیشتر از حد مجاز است.')
 
+        bill = Bill.objects.create(buyer=buyer, seller=seller, discount=discount, branch_id=branch,
+                                   used_points=used_points)
+
         for item in items:
             product_code = item['product']
             try:
@@ -77,14 +80,10 @@ class BillsViewSet(NafisBase, ModelViewSet):
             if end_of_roll:
                 end_of_roll_amount = item['end_of_roll_amount']
             discount = item['discount']
-            items_objects.append(BillItem.objects.create(product=product, amount=amount,
-                                                         discount=discount,
-                                                         end_of_roll=end_of_roll,
-                                                         end_of_roll_amount=end_of_roll_amount))
-        bill = Bill.objects.create(buyer=buyer, seller=seller, discount=discount, branch_id=branch,
-                                   used_points=used_points)
-
-        bill.items.add(*items_objects)
+            BillItem.objects.create(product=product, amount=amount,
+                                    discount=discount,
+                                    end_of_roll=end_of_roll,
+                                    end_of_roll_amount=end_of_roll_amount, bill=bill)
 
         serializer = self.get_serializer(bill)
         headers = self.get_success_headers(serializer.data)
