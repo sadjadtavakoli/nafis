@@ -20,7 +20,7 @@ from rest_framework import routers
 
 from bill.views import BillsViewSet, BillItemViewSet, CustomerPaymentViewSet
 from nafis.views import LoginAPIView
-from product.views import ProductIdCreateApiView, ProductViewSet
+from product.views import ProductIdCreateApiView, ProductViewSet, ProductFieldsOptionsView
 
 router = routers.DefaultRouter()
 router.register(r'bills', BillsViewSet, 'bill')
@@ -32,5 +32,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^login/', LoginAPIView.as_view(), name='login'),
     url(r'^product-id/', ProductIdCreateApiView.as_view(), name='create-product-id'),
+    url(r'^api/product-fields/', ProductFieldsOptionsView.as_view(), name='product-fields'),
     path('api/', include(router.urls)),
 ]
