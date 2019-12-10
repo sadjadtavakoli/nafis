@@ -98,7 +98,7 @@ class BillItemManager(models.Manager):
 
 
 class BillItem(models.Model):
-    product = models.ManyToManyField('product.Product', related_name='bill_items')
+    product = models.ForeignKey('product.Product', related_name='bill_items', on_delete=DO_NOTHING)
     amount = models.FloatField(blank=False, null=False)
     discount = models.FloatField(default=0)
     bill = models.ForeignKey('bill.Bill', related_name='items', on_delete=CASCADE)
