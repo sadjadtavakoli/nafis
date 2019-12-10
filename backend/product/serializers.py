@@ -18,25 +18,42 @@ class ProductIdSerializer(serializers.ModelSerializer):
         fields = ('pk',)
 
 
-class ColorSerializer(serializers.ModelSerializer):
+class ColorDropDownSerializer(serializers.ModelSerializer):
+    key = serializers.IntegerField(source='pk')
+    value = serializers.IntegerField(source='pk')
+    text = serializers.CharField(source='name')
+    color = serializers.CharField(source='rgb')
+
     class Meta:
         model = Color
-        fields = '__all__'
+        fields = ('key', 'value', 'text', 'color')
 
 
-class MaterialSerializer(serializers.ModelSerializer):
+class MaterialDropDownSerializer(serializers.ModelSerializer):
+    key = serializers.IntegerField(source='pk')
+    value = serializers.IntegerField(source='pk')
+    text = serializers.CharField(source='name')
+
     class Meta:
         model = Material
-        fields = '__all__'
+        fields = ('key', 'value', 'text')
 
 
-class FTypeSerializer(serializers.ModelSerializer):
+class FTypeDropDownSerializer(serializers.ModelSerializer):
+    key = serializers.IntegerField(source='pk')
+    value = serializers.IntegerField(source='pk')
+    text = serializers.CharField(source='name')
+
     class Meta:
         model = FType
-        fields = '__all__'
+        fields = ('key', 'value', 'text')
 
 
-class DesignSerializer(serializers.ModelSerializer):
+class DesignDropDownSerializer(serializers.ModelSerializer):
+    key = serializers.IntegerField(source='pk')
+    value = serializers.IntegerField(source='pk')
+    text = serializers.CharField(source='name')
+
     class Meta:
         model = Design
-        fields = '__all__'
+        fields = ('key', 'value', 'text')

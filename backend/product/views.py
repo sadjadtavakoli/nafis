@@ -10,8 +10,8 @@ from branch.serializers import BranchSerializer
 from nafis.paginations import PaginationClass
 from nafis.views import NafisBase
 from product.models import Product, ProductId, Material, Design, Color, FType
-from product.serializers import ProductSerializer, ProductIdSerializer, MaterialSerializer, DesignSerializer, \
-    ColorSerializer, FTypeSerializer
+from product.serializers import ProductSerializer, ProductIdSerializer, MaterialDropDownSerializer, DesignDropDownSerializer, \
+    ColorDropDownSerializer, FTypeDropDownSerializer
 
 
 class ProductViewSet(NafisBase, mixins.CreateModelMixin,
@@ -33,10 +33,10 @@ class ProductIdCreateApiView(NafisBase, CreateAPIView):
 
 class ProductFieldsOptionsView(NafisBase, APIView):
     def get(self, request):
-        material_data = MaterialSerializer(Material.objects.all(), many=True).data
-        design_data = DesignSerializer(Design.objects.all(), many=True).data
-        color_data = ColorSerializer(Color.objects.all(), many=True).data
-        f_type_data = FTypeSerializer(FType.objects.all(), many=True).data
+        material_data = MaterialDropDownSerializer(Material.objects.all(), many=True).data
+        design_data = DesignDropDownSerializer(Design.objects.all(), many=True).data
+        color_data = ColorDropDownSerializer(Color.objects.all(), many=True).data
+        f_type_data = FTypeDropDownSerializer(FType.objects.all(), many=True).data
         branch_data = BranchSerializer(Branch.objects.all(), many=True).data
         response = dict(branch=branch_data, background_color=color_data, design_color=color_data,
                         material=material_data, design=design_data, f_type=f_type_data)
