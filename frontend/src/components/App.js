@@ -9,9 +9,9 @@ import history from "../history";
 import SideBar from "./sideBar";
 import Sale from "./sale";
 import mainPage from "./mainPage";
+import Depository from "./depository";
 // import Dashboard from "../dashboard";
 // import Receipt from "../receipt";
-// import Depository from "../depository";
 // import Providers from "../providers";
 // import ProviderProfile from "../providerProfile";
 // import Customers from "../customers";
@@ -42,9 +42,9 @@ class App extends React.Component {
                             <SideBar>
                                 <Route path="/" exact component={mainPage} />
                                 <Route path="/sale" exact component={Sale}/>
+                                <Route path="/depository" exact component={Depository}/>
                                 {/* 
                         <Route path="/receipt/:id" exact component={Receipt}/>
-                        <Route path="/depository" exact component={Depository}/>
                         <Route path="/providers" exact component={Providers}/>
                         <Route path="/providers/:id" exact component={ProviderProfile}/>
                         <Route path="/customers" exact component={Customers}/>
