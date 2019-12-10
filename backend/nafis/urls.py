@@ -31,7 +31,7 @@ router.register(r'payments', CustomerPaymentViewSet, 'customer-payments')
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^login/', LoginAPIView.as_view(), name='login'),
-    url(r'^product-id/', ProductIdCreateApiView.as_view(), name='create-product-id'),
+    url(r'^api/product-id/', ProductIdCreateApiView.as_view(), name='create-product-id'),
     url(r'^api/product-fields/', ProductFieldsOptionsView.as_view(), name='product-fields'),
     path('api/', include(router.urls)),
 ]
