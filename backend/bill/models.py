@@ -53,9 +53,9 @@ class Bill(models.Model):
 
     @property
     def paid(self):
-        paid = self.used_points
+        paid = float(self.used_points)
         if self.payments.count():
-            paid += self.payments.aggregate(Sum('amount'))['amount__sum']
+            paid += float(self.payments.aggregate(Sum('amount'))['amount__sum'])
         return paid
 
     @property
