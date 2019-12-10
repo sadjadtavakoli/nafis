@@ -3,6 +3,7 @@ import React from "react";
 import { connect } from "react-redux";
 // import { initReceipt,navBarDisplay } from "../../actions";
 // import Checkbox from "react-simple-checkbox";
+import { Button, Header, Icon, Segment } from 'semantic-ui-react'
 
 
 // import MainPageItem from "../basic/mainPageItem";
@@ -266,7 +267,12 @@ class MainPage extends React.Component {
     return (
       <div className="main-page__container">
             <div className="main-page__items-container">
-                MAIN PAGE
+                <Segment placeholder>
+                <Header icon>
+                  <Icon name='wordpress forms' />
+                  <span>صفحه‌ی پیشخوان در حال طراحی و اجرا می باشد</span>
+                </Header>
+              </Segment>
           {/* {this.props.type
             ? this.setItems(this.props.type).map((item, index) => {
                 return (

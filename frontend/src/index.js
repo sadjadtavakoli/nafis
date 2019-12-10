@@ -6,7 +6,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import reduxThunk from "redux-thunk";
 import * as serviceWorker from './serviceWorker';
 
-// import ReduxToastr from 'react-redux-toastr'
+import ReduxToastr from 'react-redux-toastr'
 
 import reducers from "./reducers";
 import App from "./components/App";
@@ -20,7 +20,7 @@ const store = createStore(
 
 ReactDOM.render(
   <Provider store={store}>
-        {/* <ReduxToastr
+        <ReduxToastr
           timeOut={4000}
           newestOnTop={false}
           preventDuplicates
@@ -29,7 +29,7 @@ ReactDOM.render(
           transitionIn="fadeIn"
           transitionOut="fadeOut"
           progressBar
-          closeOnToastrClick/> */}
+          closeOnToastrClick/>
     <App />
   </Provider>,
   document.querySelector("#root")

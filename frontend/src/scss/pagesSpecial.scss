@@ -4,3 +4,25 @@
     height: -webkit-fill-available;
     justify-content: center;
 }
+#sidebar{
+    .ui.segment{
+        margin-top: 0px !important;
+    }
+    .navbar{
+        height: 3em;
+        
+    }
+}
+#add-bill{
+    .ui.selection.dropdown{
+        text-align: right;
+    }
+    .ui.dropdown .menu .selected.item, .ui.dropdown.selected {
+        text-align: right;
+        direction: rtl;
+    }
+    .ir.flag{
+        margin-left: .78571429rem;
+        margin-right: 0px;
+    }
+}
