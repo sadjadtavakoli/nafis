@@ -8,6 +8,7 @@ import { combineReducers } from "redux";
 // import providerReducer from './providerReducer'
 import authReducer from './authReducer';
 import saleReducer from './saleReducer';
+import depositoryReducer from './depositoryReducer';
 // import billReportsReducer from './billReportsReducer';
 // import chartsReportsReducer from './chartsReportsReducer';
 // import notificationsReducer from './notificationsReducer';
@@ -26,6 +27,7 @@ export default combineReducers({
   // providers: providerReducer,
   auth: authReducer,
   activeBill: saleReducer,
+  depository: depositoryReducer,
   // billReports: billReportsReducer,
   // billByPhoneNumber: billByPhoneNumberReducer,
   // charts: chartsReportsReducer,
