@@ -61,7 +61,7 @@ class SideBar extends React.Component {
                         <Menu.Menu position='right'>
                             <Menu.Item style={{paddingRight: 0}}>{userData.first_name+' '+userData.last_name}</Menu.Item>
                             <Menu.Item style={{paddingLeft: 0}}>
-                                <img src='http://uupload.ir/files/6xcx_business-user-account-png-image.png' />
+                                <img src='http://uupload.ir/files/6dzr_business-user-account-png-image-min.png' />
                             </Menu.Item>
                         </Menu.Menu>
                     </Menu>

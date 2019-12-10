@@ -18,7 +18,7 @@ class ProductTable extends React.Component {
         this.props.getProductsList(page).then(() => {
             console.log('xlksdjflksdkljflksdjflkjsdflksd', this.props);
             this.setState({
-                productsList: this.props.productsList.results,
+                productsList: this.props.productsList ? this.props.productsList.results : {},
                 totalPageCount: Math.ceil(this.props.productsList.count / 25),
             });
         });
@@ -27,7 +27,7 @@ class ProductTable extends React.Component {
         this.getProductsList(activePage);
     }
     render() {
-        return (
+        return this.state.productsList.length > 0?(
         <Table celled striped className="">
             <Table.Header>
             <Table.Row>
@@ -70,14 +70,14 @@ class ProductTable extends React.Component {
                         })}
             
                 </Table.Body>
-                <Table.Footer fullWidth>
+                <Table.Footer fullWidth hidden={this.state.totalPageCount < 2}>
                 <Table.Row>
                     <Table.HeaderCell colSpan='10' className="norm-latin">
                       <Pagination className="norm-latin" defaultActivePage={1} onPageChange={this.changePage} totalPages={this.state.totalPageCount} />
                     </Table.HeaderCell>
                 </Table.Row>
                 </Table.Footer>
-        </Table>);
+        </Table>):null;
     }
                                         
 }
