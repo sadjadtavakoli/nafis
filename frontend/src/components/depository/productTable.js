@@ -8,13 +8,20 @@ class ProductTable extends React.Component {
         super(props);
     }
     state = {
-        productsList:[]
+        productsList: [],
+        totalPageCount:1
     }
     componentDidMount() {
         this.props.getProductsList().then(() => {
             console.log('xlksdjflksdkljflksdjflkjsdflksd', this.props);
-            this.setState({productsList:this.props.productsList.results})
+            this.setState({
+                productsList: this.props.productsList.results,
+                totalPageCount: Math.ceil(this.props.productsList.count / 25),
+            });
         })
+    }
+    changePage = (event,{activePage}) => {
+        console.log('xxxxx',activePage);
     }
     render() {
         return (
@@ -39,8 +46,8 @@ class ProductTable extends React.Component {
 
                 <Table.Body>
                     
-                        {this.state.productsList.map(item => {
-                            return(<Table.Row>
+                        {this.state.productsList.map((item,index) => {
+                            return(<Table.Row key={index}>
                                     <Table.Cell className="norm-latin text-center"><span className="yekan">{item.background_color.name}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center"><span className="yekan">{item.design_color.name}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center"><span className="yekan">{item.material.name}</span></Table.Cell>
@@ -63,7 +70,7 @@ class ProductTable extends React.Component {
                 <Table.Footer fullWidth>
                 <Table.Row>
                     <Table.HeaderCell colSpan='10' className="norm-latin">
-                      <Pagination className="norm-latin" defaultActivePage={5} totalPages={10} />
+                      <Pagination className="norm-latin" defaultActivePage={1} onPageChange={this.changePage} totalPages={this.state.totalPageCount*23} />
                     </Table.HeaderCell>
                 </Table.Row>
                 </Table.Footer>
