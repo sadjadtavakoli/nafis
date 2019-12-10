@@ -14,7 +14,13 @@
 }
 .norm-latin{
   *{
-    font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif !important;
+    font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
+  }
+}
+*[role="option"]{
+  text-align: right;
+  span{
+    display: flex;
   }
 }
 *{

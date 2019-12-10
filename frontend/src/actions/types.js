@@ -35,6 +35,7 @@ export const LOGIN = "LOGIN";
 export const GET_ACTIVE_BILL = "GET_ACTIVE_BILL";
 export const ADD_BILL = "ADD_BILL";
 export const GET_PRODUCT_FIELDS = "GET_PRODUCT_FIELDS";
+export const GET_PRODUCT_LIST = "GET_PRODUCT_LIST";
 // export const SEARCH_PROVIDER = "SEARCH_PROVIDER";
 // export const SEARCH_CUSTOMER = "SEARCH_CUSTOMER";
 // export const SEARCH_RECEIPT = "SEARCH_RECEIPT";

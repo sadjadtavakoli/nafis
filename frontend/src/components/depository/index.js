@@ -2,7 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import history from "../../history";
 import { Button,Modal,Image,Header, Segment } from 'semantic-ui-react'
-import { getActiveBill } from '../../actions/SaleActions'
 import AddProductModal from './addProductModal'
 import ProductTable from './productTable'
 
@@ -11,7 +10,6 @@ class Depository extends React.Component {
         super(props);
     }
     componentDidMount() {
-        this.props.getActiveBill()
     }
     state = {
         open: false
@@ -53,5 +51,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { getActiveBill }
+  {  }
 )(Depository);
