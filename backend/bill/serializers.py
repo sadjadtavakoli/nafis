@@ -4,7 +4,7 @@ from bill.models import Bill, BillItem, SupplierBill, SupplierBillItem, Customer
     OurPayment, CustomerCheque, OurCheque
 from branch.serializers import BranchSerializer
 from customer.serializers import CustomerSerializer
-from product.serializers import ProductSerializer
+from product.serializers import ProductSerializer, ProductDetailSerializer
 from staff.serializers import StaffSerializer
 from supplier.serializers import SupplierSerializer
 
@@ -80,7 +80,7 @@ class BillSerializer(serializers.ModelSerializer):
 
 
 class SupplierBillItemSerializer(serializers.ModelSerializer):
-    product = ProductSerializer()
+    product = ProductDetailSerializer()
 
     class Meta:
         model = SupplierBillItem
