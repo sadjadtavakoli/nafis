@@ -85,14 +85,14 @@ class BillItemManager(models.Manager):
     def create(self, product, amount,
                discount,
                end_of_roll,
-               end_of_roll_amount):
+               end_of_roll_amount, bill):
         if product.stock_amount < amount:
             raise ValidationError("مقدار کافی از این پارچه موجود نمی‌باشد")
 
         item = super(BillItemManager, self).create(product=product, amount=amount,
                                                    discount=discount,
                                                    end_of_roll=end_of_roll,
-                                                   end_of_roll_amount=end_of_roll_amount)
+                                                   end_of_roll_amount=end_of_roll_amount, bill=bill)
         product.update_stock_amount(amount + float(0.05))
         return item
 
