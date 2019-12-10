@@ -1,7 +1,6 @@
 
 import React from "react";
 import { connect } from "react-redux";
-import {setNewBill,getActiveBill} from '../../actions/SaleActions'
 import { Button, Modal, Divider, Label, Grid, Form, Card, Popup, Icon, Message } from 'semantic-ui-react'
 import {toastr} from 'react-redux-toastr'
 import { getProductFields, setNewProduct } from '../../actions/DepositoryActions'
@@ -24,9 +23,11 @@ class AddBillModal extends React.Component {
     constructor(props) {
         super(props);
     }
+    componentWillReceiveProps() {
+        this.setState({ code: this.props.code });
+    }
     componentDidMount() {
         this.props.getProductFields().then(() => {
-            console.log('propseeeee',this.props);
             this.setState({
                 background_color_Options: this.props.productFields.background_color,
                 design_color_Options: this.props.productFields.design_color,
@@ -141,6 +142,11 @@ class AddBillModal extends React.Component {
                 }
                 this.props.setNewProduct(prepareData).then(() => {
                     this.props.onClose();
+                        this.setState({
+                            code: '',
+                            buying_price: '',
+                            selling_price:''
+                        })
                     toastr.success('ثبت محصول جدید', 'محصول جدید با موفقیت ثبت شد');
                 });
             }
@@ -172,8 +178,8 @@ class AddBillModal extends React.Component {
                                 <Divider />
                                 
                                 <Form.Group unstackable widths={2}>
-                                    <Form.Input className='ltr placeholder-rtl' label='کد محصول' type="number" error={this.state.formValidation.code} onChange={(e)=>this.inputChange(e,'code')} placeholder='کد محصول' />
-                                    <Form.Input className='ltr placeholder-rtl' label='نام محصول' type="number" error={this.state.formValidation.name} onChange={(e)=>this.inputChange(e,'name')} placeholder='نام محصول' />
+                                    <Form.Input className='ltr placeholder-rtl' readOnly label='کد محصول' defaultValue={this.props.code} type="number" error={this.state.formValidation.code} onChange={(e)=>this.inputChange(e,'code')} placeholder='کد محصول' />
+                                    <Form.Input className='ltr placeholder-rtl' label='نام محصول' error={this.state.formValidation.name} onChange={(e)=>this.inputChange(e,'name')} placeholder='نام محصول' />
                                 </Form.Group>
                                   <Form.Group unstackable widths={2}>
                                     <Form.Input className='ltr placeholder-rtl' label='مقدار باقی مانده' type="number" error={this.state.formValidation.stock_amount} onChange={(e)=>this.inputChange(e,'stock_amount')} placeholder='مقدار باقی مانده' />
@@ -217,7 +223,7 @@ class AddBillModal extends React.Component {
 }
 
 const mapStateToProps = state => {
-    // console.log('state',state)
+    // console.log('statXXXXXXXXXe',state)
   return {
         productFields: state.depository.productFields,
 //     currentUser: state.auth.currentUser
