@@ -1,4 +1,4 @@
-export const priceToPersian = function(price) {
+export const digitToComma = function(price) {
     if (!isNaN(parseInt(price))) {
         price = price ? price.toString() : '0';
         var answer = '';

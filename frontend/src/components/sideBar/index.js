@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { Header, Icon, Input, Menu, Segment, Sidebar, Button } from 'semantic-ui-react'
 import history from "../../history";
 import {logOut} from "../../actions/LoginActions";
-
+let userData = JSON.parse(localStorage.getItem('user'))
 class SideBar extends React.Component {
     constructor(props) {
         super(props);
@@ -23,7 +23,7 @@ class SideBar extends React.Component {
     updateWindowDimensions() {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
-    state = { activeItem: 'home', visible: false,width: 0, height: 0 }
+    state = { visible: false,width: 0, height: 0 }
     
     logOut = () => {
         this.props.logOut();
@@ -59,21 +59,10 @@ class SideBar extends React.Component {
                             </Menu.Item>
                         </Menu.Menu>
                         <Menu.Menu position='right'>
-                             <Menu.Item
-                            name='home'
-                            active={this.state.activeItem === 'home'}
-                            onClick={this.handleItemClick}
-                        />
-                        <Menu.Item
-                            name='messages'
-                            active={this.state.activeItem === 'messages'}
-                            onClick={this.handleItemClick}
-                        />
-                        <Menu.Item
-                            name='friends'
-                            active={this.state.activeItem === 'friends'}
-                            onClick={this.handleItemClick}
-                        />
+                            <Menu.Item style={{paddingRight: 0}}>{userData.first_name+' '+userData.last_name}</Menu.Item>
+                            <Menu.Item style={{paddingLeft: 0}}>
+                                <img src='http://uupload.ir/files/6xcx_business-user-account-png-image.png' />
+                            </Menu.Item>
                         </Menu.Menu>
                     </Menu>
                 </div>
@@ -100,8 +89,8 @@ class SideBar extends React.Component {
                             <Icon name='fax' />
                             <span>صندوق</span>
                     </Menu.Item>
-                    <Menu.Item as='a'>
-                            <Icon onClick={()=>{this.goTo('/depository/')}} name='factory' />
+                    <Menu.Item onClick={()=>{this.goTo('/depository/')}} as='a'>
+                            <Icon name='factory' />
                             <span>انبارداری</span>
                     </Menu.Item>
                     </Sidebar>
