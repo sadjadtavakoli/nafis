@@ -62,7 +62,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
         items = data.get('items')
         items_objects = []
 
-        if used_points > buyer.points:
+        if int(used_points) > buyer.points:
             raise ValidationError('امتیاز استفاده شده بیشتر از حد مجاز است.')
 
         for item in items:

@@ -11,7 +11,7 @@ class Bill(models.Model):
     buyer = models.ForeignKey('customer.Customer', related_name='bills', on_delete=DO_NOTHING)
     seller = models.ForeignKey('staff.Staff', related_name='bills', on_delete=DO_NOTHING)
     discount = models.FloatField(default=0)
-    used_points = models.FloatField(default=0)
+    used_points = models.IntegerField(default=0)
     branch = models.ForeignKey('branch.Branch', related_name='bills', on_delete=DO_NOTHING)
     bill_image = models.ImageField(null=True, blank=True)
 
