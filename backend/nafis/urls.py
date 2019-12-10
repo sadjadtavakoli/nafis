@@ -15,8 +15,8 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from rest_framework import routers
 from django.urls import path, include
+from rest_framework import routers
 
 from bill.views import BillsViewSet, BillItemViewSet, CustomerPaymentViewSet
 from nafis.views import LoginAPIView

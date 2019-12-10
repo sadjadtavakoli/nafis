@@ -75,6 +75,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'nafis.wsgi.application'
 
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    )
+}
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
