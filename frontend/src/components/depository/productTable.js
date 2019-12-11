@@ -16,7 +16,6 @@ class ProductTable extends React.Component {
     }
     getProductsList = (page = 1) => {
         this.props.getProductsList(page).then(() => {
-            console.log('xlksdjflksdkljflksdjflkjsdflksd', this.props);
             this.setState({
                 productsList: this.props.productsList ? this.props.productsList.results : {},
                 totalPageCount: Math.ceil(this.props.productsList.count / 25),

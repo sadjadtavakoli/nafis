@@ -1,10 +1,20 @@
 import React from "react";
 import { connect } from "react-redux";
 import history from "../../history";
-import { Button,Modal,Image,Header, Segment } from 'semantic-ui-react'
+import { Button,Tab,Image,Header, Segment } from 'semantic-ui-react'
 import { getActiveBill } from '../../actions/SaleActions'
 import AddBillModal from './addBillModal'
 import BillTable from './billTable'
+const panes = [
+  {
+    menuItem: 'فاکتورهای فعال',
+    render: () => <Tab.Pane attached={false}><BillTable /></Tab.Pane>,
+  },
+  {
+    menuItem: 'موجودی محصولات',
+      render: () => <Tab.Pane attached={false}><BillTable /></Tab.Pane>,
+  }
+]
 class Sale extends React.Component {
     constructor(props) {
         super(props);
@@ -26,7 +36,8 @@ class Sale extends React.Component {
                     <Segment stacked className="rtl">
                         <Button className="yekan" onClick={() => this.setState({ open: true })} color="green" content='افزودن فاکتور' icon='add' labelPosition='right' />
                     </Segment>
-                    <BillTable />
+                    <Tab renderActiveOnly={true} menu={{ pointing: true }} panes={panes} />
+                    
                 </div>
             </>
         );
@@ -34,7 +45,7 @@ class Sale extends React.Component {
 }
 
 const mapStateToProps = state => {
-    console.log(state)
+    // console.log(state)
 //   return {
 //     nextReceipt: state.receipts.nextReceipt,
 //     currentUser: state.auth.currentUser
@@ -51,6 +62,6 @@ const mapStateToProps = state => {
 };
 
 export default connect(
-  mapStateToProps,
+  null,
   { getActiveBill }
 )(Sale);
