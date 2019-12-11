@@ -39,7 +39,6 @@ class ProductTable extends React.Component {
                 this.getProductsList(this.state.activePage);
             } else {
                 this.props.getProductsByCode(this.state.value).then(() => {
-                    console.log(11121321312,this.props)
                     this.setState({
                         notFound:false,
                         productsList: [this.props.productsList ] ,
@@ -72,7 +71,7 @@ class ProductTable extends React.Component {
                                 loading={this.state.searchLoading}
                                 showNoResults={false}
                                 placeholder='کد محصول را وارد نمایید'   
-                                className="placeholder-rtl yekan"        
+                                className="placeholder-rtl yekan ltr"        
                                 onSearchChange={this.handleSearchChange}
                                 // results={results}
                                 // value={value}
