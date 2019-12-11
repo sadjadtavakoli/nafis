@@ -24,7 +24,7 @@ class CloseBillPermission(NafisBasePermission):
         if not permission:
             return False
         staff = Staff.objects.get(username=request.user.username)
-        if staff.job != "cashier":
+        if staff.job not in ["cashier", "admin"]:
             return False
         return True
 
