@@ -22,7 +22,6 @@ class Depository extends React.Component {
     openModal = () => {
         this.props.getProductID().then(() => {
             this.setState({ productID: this.props.productID.pk }, () => {
-                // console.log(this.props,this.state)
                 this.setState({open:true})
             });
         });

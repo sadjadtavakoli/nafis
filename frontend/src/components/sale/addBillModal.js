@@ -65,12 +65,10 @@ class AddBillModal extends React.Component {
                 formValidation:{...this.state.formValidation,items:false}
             }
             , () => {
-        console.log('data', this.state.itemsDataSheet);
         });
         this.toggleAddItemPopup();
     }
     inputChange = (event, inputName) => {
-        console.log(event,inputName)
         this.setState({
             [inputName]: event.target.value
         })
@@ -102,7 +100,6 @@ class AddBillModal extends React.Component {
                     branch: this.state.branch,
                     items: this.state.itemsDataSheet
                 }
-                console.log(prepareData, hasError);
                 this.props.setNewBill(prepareData);
             }
         });
@@ -162,9 +159,6 @@ class AddBillModal extends React.Component {
                                         
                                     </div>
                                 </Segment>
-                                
-
-                                
                             </Form>
                         </Modal.Description>
                     </Modal.Content>
@@ -187,7 +181,6 @@ class AddBillModal extends React.Component {
 }
 
 const mapStateToProps = state => {
-    console.log(state)
 //   return {
 //     nextReceipt: state.receipts.nextReceipt,
 //     currentUser: state.auth.currentUser
@@ -204,6 +197,6 @@ const mapStateToProps = state => {
 };
 
 export default connect(
-  mapStateToProps,
+  null,
   { setNewBill }
 )(AddBillModal);

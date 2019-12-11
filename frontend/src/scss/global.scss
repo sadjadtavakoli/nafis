@@ -9,13 +9,23 @@
     font-weight: normal;
     font-style: normal;
 }
-.yekan{
+.pointer{
+  cursor: pointer;
+}
+.yekan,.header{
     font-family: yekan !important;
 }
 .norm-latin{
   *{
     font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
   }
+}
+.ui.pointing.menu{
+  direction:rtl;
+}
+.ui.message>.icon,.ui.label>.icon {
+    margin-left: .6em;
+    margin-right: 0;
 }
 *[role="option"]{
   text-align: right;

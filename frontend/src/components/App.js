@@ -73,7 +73,6 @@ class App extends React.Component {
 };
 
 const mapStateToProps = state => {
-    console.log('state',state)
     if (localStorage.getItem('token')) {
         return {type: localStorage.getItem('type')+'XXXXXXX', user: localStorage.getItem('user'), token: localStorage.getItem('token')}
     }
