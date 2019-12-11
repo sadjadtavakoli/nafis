@@ -28,7 +28,10 @@ class BillsViewSet(NafisBase, ModelViewSet):
 
     @action(url_path='close-all', detail=False, methods=['post'], permission_classes=(CloseBillPermission,))
     def close_all(self, request):
-        Bill.objects.filter(status="active").update(status='done')
+        for bill in Bill.objects.filter(status="active"):
+            bill.check_status()
+            bill.buyer.points += int(bill.final_price) * int(settings.POINT_PERCENTAGE)
+            bill.buyer.save()
         return Response({'ok': True})
 
     @action(url_path='actives', detail=False, methods=['get'], permission_classes=())
@@ -123,7 +126,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
-class BillItemViewSet(NafisBase, ModelViewSet):
+class BillItemViewSet(ModelViewSet):
     serializer_class = BillItemSerializer
     permission_classes = (LoginRequired,)
     queryset = BillItem.objects.all()
@@ -139,18 +142,24 @@ class BillItemViewSet(NafisBase, ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         bill = self.get_object().bill
+        bill_item_product = self.get_object().product
+        bill_item_amount = self.get_object().amount
         if bill.seller.username != request.user.username or bill.status != "active":
             raise PermissionDenied
-        response = super(BillItemViewSet, self).destroy(request, *args, **kwargs)
-        bill_item = self.get_object()
-        bill_item.product.update_stock_amount(-1 * bill_item.amount)
-        return response
+        super(BillItemViewSet, self).destroy(request, *args, **kwargs)
+        bill_item_product.update_stock_amount(-1 * bill_item_amount)
+        serializer = BillSerializer(bill)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, headers=headers)
 
     def update(self, request, *args, **kwargs):
         bill = self.get_object().bill
         if bill.seller.username != request.user.username or bill.status != "active":
             raise PermissionDenied
-        return super(BillItemViewSet, self).update(request, *args, **kwargs)
+        super(BillItemViewSet, self).update(request, *args, **kwargs)
+        serializer = BillSerializer(bill)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, headers=headers)
 
     def create(self, request, *args, **kwargs):
         bill = Bill.objects.get(pk=self.request.data.get('bill', None))
@@ -173,13 +182,12 @@ class BillItemViewSet(NafisBase, ModelViewSet):
         if end_of_roll:
             end_of_roll_amount = item['end_of_roll_amount']
         discount = item.get('discount', 0)
-        bill_item = BillItem.objects.create(product=product, amount=amount,
-                                            discount=discount,
-                                            end_of_roll=end_of_roll,
-                                            end_of_roll_amount=end_of_roll_amount, bill=bill)
+        BillItem.objects.create(product=product, amount=amount,
+                                discount=discount,
+                                end_of_roll=end_of_roll,
+                                end_of_roll_amount=end_of_roll_amount, bill=bill)
 
-        serializer = self.get_serializer_class()
-        serializer = serializer(bill_item)
+        serializer = BillSerializer(bill)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
