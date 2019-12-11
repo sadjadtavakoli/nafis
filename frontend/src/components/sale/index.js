@@ -5,6 +5,7 @@ import { Button,Tab,Image,Header, Segment } from 'semantic-ui-react'
 import { getActiveBill } from '../../actions/SaleActions'
 import AddBillModal from './addBillModal'
 import BillTable from './billTable'
+import ProductTable from '../depository/productTable'
 const panes = [
   {
     menuItem: 'فاکتورهای فعال',
@@ -12,7 +13,7 @@ const panes = [
   },
   {
     menuItem: 'موجودی محصولات',
-      render: () => <Tab.Pane attached={false}><BillTable /></Tab.Pane>,
+      render: () => <Tab.Pane attached={false}><ProductTable searchBar={true}/></Tab.Pane>,
   }
 ]
 class Sale extends React.Component {

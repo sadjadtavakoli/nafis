@@ -5,6 +5,10 @@ export const getProductsList = (page=1) => async dispatch => {
     const response = await server(localStorage.getItem("token")).get("/products/", { params:{page}});
     dispatch({type: GET_PRODUCT_LIST, payload: response.data});
 }
+export const getProductsByCode = (code,page=1) => async dispatch => {
+    const response = await server(localStorage.getItem("token")).get("/products/code/", { params:{code,page}});
+    dispatch({type: GET_PRODUCT_LIST, payload: response.data});
+}
 export const getProductFields = () => async dispatch => {
     const response = await server(localStorage.getItem("token")).get("/product-fields/");
     dispatch({type: GET_PRODUCT_FIELDS, payload: response.data});

@@ -1,15 +1,19 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Table, Pagination } from 'semantic-ui-react'
-import { getProductsList } from '../../actions/DepositoryActions'
-import { digitToComma } from '../utils/numberUtils'
+import { Table, Pagination, Grid, Search } from 'semantic-ui-react'
+import { getProductsList,getProductsByCode } from '../../actions/DepositoryActions'
+import { digitToComma } from '../utils/numberUtils';
+import LoadingBar from '../utils/loadingBar'
+import NotFound from '../utils/notFound'
 class ProductTable extends React.Component {
     constructor(props) {
         super(props);
     }
     state = {
         productsList: [],
-        totalPageCount:1
+        totalPageCount: 1,
+        activePage: 1,
+        notFound:false
     }
     componentDidMount() {
        this.getProductsList()
@@ -17,45 +21,92 @@ class ProductTable extends React.Component {
     getProductsList = (page = 1) => {
         this.props.getProductsList(page).then(() => {
             this.setState({
+                notFound:false,
                 productsList: this.props.productsList ? this.props.productsList.results : {},
-                totalPageCount: Math.ceil(this.props.productsList.count / 25),
+                totalPageCount: this.props.productsList ? Math.ceil(this.props.productsList.count / 25):1,
             });
         });
     }
-    changePage = (event,{activePage}) => {
+    changePage = (event, { activePage }) => {
+        this.setState({activePage})
         this.getProductsList(activePage);
     }
+    handleSearchChange = (e, { value }) => {
+        this.setState({ searchLoading: true, value })
+
+        setTimeout(() => {
+            if (this.state.value.length < 1) {
+                this.getProductsList(this.state.activePage);
+            } else {
+                this.props.getProductsByCode(this.state.value).then(() => {
+                    console.log(11121321312,this.props)
+                    this.setState({
+                        notFound:false,
+                        productsList: [this.props.productsList ] ,
+                        totalPageCount: 1,
+                    });
+                }).catch(() => {
+                    this.setState({notFound:true})
+                })
+            }
+            this.setState({
+                searchLoading: false
+            })
+        }, 300)
+    };
     render() {
-        return this.state.productsList.length > 0?(
+        return this.state.productsList.length > 0 ? (
+            <>
         <Table celled striped className="">
-            <Table.Header>
+            <Table.Header >
             <Table.Row>
-                <Table.HeaderCell colSpan='10' className="rtl text-right">لیست محصولات</Table.HeaderCell>
+                        <Table.HeaderCell colSpan='10' className="rtl text-right">
+                            <Grid>
+                                <Grid.Column width={2} style={{display:'flex',alignItems:'center'}}>
+                                    <span>لیست محصولات موجود</span>
+                                </Grid.Column>
+                            <Grid.Column width={6}>
+                                        <Search
+                                            hidden={this.props.searchBar?'':'invisible'}
+                                input={{ icon: 'search', iconPosition: 'left' }}
+                                loading={this.state.searchLoading}
+                                showNoResults={false}
+                                placeholder='کد محصول را وارد نمایید'   
+                                className="placeholder-rtl yekan"        
+                                onSearchChange={this.handleSearchChange}
+                                // results={results}
+                                // value={value}
+                                // {...this.props}
+                            />
+                                </Grid.Column>
+                            </Grid>
+                            </Table.HeaderCell>
                     </Table.Row>
-                    <Table.Row>
-                    <Table.HeaderCell className="text-center">رنگ پس زمینه</Table.HeaderCell>
-                    <Table.HeaderCell className="text-center">رنگ طرح</Table.HeaderCell>
-                    <Table.HeaderCell className="text-center">جنس</Table.HeaderCell>
-                    <Table.HeaderCell className="text-center">نوع پارچه</Table.HeaderCell>
-                    <Table.HeaderCell className="text-center">نوع طرح</Table.HeaderCell>
-                    <Table.HeaderCell className="text-center">مقدار باقی مانده</Table.HeaderCell>
-                    <Table.HeaderCell className="text-center">قیمت فروش</Table.HeaderCell>
-                    <Table.HeaderCell className="text-center">قیمت خرید</Table.HeaderCell>
-                    <Table.HeaderCell className="text-center">نام محصول</Table.HeaderCell>
-                    <Table.HeaderCell className="text-center">کد محصول</Table.HeaderCell>
-      </Table.Row>
+                        <Table.Row>
+                            {!this.state.notFound ?<>
+                                <Table.HeaderCell className="text-center">رنگ پس زمینه</Table.HeaderCell>
+                                <Table.HeaderCell className="text-center">رنگ طرح</Table.HeaderCell>
+                                <Table.HeaderCell className="text-center">جنس</Table.HeaderCell>
+                                <Table.HeaderCell className="text-center">نوع پارچه</Table.HeaderCell>
+                                <Table.HeaderCell className="text-center">نوع طرح</Table.HeaderCell>
+                                <Table.HeaderCell className="text-center">مقدار باقی مانده</Table.HeaderCell>
+                                <Table.HeaderCell className="text-center">قیمت فروش</Table.HeaderCell>
+                                <Table.HeaderCell className="text-center">قیمت خرید</Table.HeaderCell>
+                                <Table.HeaderCell className="text-center">نام محصول</Table.HeaderCell>
+                                <Table.HeaderCell className="text-center">کد محصول</Table.HeaderCell></>: null}
+            </Table.Row>
             </Table.Header>
 
                 <Table.Body>
                     
-                        {this.state.productsList.map((item,index) => {
+                        {!this.state.notFound?this.state.productsList.map((item,index) => {
                             return(<Table.Row key={index}>
                                     <Table.Cell className="norm-latin text-center"><span className="yekan">{item.background_color.name}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center"><span className="yekan">{item.design_color.name}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center"><span className="yekan">{item.material.name}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center"><span className="yekan">{item.f_type.name}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center"><span className="yekan">{item.design.name}</span></Table.Cell>
-                                    <Table.Cell className="norm-latin text-center rtl">
+                                    <Table.Cell className="norm-latin text-center ltr">
                                     <span>{digitToComma(item.stock_amount)}</span><span>&nbsp;</span>
                                     <span className="yekan">متر</span>
                                     </Table.Cell>
@@ -66,17 +117,21 @@ class ProductTable extends React.Component {
                                     <span>{item.code}</span>
                                     </Table.Cell>
                                 </Table.Row>);
-                        })}
-            
+                        }):null}
                 </Table.Body>
-                <Table.Footer fullWidth hidden={this.state.totalPageCount < 2}>
+                
+                    <Table.Footer fullWidth hidden={this.state.totalPageCount < 2}>
                 <Table.Row>
                     <Table.HeaderCell colSpan='10' className="norm-latin">
                       <Pagination className="norm-latin" defaultActivePage={1} onPageChange={this.changePage} totalPages={this.state.totalPageCount} />
                     </Table.HeaderCell>
-                </Table.Row>
+                        </Table.Row>
+                        
                 </Table.Footer>
-        </Table>):null;
+                </Table>
+                {this.state.notFound?<NotFound/>:null}
+
+            </>) : <LoadingBar />;
     }
                                         
 }
@@ -99,5 +154,5 @@ const mapStateToProps = state => {
 
 export default connect(
     mapStateToProps,
-    { getProductsList }
+    { getProductsList,getProductsByCode }
 )(ProductTable);
