@@ -27,6 +27,22 @@ class BillsViewSet(NafisBase, ModelViewSet):
     non_destroyers = ['cashier']
     pagination_class = PaginationClass
 
+    def destroy(self, request, *args, **kwargs):
+        bill = self.get_object()
+        bill_items_data = []
+        for item in bill.items.all():
+            bill_items_data.append({'product': item.product, 'amount': item.amount})
+        if bill.seller.username != request.user.username or bill.status != "active":
+            raise PermissionDenied
+        if len(bill.payments.all()):
+            raise PermissionDenied(
+                detail="نمی‌توانید فاکتوری که پرداخت دارد را حذف کنید، ابتدا"
+                       " پرداخت‌ها را حذف نموده سپس نسبت به حذف فاکتور اقدام نمایید.")
+        response = super(BillsViewSet, self).destroy(request, *args, **kwargs)
+        for data in bill_items_data:
+            data['product'].update_stock_amount(-1 * data['amount'])
+        return response
+
     @action(url_path='close-all', detail=False, methods=['post'], permission_classes=(CloseBillPermission,))
     def close_all(self, request):
         for bill in Bill.objects.filter(status="active"):
