@@ -24,7 +24,7 @@ class BillTable extends React.Component {
         this.props.getActiveBill(page).then(() => {
             this.setState({
                 activeBill: this.props.activeBill ? this.props.activeBill.results : {},
-                totalPageCount: Math.ceil(this.props.activeBill.count / 25),
+                totalPageCount: this.props.activeBill? Math.ceil(this.props.activeBill.count / 25):0,
             });
         });
     }
