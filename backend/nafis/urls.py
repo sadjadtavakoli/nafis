@@ -19,6 +19,7 @@ from django.urls import path, include
 from rest_framework import routers
 
 from bill.views import BillsViewSet, BillItemViewSet, CustomerPaymentViewSet
+from customer.views import CustomersViewSet
 from nafis.views import LoginAPIView
 from product.views import ProductIdCreateApiView, ProductViewSet, ProductFieldsOptionsView
 
@@ -27,6 +28,7 @@ router.register(r'bills', BillsViewSet, 'bill')
 router.register(r'bill-items', BillItemViewSet, 'bill-item')
 router.register(r'products', ProductViewSet, 'product')
 router.register(r'payments', CustomerPaymentViewSet, 'customer-payments')
+router.register(r'customers', CustomersViewSet, 'customers')
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
