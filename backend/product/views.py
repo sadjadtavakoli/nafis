@@ -1,6 +1,9 @@
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import mixins
+from rest_framework.decorators import action
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
+from rest_framework.status import HTTP_404_NOT_FOUND
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 
@@ -30,6 +33,15 @@ class ProductViewSet(NafisBase, mixins.CreateModelMixin,
             return ProductDetailSerializer
         else:
             return ProductSerializer
+
+    @action(methods=['GET'], detail=False, url_path="code")
+    def get_product_using_code(self, request):
+        code = self.request.query_params.get('code', None)
+        try:
+            product = Product.objects.get(code=code)
+            return Response(ProductSerializer(product).data)
+        except ObjectDoesNotExist:
+            return Response({'چنین محصولی یافت نشد.'}, status=HTTP_404_NOT_FOUND)
 
 
 class ProductIdCreateApiView(NafisBase, CreateAPIView):
