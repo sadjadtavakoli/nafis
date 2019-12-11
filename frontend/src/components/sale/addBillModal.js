@@ -1,8 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import NewBillPopup from './newBillPopup'
-import {setNewBill} from '../../actions/SaleActions'
-import { Button, Modal, Divider, Header, Segment, Form, Card, Popup, Icon, Message } from 'semantic-ui-react'
+import { setNewBill } from '../../actions/SaleActions'
+import { enToFa } from '../utils/numberUtils'
+import { Button, Modal, Divider, Header, Segment, Form, Card, Popup, Icon, Message, Label } from 'semantic-ui-react'
 import {toastr} from 'react-redux-toastr'
 const INITIAL_STATE = {
     isOpenAddItem: false,
@@ -34,14 +35,31 @@ class AddBillModal extends React.Component {
     toggleAddItemPopup = () => {
         this.setState((prevState)=>({isOpenAddItem: !prevState.isOpenAddItem}))
     }
+    deleteItem = (id) => {
+        console.log(id, id);
+        let itemsDataSheet = this.state.itemsDataSheet;
+        let itemsDOM = this.state.itemsDOM;
+        for( var i = 0; i < itemsDataSheet.length; i++){ 
+            if ( i === id) {
+                itemsDataSheet.splice(i, 1); 
+                itemsDOM.splice(i, 1); 
+            }
+        };
+        this.setState({itemsDataSheet,itemsDOM})
+    }
     submitItemPopup = (data) => {
         let id = this.state.itemsDataSheet.length;
         const itemDOM = (<Card fluid key={id}>
             <Card.Content>
-                <Card.Header className='yekan'>آیتم شماره {id+1} </Card.Header>
+                <Card.Header className='yekan'>آیتم شماره {enToFa(id + 1)}
+                    <span>
+                        <Label color='red' onClick={()=>this.deleteItem(id)} className="pointer" style={{marginRight: 10}}>
+                            <Icon name='trash' /> حذف آیتم
+                        </Label>
+                    </span>
+                </Card.Header>
                 <Card.Description className='yekan'>
                         <Message compact size='mini' color='teal'>داده های زیر صرفا جهت خواندن هستن و برای جلوگیری از اشتباهات انسانی قابل تغییر نمی باشند. </Message>
-
                     </Card.Description>
             </Card.Content>
             <Card.Content extra>
@@ -169,7 +187,7 @@ class AddBillModal extends React.Component {
                     </Modal.Content>
 
                     <Modal.Actions>
-                        <Button color='black' onClick={this.props.onClose}><span>بستن</span></Button>
+                        <Button color='black' onClick={() => { this.props.onClose();this.setState({isOpenAddItem:false}) }}><span>بستن</span></Button>
                         <Button className="yekan"
                             positive
                             icon='checkmark'
