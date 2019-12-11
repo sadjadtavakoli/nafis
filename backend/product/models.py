@@ -1,7 +1,12 @@
+from math import floor
+
 from django.db import models
 from django.db.models import DO_NOTHING
 from rest_framework.decorators import action
 
+def round_down(n, decimals=0):
+    multiplier = 10 ** decimals
+    return floor(n * multiplier) / multiplier
 
 class Product(models.Model):
     code = models.IntegerField(null=False, blank=False)
@@ -20,7 +25,7 @@ class Product(models.Model):
 
     def update_stock_amount(self, amount):
         self.stock_amount -= amount
-        self.stock_amount = round(self.stock_amount)
+        self.stock_amount = round_down(self.stock_amount, 1)
         self.save()
 
     @property
