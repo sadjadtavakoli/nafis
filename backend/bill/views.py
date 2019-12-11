@@ -176,13 +176,12 @@ class BillItemViewSet(NafisBase, ModelViewSet):
         if end_of_roll:
             end_of_roll_amount = item['end_of_roll_amount']
         discount = item.get('discount', 0)
-        bill_item = BillItem.objects.create(product=product, amount=amount,
-                                            discount=discount,
-                                            end_of_roll=end_of_roll,
-                                            end_of_roll_amount=end_of_roll_amount, bill=bill)
+        BillItem.objects.create(product=product, amount=amount,
+                                discount=discount,
+                                end_of_roll=end_of_roll,
+                                end_of_roll_amount=end_of_roll_amount, bill=bill)
 
-        serializer = self.get_serializer_class()
-        serializer = serializer(bill_item)
+        serializer = BillSerializer(bill)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
