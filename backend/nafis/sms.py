@@ -23,7 +23,6 @@ class SendSMS:
             'yourMessageIds': yourMessageIds,
             'sendType': 1
         }
-        print("here")
         result = requests.post(api, post_data)
         return result
 
