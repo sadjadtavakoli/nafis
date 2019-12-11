@@ -31,11 +31,25 @@ class BillsViewSet(NafisBase, ModelViewSet):
 
     @action(url_path='actives', detail=False, methods=['get'], permission_classes=())
     def get_actives(self, request):
-        return Response(BillSerializer(Bill.objects.filter(status='active'), many=True).data)
+        queryset = Bill.objects.filter(status='active')
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
     @action(url_path='dones', detail=False, methods=['get'], permission_classes=())
     def get_dones(self, request):
-        return Response(BillSerializer(Bill.objects.filter(status='done'), many=True).data)
+        queryset = Bill.objects.filter(status='done')
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
     @action(methods=['post'], detail=True, url_path='add-payments', permission_classes=(AddPaymentPermission,))
     def add_payments(self, request):
@@ -60,7 +74,6 @@ class BillsViewSet(NafisBase, ModelViewSet):
         used_points = data.get('used_points', 0)
         branch = data.get('branch')
         items = data.get('items')
-        items_objects = []
 
         if int(used_points) > buyer.points:
             raise ValidationError('امتیاز استفاده شده بیشتر از حد مجاز است.')
