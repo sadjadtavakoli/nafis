@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
@@ -6,7 +8,7 @@ from rest_framework.exceptions import ValidationError, PermissionDenied
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from bill.models import Bill, BillItem, CustomerPayment
+from bill.models import Bill, BillItem, CustomerPayment, CustomerCheque
 from bill.permissions import LoginRequired, CloseBillPermission, AddPaymentPermission
 from bill.serializers import BillSerializer, CustomerPaymentSerializer, BillItemSerializer
 from customer.models import Customer
@@ -52,13 +54,31 @@ class BillsViewSet(NafisBase, ModelViewSet):
         return Response(serializer.data)
 
     @action(methods=['post'], detail=True, url_path='add-payments', permission_classes=(AddPaymentPermission,))
-    def add_payments(self, request):
-        data = self.request.data
-        payment = CustomerPayment.objects.create(**data, bill=self.get_object())
-        return Response(CustomerPaymentSerializer(payment).data)
+    def add_payments(self, request, **kwargs):
+        amount = self.request.data.get('amount')
+        payment_type = self.request.data.get('type')
+        bill = self.get_object()
+        payment = CustomerPayment.objects.create(create_date=datetime.now(),
+                                                 amount=amount, bill=bill, type=payment_type)
+        if payment_type == "cheque":
+            bank = self.request.data.get('bank')
+            number = self.request.data.get('number')
+            issue_date = self.request.data.get('issue_date', datetime.now().date())
+            expiry_date = self.request.data.get('expiry_date')
+            cheque = CustomerCheque.objects.create(number=number, bank=bank,
+                                                   issue_date=issue_date,
+                                                   expiry_date=expiry_date,
+                                                   amount=amount, customer=bill.buyer)
+
+            payment.cheque = cheque
+            payment.save()
+
+        serializer = CustomerPaymentSerializer(payment)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     @action(methods=['post'], detail=True, url_path='done', permission_classes=(CloseBillPermission,))
-    def close_bill(self, request):
+    def close_bill(self, request, **kwargs):
         instance = self.get_object()
         instance.check_status()
         instance.buyer.points += instance.final_price * settings.POINT_PERCENTAGE

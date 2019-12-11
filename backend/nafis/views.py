@@ -1,3 +1,5 @@
+from types import MemberDescriptorType
+
 from django.contrib.auth import authenticate, login
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.permissions import AllowAny
