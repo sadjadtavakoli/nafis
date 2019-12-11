@@ -26,12 +26,12 @@ class Bill(models.Model):
     def price(self):
         price = 0
         for item in self.items.filter(rejected=False).all():
-            price += item.price
+            price += float(item.price)
         return price
 
     @property
     def total_discount(self):
-        return self.discount + self.items_discount + self.buyer_special_discount
+        return float(self.discount) + float(self.items_discount) + float(self.buyer_special_discount)
 
     @property
     def buyer_special_discount(self):
@@ -41,15 +41,15 @@ class Bill(models.Model):
     def items_discount(self):
         discount = 0
         for item in self.items.all():
-            discount += item.discount
-            discount += item.special_discount
+            discount += float(item.discount)
+            discount += float(item.special_discount)
         return discount
 
     @property
     def final_price(self):
-        if self.total_discount >= self.price:
+        if float(self.total_discount) >= float(self.price):
             return 0
-        return self.price - self.total_discount
+        return float(self.price) - float(self.total_discount)
 
     @property
     def paid(self):
@@ -86,14 +86,14 @@ class BillItemManager(models.Manager):
                discount,
                end_of_roll,
                end_of_roll_amount, bill):
-        if product.stock_amount < amount:
+        if float(product.stock_amount) < float(amount):
             raise ValidationError("مقدار کافی از این پارچه موجود نمی‌باشد")
 
         item = super(BillItemManager, self).create(product=product, amount=amount,
                                                    discount=discount,
                                                    end_of_roll=end_of_roll,
                                                    end_of_roll_amount=end_of_roll_amount, bill=bill)
-        product.update_stock_amount(amount + float(0.05))
+        product.update_stock_amount(float(amount) + float(0.05))
         return item
 
 
@@ -117,14 +117,14 @@ class BillItem(models.Model):
     @property
     def price(self):
         if self.end_of_roll:
-            return self.end_of_roll_amount * self.product.selling_price
-        return self.amount * self.product.selling_price
+            return float(self.end_of_roll_amount) * float(self.product.selling_price)
+        return float(self.amount) * float(self.product.selling_price)
 
     @property
     def final_price(self):
-        if self.discount > self.price:
+        if float(self.discount) > float(self.price):
             return 0
-        return self.price - self.discount
+        return float(self.price) - float(self.discount)
 
     def reject(self):
         self.rejected = True
@@ -164,7 +164,7 @@ class SupplierBillItem(models.Model):
 
     @property
     def price(self):
-        return self.raw_price * self.currency_price
+        return float(self.raw_price) * float(self.currency_price)
 
     def reject(self):
         self.rejected = True
@@ -217,7 +217,7 @@ class SpecialDiscount(models.Model):
 
     def value(self, price):
         if self.percentage > 0:
-            return price * self.percentage
+            return float(price) * float(self.percentage)
         return self.straight
 
 

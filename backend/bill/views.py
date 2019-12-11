@@ -109,10 +109,10 @@ class BillsViewSet(NafisBase, ModelViewSet):
                 raise ValidationError('محصولی با کد‌ {} وجود ندارد.'.format(product_code))
             amount = item['amount']
             end_of_roll_amount = None
-            end_of_roll = item['end_of_roll']
+            end_of_roll = item.get('end_of_roll', False)
             if end_of_roll:
                 end_of_roll_amount = item['end_of_roll_amount']
-            discount = item['discount']
+            discount = item.get('discount', 0)
             BillItem.objects.create(product=product, amount=amount,
                                     discount=discount,
                                     end_of_roll=end_of_roll,
@@ -156,7 +156,32 @@ class BillItemViewSet(NafisBase, ModelViewSet):
         bill = Bill.objects.get(pk=self.request.data.get('bill', None))
         if bill.status != "active":
             raise PermissionDenied
-        return super(BillItemViewSet, self).create(request, *args, **kwargs)
+
+        staff = Staff.objects.get(username=request.user.username)
+        if staff.job in self.non_creator:
+            raise PermissionDenied
+
+        item = self.request.data
+        product_code = item['product']
+        try:
+            product = Product.objects.get(code=product_code)
+        except ObjectDoesNotExist:
+            raise ValidationError('محصولی با کد‌ {} وجود ندارد.'.format(product_code))
+        amount = item['amount']
+        end_of_roll_amount = None
+        end_of_roll = item.get('end_of_roll', False)
+        if end_of_roll:
+            end_of_roll_amount = item['end_of_roll_amount']
+        discount = item.get('discount', 0)
+        bill_item = BillItem.objects.create(product=product, amount=amount,
+                                            discount=discount,
+                                            end_of_roll=end_of_roll,
+                                            end_of_roll_amount=end_of_roll_amount, bill=bill)
+
+        serializer = self.get_serializer_class()
+        serializer = serializer(bill_item)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class CustomerPaymentViewSet(NafisBase, ModelViewSet):
