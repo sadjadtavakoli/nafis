@@ -36,8 +36,8 @@ class BillsViewSet(NafisBase, ModelViewSet):
             raise PermissionDenied
         if len(bill.payments.all()):
             raise PermissionDenied(
-                detail="نمی‌توانید فاکتوری که پرداخت دارد را حذف کنید، ابتدا"
-                       " پرداخت‌ها را حذف نموده سپس نسبت به حذف فاکتور اقدام نمایید.")
+                detail="نمی‌توانید فاکتوری را که پرداخت دارد حذف کنید، ابتدا پرداخت‌ها"
+                       " را حذف نموده سپس نسبت به حذف فاکتور اقدام نمایید.")
         response = super(BillsViewSet, self).destroy(request, *args, **kwargs)
         for data in bill_items_data:
             data['product'].update_stock_amount(-1 * data['amount'])
