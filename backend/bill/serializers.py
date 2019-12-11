@@ -14,7 +14,7 @@ class CustomerChequeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomerCheque
-        fields = ('number', 'bank', 'issue_date', 'expiry_date', 'amount', 'status', 'customer')
+        fields = ('pk', 'number', 'bank', 'issue_date', 'expiry_date', 'amount', 'status', 'customer')
 
 
 class OurChequeSerializer(serializers.ModelSerializer):
@@ -22,7 +22,7 @@ class OurChequeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OurCheque
-        fields = ('number', 'bank', 'issue_date', 'expiry_date', 'amount', 'status', 'supplier')
+        fields = ('pk', 'number', 'bank', 'issue_date', 'expiry_date', 'amount', 'status', 'supplier')
 
 
 class CustomerPaymentSerializer(serializers.ModelSerializer):
@@ -30,7 +30,7 @@ class CustomerPaymentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomerPayment
-        fields = ('create_date', 'amount', 'type', 'cheque')
+        fields = ('pk', 'create_date', 'amount', 'type', 'cheque')
 
 
 class OurPaymentSerializer(serializers.ModelSerializer):
@@ -38,7 +38,7 @@ class OurPaymentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OurPayment
-        fields = ('create_date', 'amount', 'type', 'cheque')
+        fields = ('pk', 'create_date', 'amount', 'type', 'cheque')
 
 
 class BillItemSerializer(serializers.ModelSerializer):
@@ -49,7 +49,7 @@ class BillItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BillItem
-        fields = ('product', 'amount', 'discount', 'end_of_roll', 'end_of_roll_amount', 'rejected',
+        fields = ('pk', 'product', 'amount', 'discount', 'end_of_roll', 'end_of_roll_amount', 'rejected',
                   'special_discount', 'price', 'final_price')
 
 
@@ -84,7 +84,7 @@ class SupplierBillItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SupplierBillItem
-        fields = ('product', 'amount')
+        fields = ('pk', 'product', 'amount')
 
 
 class SupplierBillSerializer(serializers.ModelSerializer):
@@ -94,4 +94,4 @@ class SupplierBillSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SupplierBill
-        fields = ('create_date', 'supplier', 'status', 'items', 'payments')
+        fields = ('pk', 'create_date', 'supplier', 'status', 'items', 'payments')
