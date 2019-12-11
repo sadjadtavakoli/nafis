@@ -4,7 +4,25 @@ import NewBillPopup from './newBillPopup'
 import {setNewBill} from '../../actions/SaleActions'
 import { Button, Modal, Divider, Header, Segment, Form, Card, Popup, Icon, Message } from 'semantic-ui-react'
 import {toastr} from 'react-redux-toastr'
-
+const INITIAL_STATE = {
+    isOpenAddItem: false,
+    formValidation: {
+        phone_number: false,
+        used_points: false,
+        branch: false,
+        discount: false,
+        items: false
+    },
+    phone_number: '',
+    used_points: 0,
+    branch: 1,
+    discount: 0,
+    itemsDOM: [],
+    itemsDataSheet: [],
+    branchOptions: [
+        { key: '1', value: '1', flag: 'ir', text: 'شعبه یک' },
+    ]
+};
 class AddBillModal extends React.Component {
     constructor(props) {
         super(props);
@@ -12,25 +30,7 @@ class AddBillModal extends React.Component {
     componentDidMount() {
         // toastr.success('asdf','sadfsdfdfssdf')
     }
-    state = {
-        isOpenAddItem: false,
-        formValidation: {
-            phone_number: false,
-            used_points: false,
-            branch: false,
-            discount: false,
-            items:false
-        },
-        phone_number: '',
-        used_points: '',
-        branch: 1,
-        discount: 0,
-        itemsDOM: [],
-        itemsDataSheet: [],
-        branchOptions: [
-            { key: '1', value: '1', flag: 'ir', text: 'شعبه یک' },
-        ]
-    };
+    state = INITIAL_STATE;
     toggleAddItemPopup = () => {
         this.setState((prevState)=>({isOpenAddItem: !prevState.isOpenAddItem}))
     }
@@ -100,7 +100,12 @@ class AddBillModal extends React.Component {
                     branch: this.state.branch,
                     items: this.state.itemsDataSheet
                 }
-                this.props.setNewBill(prepareData);
+                this.props.setNewBill(prepareData).then(() => {
+                    this.setState(INITIAL_STATE);
+                    this.props.onClose();
+                    toastr.success('ثبت فاکتور جدید', 'فاکتور جدید با موفقیت ثبت شد');
+
+                });
             }
         });
         
@@ -121,7 +126,7 @@ class AddBillModal extends React.Component {
                             <Form>
                                 <Form.Group unstackable widths={2}>
                                     <Form.Input className='ltr placeholder-rtl' label='شماره تلفن همراه' type="number" error={this.state.formValidation.phone_number} onChange={(e)=>this.inputChange(e,'phone_number')} placeholder='شماره تلفن همراه' />
-                                    <Form.Input className='ltr placeholder-rtl' label='امتیاز استفاده شده' type="number" error={this.state.formValidation.used_points} onChange={(e)=>this.inputChange(e,'used_points')} placeholder='امتیاز استفاده شده' />
+                                    <Form.Input className='ltr placeholder-rtl' label='امتیاز استفاده شده' type="number" defaultValue='0' error={this.state.formValidation.used_points} onChange={(e)=>this.inputChange(e,'used_points')} placeholder='امتیاز استفاده شده' />
                                 </Form.Group>
                                 <Form.Group widths={2}>
                                     {/* <Form.Input   placeholder='شعبه' /> */}

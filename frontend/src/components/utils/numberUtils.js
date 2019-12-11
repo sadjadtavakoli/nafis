@@ -18,7 +18,7 @@ export const phoneNumberBeautifier = function (phone) {
     if (phone === 0)
         return ''
     let p = String(parseInt(phone))
-    return p.slice(0, 3) + ' ' + p.slice(3, 6) + ' ' + p.slice(6, 11);
+    return '0'+p.slice(0, 3) + ' ' + p.slice(3, 6) + ' ' + p.slice(6, 11);
 }
 
 const fa = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];

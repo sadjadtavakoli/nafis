@@ -1,8 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Button, Form, Card, Label } from 'semantic-ui-react'
+import { Button, Form, Card, Label, Icon } from 'semantic-ui-react'
 import { getProductsByCode } from '../../actions/DepositoryActions'
-import { enToFa } from '../utils/numberUtils'
+import { addNewItem } from '../../actions/SaleActions'
+import { enToFa, phoneNumberBeautifier } from '../utils/numberUtils';
+import { toastr } from 'react-redux-toastr';
+
 class NewBillPopup extends React.Component {
     constructor(props) {
         super(props);
@@ -36,10 +39,27 @@ class NewBillPopup extends React.Component {
         this.setState((prevState)=>({end_of_roll: !prevState.end_of_roll,end_of_roll_amount:''}))
     }
     submitForm = () => {
-        if (this.state.product.length < 1 || this.state.amount.length < 1 || this.state.discount.length < 1 || (this.state.end_of_roll && this.state.end_of_roll_amount.length < 1)) {
+        if (String(this.state.product).length < 1 || String(this.state.amount).length < 1 || String(this.state.discount).length < 1 || (this.state.end_of_roll && this.state.end_of_roll_amount.length < 1)) {
             alert('فرم افزودن آیتم معتبر نبوده است');
         } else {
-            this.props.onSubmit(this.state)
+            let prepareData = {
+                bill:this.props.pk,
+                product: this.state.product,
+                amount: this.state.amount,
+                end_of_roll: this.state.end_of_roll,
+                discount: this.state.discount,
+                end_of_roll_amount: this.state.end_of_roll_amount,
+            }
+            if (this.props.pk) {
+                this.props.addNewItem(this.props.pk, prepareData).then(() => {
+                    this.props.refetch();
+                    toastr.success('ثبت آیتم جدید', 'ثبت آیتم جدید با موفقیت انجام شد');
+                    this.props.onClose();
+                });
+            } else {
+                this.props.onSubmit(prepareData);
+                this.props.refetch()
+            }
         }
     }
     handleSearchChange = (value) => {
@@ -66,18 +86,27 @@ class NewBillPopup extends React.Component {
         return (
             <Card className="rtl" fluid key={0}>
                 <Card.Content>
-                    <Card.Header className='yekan'>افزودن آیتم جدید</Card.Header>
+                    <Card.Header className="d-flex">
+                        <h3 className='yekan d-flex'
+                        style={{ alignItems: 'center', marginBottom: 0 }}>
+                                افزودن آیتم جدید
+                        </h3>
+                        <span>
+                    {this.props.pk ? <Label color="green ltr">{enToFa(phoneNumberBeautifier(this.props.phoneNumber))}</Label>:null}
+                        </span>
+                    </Card.Header>
                 </Card.Content>
                 <Card.Content extra>
                     {isNaN(this.state.notFound) ? <Label className="invisible">ا</Label>:null}
                     {this.state.notFound === false ?
-                        <Label color='blue'>
+                        <Label color='teal'>
+                            <Icon name='info'/>
                             <span>نام محصول:</span>&nbsp;<span>{enToFa(this.state.productData.name)}</span>
                             <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                             <span>مقدار باقی مانده:</span>&nbsp;<span>{enToFa(this.state.productData.stock_amount)}</span>&nbsp;<span>متر</span></Label>
                         : null}
                     {this.state.notFound === true ?
-                        <Label color='red'>محصول مورد نظر یافت نشد</Label>:null}
+                        <Label color='red'><Icon name="warning circle"/><span>محصول مورد نظر یافت نشد</span></Label>:null}
                     <Form>
                         <Form.Group widths='equal'>
                             <Form.Input className='ltr placeholder-rtl' type="number" fluid label='کد محصول' onChange={(e)=>this.changeInput(e,'product')} placeholder='' />
@@ -111,5 +140,5 @@ const mapStateToProps = state => {
 } 
 export default connect(
     mapStateToProps,
-    {getProductsByCode}
+    {getProductsByCode, addNewItem}
 )(NewBillPopup);
