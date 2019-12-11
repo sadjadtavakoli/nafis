@@ -211,7 +211,13 @@ class CustomerPaymentViewSet(NafisBase, ModelViewSet):
         bill = self.get_object().bill
         if bill.status == "done":
             raise PermissionDenied
-        return super(CustomerPaymentViewSet, self).destroy(request, *args, **kwargs)
+        cheque = None
+        if self.get_object().type == "cheque":
+            cheque = self.get_object().cheque
+        response = super(CustomerPaymentViewSet, self).destroy(request, *args, **kwargs)
+        if cheque:
+            cheque.delete()
+        return response
 
     def update(self, request, *args, **kwargs):
         bill = self.get_object().bill
