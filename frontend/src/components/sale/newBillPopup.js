@@ -1,7 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Button, Form, Card } from 'semantic-ui-react'
-
+import { Button, Form, Card, Label } from 'semantic-ui-react'
+import { getProductsByCode } from '../../actions/DepositoryActions'
+import { enToFa } from '../utils/numberUtils'
 class NewBillPopup extends React.Component {
     constructor(props) {
         super(props);
@@ -11,10 +12,25 @@ class NewBillPopup extends React.Component {
         amount: '',
         end_of_roll: false,
         discount: 0,
-        end_of_roll_amount: ''
+        end_of_roll_amount: '',
+        disabled: true,
+        notFound: NaN,
+        productData:{}
     }
-    changeInput = (event, inputName)=>{
-        this.setState({ [inputName]: Number(event.target.value) });
+    changeInput = (event, inputName) => {
+        let value = Number(event.target.value);
+        this.setState({ [inputName]: value }, () => {
+            
+            if (inputName === 'product') {
+                this.handleSearchChange(this.state.product)
+            }
+                if (this.state.amount <= Number(this.state.productData.stock_amount)){
+                    this.setState({ disabled: false });
+                } else {
+                    this.setState({ disabled: true });
+                }
+        });
+            
     }
     toggleIsEndOfRoll = () => {
         this.setState((prevState)=>({end_of_roll: !prevState.end_of_roll,end_of_roll_amount:''}))
@@ -26,6 +42,26 @@ class NewBillPopup extends React.Component {
             this.props.onSubmit(this.state)
         }
     }
+    handleSearchChange = (value) => {
+        this.setState({ product: Number(value) }, () => {
+            setTimeout(() => {
+                if (String(this.state.product).length < 1 || String(this.state.product) === '0') {
+                    this.setState({ disabled: true, notFound: NaN });
+                } else {
+                    this.props.getProductsByCode(this.state.product).then(() => {
+                        this.setState({
+                            notFound: false,
+                            productData: this.props.productsList
+                        }, () => {
+                            console.log(this.state.productData);
+                        });
+                    }).catch(() => {
+                        this.setState({ notFound: true, disabled: true, productData: {} })
+                    })
+                }
+            }, 300)
+        });
+    };
     render() {
         return (
             <Card className="rtl" fluid key={0}>
@@ -33,6 +69,15 @@ class NewBillPopup extends React.Component {
                     <Card.Header className='yekan'>افزودن آیتم جدید</Card.Header>
                 </Card.Content>
                 <Card.Content extra>
+                    {isNaN(this.state.notFound) ? <Label className="invisible">ا</Label>:null}
+                    {this.state.notFound === false ?
+                        <Label color='blue'>
+                            <span>نام محصول:</span>&nbsp;<span>{enToFa(this.state.productData.name)}</span>
+                            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                            <span>مقدار باقی مانده:</span>&nbsp;<span>{enToFa(this.state.productData.stock_amount)}</span>&nbsp;<span>متر</span></Label>
+                        : null}
+                    {this.state.notFound === true ?
+                        <Label color='red'>محصول مورد نظر یافت نشد</Label>:null}
                     <Form>
                         <Form.Group widths='equal'>
                             <Form.Input className='ltr placeholder-rtl' type="number" fluid label='کد محصول' onChange={(e)=>this.changeInput(e,'product')} placeholder='' />
@@ -48,7 +93,7 @@ class NewBillPopup extends React.Component {
                             <Button.Group className="ltr" >
                                 <Button className="yekan" onClick={this.props.onClose}>بستن&nbsp;&nbsp;&nbsp;</Button>
                                 <Button.Or text='یا' />
-                                <Button className="yekan" onClick={this.submitForm} positive>افزودن</Button>
+                                <Button className="yekan" disabled={this.state.disabled} onClick={this.submitForm} positive>افزودن</Button>
                             </Button.Group>
                         </div>
                     </Form>
@@ -59,7 +104,12 @@ class NewBillPopup extends React.Component {
 }
 
 
+const mapStateToProps = state => {
+  return {
+      productsList: state.depository.productsList,
+  }
+} 
 export default connect(
-    null,
-    null
+    mapStateToProps,
+    {getProductsByCode}
 )(NewBillPopup);

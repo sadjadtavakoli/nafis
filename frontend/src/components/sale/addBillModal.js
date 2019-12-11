@@ -148,7 +148,7 @@ class AddBillModal extends React.Component {
                                     })}
                                     <div className="text-center padded">
                                         <Popup
-                                            style={{top:-35}}
+                                            style={{top:-70}}
                                             content={<NewBillPopup onClose={this.toggleAddItemPopup} onSubmit={this.submitItemPopup}/>}
                                             open={this.state.isOpenAddItem}
                                             className="no-filter"
