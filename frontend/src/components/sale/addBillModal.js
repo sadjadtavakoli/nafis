@@ -187,7 +187,7 @@ class AddBillModal extends React.Component {
                     </Modal.Content>
 
                     <Modal.Actions>
-                        <Button color='black' onClick={this.props.onClose}><span>بستن</span></Button>
+                        <Button color='black' onClick={() => { this.props.onClose();this.setState({isOpenAddItem:false}) }}><span>بستن</span></Button>
                         <Button className="yekan"
                             positive
                             icon='checkmark'
