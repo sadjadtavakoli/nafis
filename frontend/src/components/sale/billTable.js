@@ -1,11 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Table, Pagination, Button, Icon } from 'semantic-ui-react'
+import { Table, Pagination, Button, Icon, Popup } from 'semantic-ui-react';
 import { getActiveBill } from '../../actions/SaleActions'
-import { digitToComma } from '../utils/numberUtils'
+import { digitToComma, phoneNumberBeautifier } from '../utils/numberUtils';
 import { standardTimeToJalaali } from '../utils/jalaaliUtils'
 import ShowInformationModal from './showInformationModal'
 import LoadingBar from '../utils/loadingBar'
+import NewBillPopup from './newBillPopup'
+
 const colSpan = 6;
 class BillTable extends React.Component {
     constructor(props) {
@@ -15,7 +17,9 @@ class BillTable extends React.Component {
         activeBill: [],
         totalPageCount: 1,
         isOpenInformationModal: false,
-        itemData:{}
+        itemData: {},
+        isOpenAddItem: NaN,
+        activePage:1
     }
     componentDidMount() {
        this.getActiveBill()
@@ -28,8 +32,10 @@ class BillTable extends React.Component {
             });
         });
     }
-    changePage = (event,{activePage}) => {
-        this.getActiveBill(activePage);
+    changePage = (event, { activePage }) => {
+        this.setState({ activePage }, () => {
+            this.getActiveBill(this.state.activePage);
+        })
     }
     closeInformationModal = () => {
         this.setState({isOpenInformationModal:false})
@@ -38,6 +44,43 @@ class BillTable extends React.Component {
         this.setState({ itemData }, () => {
             this.setState({isOpenInformationModal:true})
         })
+    }
+    toggleAddItemPopup = (id) => {
+        this.setState({ isOpenAddItem: id });
+    };
+        submitItemPopup = (data) => {
+        let id = this.state.itemsDataSheet.length;
+        // const itemDOM = (<Card fluid key={id}>
+        //     <Card.Content>
+        //         <Card.Header className='yekan'>آیتم شماره {id+1} </Card.Header>
+        //         <Card.Description className='yekan'>
+        //                 <Message compact size='mini' color='teal'>داده های زیر صرفا جهت خواندن هستن و برای جلوگیری از اشتباهات انسانی قابل تغییر نمی باشند. </Message>
+
+        //             </Card.Description>
+        //     </Card.Content>
+        //     <Card.Content extra>
+        //         <Form>
+        //             <Form.Group widths='equal'>
+        //                 <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={data.product} label='کد محصول' placeholder='' />
+        //                 <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={data.amount} label='مقدار(متر)' placeholder='' />
+        //                 <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={data.discount} label='تخفیف' placeholder='' />
+        //             </Form.Group>
+        //             <Form.Group widths='3'>
+        //                 <Form.Checkbox toggle className='ltr placeholder-rtl' readOnly checked={data.end_of_roll} label='ته طاقه؟' />
+        //                 <Form.Input className={`ltr placeholder-rtl ${data.end_of_roll ? '' : 'invisible'}`} readOnly defaultValue={data.end_of_roll_amount} label='مقدار ته طاقه' placeholder='مقدار ته طاقه' />
+        //             </Form.Group>
+        //         </Form>
+        //     </Card.Content>
+        // </Card>);
+        this.setState(
+            {
+                // itemsDOM: [...this.state.itemsDOM, itemDOM],
+                itemsDataSheet: [...this.state.itemsDataSheet, data],
+                formValidation:{...this.state.formValidation,items:false}
+            }
+            , () => {
+        });
+        this.toggleAddItemPopup();
     }
     render() {
         return this.state.activeBill.length > 0 ? (
@@ -65,15 +108,26 @@ class BillTable extends React.Component {
                         icon={<Icon name='search' inverted circular link />}
                         placeholder='Search...'
                     /> */}
+                           
                         {this.state.activeBill.map((item,index) => {
                             return (
                                 <>
                                 <Table.Row key={index}>
-                                <Table.Cell className="norm-latin text-center">
-                                    <Button onClick={()=>this.openInformationModal(item)} icon labelPosition='right' color="green">
-                                       <span className="yekan" >افزودن آیتم جدید</span>
-                                        <Icon name='add' />
-                                    </Button>
+                                        <Table.Cell className="norm-latin text-center">
+                                            <Popup
+                                                content={<NewBillPopup refetch={()=>this.getActiveBill(this.state.activePage)} phoneNumber={item.buyer.phone_number} pk={item.pk} onClose={()=>this.toggleAddItemPopup(NaN)} onSubmit={this.submitItemPopup}/>}
+                                            open={this.state.isOpenAddItem === index}
+                                            className="no-filter"
+                                            position='bottom center'
+                                            wide='very'
+                                                trigger={
+                                                     <Button onClick={()=>this.toggleAddItemPopup(index)} icon labelPosition='right' color="green">
+                                                        <span className="yekan" >افزودن آیتم جدید</span>
+                                                        <Icon name='add' />
+                                                    </Button>
+                                                }
+                                                color='green' size='huge' icon='add' />
+                           
                                     <Button onClick={()=>this.openInformationModal(item)} icon labelPosition='right' color="yellow">
                                        <span className="yekan" >نمایش اطلاعات</span>
                                         <Icon name='info' />
@@ -83,7 +137,7 @@ class BillTable extends React.Component {
                                     <Table.Cell className="norm-latin text-center"><span>{standardTimeToJalaali(item.create_date)}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center rtl"><span>{digitToComma(item.final_price)}</span>&nbsp;<span className="yekan">تومان</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center">{item.final_discount?(<><span className="yekan">digitToComma(item.final_discount)</span><span className="yekan">تومان</span></>):'--'}  </Table.Cell>
-                                    <Table.Cell className="norm-latin text-center"><span>{item.buyer.phone_number}</span></Table.Cell>
+                                    <Table.Cell className="norm-latin text-center"><span>{phoneNumberBeautifier(item.buyer.phone_number)}</span></Table.Cell>
                                     </Table.Row>
                                 </>);
                             })}

@@ -107,7 +107,7 @@ class ShowInformationModal extends React.Component {
     // }
     labelRender = (labelName) => {
         return (
-            <span style={{marginBottom: '2.5px',alignItems: 'center', display: 'flex',justifyContent: 'flex-end'}}>
+            <span className="d-flex" style={{marginBottom: '2.5px',alignItems: 'center',justifyContent: 'flex-end'}}>
                 <Label className="pointer" style={{marginRight: 10}} size='mini' color="teal" >
                 <Icon name='edit' /> ویرایش
             </Label>
