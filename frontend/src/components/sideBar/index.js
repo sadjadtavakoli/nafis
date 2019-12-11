@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import { Header, Icon, Input, Menu, Segment, Sidebar, Button } from 'semantic-ui-react'
 import history from "../../history";
 import {logOut} from "../../actions/LoginActions";
-let userData = JSON.parse(localStorage.getItem('user'))
 class SideBar extends React.Component {
     constructor(props) {
         super(props);
@@ -21,9 +20,9 @@ class SideBar extends React.Component {
     }
 
     updateWindowDimensions() {
-        this.setState({ width: window.innerWidth, height: window.innerHeight });
+        this.setState({ height: window.innerHeight });
     }
-    state = { visible: false,width: 0, height: 0 }
+    state = { visible: false, userData: JSON.parse(localStorage.getItem('user')), height: 0 }
     
     logOut = () => {
         this.props.logOut();
@@ -59,7 +58,7 @@ class SideBar extends React.Component {
                             </Menu.Item>
                         </Menu.Menu>
                         <Menu.Menu position='right'>
-                            <Menu.Item style={{paddingRight: 0}}>{userData.first_name+' '+userData.last_name}</Menu.Item>
+                            <Menu.Item style={{paddingRight: 0}}>{this.state.userData.first_name+' '+this.state.userData.last_name}</Menu.Item>
                             <Menu.Item style={{paddingLeft: 0}}>
                                 <img src='http://uupload.ir/files/6dzr_business-user-account-png-image-min.png' />
                             </Menu.Item>

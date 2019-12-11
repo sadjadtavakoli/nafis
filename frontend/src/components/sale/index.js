@@ -4,6 +4,7 @@ import history from "../../history";
 import { Button,Modal,Image,Header, Segment } from 'semantic-ui-react'
 import { getActiveBill } from '../../actions/SaleActions'
 import AddBillModal from './addBillModal'
+import BillTable from './billTable'
 class Sale extends React.Component {
     constructor(props) {
         super(props);
@@ -25,7 +26,7 @@ class Sale extends React.Component {
                     <Segment stacked className="rtl">
                         <Button className="yekan" onClick={() => this.setState({ open: true })} color="green" content='افزودن فاکتور' icon='add' labelPosition='right' />
                     </Segment>
-                    
+                    <BillTable />
                 </div>
             </>
         );
