@@ -65,8 +65,8 @@ class ProductTable extends React.Component {
                                     <span>لیست محصولات موجود</span>
                                 </Grid.Column>
                             <Grid.Column width={6}>
-                                        <Search
-                                            hidden={this.props.searchBar?'':'invisible'}
+                            <Search
+                                hidden={this.props.searchBar?'':'invisible'}
                                 input={{ icon: 'search', iconPosition: 'left' }}
                                 loading={this.state.searchLoading}
                                 showNoResults={false}
@@ -90,7 +90,7 @@ class ProductTable extends React.Component {
                                 <Table.HeaderCell className="text-center">نوع طرح</Table.HeaderCell>
                                 <Table.HeaderCell className="text-center">مقدار باقی مانده</Table.HeaderCell>
                                 <Table.HeaderCell className="text-center">قیمت فروش</Table.HeaderCell>
-                                <Table.HeaderCell className="text-center">قیمت خرید</Table.HeaderCell>
+                                {/* <Table.HeaderCell className="text-center">قیمت خرید</Table.HeaderCell> */}
                                 <Table.HeaderCell className="text-center">نام محصول</Table.HeaderCell>
                                 <Table.HeaderCell className="text-center">کد محصول</Table.HeaderCell></>: null}
             </Table.Row>
@@ -110,7 +110,7 @@ class ProductTable extends React.Component {
                                     <span className="yekan">متر</span>
                                     </Table.Cell>
                                     <Table.Cell className="norm-latin text-center rtl"><span>{digitToComma(item.selling_price)}</span> <span className="yekan">تومان</span></Table.Cell>
-                                    <Table.Cell className="norm-latin text-center rtl"><span>{digitToComma(item.buying_price)}</span> <span className="yekan">تومان</span></Table.Cell>
+                                    {/* <Table.Cell className="norm-latin text-center rtl"><span>{digitToComma(item.buying_price)}</span> <span className="yekan">تومان</span></Table.Cell> */}
                                     <Table.Cell className="norm-latin text-center"><span>{item.code}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center" textAlign='right'>
                                     <span>{item.code}</span>
