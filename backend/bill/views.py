@@ -13,6 +13,7 @@ from bill.permissions import LoginRequired, CloseBillPermission, AddPaymentPermi
 from bill.serializers import BillSerializer, CustomerPaymentSerializer, BillItemSerializer
 from customer.models import Customer
 from nafis.paginations import PaginationClass
+from nafis.sms import SendSMS, create_message
 from nafis.views import NafisBase
 from product.models import Product
 from staff.models import Staff
@@ -83,9 +84,15 @@ class BillsViewSet(NafisBase, ModelViewSet):
     @action(methods=['post'], detail=True, url_path='done', permission_classes=(CloseBillPermission,))
     def close_bill(self, request, **kwargs):
         instance = self.get_object()
-        instance.check_status()
-        instance.buyer.points += instance.final_price * settings.POINT_PERCENTAGE
-        instance.buyer.save()
+        if instance.status == "active":
+            instance.check_status()
+            try:
+                sms = SendSMS()
+                sms.group_sms(create_message(instance), [instance.buyer.phone_number], instance.buyer.phone_number)
+            except:
+                pass
+            instance.buyer.points += instance.final_price * settings.POINT_PERCENTAGE
+            instance.buyer.save()
         return Response({'status': instance.status})
 
     def create(self, request, *args, **kwargs):
@@ -204,7 +211,13 @@ class CustomerPaymentViewSet(NafisBase, ModelViewSet):
         bill = self.get_object().bill
         if bill.status == "done":
             raise PermissionDenied
-        return super(CustomerPaymentViewSet, self).destroy(request, *args, **kwargs)
+        cheque = None
+        if self.get_object().type == "cheque":
+            cheque = self.get_object().cheque
+        response = super(CustomerPaymentViewSet, self).destroy(request, *args, **kwargs)
+        if cheque:
+            cheque.delete()
+        return response
 
     def update(self, request, *args, **kwargs):
         bill = self.get_object().bill
