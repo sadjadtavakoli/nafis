@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { enToFa } from '../utils/numberUtils'
-import {setNewBill} from '../../actions/SaleActions'
+import { setNewBill, deleteItem } from '../../actions/SaleActions';
 import { Button, Modal, Divider, Header, Segment, Form, Card, Dimmer, Loader, Image, Icon, Message, Label } from 'semantic-ui-react'
 import {toastr} from 'react-redux-toastr'
 
@@ -33,19 +33,27 @@ class ShowInformationModal extends React.Component {
     toggleAddItemPopup = () => {
         this.setState((prevState)=>({isOpenAddItem: !prevState.isOpenAddItem}))
     }
+    deleteItem = (index) => {
+        console.log(1,this.state);
+        this.props.deleteItem(this.state.data.items[index].pk).then(({data}) => {
+            this.setState({ data }, () => {
+                console.log(2,this.state);
+            });
+        })
+    }
     itemsRender = (item,index) => {
         // console.log('itemsRender',item)
         let id = Object.keys(this.state.data.items).length;
         return (<Card.Group key={index}>
             <Card fluid>
                 <Card.Content>
-                    <Card.Header className='yekan'>آیتم شماره {enToFa(id)}<span>
-                    <Label color='red' className="pointer">
+                    <Card.Header className='yekan'>آیتم شماره {enToFa(index+1)}<span>
+                    <Label color='red' onClick={()=>this.deleteItem(index)} className="pointer" style={{marginRight: 10}}>
                         <Icon name='trash' /> حذف آیتم
                     </Label>
                     </span> </Card.Header>
                     <Card.Description className='yekan'>
-                        <Message compact size='mini' color='teal'>داده های زیر صرفا جهت خواندن هستن و برای جلوگیری از اشتباهات انسانی قابل تغییر نمی باشند. </Message>
+                        <Message compact size='mini' color='teal'>داده های زیر صرفا جهت خواندن هستن و برای جلوگیری از خطای انسانی قابل ویرایش نمی باشند.</Message>
 
                     </Card.Description>
                 </Card.Content>
@@ -71,40 +79,6 @@ class ShowInformationModal extends React.Component {
             [inputName]: event.target.value
         })
     }
-    // formSubmitHandler = () => {
-    //     this.setState({ formValidation: { ...this.state.formValidation, used_points: false, discount: false, phone_number: false,items:false } }, () => {
-    //         let hasError = false;
-    //         if (this.state.phone_number.length !== 11) {
-    //             this.setState({ formValidation: { ...this.state.formValidation, phone_number: true } });
-    //             hasError = true;
-    //         }
-    //         if (this.state.used_points.length < 1) {
-    //             this.setState({ formValidation: { ...this.state.formValidation, used_points: true } });
-    //             hasError = true;
-    //         }
-    //         if (this.state.discount.length < 1) {
-    //             this.setState({ formValidation: { ...this.state.formValidation, discount: true } });
-    //             hasError = true;
-    //         }
-    //         if (this.state.itemsDataSheet.length < 1) {
-    //             this.setState({ formValidation: { ...this.state.formValidation, items: true } });
-    //             hasError = true;
-    //         }
-    //         if (!hasError) {
-    //             const prepareData = {
-    //                 phone_number: this.state.phone_number,
-    //                 discount: this.state.discount,
-    //                 used_points: this.state.used_points,
-    //                 branch: this.state.branch,
-    //                 items: this.state.itemsDataSheet
-    //             }
-    //             console.log(prepareData, hasError);
-    //             this.props.setNewBill(prepareData);
-    //         }
-    //     });
-        
-       
-    // }
     labelRender = (labelName) => {
         return (
             <span className="d-flex" style={{marginBottom: '2.5px',alignItems: 'center',justifyContent: 'flex-end'}}>
@@ -130,12 +104,12 @@ class ShowInformationModal extends React.Component {
                         <Modal.Description>
                             <Form>
                                 <Form.Group unstackable widths={2}>
-                                    <Form.Input className='ltr placeholder-rtl' readOnly defaultValue={this.state.data.buyer.phone_number} label={()=>this.labelRender('شماره تلفن همراه')} type="number" error={this.state.formValidation.phone_number} onChange={(e)=>this.inputChange(e,'phone_number')} placeholder='شماره تلفن همراه' />
-                                    <Form.Input className='ltr placeholder-rtl' readOnly defaultValue={this.state.data.used_points} label={()=>this.labelRender('امتیاز استفاده شده')} type="number" error={this.state.formValidation.used_points} onChange={(e)=>this.inputChange(e,'used_points')} placeholder='امتیاز استفاده شده' />
+                                    <Form.Input className='ltr placeholder-rtl' readOnly defaultValue={this.state.data.buyer.phone_number} label={()=>this.labelRender('شماره تلفن همراه')} type="number" onChange={(e)=>this.inputChange(e,'phone_number')} placeholder='شماره تلفن همراه' />
+                                    <Form.Input className='ltr placeholder-rtl' readOnly defaultValue={this.state.data.used_points} label={()=>this.labelRender('امتیاز استفاده شده')} type="number" onChange={(e)=>this.inputChange(e,'used_points')} placeholder='امتیاز استفاده شده' />
                                 </Form.Group>
                                 <Form.Group widths={2}>
                                     <Form.Dropdown className='ltr placeholder-rtl text-right' readOnly defaultValue={'1'} placeholder='شعبه' selection label={'شعبه'} options={this.state.branchOptions} />
-                                    <Form.Input className='ltr placeholder-rtl' readOnly defaultValue={this.state.data.discount} label={()=>this.labelRender('تخفیف کلی')}  type="number" defaultValue='0' error={this.state.formValidation.discount} onChange={(e)=>this.inputChange(e,'discount')} placeholder='مقدار تخفیف' />
+                                    <Form.Input className='ltr placeholder-rtl' readOnly defaultValue={this.state.data.discount} label={()=>this.labelRender('تخفیف کلی')}  type="number" defaultValue='0' onChange={(e)=>this.inputChange(e,'discount')} placeholder='مقدار تخفیف' />
                                 </Form.Group>
                                 <Message
                                     hidden={Object.keys(this.state.data.items).length > 0}
@@ -189,5 +163,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { setNewBill }
+  { setNewBill,deleteItem }
 )(ShowInformationModal);

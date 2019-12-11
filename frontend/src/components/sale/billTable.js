@@ -50,28 +50,6 @@ class BillTable extends React.Component {
     };
         submitItemPopup = (data) => {
         let id = this.state.itemsDataSheet.length;
-        // const itemDOM = (<Card fluid key={id}>
-        //     <Card.Content>
-        //         <Card.Header className='yekan'>آیتم شماره {id+1} </Card.Header>
-        //         <Card.Description className='yekan'>
-        //                 <Message compact size='mini' color='teal'>داده های زیر صرفا جهت خواندن هستن و برای جلوگیری از اشتباهات انسانی قابل تغییر نمی باشند. </Message>
-
-        //             </Card.Description>
-        //     </Card.Content>
-        //     <Card.Content extra>
-        //         <Form>
-        //             <Form.Group widths='equal'>
-        //                 <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={data.product} label='کد محصول' placeholder='' />
-        //                 <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={data.amount} label='مقدار(متر)' placeholder='' />
-        //                 <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={data.discount} label='تخفیف' placeholder='' />
-        //             </Form.Group>
-        //             <Form.Group widths='3'>
-        //                 <Form.Checkbox toggle className='ltr placeholder-rtl' readOnly checked={data.end_of_roll} label='ته طاقه؟' />
-        //                 <Form.Input className={`ltr placeholder-rtl ${data.end_of_roll ? '' : 'invisible'}`} readOnly defaultValue={data.end_of_roll_amount} label='مقدار ته طاقه' placeholder='مقدار ته طاقه' />
-        //             </Form.Group>
-        //         </Form>
-        //     </Card.Content>
-        // </Card>);
         this.setState(
             {
                 // itemsDOM: [...this.state.itemsDOM, itemDOM],
