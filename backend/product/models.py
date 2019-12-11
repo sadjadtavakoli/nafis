@@ -20,6 +20,7 @@ class Product(models.Model):
 
     def update_stock_amount(self, amount):
         self.stock_amount -= amount
+        self.stock_amount = round(self.stock_amount)
         self.save()
 
     @property
