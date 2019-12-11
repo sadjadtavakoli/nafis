@@ -31,14 +31,14 @@ class SendSMS:
 def create_message(bill, ):
     items_part = ""
     for index, item in enumerate(bill.items.all()):
-        items_part += "{}- {} | {} متر| {} تومان".format(index + 1, item.product.name, item.amount,
+        items_part += "{}- {} | {} متر | {} تومان".format(index + 1, item.product.name, item.amount,
                                                          item.final_price)
         items_part += '\n'
 
     template = "«فاکتور خرید پارچه نفیس»" \
                "\n" \
                + items_part + "" \
-                              "مجموع: {} تومان| تخفیف کالایی: {} تومان| تخفیف فاکتوری {} تومان".format(
+                              "مجموع: {} تومان | تخفیف کالایی: {} تومان | تخفیف فاکتوری {} تومان".format(
         bill.price, bill.items_discount, bill.discount) + "\n" \
                                                           "قابل پرداخت: {} تومان".format(
         bill.final_price) + "\n" \
