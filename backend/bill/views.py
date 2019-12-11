@@ -28,7 +28,10 @@ class BillsViewSet(NafisBase, ModelViewSet):
 
     @action(url_path='close-all', detail=False, methods=['post'], permission_classes=(CloseBillPermission,))
     def close_all(self, request):
-        Bill.objects.filter(status="active").update(status='done')
+        for bill in Bill.objects.filter(status="active"):
+            bill.check_status()
+            bill.buyer.points += bill.final_price * settings.POINT_PERCENTAGE
+            bill.buyer.save()
         return Response({'ok': True})
 
     @action(url_path='actives', detail=False, methods=['get'], permission_classes=())
