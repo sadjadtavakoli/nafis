@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import NewBillPopup from './newBillPopup'
-import {setNewBill,getActiveBill} from '../../actions/SaleActions'
+import {setNewBill} from '../../actions/SaleActions'
 import { Button, Modal, Divider, Header, Segment, Form, Card, Popup, Icon, Message } from 'semantic-ui-react'
 import {toastr} from 'react-redux-toastr'
 
@@ -11,7 +11,6 @@ class AddBillModal extends React.Component {
     }
     componentDidMount() {
         // toastr.success('asdf','sadfsdfdfssdf')
-        this.props.getActiveBill();
     }
     state = {
         isOpenAddItem: false,
@@ -206,5 +205,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { setNewBill,getActiveBill }
+  { setNewBill }
 )(AddBillModal);

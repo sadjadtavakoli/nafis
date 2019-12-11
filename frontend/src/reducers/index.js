@@ -26,7 +26,7 @@ export default combineReducers({
   // products: productsReducer,
   // providers: providerReducer,
   auth: authReducer,
-  activeBill: saleReducer,
+  sale: saleReducer,
   depository: depositoryReducer,
   // billReports: billReportsReducer,
   // billByPhoneNumber: billByPhoneNumberReducer,
