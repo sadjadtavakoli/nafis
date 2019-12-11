@@ -39,7 +39,7 @@ class ProductViewSet(NafisBase, mixins.CreateModelMixin,
         code = self.request.query_params.get('code', None)
         try:
             product = Product.objects.get(code=code)
-            return Response(ProductSerializer(product).data)
+            return Response(ProductDetailSerializer(product).data)
         except ObjectDoesNotExist:
             return Response({'چنین محصولی یافت نشد.'}, status=HTTP_404_NOT_FOUND)
 
