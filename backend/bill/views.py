@@ -30,7 +30,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
     def close_all(self, request):
         for bill in Bill.objects.filter(status="active"):
             bill.check_status()
-            bill.buyer.points += bill.final_price * settings.POINT_PERCENTAGE
+            bill.buyer.points += int(bill.final_price) * int(settings.POINT_PERCENTAGE)
             bill.buyer.save()
         return Response({'ok': True})
 
