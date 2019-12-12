@@ -79,16 +79,16 @@ class BillsViewSet(NafisBase, ModelViewSet):
         payment_type = self.request.data.get('type')
         bill = self.get_object()
         payment = CustomerPayment.objects.create(create_date=datetime.now(),
-                                                 amount=amount, bill=bill, type=payment_type)
+                                                 amount=float(amount), bill=bill, type=payment_type)
         if payment_type == "cheque":
             bank = self.request.data.get('bank')
             number = self.request.data.get('number')
             issue_date = self.request.data.get('issue_date', datetime.now().date())
             expiry_date = self.request.data.get('expiry_date')
-            cheque = CustomerCheque.objects.create(number=number, bank=bank,
+            cheque = CustomerCheque.objects.create(number=int(number), bank=bank,
                                                    issue_date=issue_date,
                                                    expiry_date=expiry_date,
-                                                   amount=amount, customer=bill.buyer)
+                                                   amount=int(amount), customer=bill.buyer)
 
             payment.cheque = cheque
             payment.save()
@@ -102,11 +102,13 @@ class BillsViewSet(NafisBase, ModelViewSet):
         instance = self.get_object()
         if instance.status == "active":
             instance.check_status()
-            try:
-                sms = SendSMS()
-                sms.group_sms(create_message(instance), [instance.buyer.phone_number], instance.buyer.phone_number)
-            except:
-                pass
+            send_message = self.request.data.get('send_message', True)
+            if send_message:
+                try:
+                    sms = SendSMS()
+                    sms.group_sms(create_message(instance), [instance.buyer.phone_number], instance.buyer.phone_number)
+                except:
+                    pass
             instance.buyer.points += instance.final_price * settings.POINT_PERCENTAGE
             instance.buyer.save()
         return Response({'status': instance.status})
