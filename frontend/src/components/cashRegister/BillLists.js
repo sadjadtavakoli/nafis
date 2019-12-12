@@ -93,11 +93,11 @@ const BillLists = ({
       <Table.Footer fullWidth>
         <Table.Row>
           <Table.HeaderCell colSpan="10" className="norm-latin">
-            <Pagination
+            {/* <Pagination
               className="norm-latin"
               defaultActivePage={1}
               totalPages={5}
-            />
+            /> */}
           </Table.HeaderCell>
         </Table.Row>
       </Table.Footer>

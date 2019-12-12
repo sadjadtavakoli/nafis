@@ -6,7 +6,6 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import reduxThunk from "redux-thunk";
 // import * as serviceWorker from './serviceWorker';
 import { server } from "./apis/server";
-import * as schema from "./apis/schema";
 
 import ReduxToastr from "react-redux-toastr";
 
@@ -18,8 +17,7 @@ const store = createStore(
   composeWithDevTools(
     applyMiddleware(
       reduxThunk.withExtraArgument({
-        api: server(localStorage.getItem("token")),
-        schema
+        api: server(localStorage.getItem("token"))
       })
     )
   )
