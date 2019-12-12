@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import NewBillPopup from './newBillPopup'
-import { setNewBill } from '../../actions/SaleActions'
+import { setNewBill,getCustomerByPhoneNumber } from '../../actions/SaleActions'
 import { enToFa } from '../utils/numberUtils'
 import { Button, Modal, Divider, Header, Segment, Form, Card, Popup, Icon, Message, Label } from 'semantic-ui-react'
 import {toastr} from 'react-redux-toastr'
@@ -22,7 +22,8 @@ const INITIAL_STATE = {
     itemsDataSheet: [],
     branchOptions: [
         { key: '1', value: '1', flag: 'ir', text: 'شعبه یک' },
-    ]
+    ],
+    customerData:{}
 };
 class AddBillModal extends React.Component {
     constructor(props) {
@@ -86,10 +87,26 @@ class AddBillModal extends React.Component {
         });
         this.toggleAddItemPopup();
     }
+    getCustomerData(phone_number) {
+        if (phone_number.length === 11) {
+            this.props.getCustomerByPhoneNumber(phone_number).then(({ data }) => {
+                this.setState({customerData:data})
+            })
+        }
+    };
     inputChange = (event, inputName) => {
         this.setState({
             [inputName]: event.target.value
-        })
+        }, () => {
+            console.log(this.state.phone_number.length)
+            if (inputName === 'phone_number') {
+                if (this.state.phone_number.length === 11) {
+                    this.getCustomerData(this.state.phone_number)
+                } else {
+                    this.setState({ customerData: {} })
+                }
+            };
+        });
     }
     formSubmitHandler = () => {
         this.setState({ formValidation: { ...this.state.formValidation, used_points: false, discount: false, phone_number: false,items:false } }, () => {
@@ -99,6 +116,10 @@ class AddBillModal extends React.Component {
                 hasError = true;
             }
             if (this.state.used_points.length < 1) {
+                this.setState({ formValidation: { ...this.state.formValidation, used_points: true } });
+                hasError = true;
+            } else if (this.state.used_points > this.state.customerData.points) {
+                alert('مقدار امتیاز وارد شده بیش تر از امتیاز مشتری است');
                 this.setState({ formValidation: { ...this.state.formValidation, used_points: true } });
                 hasError = true;
             }
@@ -141,6 +162,7 @@ class AddBillModal extends React.Component {
                     <Modal.Header className="yekan">ثبت فاکتور جدید</Modal.Header>
                     <Modal.Content scrolling>
                         <Modal.Description>
+                            {Object.keys(this.state.customerData).length > 0? <Label color='blue'><span>امتیاز مشتری:&nbsp;</span><span>{enToFa(String(this.state.customerData.points))}</span><span>&nbsp;امتیاز</span></Label> : <Label className='invisible'><span>ا</span></Label>}
                             <Form>
                                 <Form.Group unstackable widths={2}>
                                     <Form.Input className='ltr placeholder-rtl' label='شماره تلفن همراه' type="number" error={this.state.formValidation.phone_number} onChange={(e)=>this.inputChange(e,'phone_number')} placeholder='شماره تلفن همراه' />
@@ -221,5 +243,5 @@ const mapStateToProps = state => {
 
 export default connect(
   null,
-  { setNewBill }
+  { setNewBill,getCustomerByPhoneNumber }
 )(AddBillModal);

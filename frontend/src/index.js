@@ -21,7 +21,7 @@ const store = createStore(
 ReactDOM.render(
   <Provider store={store}>
         <ReduxToastr
-          timeOut={4000}
+          timeOut={400099}
           newestOnTop={false}
           preventDuplicates
           position="top-right"
