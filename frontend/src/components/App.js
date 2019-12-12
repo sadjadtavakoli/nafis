@@ -1,8 +1,8 @@
 import React from "react";
-import {Router, Route} from "react-router-dom";
-import {connect} from "react-redux";
+import { Router, Route } from "react-router-dom";
+import { connect } from "react-redux";
 
-import 'semantic-ui-css/semantic.min.css'
+import "semantic-ui-css/semantic.min.css";
 import "../scss/global.scss";
 
 import history from "../history";
@@ -10,6 +10,8 @@ import SideBar from "./sideBar";
 import Sale from "./sale";
 import mainPage from "./mainPage";
 import Depository from "./depository";
+import CashRegister from "./cashRegister";
+import PrintableFactor from "./factor";
 // import Dashboard from "../dashboard";
 // import Receipt from "../receipt";
 // import Providers from "../providers";
@@ -23,7 +25,6 @@ import Depository from "./depository";
 // import addProvider from "../addProvider";
 // import editProvider from "../editProvider";
 // import editCustomer from "../editCustomer";
-// import CashRegister from "../cashRegister";
 // import NavBar from "../navbar";
 // import FlexDummy from "../basic/flexDummy";
 import Login from "./auth/login";
@@ -32,18 +33,20 @@ import Login from "./auth/login";
 // import ProviderStats from '../providerStats';
 
 class App extends React.Component {
-    render(){
-        return (
-            <div className="App__container">
-                {this.props.token ? (
-                    <>
-                        <Router history={history}>
-                            {/* <NavBar/> */}
-                            <SideBar>
-                                <Route path="/" exact component={mainPage} />
-                                <Route path="/sale" exact component={Sale}/>
-                                <Route path="/depository" exact component={Depository}/>
-                                {/* 
+  render() {
+    return (
+      <div className="App__container">
+        {this.props.token ? (
+          <>
+            <Router history={history}>
+              {/* <NavBar/> */}
+              <SideBar>
+                <Route path="/" exact component={mainPage} />
+                <Route path="/sale" exact component={Sale} />
+                <Route path="/depository" exact component={Depository} />
+                <Route path="/cashregister" exact component={CashRegister} />
+                <Route path="/factor/:id" exact component={PrintableFactor} />
+                {/* 
                         <Route path="/receipt/:id" exact component={Receipt}/>
                         <Route path="/providers" exact component={Providers}/>
                         <Route path="/providers/:id" exact component={ProviderProfile}/>
@@ -60,24 +63,28 @@ class App extends React.Component {
                         <Route path="/cashregister/stats" exact component={DailyStats} />
                         <Route path="/notifications" exact component={Notificaitons} />
                         <Route path="/providerStats" exact component={ProviderStats} /> */}
-                            </SideBar>
-                        </Router>
-                        {/* <FlexDummy direction="bottom"/> */}
-                    </>
-                ) : (
-                        <Login />
-                    )}
-            </div>
-        );
-    }
-};
+              </SideBar>
+            </Router>
+            {/* <FlexDummy direction="bottom"/> */}
+          </>
+        ) : (
+          <Login />
+        )}
+      </div>
+    );
+  }
+}
 
 const mapStateToProps = state => {
-    if (localStorage.getItem('token')) {
-        return {type: localStorage.getItem('type')+'XXXXXXX', user: localStorage.getItem('user'), token: localStorage.getItem('token')}
-    }
-    // return {type: state.auth.type, user: state.auth.currentUser, token: state.auth.token};
-    return {type: null, user: null, token: null};
+  if (localStorage.getItem("token")) {
+    return {
+      type: localStorage.getItem("type") + "XXXXXXX",
+      user: localStorage.getItem("user"),
+      token: localStorage.getItem("token")
+    };
+  }
+  // return {type: state.auth.type, user: state.auth.currentUser, token: state.auth.token};
+  return { type: null, user: null, token: null };
 };
 
 export default connect(mapStateToProps)(App);
