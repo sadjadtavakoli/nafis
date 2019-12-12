@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from "react";
 import { connect } from "react-redux";
 import { Table, Pagination, Grid, Search } from 'semantic-ui-react'

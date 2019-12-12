@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from "react";
 // import animejs from "animejs";
 import { connect } from "react-redux";
