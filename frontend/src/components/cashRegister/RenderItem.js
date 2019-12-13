@@ -1,21 +1,11 @@
-import React, { useState, useEffect } from "react";
-import {
-  Header,
-  Form,
-  Popup,
-  Button,
-  Label,
-  Divider,
-  Card
-} from "semantic-ui-react";
+import React from "react";
+import { Form, Popup, Button, Label, Divider, Card } from "semantic-ui-react";
 import renderField from "./RenderField";
 import { priceToPersian, enToFa } from "../utils/numberUtils";
-import { standardTimeToJalaali } from "../utils/jalaaliUtils";
+import { useToggle } from "../../utils/Hooks";
 
 const RenderItem = props => {
-  const [productInfoIsOpen, setProductInfoIsOpen] = useState(false);
-  const toggleProductInfoIsOpen = () =>
-    setProductInfoIsOpen(prevState => !prevState);
+  const [productInfoIsOpen, toggleProductInfoIsOpen] = useToggle(false);
   return (
     <>
       <Form.Group

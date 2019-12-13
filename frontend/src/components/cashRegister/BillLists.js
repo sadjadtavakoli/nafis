@@ -7,9 +7,8 @@ const BillLists = ({
   title,
   headerTitles,
   dataProvider,
-  setData,
   setBillPK,
-  setModal,
+  togglePreviewModal,
   setDoneDialog,
   setDeleteDialog
 }) => {
@@ -52,9 +51,8 @@ const BillLists = ({
             <Table.Cell className="norm-latin text-center">
               <Button
                 onClick={() => {
-                  setData({ pk: item.pk, type: "action", bill: item });
                   setBillPK(item.pk);
-                  setModal(true);
+                  togglePreviewModal();
                 }}
                 icon
                 labelPosition="right"
@@ -76,7 +74,6 @@ const BillLists = ({
               </Button>
               <Button
                 onClick={() => {
-                  console.log("remove clicked: ", item.pk);
                   setDeleteDialog(item.pk);
                 }}
                 icon
