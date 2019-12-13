@@ -23,8 +23,8 @@ class BillsViewSet(NafisBase, ModelViewSet):
     serializer_class = BillSerializer
     permission_classes = (LoginRequired,)
     queryset = Bill.objects.all()
-    non_updaters = ["cashier"]
-    non_destroyers = ['cashier']
+    non_updaters = []
+    non_destroyers = ['cashier', 'salesperson', 'storekeeper', 'accountant']
     pagination_class = PaginationClass
 
     def destroy(self, request, *args, **kwargs):
@@ -54,6 +54,9 @@ class BillsViewSet(NafisBase, ModelViewSet):
     @action(url_path='actives', detail=False, methods=['get'], permission_classes=())
     def get_actives(self, request):
         queryset = Bill.objects.filter(status='active')
+        staff = Staff.objects.get(username=self.request.user.username)
+        if staff.job == "salesperson":
+            queryset.filter(buyer=staff)
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
