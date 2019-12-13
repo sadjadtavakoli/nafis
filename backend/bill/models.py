@@ -41,7 +41,7 @@ class Bill(models.Model):
     def items_discount(self):
         discount = 0
         for item in self.items.all():
-            discount += float(item.discount)
+            discount += float(item.total_discount)
             discount += float(item.special_discount)
         return discount
 
@@ -100,7 +100,7 @@ class BillItemManager(models.Manager):
 class BillItem(models.Model):
     product = models.ForeignKey('product.Product', related_name='bill_items', on_delete=DO_NOTHING)
     amount = models.FloatField(blank=False, null=False)
-    discount = models.FloatField(default=0)
+    discount = models.IntegerField(default=0)
     bill = models.ForeignKey('bill.Bill', related_name='items', on_delete=CASCADE)
     end_of_roll = models.BooleanField(default=False)
     end_of_roll_amount = models.FloatField(default=0, null=True, blank=True)
@@ -117,19 +117,23 @@ class BillItem(models.Model):
     @property
     def price(self):
         if self.end_of_roll:
-            return float(self.end_of_roll_amount) * float(self.product.selling_price)
-        return float(self.amount) * float(self.product.selling_price)
+            return int(self.end_of_roll_amount * float(self.product.selling_price))
+        return int(self.amount * float(self.product.selling_price))
 
     @property
     def final_price(self):
-        if float(self.discount) > float(self.price):
+        if int(self.discount) > int(self.price):
             return 0
-        return float(self.price) - float(self.discount)
+        return int(self.price) - int(self.discount)
 
     def reject(self):
         self.rejected = True
         self.product.update_stock_amount(-1 * self.amount)
         self.save()
+
+    @property
+    def total_discount(self):
+        return int(self.amount * float(self.discount))
 
 
 class SupplierBill(models.Model):
@@ -154,8 +158,8 @@ class SupplierBillItem(models.Model):
     amount = models.FloatField(blank=False, null=False)
     bill = models.ForeignKey('bill.SupplierBill', related_name='bills', on_delete=CASCADE)
     rejected = models.BooleanField(default=False)
-    raw_price = models.FloatField()
-    currency_price = models.FloatField(default=1)
+    raw_price = models.IntegerField()
+    currency_price = models.IntegerField(default=1)
     currency = models.CharField(
         choices=(('ریال', 'ریال'), ('درهم', 'درهم'), ('دلار', 'دلار'), ('روپیه', 'روپیه'),
                  ('یوان', 'یوان')),
@@ -164,7 +168,7 @@ class SupplierBillItem(models.Model):
 
     @property
     def price(self):
-        return float(self.raw_price) * float(self.currency_price)
+        return int(self.raw_price) * int(self.currency_price)
 
     def reject(self):
         self.rejected = True
@@ -213,7 +217,7 @@ class OurCheque(models.Model):
 
 class SpecialDiscount(models.Model):
     percentage = models.IntegerField(default=0)
-    straight = models.FloatField(default=0)
+    straight = models.IntegerField(default=0)
 
     def value(self, price):
         if self.percentage > 0:

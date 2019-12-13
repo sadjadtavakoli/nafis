@@ -2,11 +2,12 @@ from math import floor
 
 from django.db import models
 from django.db.models import DO_NOTHING
-from rest_framework.decorators import action
+
 
 def round_down(n, decimals=0):
     multiplier = 10 ** decimals
     return floor(n * multiplier) / multiplier
+
 
 class Product(models.Model):
     code = models.IntegerField(null=False, blank=False)
@@ -18,8 +19,8 @@ class Product(models.Model):
                                      on_delete=DO_NOTHING)
     material = models.ForeignKey('product.Material', related_name='products', on_delete=DO_NOTHING)
     design = models.ForeignKey('product.Design', related_name='products', on_delete=DO_NOTHING)
-    selling_price = models.FloatField()
-    buying_price = models.FloatField()
+    selling_price = models.IntegerField()
+    buying_price = models.IntegerField()
     stock_amount = models.FloatField()
     f_type = models.ForeignKey('product.FType', related_name='products', on_delete=DO_NOTHING)
 

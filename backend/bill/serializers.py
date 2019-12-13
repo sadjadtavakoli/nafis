@@ -49,8 +49,9 @@ class BillItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BillItem
-        fields = ('pk', 'product', 'amount', 'discount', 'end_of_roll', 'end_of_roll_amount', 'rejected',
-                  'special_discount', 'price', 'final_price')
+        fields = (
+        'pk', 'product', 'amount', 'discount', 'total_discount', 'end_of_roll', 'end_of_roll_amount', 'rejected',
+        'special_discount', 'price', 'final_price')
 
 
 class BillSerializer(serializers.ModelSerializer):
