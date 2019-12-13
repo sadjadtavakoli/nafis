@@ -58,7 +58,7 @@ class BillSerializer(serializers.ModelSerializer):
     items = BillItemSerializer(many=True, required=False)
     buyer = CustomerSerializer()
     seller = StaffSerializer()
-    branch = BranchSerializer()
+    branch = BranchSerializer(read_only=True)
     payments = CustomerPaymentSerializer(many=True, required=False)
     price = serializers.ReadOnlyField()
     total_discount = serializers.ReadOnlyField()
