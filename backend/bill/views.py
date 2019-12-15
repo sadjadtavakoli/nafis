@@ -21,7 +21,7 @@ from staff.models import Staff
 
 class BillsViewSet(NafisBase, ModelViewSet):
     serializer_class = BillSerializer
-    # permission_classes = (LoginRequired,)
+    permission_classes = (LoginRequired,)
     queryset = Bill.objects.all().order_by('-pk')
     non_updaters = []
     non_destroyers = ['cashier', 'salesperson', 'storekeeper', 'accountant']
@@ -78,11 +78,23 @@ class BillsViewSet(NafisBase, ModelViewSet):
 
     @action(methods=['post'], detail=True, url_path='add-payments', permission_classes=(AddPaymentPermission,))
     def add_payments(self, request, **kwargs):
-        amount = self.request.data.get('amount')
         payment_type = self.request.data.get('type')
+        if payment_type == "cash_card":
+            cash_amount = self.request.data.get('cash_amount', 0)
+            card_amount = self.request.data.get('card_amount', 0)
+            if cash_amount:
+                amount = cash_amount
+                payment_type = "cash"
+            else:
+                amount = card_amount
+                payment_type = "card"
+        else:
+            amount = self.request.data.get('amount')
+
         bill = self.get_object()
         payment = CustomerPayment.objects.create(create_date=datetime.now(),
                                                  amount=float(amount), bill=bill, type=payment_type)
+
         if payment_type == "cheque":
             bank = self.request.data.get('bank')
             number = self.request.data.get('number')
