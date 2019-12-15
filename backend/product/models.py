@@ -1,4 +1,4 @@
-from math import floor
+from math import floor, ceil
 
 from django.db import models
 from django.db.models import DO_NOTHING
@@ -7,6 +7,11 @@ from django.db.models import DO_NOTHING
 def round_down(n, decimals=0):
     multiplier = 10 ** decimals
     return floor(n * multiplier) / multiplier
+
+
+def round_up(n, decimals=0):
+    multiplier = 10 ** decimals
+    return ceil(n * multiplier) / multiplier
 
 
 class Product(models.Model):

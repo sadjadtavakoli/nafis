@@ -3,6 +3,8 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import DO_NOTHING, CASCADE, Sum
 
+from product.models import round_up
+
 
 class Bill(models.Model):
     create_date = models.DateTimeField(auto_now_add=True)
@@ -27,15 +29,15 @@ class Bill(models.Model):
         price = 0
         for item in self.items.filter(rejected=False).all():
             price += float(item.price)
-        return price
+        return round_up(price, -3)
 
     @property
     def total_discount(self):
-        return float(self.discount) + float(self.items_discount) + float(self.buyer_special_discount)
+        return round_up(float(self.discount) + float(self.items_discount) + float(self.buyer_special_discount), -3)
 
     @property
     def buyer_special_discount(self):
-        return self.buyer.special_discount(self.price)
+        return round_up(self.buyer.special_discount(self.price), -3)
 
     @property
     def items_discount(self):
@@ -43,7 +45,7 @@ class Bill(models.Model):
         for item in self.items.all():
             discount += float(item.total_discount)
             discount += float(item.special_discount)
-        return discount
+        return round_up(discount, -3)
 
     @property
     def final_price(self):
