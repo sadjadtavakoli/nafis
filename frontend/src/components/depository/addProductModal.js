@@ -1,4 +1,4 @@
-
+/* eslint-disable */
 import React from "react";
 import { connect } from "react-redux";
 import { Button, Modal, Divider, Label, Grid, Form, Card, Popup, Icon, Message } from 'semantic-ui-react'
