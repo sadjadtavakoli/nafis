@@ -39,7 +39,7 @@ class Color(models.Model):
     name = models.CharField(max_length=32, null=False, blank=False)
 
     def __str__(self):
-        return self.name + " " + self.rgb
+        return self.name + " " + self.rgb if self.rgb is not None else self.name
 
 
 class Design(models.Model):
