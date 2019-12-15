@@ -21,8 +21,8 @@ from staff.models import Staff
 
 class BillsViewSet(NafisBase, ModelViewSet):
     serializer_class = BillSerializer
-    permission_classes = (LoginRequired,)
-    queryset = Bill.objects.all()
+    # permission_classes = (LoginRequired,)
+    queryset = Bill.objects.all().order_by('-pk')
     non_updaters = []
     non_destroyers = ['cashier', 'salesperson', 'storekeeper', 'accountant']
     pagination_class = PaginationClass
@@ -53,7 +53,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
 
     @action(url_path='actives', detail=False, methods=['get'], permission_classes=())
     def get_actives(self, request):
-        queryset = Bill.objects.filter(status='active')
+        queryset = Bill.objects.filter(status='active').order_by('-pk')
         staff = Staff.objects.get(username=self.request.user.username)
         if staff.job == "salesperson":
             queryset.filter(buyer=staff)
@@ -67,7 +67,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
 
     @action(url_path='dones', detail=False, methods=['get'], permission_classes=())
     def get_dones(self, request):
-        queryset = Bill.objects.filter(status='done')
+        queryset = Bill.objects.filter(status='done').order_by('-pk')
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
