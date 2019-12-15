@@ -11,7 +11,7 @@ from rest_framework.viewsets import ModelViewSet
 from bill.models import Bill, BillItem, CustomerPayment, CustomerCheque
 from bill.permissions import LoginRequired, CloseBillPermission, AddPaymentPermission
 from bill.serializers import BillSerializer, CustomerPaymentSerializer, BillItemSerializer
-from customer.models import Customer
+from customer.models import Customer, Point
 from nafis.paginations import PaginationClass
 from nafis.sms import SendSMS, create_message
 from nafis.views import NafisBase
@@ -47,7 +47,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
     def close_all(self, request):
         for bill in Bill.objects.filter(status="active"):
             bill.check_status()
-            bill.buyer.points += int(bill.final_price) * int(settings.POINT_PERCENTAGE)
+            bill.buyer.points += int(bill.final_price) * int(Point.objects.first().amount)
             bill.buyer.save()
         return Response({'ok': True})
 
@@ -124,8 +124,9 @@ class BillsViewSet(NafisBase, ModelViewSet):
                     sms.group_sms(create_message(instance), [instance.buyer.phone_number], instance.buyer.phone_number)
                 except:
                     pass
-            instance.buyer.points += instance.final_price * settings.POINT_PERCENTAGE
-            instance.buyer.save()
+            if not(instance.items_special_discount or instance.buyer_special_discount):
+                instance.buyer.points += int(instance.final_price) * int(Point.objects.first().amount)
+                instance.buyer.save()
         return Response({'status': instance.status})
 
     def create(self, request, *args, **kwargs):

@@ -12,7 +12,7 @@ class Bill(models.Model):
     status = models.CharField(choices=settings.BILL_STATUS, max_length=32, default='active')
     buyer = models.ForeignKey('customer.Customer', related_name='bills', on_delete=DO_NOTHING)
     seller = models.ForeignKey('staff.Staff', related_name='bills', on_delete=DO_NOTHING)
-    discount = models.FloatField(default=0)
+    discount = models.IntegerField(default=0)
     used_points = models.IntegerField(default=0)
     branch = models.ForeignKey('branch.Branch', related_name='bills', on_delete=DO_NOTHING)
     bill_image = models.ImageField(null=True, blank=True)
@@ -28,54 +28,61 @@ class Bill(models.Model):
     def price(self):
         price = 0
         for item in self.items.filter(rejected=False).all():
-            price += float(item.price)
+            price += int(item.price)
         return round_up(price, -3)
 
     @property
     def total_discount(self):
-        return round_up(float(self.discount) + float(self.items_discount) + float(self.buyer_special_discount), -3)
+        return round_up(int(self.discount) + int(self.items_discount) + int(self.buyer_special_discount), -3)
 
     @property
     def buyer_special_discount(self):
         return round_up(self.buyer.special_discount(self.price), -3)
 
     @property
+    def items_special_discount(self):
+        discount = 0
+        for item in self.items.all():
+            discount += int(item.special_discount)
+        return round_up(discount, -3)
+
+    @property
     def items_discount(self):
         discount = 0
         for item in self.items.all():
-            discount += float(item.total_discount)
-            discount += float(item.special_discount)
+            discount += int(item.total_discount)
+            discount += int(item.special_discount)
         return round_up(discount, -3)
 
     @property
     def final_price(self):
-        if float(self.total_discount) >= float(self.price):
+        if int(self.total_discount) >= int(self.price):
             return 0
-        return float(self.price) - float(self.total_discount)
+        return int(self.price) - int(self.total_discount)
 
     @property
     def paid(self):
-        paid = float(self.used_points)
+        paid = int(self.used_points)
         if self.payments.count():
-            paid += float(self.payments.aggregate(Sum('amount'))['amount__sum'])
+            paid += int(self.payments.aggregate(Sum('amount'))['amount__sum'])
         return paid
 
     @property
     def cheque_paid(self):
         if self.payments.count():
-            return self.payments.filter(type='cheque').aggregate(Sum('amount'))['amount__sum']
+            return int(self.payments.filter(type='cheque').aggregate(Sum('amount'))['amount__sum'])
         return 0
 
     @property
     def cash_paid(self):
         if self.payments.count():
-            return self.payments.filter(type='cash').aggregate(Sum('amount'))['amount__sum']
+            return int(self.payments.filter(type='cash').aggregate(Sum('amount'))['amount__sum'])
         return 0
 
     @property
     def card_paid(self):
         if self.payments.count():
-            return self.payments.filter(type='card').aggregate(Sum('amount'))['amount__sum']
+            return int(self.payments.filter(type='card').aggregate(Sum('amount'))['amount__sum'])
         return 0
 
     @property
@@ -223,7 +230,7 @@ class SpecialDiscount(models.Model):
 
     def value(self, price):
         if self.percentage > 0:
-            return float(price) * float(self.percentage)
+            return int(price) * int(self.percentage)
         return self.straight
 
 

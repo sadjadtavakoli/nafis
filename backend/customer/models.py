@@ -27,3 +27,7 @@ class CustomerType(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Point(models.Model):
+    amount = models.IntegerField(null=False, blank=False)
