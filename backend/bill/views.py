@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from rest_framework.decorators import action
@@ -47,7 +46,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
     def close_all(self, request):
         for bill in Bill.objects.filter(status="active"):
             bill.check_status()
-            bill.buyer.points += int(bill.final_price) * int(Point.objects.first().amount)
+            bill.buyer.points += int(bill.final_price) * int(Point.objects.first().amount) / 100
             bill.buyer.save()
         return Response({'ok': True})
 
@@ -124,8 +123,8 @@ class BillsViewSet(NafisBase, ModelViewSet):
                     sms.group_sms(create_message(instance), [instance.buyer.phone_number], instance.buyer.phone_number)
                 except:
                     pass
-            if not(instance.items_special_discount or instance.buyer_special_discount):
-                instance.buyer.points += int(instance.final_price) * int(Point.objects.first().amount)
+            if not (instance.items_special_discount or instance.buyer_special_discount):
+                instance.buyer.points += int(instance.final_price) * int(Point.objects.first().amount) / 100
                 instance.buyer.save()
         return Response({'status': instance.status})
 
