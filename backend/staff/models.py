@@ -14,5 +14,5 @@ class Staff(User):
     employment_date = models.DateField(blank=True, null=True)
     address = models.CharField(max_length=200, blank=True, null=True)
     REQUIRED_FIELDS = ('username', 'job')
-    branch = models.ForeignKey('branch.Branch', related_name='staffs', on_delete=DO_NOTHING)
+    branch = models.ForeignKey('branch.Branch', related_name='staffs', on_delete=DO_NOTHING, blank=True, null=True)
 
