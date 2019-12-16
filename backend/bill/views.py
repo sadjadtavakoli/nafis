@@ -46,8 +46,9 @@ class BillsViewSet(NafisBase, ModelViewSet):
     def close_all(self, request):
         for bill in Bill.objects.filter(status="active"):
             bill.check_status()
-            bill.buyer.points += int(bill.final_price) * int(Point.objects.first().amount) / 100
-            bill.buyer.save()
+            if not (bill.items_special_discount or bill.buyer_special_discount):
+                bill.buyer.points += int(bill.final_price) * int(Point.objects.first().amount) / 100
+                bill.buyer.save()
         return Response({'ok': True})
 
     @action(url_path='actives', detail=False, methods=['get'], permission_classes=())
