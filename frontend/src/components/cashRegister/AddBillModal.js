@@ -5,12 +5,7 @@ import {
   Divider,
   Header,
   Segment,
-  Form,
-  Card,
-  Popup,
-  Icon,
-  Message,
-  Label
+  Form
 } from "semantic-ui-react";
 import BuyerDetails from "./BuyerDetails";
 import SellerDetails from "./SellerDetails";
@@ -85,9 +80,10 @@ const AddBillModal = props => {
     </Modal>
   );
 };
-export default connect((state, onwProps) => {
-  const da = state.bills.bills.find(bill => bill.pk === onwProps.billPK);
-  return {
-    data: da
-  };
-}, null)(AddBillModal);
+
+export default connect(
+  (state, onwProps) => ({
+    data: state.bills.bills.find(bill => bill.pk === onwProps.billPK)
+  }),
+  null
+)(AddBillModal);

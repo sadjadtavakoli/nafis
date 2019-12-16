@@ -12,6 +12,7 @@ const AddPaymentPopup = props => {
     { text: "نقد", value: "cash", key: 2 },
     { text: "کارت", value: "card", key: 3 }
   ];
+
   const selectHandler = (e, { value }) => {
     setSelectedPaymentType(value);
     setPaymentFormData("type")(value);

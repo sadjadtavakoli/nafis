@@ -17,6 +17,7 @@ const PaymentDetails = props => {
   const removePayment = (billID, paymentID) => {
     props.removePayment(billID, paymentID);
   };
+
   return (
     <>
       <Header as="h3" textAlign="right">
@@ -36,9 +37,7 @@ const PaymentDetails = props => {
                 "تاریخ ایجاد",
                 compose(enToFa, standardTimeToJalaali)
               )}
-              {renderField(payment, "amount", "مبلغ پرداختی", text =>
-                priceToPersian(text)
-              )}
+              {renderField(payment, "amount", "مبلغ پرداختی", priceToPersian)}
               {renderField(payment, "type", "نوع پرداخت", convertToFA)}
               <Label
                 as="a"
