@@ -1,7 +1,7 @@
 import { LOGIN } from "../actions/types";
 
 const INITIAL_VALUES = {
-  currentUser: localStorage.getItem("user") || "",
+  currentUser: JSON.parse(localStorage.getItem("user")) || "",
   type: localStorage.getItem("type") || "",
   token: localStorage.getItem("token") || ""
 };

@@ -10,7 +10,12 @@ import BillDoneModal from "./BillDoneModal";
 import BillDeleteModal from "./BillDeleteModal";
 import { useToggle } from "../../utils/Hooks";
 
-const CashRegister = ({ getAllActiveBills, activeBills, loading }) => {
+const CashRegister = ({
+  getAllActiveBills,
+  activeBills,
+  loading,
+  currentUser
+}) => {
   const [modal, toggleModal] = useToggle(false);
 
   const [billPK, setBillPK] = useState(undefined);
@@ -26,7 +31,12 @@ const CashRegister = ({ getAllActiveBills, activeBills, loading }) => {
   }, []);
   return (
     <Container>
-      <AddBillModal open={modal} onClose={toggleModal} billPK={billPK} />
+      <AddBillModal
+        open={modal}
+        onClose={toggleModal}
+        billPK={billPK}
+        setDoneDialog={setDoneDialog}
+      />
       <BillDoneModal dialog={doneDialog} closeDialog={closeDoneDialog} />
       <BillDeleteModal dialog={deleteDialog} closeDialog={closeDeleteDialog} />
       {loading ? (
@@ -36,14 +46,15 @@ const CashRegister = ({ getAllActiveBills, activeBills, loading }) => {
           title="لیست فاکتور‌های فعال"
           headerTitles={[
             "موبایل خریدار",
+            "اسم فروشنده",
             "مبلغ نهایی فاکتور",
             "تاریخ فاکتور",
             "عملیات فاکتور"
           ]}
+          currentUser={currentUser}
           dataProvider={activeBills}
           togglePreviewModal={toggleModal}
           setBillPK={setBillPK}
-          setDoneDialog={setDoneDialog}
           setDeleteDialog={setDeleteDialog}
         />
       )}
@@ -53,6 +64,7 @@ const CashRegister = ({ getAllActiveBills, activeBills, loading }) => {
 
 export default connect(
   state => ({
+    currentUser: state.auth.currentUser,
     loading: state.bills.loading,
     activeBills:
       state.bills.bills.filter(bill => bill.status === "active") || []
