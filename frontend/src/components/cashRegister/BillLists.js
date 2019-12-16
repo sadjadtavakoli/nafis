@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Pagination, Icon, Button } from "semantic-ui-react";
+import { Table, Icon, Button } from "semantic-ui-react";
 import { standardTimeToJalaali } from "../utils/jalaaliUtils";
 import { enToFa, priceToPersian } from "../utils/numberUtils";
 
@@ -10,7 +10,8 @@ const BillLists = ({
   setBillPK,
   togglePreviewModal,
   setDoneDialog,
-  setDeleteDialog
+  setDeleteDialog,
+  currentUser
 }) => {
   return (
     <Table color="green" striped className="rtl">
@@ -41,6 +42,12 @@ const BillLists = ({
               </span>
             </Table.Cell>
             <Table.Cell className="norm-latin text-center">
+              <span className="yekan">
+                {item.seller &&
+                  `${item.seller.first_name} ${item.seller.last_name}`}
+              </span>
+            </Table.Cell>
+            <Table.Cell className="norm-latin text-center">
               <span className="yekan">{priceToPersian(item.final_price)}</span>
             </Table.Cell>
             <Table.Cell className="norm-latin text-center">
@@ -58,44 +65,33 @@ const BillLists = ({
                 labelPosition="right"
                 color="blue"
               >
-                <span className="yekan">نمایش</span>
-                <Icon name="info" />
+                <span className="yekan">ویرایش</span>
+                <Icon name="edit" />
               </Button>
-              <Button
-                onClick={() => {
-                  setDoneDialog(item.pk);
-                }}
-                icon
-                labelPosition="right"
-                color="yellow"
-              >
-                <span className="yekan">بستن</span>
-                <Icon name="lock" />
-              </Button>
-              <Button
-                onClick={() => {
-                  setDeleteDialog(item.pk);
-                }}
-                icon
-                labelPosition="right"
-                negative
-              >
-                <span className="yekan">حذف</span>
-                <Icon name="close" />
-              </Button>
+
+              {currentUser.job === "admin" ? (
+                <Button
+                  onClick={() => {
+                    setDeleteDialog(item.pk);
+                  }}
+                  icon
+                  labelPosition="right"
+                  negative
+                >
+                  <span className="yekan">حذف</span>
+                  <Icon name="close" />
+                </Button>
+              ) : null}
             </Table.Cell>
           </Table.Row>
         ))}
       </Table.Body>
       <Table.Footer fullWidth>
         <Table.Row>
-          <Table.HeaderCell colSpan="10" className="norm-latin">
-            {/* <Pagination
-              className="norm-latin"
-              defaultActivePage={1}
-              totalPages={5}
-            /> */}
-          </Table.HeaderCell>
+          <Table.HeaderCell
+            colSpan="10"
+            className="norm-latin"
+          ></Table.HeaderCell>
         </Table.Row>
       </Table.Footer>
     </Table>
