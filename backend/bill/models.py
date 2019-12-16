@@ -69,19 +69,19 @@ class Bill(models.Model):
 
     @property
     def cheque_paid(self):
-        if self.payments.count():
+        if self.payments.filter(type='cheque').exists():
             return int(self.payments.filter(type='cheque').aggregate(Sum('amount'))['amount__sum'])
         return 0
 
     @property
     def cash_paid(self):
-        if self.payments.count():
+        if self.payments.filter(type='cash').exists():
             return int(self.payments.filter(type='cash').aggregate(Sum('amount'))['amount__sum'])
         return 0
 
     @property
     def card_paid(self):
-        if self.payments.count():
+        if self.payments.filter(type='card').exists():
             return int(self.payments.filter(type='card').aggregate(Sum('amount'))['amount__sum'])
         return 0
 
