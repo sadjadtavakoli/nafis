@@ -5,15 +5,6 @@ import {
   createReducer
 } from "../utils/FunctionalUtils";
 
-// const addBill = (billsState, action) => {
-//   return billsState.bills.concat({ [action.payload.pk]: action.payload });
-// };
-
-// const editBill = (billsState, action) =>
-//   updateItemInArray(billsState, action.payload.id, bill =>
-//     updateObject(bill, action.payload.target)
-//   );
-
 const INITIAL_STATE = {
   loading: false,
   bills: [],
@@ -21,8 +12,6 @@ const INITIAL_STATE = {
 };
 
 export default createReducer(INITIAL_STATE, {
-  //   ADD_Bill: addBill,
-  //   EDIT_Bill: editBill,
   [ActionTypes.FETCH(ActionTypes.GET_ACTIVE_BILL)]: (state, action) => ({
     ...state,
     loading: true
@@ -64,22 +53,3 @@ export default createReducer(INITIAL_STATE, {
     bills: state.bills.filter(bill => bill.pk !== action.payload.billID)
   })
 });
-
-// export default (state = INITIAL_STATE, action) => {
-//   switch (action.type) {
-//     case ActionTypes.FETCH(ActionTypes.GET_ACTIVE_BILL): {
-//       return { ...state, loading: true };
-//       break;
-//     }
-//     case ActionTypes.SUCSS(ActionTypes.GET_ACTIVE_BILL): {
-//       return { ...state, loading: false };
-//       break;
-//     }
-//     case ActionTypes.FAILD(ActionTypes.GET_ACTIVE_BILL): {
-//       return { ...state, loading: false, error: action.error };
-//       break;
-//     }
-//     default:
-//       return state;
-//   }
-// };

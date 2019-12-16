@@ -15,7 +15,7 @@ const BillDeleteModal = props => {
       })
       .catch(err => {
         props.closeDialog();
-        toastr.error(err);
+        toastr.error(err.detail);
       });
   };
 

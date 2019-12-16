@@ -5,9 +5,6 @@ import { enToFa } from "../utils/numberUtils";
 import RenderItem from "./RenderItem";
 
 const ProductItems = props => {
-  const [productInfoIsOpen, setProductInfoIsOpen] = useState(false);
-  const toggleProductInfoIsOpen = () =>
-    setProductInfoIsOpen(prevState => !prevState);
   return (
     <>
       <Header as="h3" textAlign="right">

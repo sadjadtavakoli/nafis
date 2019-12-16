@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from "react";
 import { connect } from "react-redux";
 import { Button, Container, Divider, Form, Grid, Segment } from 'semantic-ui-react'
