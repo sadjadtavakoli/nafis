@@ -11,7 +11,7 @@ def round_down(n, decimals=0):
 
 def round_up(n, decimals=0):
     multiplier = 10 ** decimals
-    return ceil(n * multiplier) / multiplier
+    return int(ceil(n * multiplier) / multiplier)
 
 
 class Product(models.Model):
