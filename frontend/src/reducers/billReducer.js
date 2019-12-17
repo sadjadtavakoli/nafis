@@ -8,10 +8,15 @@ import {
 const INITIAL_STATE = {
   loading: false,
   bills: [],
+  dailyReport: [],
   error: undefined
 };
 
 export default createReducer(INITIAL_STATE, {
+  [ActionTypes.GET_DAILY_REPORT]: (state, action) => ({
+    ...state,
+    dailyReport: action.payload
+  }),
   [ActionTypes.FETCH(ActionTypes.GET_ACTIVE_BILL)]: (state, action) => ({
     ...state,
     loading: true

@@ -9,6 +9,7 @@ export const REMOVE_PAYMENT = "REMOVE_PAYMENT";
 export const CHANGE_BILL_TO_DONE = "CHANGE_BILL_TO_DONE";
 export const REMOVE_BILL = "REMOVE_BILL";
 export const GET_BILL = "GET_BILL";
+export const GET_DAILY_REPORT = "GET_DAILY_REPORT";
 
 export const FETCH = types => `FETCH_${types}`;
 export const SUCSS = types => `SUCSS_${types}`;
