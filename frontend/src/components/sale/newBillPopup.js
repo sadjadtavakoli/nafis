@@ -52,8 +52,8 @@ class NewBillPopup extends React.Component {
                 end_of_roll_amount: this.state.end_of_roll_amount,
             }
             if (this.props.pk) {
-                this.props.addNewItem(this.props.pk, prepareData).then(() => {
-                    this.props.refetch();
+                this.props.addNewItem(this.props.pk, prepareData).then((res) => {
+                    this.props.refetch(res);
                     setTimeout(() => {
                         toastr.success('ثبت آیتم جدید', 'ثبت آیتم جدید با موفقیت انجام شد');
                         this.props.onClose();

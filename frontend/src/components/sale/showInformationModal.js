@@ -2,16 +2,15 @@ import React from "react";
 import { connect } from "react-redux";
 import { enToFa } from '../utils/numberUtils'
 import { setNewBill, deleteItem, getCustomerByPhoneNumber,updateBill } from '../../actions/SaleActions';
-import { Button, Modal, Divider, Header, Segment, Form, Card, Dimmer, Loader, Image, Icon, Message, Label } from 'semantic-ui-react'
+import { Button, Modal, Divider, Header, Segment, Form, Card, Popup, Loader, Image, Icon, Message, Label } from 'semantic-ui-react'
 import {toastr} from 'react-redux-toastr'
-
+import NewBillPopup from './newBillPopup'
 class ShowInformationModal extends React.Component {
     constructor(props) {
         super(props);
     }
     componentWillReceiveProps() {
         this.setState({ data: this.props.data }, () => {
-            console.log(this.props.data);
             if(this.state.data.buyer)
                 this.getCustomerData(this.state.data.buyer.phone_number)
         })
@@ -43,16 +42,20 @@ class ShowInformationModal extends React.Component {
         this.setState((prevState)=>({isOpenAddItem: !prevState.isOpenAddItem}))
     }
     deleteItem = (index) => {
-        this.props.deleteItem(this.state.data.items[index].pk).then(({data}) => {
-            this.setState({ data });
-        })
+        var r = window.confirm("آیا از حذف این مورد مطمئن هستید؟");
+        if (r == true) {
+            this.props.deleteItem(this.state.data.items[index].pk).then(({ data }) => {
+                this.setState({ data });
+            });
+        }
+        
     }
     itemsRender = (item,index) => {
         let id = Object.keys(this.state.data.items).length;
         return (<Card.Group key={index}>
             <Card fluid>
                 <Card.Content>
-                    <Card.Header className='yekan'>آیتم شماره {enToFa(index+1)}<span>
+                    <Card.Header className='yekan'>{item.product.name}<span>
                     <Label color='red' onClick={()=>this.deleteItem(index)} className="pointer" style={{marginRight: 10}}>
                         <Icon name='trash' /> حذف آیتم
                     </Label>
@@ -118,7 +121,7 @@ class ShowInformationModal extends React.Component {
             }
         } else if(inputName === 'discount'){
             this.props.updateBill(this.state.data.pk, { discount: Number(this.state.discount) }).then((res) => {
-                console.log(res)
+                // console.log(res)
             })
         }
     }
@@ -142,7 +145,23 @@ class ShowInformationModal extends React.Component {
                 </span>
             );
         }
-    }
+    };
+    submitItemPopup = (data) => {
+        let id = this.state.itemsDataSheet.length;
+        this.setState(
+            {
+                // itemsDOM: [...this.state.itemsDOM, itemDOM],
+                itemsDataSheet: [...this.state.itemsDataSheet, data],
+                formValidation: { ...this.state.formValidation, items: false }
+            }
+            , () => {
+            });
+        this.toggleAddItemPopup();
+    };
+    refetchModalData = (response) => {
+        console.log('response', response)
+        this.setState({data:response.data,})
+    };
     render() {
 
         return Object.keys(this.state.data).length > 0?(
@@ -171,7 +190,7 @@ class ShowInformationModal extends React.Component {
                                     icon='inbox'
                                     color='red'
                                     header='قلمی در این فاکتور موجود نمی باشد'
-                                    content={<span>در راستای جلوگیری از خطای انسانی در فرآیند ثبت و ویرایش، جهت افزودن آیتم، در صفحه‌ی قبلی بروی <b>افزودن آیتم جدید</b> کلیک نمایید</span>}
+                                    content={<span>در راستای جلوگیری از خطای انسانی در فرآیند ثبت و ویرایش، جهت افزودن آیتم،توصیه میشود در صفحه‌ی قبلی بروی <b>افزودن آیتم جدید</b> کلیک نمایید</span>}
                                 />
                                 <Segment hidden={Object.keys(this.state.data.items).length === 0}>
                                     <Header as='h3' floated='right'>
@@ -183,7 +202,17 @@ class ShowInformationModal extends React.Component {
                                         return this.itemsRender(item,index)
                                     })}
                                 </Segment>
-                                
+                                <div className="text-center">
+                                        <Popup
+                                            style={{top:-35}}
+                                        content={<NewBillPopup onClose={this.toggleAddItemPopup} phoneNumber={this.state.data.buyer.phone_number} refetch={this.refetchModalData} pk={this.state.data.pk} onSubmit={this.submitItemPopup}/>}
+                                            open={this.state.isOpenAddItem}
+                                            className="no-filter"
+                                            position='bottom center'
+                                            wide='very'
+                                            trigger={<Button circular onClick={() => {this.toggleAddItemPopup(this.state.isOpenAddItem) }} color='green' size='huge' icon='add' />}
+                                        />
+                                </div>
 
                                 
                             </Form>

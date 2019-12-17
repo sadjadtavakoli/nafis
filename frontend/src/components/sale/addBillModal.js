@@ -35,23 +35,27 @@ class AddBillModal extends React.Component {
         this.setState((prevState)=>({isOpenAddItem: !prevState.isOpenAddItem}))
     }
     deleteItem = (id) => {
-        console.log(id, id);
-        let itemsDataSheet = this.state.itemsDataSheet;
-        let itemsDOM = this.state.itemsDOM;
-        for( var i = 0; i < itemsDataSheet.length; i++){ 
-            if ( i === id) {
-                itemsDataSheet.splice(i, 1); 
-                itemsDOM.splice(i, 1); 
-            }
-        };
-        this.setState({itemsDataSheet,itemsDOM})
+        var r = window.confirm("آیا از حذف این مورد مطمئن هستید؟");
+        if (r == true) {
+            let itemsDataSheet = this.state.itemsDataSheet;
+            let itemsDOM = this.state.itemsDOM;
+            for( var i = 0; i < itemsDataSheet.length; i++){ 
+                if ( i === id) {
+                    itemsDataSheet.splice(i, 1); 
+                    itemsDOM.splice(i, 1); 
+                }
+            };
+            this.setState({ itemsDataSheet, itemsDOM });
+        }
+       
     }
     submitItemPopup = (data) => {
         console.log('data hast',data)
         let id = this.state.itemsDataSheet.length;
         const itemDOM = (<Card fluid key={id}>
             <Card.Content>
-                <Card.Header className='yekan'>آیتم شماره {enToFa(id + 1)}
+                <Card.Header className='yekan'>
+                    {data.name}
                     <span>
                         <Label color='red' onClick={()=>this.deleteItem(id)} className="pointer" style={{marginRight: 10}}>
                             <Icon name='trash' /> حذف آیتم

@@ -44,6 +44,7 @@ class BillTable extends React.Component {
         })
     }
     closeInformationModal = () => {
+        this.getActiveBill(this.state.activePage);
         this.setState({isOpenInformationModal:false})
     }
     openInformationModal = (itemData) => {
@@ -54,18 +55,18 @@ class BillTable extends React.Component {
     toggleAddItemPopup = (id) => {
         this.setState({ isOpenAddItem: id });
     };
-        submitItemPopup = (data) => {
+    submitItemPopup = (data) => {
         let id = this.state.itemsDataSheet.length;
         this.setState(
             {
                 // itemsDOM: [...this.state.itemsDOM, itemDOM],
                 itemsDataSheet: [...this.state.itemsDataSheet, data],
-                formValidation:{...this.state.formValidation,items:false}
+                formValidation: { ...this.state.formValidation, items: false }
             }
             , () => {
-        });
+            });
         this.toggleAddItemPopup();
-    }
+    };
     render() {
         return this.state.activeBill.length > 0 ? (
             <>
@@ -100,7 +101,7 @@ class BillTable extends React.Component {
                                 <Table.Row key={index}>
                                         <Table.Cell className="norm-latin text-center">
                                             <Popup
-                                                content={<NewBillPopup refetch={()=>this.getActiveBill(this.state.activePage)} phoneNumber={item.buyer.phone_number} pk={item.pk} onClose={()=>this.toggleAddItemPopup(NaN)} onSubmit={this.submitItemPopup}/>}
+                                            content={<NewBillPopup refetch={()=>this.getActiveBill(this.state.activePage)} phoneNumber={item.buyer.phone_number} pk={item.pk} onClose={()=>this.toggleAddItemPopup(NaN)} onSubmit={this.submitItemPopup}/>}
                                             open={this.state.isOpenAddItem === index}
                                             className="no-filter"
                                             position='bottom center'

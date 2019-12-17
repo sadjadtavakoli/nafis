@@ -108,7 +108,7 @@ class PrintFactor extends React.Component {
             <p className="col-3 font-weight-bold p-1">
               <span>
                 {enToFa(
-                  phoneNumberBeautifier(
+                  (
                     this.state.bill.buyer && this.state.bill.buyer.pk
                   )
                 )}
