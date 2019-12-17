@@ -1,15 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import {
-  Container,
-  Segment,
-  Button,
-  Table,
-  Pagination,
-  Icon,
-  Dimmer,
-  Loader
-} from "semantic-ui-react";
+import { Container } from "semantic-ui-react";
 import AddBillModal from "./AddBillModal";
 
 import BillLists from "./BillLists";
@@ -17,13 +8,17 @@ import { getAllActiveBills } from "../../actions/BillActions";
 import LoadingBar from "../utils/loadingBar";
 import BillDoneModal from "./BillDoneModal";
 import BillDeleteModal from "./BillDeleteModal";
+import { useToggle } from "../../utils/Hooks";
 
-const CashRegister = ({ getAllActiveBills, activeBills, loading }) => {
-  const [modal, setModal] = useState(false);
-  const [data, setData] = useState({});
+const CashRegister = ({
+  getAllActiveBills,
+  activeBills,
+  loading,
+  currentUser
+}) => {
+  const [modal, toggleModal] = useToggle(false);
+
   const [billPK, setBillPK] = useState(undefined);
-  const openModal = data => setModal(data);
-  const closeModal = () => setModal(false);
 
   const [doneDialog, setDoneDialog] = useState(false);
   const closeDoneDialog = () => setDoneDialog(false);
@@ -38,9 +33,9 @@ const CashRegister = ({ getAllActiveBills, activeBills, loading }) => {
     <Container>
       <AddBillModal
         open={modal}
-        onClose={closeModal}
-        data={data}
+        onClose={toggleModal}
         billPK={billPK}
+        setDoneDialog={setDoneDialog}
       />
       <BillDoneModal dialog={doneDialog} closeDialog={closeDoneDialog} />
       <BillDeleteModal dialog={deleteDialog} closeDialog={closeDeleteDialog} />
@@ -51,15 +46,15 @@ const CashRegister = ({ getAllActiveBills, activeBills, loading }) => {
           title="لیست فاکتور‌های فعال"
           headerTitles={[
             "موبایل خریدار",
+            "اسم فروشنده",
             "مبلغ نهایی فاکتور",
             "تاریخ فاکتور",
             "عملیات فاکتور"
           ]}
-          dataProvider={activeBills || []}
-          setModal={setModal}
-          setData={setData}
+          currentUser={currentUser}
+          dataProvider={activeBills}
+          togglePreviewModal={toggleModal}
           setBillPK={setBillPK}
-          setDoneDialog={setDoneDialog}
           setDeleteDialog={setDeleteDialog}
         />
       )}
@@ -68,11 +63,11 @@ const CashRegister = ({ getAllActiveBills, activeBills, loading }) => {
 };
 
 export default connect(
-  state => {
-    return {
-      loading: state.bills.loading,
-      activeBills: state.bills.bills.filter(bill => bill.status === "active")
-    };
-  },
+  state => ({
+    currentUser: state.auth.currentUser,
+    loading: state.bills.loading,
+    activeBills:
+      state.bills.bills.filter(bill => bill.status === "active") || []
+  }),
   { getAllActiveBills }
 )(CashRegister);

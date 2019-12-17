@@ -3,6 +3,8 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import DO_NOTHING, CASCADE, Sum
 
+from product.models import round_up
+
 
 class Bill(models.Model):
     create_date = models.DateTimeField(auto_now_add=True)
@@ -10,9 +12,9 @@ class Bill(models.Model):
     status = models.CharField(choices=settings.BILL_STATUS, max_length=32, default='active')
     buyer = models.ForeignKey('customer.Customer', related_name='bills', on_delete=DO_NOTHING)
     seller = models.ForeignKey('staff.Staff', related_name='bills', on_delete=DO_NOTHING)
-    discount = models.FloatField(default=0)
+    discount = models.IntegerField(default=0)
     used_points = models.IntegerField(default=0)
-    branch = models.ForeignKey('branch.Branch', related_name='bills', on_delete=DO_NOTHING)
+    branch = models.ForeignKey('branch.Branch', related_name='bills', on_delete=DO_NOTHING, blank=True, null=True)
     bill_image = models.ImageField(null=True, blank=True)
 
     def check_status(self):
@@ -26,54 +28,61 @@ class Bill(models.Model):
     def price(self):
         price = 0
         for item in self.items.filter(rejected=False).all():
-            price += float(item.price)
-        return price
+            price += int(item.price)
+        return round_up(price, -3)
 
     @property
     def total_discount(self):
-        return float(self.discount) + float(self.items_discount) + float(self.buyer_special_discount)
+        return round_up(int(self.discount) + int(self.items_discount) + int(self.buyer_special_discount), -3)
 
     @property
     def buyer_special_discount(self):
-        return self.buyer.special_discount(self.price)
+        return round_up(self.buyer.special_discount(self.price), -3)
+
+    @property
+    def items_special_discount(self):
+        discount = 0
+        for item in self.items.all():
+            discount += int(item.special_discount)
+        return round_up(discount, -3)
 
     @property
     def items_discount(self):
         discount = 0
         for item in self.items.all():
-            discount += float(item.discount)
-            discount += float(item.special_discount)
-        return discount
+            discount += int(item.total_discount)
+            discount += int(item.special_discount)
+        return round_up(discount, -3)
 
     @property
     def final_price(self):
-        if float(self.total_discount) >= float(self.price):
+        if int(self.total_discount) >= int(self.price):
             return 0
-        return float(self.price) - float(self.total_discount)
+        return int(self.price) - int(self.total_discount)
 
     @property
     def paid(self):
-        paid = float(self.used_points)
+        paid = int(self.used_points)
         if self.payments.count():
-            paid += float(self.payments.aggregate(Sum('amount'))['amount__sum'])
+            paid += int(self.payments.aggregate(Sum('amount'))['amount__sum'])
         return paid
 
     @property
     def cheque_paid(self):
-        if self.payments.count():
-            return self.payments.filter(type='cheque').aggregate(Sum('amount'))['amount__sum']
+        if self.payments.filter(type='cheque').exists():
+            return int(self.payments.filter(type='cheque').aggregate(Sum('amount'))['amount__sum'])
         return 0
 
     @property
     def cash_paid(self):
-        if self.payments.count():
-            return self.payments.filter(type='cash').aggregate(Sum('amount'))['amount__sum']
+        if self.payments.filter(type='cash').exists():
+            return int(self.payments.filter(type='cash').aggregate(Sum('amount'))['amount__sum'])
         return 0
 
     @property
     def card_paid(self):
-        if self.payments.count():
-            return self.payments.filter(type='card').aggregate(Sum('amount'))['amount__sum']
+        if self.payments.filter(type='card').exists():
+            return int(self.payments.filter(type='card').aggregate(Sum('amount'))['amount__sum'])
         return 0
 
     @property
@@ -100,7 +109,7 @@ class BillItemManager(models.Manager):
 class BillItem(models.Model):
     product = models.ForeignKey('product.Product', related_name='bill_items', on_delete=DO_NOTHING)
     amount = models.FloatField(blank=False, null=False)
-    discount = models.FloatField(default=0)
+    discount = models.IntegerField(default=0)
     bill = models.ForeignKey('bill.Bill', related_name='items', on_delete=CASCADE)
     end_of_roll = models.BooleanField(default=False)
     end_of_roll_amount = models.FloatField(default=0, null=True, blank=True)
@@ -117,19 +126,23 @@ class BillItem(models.Model):
     @property
     def price(self):
         if self.end_of_roll:
-            return float(self.end_of_roll_amount) * float(self.product.selling_price)
-        return float(self.amount) * float(self.product.selling_price)
+            return int(self.end_of_roll_amount * float(self.product.selling_price))
+        return int(self.amount * float(self.product.selling_price))
 
     @property
     def final_price(self):
-        if float(self.discount) > float(self.price):
+        if int(self.discount) > int(self.price):
             return 0
-        return float(self.price) - float(self.discount)
+        return int(self.price) - int(self.discount)
 
     def reject(self):
         self.rejected = True
         self.product.update_stock_amount(-1 * self.amount)
         self.save()
+
+    @property
+    def total_discount(self):
+        return int(self.amount * float(self.discount))
 
 
 class SupplierBill(models.Model):
@@ -154,8 +167,8 @@ class SupplierBillItem(models.Model):
     amount = models.FloatField(blank=False, null=False)
     bill = models.ForeignKey('bill.SupplierBill', related_name='bills', on_delete=CASCADE)
     rejected = models.BooleanField(default=False)
-    raw_price = models.FloatField()
-    currency_price = models.FloatField(default=1)
+    raw_price = models.IntegerField()
+    currency_price = models.IntegerField(default=1)
     currency = models.CharField(
         choices=(('ریال', 'ریال'), ('درهم', 'درهم'), ('دلار', 'دلار'), ('روپیه', 'روپیه'),
                  ('یوان', 'یوان')),
@@ -164,7 +177,7 @@ class SupplierBillItem(models.Model):
 
     @property
     def price(self):
-        return float(self.raw_price) * float(self.currency_price)
+        return int(self.raw_price) * int(self.currency_price)
 
     def reject(self):
         self.rejected = True
@@ -213,11 +226,11 @@ class OurCheque(models.Model):
 
 class SpecialDiscount(models.Model):
     percentage = models.IntegerField(default=0)
-    straight = models.FloatField(default=0)
+    straight = models.IntegerField(default=0)
 
     def value(self, price):
         if self.percentage > 0:
-            return float(price) * float(self.percentage)
+            return int(price) * int(self.percentage)
         return self.straight
 
 

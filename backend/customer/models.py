@@ -4,14 +4,14 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Customer(models.Model):
-    first_name = models.CharField(_('first name'), max_length=30, blank=True)
-    last_name = models.CharField(_('last name'), max_length=150, blank=True)
-    email = models.EmailField(_('email address'), blank=True)
+    first_name = models.CharField(_('first name'), max_length=30, blank=True, null=True)
+    last_name = models.CharField(_('last name'), max_length=150, blank=True, null=True)
+    email = models.EmailField(_('email address'), blank=True, null=True)
     phone_number = models.CharField(max_length=11, blank=False, null=False)
     address = models.CharField(max_length=200, null=True, blank=True)
     birth_date = models.DateField(null=True, blank=True)
     marriage_date = models.DateField(null=True, blank=True)
-    points = models.IntegerField(default=0)
+    points = models.IntegerField(default=0, null=True, blank=True)
     class_type = models.ForeignKey('customer.CustomerType', related_name='customers', on_delete=DO_NOTHING, null=True,
                                    blank=True)
 
@@ -27,3 +27,7 @@ class CustomerType(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Point(models.Model):
+    amount = models.IntegerField(null=False, blank=False)

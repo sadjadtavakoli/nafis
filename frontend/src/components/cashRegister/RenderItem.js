@@ -1,21 +1,11 @@
-import React, { useState, useEffect } from "react";
-import {
-  Header,
-  Form,
-  Popup,
-  Button,
-  Label,
-  Divider,
-  Card
-} from "semantic-ui-react";
+import React from "react";
+import { Form, Popup, Button, Label, Divider, Card } from "semantic-ui-react";
 import renderField from "./RenderField";
 import { priceToPersian, enToFa } from "../utils/numberUtils";
-import { standardTimeToJalaali } from "../utils/jalaaliUtils";
+import { useToggle } from "../../utils/Hooks";
 
 const RenderItem = props => {
-  const [productInfoIsOpen, setProductInfoIsOpen] = useState(false);
-  const toggleProductInfoIsOpen = () =>
-    setProductInfoIsOpen(prevState => !prevState);
+  const [productInfoIsOpen, toggleProductInfoIsOpen] = useToggle(false);
   return (
     <>
       <Form.Group
@@ -40,7 +30,7 @@ const RenderItem = props => {
             trigger={
               <Label
                 onClick={toggleProductInfoIsOpen}
-                color="yellow"
+                color="blue"
                 icon="info"
                 as="a"
               >
@@ -60,7 +50,7 @@ const RenderItem = props => {
       <Form.Group widths="4">
         {renderField(props.productItem, "end_of_roll", "ته طاقه", roll => {
           return roll
-            ? `هست (${props.productItem.end_of_roll_amount} متر)`
+            ? `هست (${enToFa(props.productItem.end_of_roll_amount)} متر)`
             : "نیست";
         })}
         {renderField(
@@ -90,11 +80,19 @@ const Product = props => {
       </Card.Content>
       <Card.Content extra>
         <Form>
-          {renderField(props.product, "code", "کد", enToFa)}
+          {renderField(props.product, "code", "کد محصول", enToFa)}
           {renderField(props.product, "name", "نام")}
-          {renderField(props.product, "branch", "شعبه")}
-          {renderField(props.product, "background_color", "رنگ پیش زمینه")}
-          {renderField(props.product, "design_color", "رنگ طراح")}
+          {renderField(props.product, "branch", "کد شعبه", enToFa)}
+          {renderField(
+            props.product,
+            "background_color",
+            "کد رنگ پس زمینه",
+            enToFa
+          )}
+          {renderField(props.product, "design_color", "کد رنگ طرح", enToFa)}
+          {renderField(props.product, "material", "کد جنس", enToFa)}
+          {renderField(props.product, "f_type", "کد نوع پارچه", enToFa)}
+          {renderField(props.product, "design", "کد نوع طرح", enToFa)}
           {renderField(
             props.product,
             "selling_price",

@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from "react";
 import { connect } from "react-redux";
 import { Button, Form, Card, Label, Icon } from 'semantic-ui-react'

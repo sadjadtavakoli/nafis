@@ -17,7 +17,7 @@ class StaffAdmin(UserAdmin):
 
     fieldsets = UserAdmin.fieldsets + (
         (None, {'fields': (
-        'national_id', 'birth_date', 'national_card_picture', 'profile_picture', 'job', 'employment_date', 'address')}),
+        'national_id', 'birth_date', 'national_card_picture', 'profile_picture', 'job', 'employment_date', 'address', 'branch')}),
     )
 
 

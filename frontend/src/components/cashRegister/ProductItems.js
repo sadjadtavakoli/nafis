@@ -1,13 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Header, Form, Popup, Button } from "semantic-ui-react";
-import renderField from "./RenderField";
-import { enToFa } from "../utils/numberUtils";
+import React from "react";
+import { Header } from "semantic-ui-react";
 import RenderItem from "./RenderItem";
 
 const ProductItems = props => {
-  const [productInfoIsOpen, setProductInfoIsOpen] = useState(false);
-  const toggleProductInfoIsOpen = () =>
-    setProductInfoIsOpen(prevState => !prevState);
   return (
     <>
       <Header as="h3" textAlign="right">

@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from rest_framework.decorators import action
@@ -11,7 +10,7 @@ from rest_framework.viewsets import ModelViewSet
 from bill.models import Bill, BillItem, CustomerPayment, CustomerCheque
 from bill.permissions import LoginRequired, CloseBillPermission, AddPaymentPermission
 from bill.serializers import BillSerializer, CustomerPaymentSerializer, BillItemSerializer
-from customer.models import Customer
+from customer.models import Customer, Point
 from nafis.paginations import PaginationClass
 from nafis.sms import SendSMS, create_message
 from nafis.views import NafisBase
@@ -22,9 +21,9 @@ from staff.models import Staff
 class BillsViewSet(NafisBase, ModelViewSet):
     serializer_class = BillSerializer
     permission_classes = (LoginRequired,)
-    queryset = Bill.objects.all()
-    non_updaters = ["cashier"]
-    non_destroyers = ['cashier']
+    queryset = Bill.objects.all().order_by('-pk')
+    non_updaters = []
+    non_destroyers = ['cashier', 'salesperson', 'storekeeper', 'accountant']
     pagination_class = PaginationClass
 
     def destroy(self, request, *args, **kwargs):
@@ -47,13 +46,17 @@ class BillsViewSet(NafisBase, ModelViewSet):
     def close_all(self, request):
         for bill in Bill.objects.filter(status="active"):
             bill.check_status()
-            bill.buyer.points += int(bill.final_price) * int(settings.POINT_PERCENTAGE)
-            bill.buyer.save()
+            if not (bill.items_special_discount or bill.buyer_special_discount):
+                bill.buyer.points += int(bill.final_price) * int(Point.objects.first().amount) / 100
+                bill.buyer.save()
         return Response({'ok': True})
 
     @action(url_path='actives', detail=False, methods=['get'], permission_classes=())
     def get_actives(self, request):
-        queryset = Bill.objects.filter(status='active')
+        queryset = Bill.objects.filter(status='active').order_by('-pk')
+        staff = Staff.objects.get(username=self.request.user.username)
+        if staff.job == "salesperson":
+            queryset.filter(buyer=staff)
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
@@ -64,7 +67,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
 
     @action(url_path='dones', detail=False, methods=['get'], permission_classes=())
     def get_dones(self, request):
-        queryset = Bill.objects.filter(status='done')
+        queryset = Bill.objects.filter(status='done').order_by('-pk')
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
@@ -75,11 +78,23 @@ class BillsViewSet(NafisBase, ModelViewSet):
 
     @action(methods=['post'], detail=True, url_path='add-payments', permission_classes=(AddPaymentPermission,))
     def add_payments(self, request, **kwargs):
-        amount = self.request.data.get('amount')
         payment_type = self.request.data.get('type')
+        if payment_type == "cash_card":
+            cash_amount = self.request.data.get('cash_amount', 0)
+            card_amount = self.request.data.get('card_amount', 0)
+            if cash_amount:
+                amount = cash_amount
+                payment_type = "cash"
+            else:
+                amount = card_amount
+                payment_type = "card"
+        else:
+            amount = self.request.data.get('amount')
+
         bill = self.get_object()
         payment = CustomerPayment.objects.create(create_date=datetime.now(),
                                                  amount=float(amount), bill=bill, type=payment_type)
+
         if payment_type == "cheque":
             bank = self.request.data.get('bank')
             number = self.request.data.get('number')
@@ -109,8 +124,9 @@ class BillsViewSet(NafisBase, ModelViewSet):
                     sms.group_sms(create_message(instance), [instance.buyer.phone_number], instance.buyer.phone_number)
                 except:
                     pass
-            instance.buyer.points += instance.final_price * settings.POINT_PERCENTAGE
-            instance.buyer.save()
+            if not (instance.items_special_discount or instance.buyer_special_discount):
+                instance.buyer.points += int(instance.final_price) * int(Point.objects.first().amount) / 100
+                instance.buyer.save()
         return Response({'status': instance.status})
 
     def create(self, request, *args, **kwargs):
@@ -120,13 +136,12 @@ class BillsViewSet(NafisBase, ModelViewSet):
         seller = Staff.objects.get(username=self.request.user.username)
         discount = data.get('discount', 0)
         used_points = data.get('used_points', 0)
-        branch = data.get('branch')
         items = data.get('items')
 
         if int(used_points) > buyer.points:
             raise ValidationError('امتیاز استفاده شده بیشتر از حد مجاز است.')
 
-        bill = Bill.objects.create(buyer=buyer, seller=seller, discount=discount, branch_id=branch,
+        bill = Bill.objects.create(buyer=buyer, seller=seller, discount=discount, branch_id=seller.branch,
                                    used_points=used_points)
 
         for item in items:

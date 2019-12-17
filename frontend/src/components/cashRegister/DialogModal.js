@@ -1,17 +1,5 @@
 import React from "react";
-import {
-  Button,
-  Modal,
-  Divider,
-  Header,
-  Segment,
-  Form,
-  Card,
-  Popup,
-  Icon,
-  Message,
-  Label
-} from "semantic-ui-react";
+import { Button, Modal } from "semantic-ui-react";
 
 const DialogModal = props => {
   return (

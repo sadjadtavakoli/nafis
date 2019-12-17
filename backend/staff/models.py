@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import DO_NOTHING
 
 
 class Staff(User):
@@ -13,3 +14,5 @@ class Staff(User):
     employment_date = models.DateField(blank=True, null=True)
     address = models.CharField(max_length=200, blank=True, null=True)
     REQUIRED_FIELDS = ('username', 'job')
+    branch = models.ForeignKey('branch.Branch', related_name='staffs', on_delete=DO_NOTHING, blank=True, null=True)
+
