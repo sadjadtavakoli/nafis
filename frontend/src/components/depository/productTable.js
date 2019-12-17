@@ -138,16 +138,7 @@ class ProductTable extends React.Component {
 const mapStateToProps = state => {
   return {
             productsList: state.depository.productsList,
-//     currentUser: state.auth.currentUser
-//       ? state.auth.currentUser
-//       : localStorage.getItem("user")
-//       ? localStorage.getItem("user")
-//       : "",
-//     type: state.auth.type
-//       ? state.auth.type
-//       : localStorage.getItem("type")
-//       ? localStorage.getItem("type")
-//       : ""
+
   };
 };
 
