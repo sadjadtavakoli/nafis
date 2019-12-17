@@ -19,6 +19,8 @@ class LoginRequired(NafisBasePermission):
 
 
 class CloseBillPermission(NafisBasePermission):
+    login_required = True
+
     def has_permission(self, request, view):
         permission = super(CloseBillPermission, self).has_permission(request, view)
         if not permission:
@@ -30,11 +32,26 @@ class CloseBillPermission(NafisBasePermission):
 
 
 class AddPaymentPermission(NafisBasePermission):
+    login_required = True
+
     def has_permission(self, request, view):
         permission = super(AddPaymentPermission, self).has_permission(request, view)
         if not permission:
             return False
         staff = Staff.objects.get(username=request.user.username)
         if staff.job in ['salesperson', "storekeeper", 'accountant']:
+            return False
+        return True
+
+
+class DailyReportPermission(NafisBasePermission):
+    login_required = True
+
+    def has_permission(self, request, view):
+        permission = super(DailyReportPermission, self).has_permission(request, view)
+        if not permission:
+            return False
+        staff = Staff.objects.get(username=request.user.username)
+        if staff.job not in ['admin', "cashier", 'accountant']:
             return False
         return True

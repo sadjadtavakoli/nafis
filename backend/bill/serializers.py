@@ -50,8 +50,8 @@ class BillItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = BillItem
         fields = (
-        'pk', 'product', 'amount', 'discount', 'total_discount', 'end_of_roll', 'end_of_roll_amount', 'rejected',
-        'special_discount', 'price', 'final_price')
+            'pk', 'product', 'amount', 'discount', 'total_discount', 'end_of_roll', 'end_of_roll_amount', 'rejected',
+            'special_discount', 'price', 'final_price')
 
 
 class BillSerializer(serializers.ModelSerializer):
@@ -70,6 +70,8 @@ class BillSerializer(serializers.ModelSerializer):
     card_paid = serializers.ReadOnlyField()
     cash_paid = serializers.ReadOnlyField()
     remaining_payment = serializers.ReadOnlyField()
+    items_count = serializers.ReadOnlyField()
+    profit = serializers.ReadOnlyField()
 
     class Meta:
         model = Bill
@@ -77,7 +79,7 @@ class BillSerializer(serializers.ModelSerializer):
                   'discount', 'used_points', 'branch', 'payments', 'items',
                   'bill_image', 'price', 'total_discount', 'buyer_special_discount',
                   'items_discount', 'final_price', 'paid', 'cheque_paid', 'cash_paid', 'card_paid',
-                  'remaining_payment')
+                  'remaining_payment', 'items_count', 'profit')
 
 
 class SupplierBillItemSerializer(serializers.ModelSerializer):

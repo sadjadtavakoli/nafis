@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from bill.models import Bill, BillItem, CustomerPayment, CustomerCheque
-from bill.permissions import LoginRequired, CloseBillPermission, AddPaymentPermission
+from bill.permissions import LoginRequired, CloseBillPermission, AddPaymentPermission, DailyReportPermission
 from bill.serializers import BillSerializer, CustomerPaymentSerializer, BillItemSerializer
 from customer.models import Customer, Point
 from nafis.paginations import PaginationClass
@@ -20,7 +20,7 @@ from staff.models import Staff
 
 class BillsViewSet(NafisBase, ModelViewSet):
     serializer_class = BillSerializer
-    permission_classes = (LoginRequired,)
+    # permission_classes = (LoginRequired,)
     queryset = Bill.objects.all().order_by('-pk')
     non_updaters = []
     non_destroyers = ['cashier', 'salesperson', 'storekeeper', 'accountant']
@@ -117,6 +117,8 @@ class BillsViewSet(NafisBase, ModelViewSet):
         instance = self.get_object()
         if instance.status == "active":
             instance.check_status()
+            instance.close_date = datetime.now()
+            instance.save()
             send_message = self.request.data.get('send_message', True)
             if send_message:
                 try:
@@ -164,6 +166,39 @@ class BillsViewSet(NafisBase, ModelViewSet):
         serializer = self.get_serializer(bill)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    @action(methods=['GET'], detail=False, url_path="daily-report")
+    def daily_report(self, request):
+        bills = Bill.objects.filter(create_date__date=datetime.today().date(), status__in=["remained", "done"])
+        total_benefit, total_discount, total_price, total_final_price, total_items = 0, 0, 0, 0, 0
+        total_cheque_paid, total_cash_paid, total_card_paid, total_paid, reminded_payments = 0, 0, 0, 0, 0
+        data = {}
+        bills_with_reminded_status = Bill.objects.filter(create_date__date=datetime.today().date(),
+                                                         status="remained").count()
+        for bill in bills:
+            total_final_price += bill.final_price
+            total_price += bill.price
+            total_paid += bill.paid
+            total_discount += bill.total_discount
+            total_benefit += bill.profit
+            total_items += bill.items.count()
+            total_cheque_paid += bill.cheque_paid
+            total_cash_paid += bill.cash_paid
+            total_card_paid += bill.card_paid
+            reminded_payments += bill.remaining_payment
+        data['bills_data'] = BillSerializer(bills, many=True).data
+        data['total_profit'] = total_benefit
+        data['total_discount'] = total_discount
+        data['total_price'] = total_price
+        data['total_final_price'] = total_final_price
+        data['total_items'] = total_items
+        data['total_cheque_paid'] = total_cheque_paid
+        data['total_cash_paid'] = total_cash_paid
+        data['total_card_paid'] = total_card_paid
+        data['total_paid'] = total_paid
+        data['total_reminded_payments'] = reminded_payments
+        data['bills_with_reminded_status'] = bills_with_reminded_status
+        return Response(data)
 
 
 class BillItemViewSet(ModelViewSet):

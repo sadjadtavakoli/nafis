@@ -29,22 +29,22 @@ class Bill(models.Model):
         price = 0
         for item in self.items.filter(rejected=False).all():
             price += int(item.price)
-        return round_up(price, -3)
+        return round_up(price, -2)
 
     @property
     def total_discount(self):
-        return round_up(int(self.discount) + int(self.items_discount) + int(self.buyer_special_discount), -3)
+        return round_up(int(self.discount) + int(self.items_discount) + int(self.buyer_special_discount), -2)
 
     @property
     def buyer_special_discount(self):
-        return round_up(self.buyer.special_discount(self.price), -3)
+        return round_up(self.buyer.special_discount(self.price), -2)
 
     @property
     def items_special_discount(self):
         discount = 0
         for item in self.items.all():
             discount += int(item.special_discount)
-        return round_up(discount, -3)
+        return round_up(discount, -2)
 
     @property
     def items_discount(self):
@@ -52,7 +52,7 @@ class Bill(models.Model):
         for item in self.items.all():
             discount += int(item.total_discount)
             discount += int(item.special_discount)
-        return round_up(discount, -3)
+        return round_up(discount, -2)
 
     @property
     def final_price(self):
@@ -87,7 +87,73 @@ class Bill(models.Model):
 
     @property
     def remaining_payment(self):
-        return self.price - self.paid
+        return self.final_price - self.paid
+
+    @property
+    def profit(self):
+        benefit = 0
+        for item in self.items.all():
+            benefit += item.benefit
+        return benefit
+
+    @property
+    def items_count(self):
+        return self.items.count()
+    # @staticmethod
+    # def total_sales(start_date, end_date):
+    #     bills = Bill.objects.filter(create_date__range=[start_date, end_date], status__in=["done", "remained"])
+    #     price = 0
+    #     for bill in bills:
+    #         price += bill.final_price
+    #     return price
+    #
+    # @staticmethod
+    # def total_sales_received(start_date, end_date):
+    #     bills = Bill.objects.filter(create_date__range=[start_date, end_date], status__in=["done", "remained"])
+    #     sum_ = 0
+    #     for bill in bills:
+    #         sum_ += bill.paid
+    #     return sum_
+    #
+    # @staticmethod
+    # def total_sales_remaining(start_date, end_date):
+    #     bills = Bill.objects.filter(create_date__range=[start_date, end_date], status__in=["done", "remained"])
+    #     sum_ = 0
+    #     for bill in bills:
+    #         sum_ += bill.remaining_payment
+    #     return sum_
+    #
+    # @staticmethod
+    # def total_profit(start_date, end_date):
+    #     bills = Bill.objects.filter(create_date__range=[start_date, end_date], status__in=["done", "remained"])
+    #     sum_ = 0
+    #     for bill in bills:
+    #         sum_ += bill.profit
+    #     return sum_
+    #
+    # @staticmethod
+    # def total_sales_card(start_date, end_date):
+    #     bills = Bill.objects.filter(create_date__range=[start_date, end_date], status__in=["done", "remained"])
+    #     sum_ = 0
+    #     for bill in bills:
+    #         sum_ += bill.card_paid
+    #     return sum_
+    #
+    # @staticmethod
+    # def total_sales_cash(start_date, end_date):
+    #     bills = Bill.objects.filter(create_date__range=[start_date, end_date], status__in=["done", "remained"])
+    #     sum_ = 0
+    #     for bill in bills:
+    #         sum_ += bill.cash_paid
+    #     return sum_
+    #
+    # @staticmethod
+    # def total_sales_cheque(start_date, end_date):
+    #     bills = Bill.objects.filter(create_date__range=[start_date, end_date], status__in=["done", "remained"])
+    #     sum_ = 0
+    #     for bill in bills:
+    #         sum_ += bill.card_paid
+    #     return sum_
 
 
 class BillItemManager(models.Manager):
@@ -117,6 +183,11 @@ class BillItem(models.Model):
     objects = BillItemManager()
 
     @property
+    def benefit(self):
+        total_buying_price = int(self.amount * float(self.product.buying_price))
+        return self.final_price - total_buying_price
+
+    @property
     def special_discount(self):
         discount = 0
         for item in self.product.special_discounts.all():
@@ -131,9 +202,9 @@ class BillItem(models.Model):
 
     @property
     def final_price(self):
-        if int(self.discount) > int(self.price):
+        if int(self.total_discount) > int(self.price):
             return 0
-        return int(self.price) - int(self.discount)
+        return int(self.price) - int(self.total_discount)
 
     def reject(self):
         self.rejected = True
@@ -142,6 +213,8 @@ class BillItem(models.Model):
 
     @property
     def total_discount(self):
+        if self.end_of_roll:
+            return int(self.end_of_roll_amount * float(self.discount))
         return int(self.amount * float(self.discount))
 
 
@@ -163,7 +236,7 @@ class SupplierBillItemManager(models.Manager):
 
 class SupplierBillItem(models.Model):
     product = models.OneToOneField('product.Product', related_name='supplier_bill_item',
-                                on_delete=DO_NOTHING)
+                                   on_delete=DO_NOTHING)
     amount = models.FloatField(blank=False, null=False)
     bill = models.ForeignKey('bill.SupplierBill', related_name='bills', on_delete=CASCADE)
     rejected = models.BooleanField(default=False)
