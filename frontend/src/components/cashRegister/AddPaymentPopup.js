@@ -4,23 +4,29 @@ import { useStateObject } from "../../utils/Hooks";
 import { connect } from "react-redux";
 import { addPaymentToBill } from "../../actions/BillActions";
 import { toGregorian } from "../utils/jalaaliUtils";
+import { validatePaymentData } from "../../actions/validatePayment";
 
 const AddPaymentPopup = props => {
+  const [error, setError] = useState(undefined);
   const [selectedPaymentType, setSelectedPaymentType] = useState(undefined);
   const options = [
     { text: "چک", value: "cheque", key: 1 },
-    { text: "نقد", value: "cash", key: 2 },
-    { text: "کارت", value: "card", key: 3 }
+    { text: "نقد و کارت", value: "cash_card", key: 2 }
   ];
 
   const selectHandler = (e, { value }) => {
     setSelectedPaymentType(value);
     setPaymentFormData("type")(value);
+    if (value === "cash_card")
+      setPaymentFormData("card_amount")(Number(props.remainingPrice));
+    else setPaymentFormData("amount")(Number(props.remainingPrice));
   };
 
   const [paymentFormData, setPaymentFormData] = useStateObject({
-    amount: undefined,
     type: undefined,
+    cash_amount: undefined,
+    card_amount: undefined,
+    amount: undefined,
     number: undefined,
     bank: undefined,
     issue_date: undefined,
@@ -28,11 +34,26 @@ const AddPaymentPopup = props => {
   });
 
   const handleSubmit = () => {
-    props.addPaymentToBill(props.billID, paymentFormData).then(props.onClose);
+    try {
+      const paymentData = validatePaymentData(paymentFormData);
+      props.addPaymentToBill(props.billID, paymentData).then(props.onClose);
+    } catch (error) {
+      setError({ content: error.message, pointing: "below" });
+    }
   };
 
   const JalaliToGregorianString = str =>
     Object.values(toGregorian(...str.split("/").map(Number))).join("-");
+
+  const anotherInputIsEmpty = anotherInput => {
+    if (!paymentFormData.cash_amount && !paymentFormData.card_amount)
+      return true;
+
+    if (!paymentFormData[anotherInput] || paymentFormData[anotherInput] <= 0)
+      return true;
+
+    return false;
+  };
 
   return (
     <Card className="rtl">
@@ -53,11 +74,44 @@ const AddPaymentPopup = props => {
           </Form.Group>
           <Form.Input
             type="number"
+            required={anotherInputIsEmpty("cash_amount")}
+            disabled={!anotherInputIsEmpty("cash_amount")}
+            className={`ltr placeholder-rtl ${
+              selectedPaymentType === "cash_card" ? "" : "d-none"
+            }`}
+            onChange={e => {
+              setError(undefined);
+              setPaymentFormData("card_amount")(Number(e.target.value));
+            }}
+            value={paymentFormData.card_amount}
+            label="مبلغ پرداخت کارتی"
+            placeholder="مبلغ پرداخت کارتی"
+            error={error}
+          />
+          <Form.Input
+            type="number"
+            required={anotherInputIsEmpty("card_amount")}
+            disabled={!anotherInputIsEmpty("card_amount")}
+            className={`ltr placeholder-rtl ${
+              selectedPaymentType === "cash_card" ? "" : "d-none"
+            }`}
+            onChange={e => {
+              setError(undefined);
+              setPaymentFormData("cash_amount")(Number(e.target.value));
+            }}
+            value={paymentFormData.cash_amount}
+            label="مبلغ پرداخت نقدی"
+            placeholder="مبلغ پرداخت نقدی"
+            error={error}
+          />
+          <Form.Input
+            type="number"
             required
             className={`ltr placeholder-rtl ${
-              selectedPaymentType ? "" : "invisible"
+              selectedPaymentType === "cheque" ? "" : "d-none"
             }`}
             onChange={e => setPaymentFormData("amount")(Number(e.target.value))}
+            value={paymentFormData.amount}
             label="مبلغ پرداختی"
             placeholder="مبلغ پرداختی"
           />
@@ -127,4 +181,29 @@ const AddPaymentPopup = props => {
   );
 };
 
-export default connect(null, { addPaymentToBill })(AddPaymentPopup);
+export default connect(
+  (state, ownProps) => {
+    const bill = state.bills.bills.find(bill => bill.pk === ownProps.billID);
+    const finalPrice = bill.final_price;
+    const remainingPrice = bill.remaining_payment;
+    const totalPaidPayment = bill.payments.reduce(
+      (acc, { amount }) => acc + amount,
+      0
+    );
+    const totalDiscount = bill.total_discount;
+    const frontEndComputedRemainingPrice =
+      Number(finalPrice) - Number(totalPaidPayment) - Number(totalDiscount);
+    return {
+      finalPrice,
+      remainingPrice,
+      totalPaidPayment,
+      totalDiscount,
+      frontEndComputedRemainingPrice: !Number.isNaN(
+        frontEndComputedRemainingPrice
+      )
+        ? Number(frontEndComputedRemainingPrice)
+        : 0
+    };
+  },
+  { addPaymentToBill }
+)(AddPaymentPopup);

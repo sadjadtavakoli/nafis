@@ -10,7 +10,7 @@ import {
 } from "../utils/numberUtils";
 import { getTodayJalaali, getNow } from "../utils/jalaaliUtils";
 import { isEmptyObject } from "../../utils/FunctionalUtils";
-
+import '../../scss/bootstrap.scss'
 const TOMAN = "تومان";
 
 class PrintFactor extends React.Component {
@@ -61,14 +61,14 @@ class PrintFactor extends React.Component {
   };
   render() {
     return (
-      <>
-        <div className="container px-5 mx-5 rtl py-2">
+      <div className="bootstrap factor">
+        <div className="container rtl py-2">
           <div className="row border-black border-radius-7 mb-2">
             <div className="col-6 d-flex align-items-center justify-content-center">
               <img src={logo} height="200" />
             </div>
             <div className="col-6 d-flex align-items-center justify-content-center">
-              <div className="row">
+              <div className="row norm-latin">
                 <h1 className="col">GALLERY</h1>
                 <h1 className="col">NAFIS</h1>
               </div>
@@ -108,7 +108,7 @@ class PrintFactor extends React.Component {
             <p className="col-3 font-weight-bold p-1">
               <span>
                 {enToFa(
-                  phoneNumberBeautifier(
+                  (
                     this.state.bill.buyer && this.state.bill.buyer.pk
                   )
                 )}
@@ -191,7 +191,7 @@ class PrintFactor extends React.Component {
             </div>
           </div>
         </div>
-      </>
+      </div>
     );
   }
 }

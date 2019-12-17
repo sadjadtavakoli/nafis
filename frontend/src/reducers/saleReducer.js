@@ -8,7 +8,7 @@ export default (state = INITIAL_VALUES, action) => {
     case GET_ACTIVE_BILL:
       return { ...state, activeBill: action.payload};
     case ADD_BILL:
-      return { ...state, /*activeBill: action.payload.token*/};
+      return { ...state, newBillData: action.payload};
     default:
       return state;
   }

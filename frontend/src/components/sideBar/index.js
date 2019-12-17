@@ -40,7 +40,7 @@ class SideBar extends React.Component {
 
         return (
             <div id="sidebar">
-                <div className="navbar">
+                <div className="navbar hidden-print">
                     <Menu secondary>
                         <Menu.Menu position='left'>
                             <Menu.Item
