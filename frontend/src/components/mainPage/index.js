@@ -13,16 +13,16 @@ class MainPage extends React.Component {
       <div className="main-page__container">
         <div className="main-page__items-container">
           <Segment placeholder>
-            <Header >
-              <Card.Group itemsPerRow={6} className="rtl" padded>
+            <Header padded>
+              <Card.Group itemsPerRow={6} className="rtl padded" >
                 {isPermit('sale') ?
-                  <Card raised ><Segment className="text-center" compact padded><Icon padded size="massive" name="money bill alternate" /><span>فروش</span></Segment></Card> : null}
+                  <Card raised className="p-5 pointer tale" onClick={()=>history.push('/sale/')}><Icon padded size="huge" className="m-auto w-100" name="money bill alternate" /><h2 className="text-black yekan text-center">فروش</h2></Card> : null}
                 
                 {isPermit('cashregister') ?
-                  <Card raised ><Segment className="text-center" compact padded><Icon padded size="massive" name="fax" /><span>صندوق</span></Segment></Card> : null}
+                  <Card raised className="p-5 pointer tale" onClick={()=>history.push('/cashregister/')}><Icon padded size="huge" className="m-auto w-100" name="fax" /><h2 className="text-black yekan text-center">صندوق</h2></Card> : null}
                 
                 {isPermit('depository') ?
-                  <Card raised ><Segment className="text-center" compact padded><Icon padded size="massive" name="factory" /><span>انبارداری</span></Segment></Card> : null}
+                  <Card raised className="p-5 pointer tale" onClick={()=>history.push('/depository/')}><Icon padded size="huge" className="m-auto w-100" name="factory" /><h2 className="text-black yekan text-center">انبارداری</h2></Card> : null}
                 
               </Card.Group>
               
