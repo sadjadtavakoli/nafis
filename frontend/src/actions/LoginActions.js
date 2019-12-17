@@ -7,7 +7,7 @@ export const login = (username, password) => async dispatch => {
     console.log(response.data)
     localStorage.setItem("token", response.data.token);
     localStorage.setItem("user", JSON.stringify(response.data.user));
-    localStorage.setItem("type", response.data.type);
+    localStorage.setItem("type", response.data.user.job);
     dispatch({type: LOGIN, payload: response.data});
     // dispatch({ type: LOGIN, payload: response.data[0] });
 };

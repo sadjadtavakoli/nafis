@@ -225,16 +225,6 @@ const mapStateToProps = state => {
     // console.log('statXXXXXXXXXe',state)
   return {
         productFields: state.depository.productFields,
-//     currentUser: state.auth.currentUser
-//       ? state.auth.currentUser
-//       : localStorage.getItem("user")
-//       ? localStorage.getItem("user")
-//       : "",
-//     type: state.auth.type
-//       ? state.auth.type
-//       : localStorage.getItem("type")
-//       ? localStorage.getItem("type")
-//       : ""
   };
 };
 

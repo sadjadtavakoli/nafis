@@ -45,16 +45,6 @@ const mapStateToProps = state => {
     // console.log('ppppppppp',state)
   return {
         productID: state.depository.productID,
-//     currentUser: state.auth.currentUser
-//       ? state.auth.currentUser
-//       : localStorage.getItem("user")
-//       ? localStorage.getItem("user")
-//       : "",
-//     type: state.auth.type
-//       ? state.auth.type
-//       : localStorage.getItem("type")
-//       ? localStorage.getItem("type")
-//       : ""
   };
 };
 
