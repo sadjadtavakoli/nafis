@@ -84,3 +84,48 @@
 label{
     direction: rtl;
 }
+.factor{
+  .border-black{
+    border: 3px solid black;
+}
+.border-radius-7{
+    border-radius: 7px;
+}
+.border-left-3{
+    border-left: 3px solid black;
+}
+.border-bottom-3{
+    border-bottom: 3px solid black;
+}
+.row-not-flex{
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+}
+@media print {
+  .ui{
+    &.segment{
+        position: relative;
+    background: #fff;
+    box-shadow: unset !important;
+    margin: unset !important;
+    padding: unset !important;
+    border-radius: unset !important;
+    border:  unset !important;
+      &.pushable{
+        width:990px;
+        height: unset !important;
+      }
+    }
+    
+  }
+  .factor{
+    margin:auto;
+  }
+  .hidden-print {
+    display: none !important;
+  }
+  
+}
