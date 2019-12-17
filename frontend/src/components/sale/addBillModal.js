@@ -10,13 +10,11 @@ const INITIAL_STATE = {
     isOpenAddItem: false,
     formValidation: {
         phone_number: false,
-        used_points: false,
         branch: false,
         discount: false,
         items: false
     },
     phone_number: '',
-    used_points: 0,
     branch: 1,
     discount: 0,
     itemsDOM: [],
@@ -50,6 +48,7 @@ class AddBillModal extends React.Component {
         this.setState({itemsDataSheet,itemsDOM})
     }
     submitItemPopup = (data) => {
+        console.log('data hast',data)
         let id = this.state.itemsDataSheet.length;
         const itemDOM = (<Card fluid key={id}>
             <Card.Content>
@@ -67,13 +66,14 @@ class AddBillModal extends React.Component {
             <Card.Content extra>
                 <Form>
                     <Form.Group widths='equal'>
+                        <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={data.name} label='نام محصول' placeholder='' />
                         <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={data.product} label='کد محصول' placeholder='' />
                         <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={data.amount} label='مقدار(متر)' placeholder='' />
                         <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={data.discount} label='تخفیف' placeholder='' />
                     </Form.Group>
                     <Form.Group widths='3'>
                         <Form.Checkbox toggle className='ltr placeholder-rtl' readOnly checked={data.end_of_roll} label='ته طاقه؟' />
-                        <Form.Input className={`ltr placeholder-rtl ${data.end_of_roll ? '' : 'invisible'}`} readOnly defaultValue={data.end_of_roll_amount} label='مقدار ته طاقه' placeholder='مقدار ته طاقه' />
+                        <Form.Input className={`ltr placeholder-rtl ${data.end_of_roll ? '' : 'invisible'}`} readOnly defaultValue={data.end_of_roll_amount} label='مقدار حساب شده' placeholder='مقدار حساب شده' />
                     </Form.Group>
                 </Form>
             </Card.Content>
@@ -110,20 +110,13 @@ class AddBillModal extends React.Component {
         });
     }
     formSubmitHandler = () => {
-        this.setState({ formValidation: { ...this.state.formValidation, used_points: false, discount: false, phone_number: false,items:false } }, () => {
+        this.setState({ formValidation: { ...this.state.formValidation, discount: false, phone_number: false,items:false } }, () => {
             let hasError = false;
             if (this.state.phone_number.length !== 11) {
                 this.setState({ formValidation: { ...this.state.formValidation, phone_number: true } });
                 hasError = true;
             }
-            if (this.state.used_points.length < 1) {
-                this.setState({ formValidation: { ...this.state.formValidation, used_points: true } });
-                hasError = true;
-            } else if (this.state.used_points > this.state.customerData.points) {
-                alert('مقدار امتیاز وارد شده بیش تر از امتیاز مشتری است');
-                this.setState({ formValidation: { ...this.state.formValidation, used_points: true } });
-                hasError = true;
-            }
+          
             if (this.state.discount.length < 1) {
                 this.setState({ formValidation: { ...this.state.formValidation, discount: true } });
                 hasError = true;
@@ -136,7 +129,6 @@ class AddBillModal extends React.Component {
                 const prepareData = {
                     phone_number: this.state.phone_number,
                     discount: this.state.discount,
-                    used_points: this.state.used_points,
                     branch: this.state.branch,
                     items: this.state.itemsDataSheet
                 }
@@ -167,16 +159,8 @@ class AddBillModal extends React.Component {
                             <Form>
                                 <Form.Group unstackable widths={2}>
                                     <Form.Input className='ltr placeholder-rtl' label='شماره تلفن همراه' type="number" error={this.state.formValidation.phone_number} onChange={(e)=>this.inputChange(e,'phone_number')} placeholder='شماره تلفن همراه' />
-                                    <Form.Input className='ltr placeholder-rtl' label='امتیاز استفاده شده' type="number" defaultValue='0' error={this.state.formValidation.used_points} onChange={(e)=>this.inputChange(e,'used_points')} placeholder='امتیاز استفاده شده' />
-                                </Form.Group>
-                                <Form.Group widths={2}>
-                                    {/* <Form.Input   placeholder='شعبه' /> */}
                                     <Form.Dropdown className='ltr placeholder-rtl text-right' defaultValue={'1'} placeholder='شعبه' selection label='شعبه' options={this.state.branchOptions} />
-                                    <Form.Input className='ltr placeholder-rtl' label='تخفیف کلی' type="number" defaultValue='0' error={this.state.formValidation.discount} onChange={(e)=>this.inputChange(e,'discount')} placeholder='مقدار تخفیف' />
                                 </Form.Group>
-                                
-                                
-
                                 <Segment >
                                     <Header as='h3' floated='right'>
                                     <span>اقلام</span>
@@ -205,6 +189,9 @@ class AddBillModal extends React.Component {
                                         
                                     </div>
                                 </Segment>
+                                  <Form.Group widths={1}>
+                                    <Form.Input className='ltr placeholder-rtl' label='تخفیف کلی' type="number" defaultValue='0' error={this.state.formValidation.discount} onChange={(e)=>this.inputChange(e,'discount')} placeholder='مقدار تخفیف' />
+                                </Form.Group>
                             </Form>
                         </Modal.Description>
                     </Modal.Content>

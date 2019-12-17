@@ -65,13 +65,14 @@ class ShowInformationModal extends React.Component {
                 <Card.Content extra>
                     <Form>
                         <Form.Group widths='equal'>
+                            <Form.Input className='rtl text-right placeholder-rtl' readOnly fluid defaultValue={item.product.name} label='نام محصول' placeholder='' />
                             <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={item.product.code} label='کد محصول' placeholder='' />
                             <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={item.amount} label='مقدار(متر)' placeholder='' />
                             <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={item.discount} label='تخفیف' placeholder='' />
                         </Form.Group>
                         <Form.Group widths='3'>
                             <Form.Checkbox toggle className='ltr placeholder-rtl' readOnly checked={item.end_of_roll} label='ته طاقه؟' />
-                            <Form.Input className={`ltr placeholder-rtl ${item.end_of_roll ? '' : 'invisible'}`} readOnly defaultValue={item.end_of_roll_amount} label='مقدار ته طاقه' placeholder='مقدار ته طاقه' />
+                            <Form.Input className={`ltr placeholder-rtl ${item.end_of_roll ? '' : 'invisible'}`} readOnly defaultValue={item.end_of_roll_amount} label='مقدار حساب شده' placeholder='مقدار حساب شده' />
                         </Form.Group>
                     </Form>
                 </Card.Content>

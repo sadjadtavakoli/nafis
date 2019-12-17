@@ -8,7 +8,7 @@ import ShowInformationModal from './showInformationModal'
 import LoadingBar from '../utils/loadingBar'
 import NewBillPopup from './newBillPopup'
 
-const colSpan = 6;
+const colSpan = 7;
 class BillTable extends React.Component {
     constructor(props) {
         super(props);
@@ -20,6 +20,12 @@ class BillTable extends React.Component {
         itemData: {},
         isOpenAddItem: NaN,
         activePage:1
+    }
+    componentWillReceiveProps(newProps) {
+        if ( newProps.newBillData && (newProps.newBillData.pk !== this.props.newBillData.pk) ) {
+            console.log('TRUUUUUUUUUEEEE', newProps.newBillData, this.props.newBillData);
+            this.getActiveBill(this.state.activePage);
+        }
     }
     componentDidMount() {
        this.getActiveBill()
@@ -74,7 +80,8 @@ class BillTable extends React.Component {
                     <Table.HeaderCell className="text-center">عملیات</Table.HeaderCell>
                     <Table.HeaderCell className="text-center">تعداد پرداختی ها</Table.HeaderCell>
                     <Table.HeaderCell className="text-center">تاریخ ثبت</Table.HeaderCell>
-                    <Table.HeaderCell className="text-center">قیمت نهایی</Table.HeaderCell>
+                    <Table.HeaderCell className="text-center">مبلغ کل</Table.HeaderCell>
+                    <Table.HeaderCell className="text-center">مبلغ نهایی</Table.HeaderCell>
                     <Table.HeaderCell className="text-center">تخفیف کل</Table.HeaderCell>
                     <Table.HeaderCell className="text-center">شماره تلفن خریدار</Table.HeaderCell>
             </Table.Row>
@@ -113,6 +120,7 @@ class BillTable extends React.Component {
                                     </Table.Cell>
                                     <Table.Cell className="norm-latin text-center rtl"><span >{item.payments.length}</span>&nbsp;<span className="yekan">پرداختی</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center"><span>{standardTimeToJalaali(item.create_date)}</span></Table.Cell>
+                                    <Table.Cell className="norm-latin text-center rtl"><span>{digitToComma(item.price)}</span>&nbsp;<span className="yekan">تومان</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center rtl"><span>{digitToComma(item.final_price)}</span>&nbsp;<span className="yekan">تومان</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center">{item.final_discount?(<><span className="yekan">digitToComma(item.final_discount)</span><span className="yekan">تومان</span></>):'--'}  </Table.Cell>
                                     <Table.Cell className="norm-latin text-center"><span>{phoneNumberBeautifier(item.buyer.phone_number)}</span></Table.Cell>
@@ -135,8 +143,10 @@ class BillTable extends React.Component {
 }
 
 const mapStateToProps = state => {
+    console.log(';oair[8w098w09w09we',state)
   return {
-            activeBill: state.sale.activeBill,
+        activeBill: state.sale.activeBill,
+        newBillData: !state.sale.newBillData ? {pk:0}:state.sale.newBillData,
 //     currentUser: state.auth.currentUser
 //       ? state.auth.currentUser
 //       : localStorage.getItem("user")

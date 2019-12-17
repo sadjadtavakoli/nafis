@@ -44,6 +44,7 @@ class NewBillPopup extends React.Component {
             alert('فرم افزودن آیتم معتبر نبوده است');
         } else {
             let prepareData = {
+                name: this.state.productData.name,
                 bill:this.props.pk,
                 product: this.state.product,
                 amount: this.state.amount,
@@ -117,7 +118,7 @@ class NewBillPopup extends React.Component {
                         </Form.Group>
                         <Form.Group widths='equal'>
                             <Form.Checkbox toggle className='ltr placeholder-rtl' checked={this.state.end_of_roll} onChange={this.toggleIsEndOfRoll} label='ته طاقه؟' />
-                            <Form.Input type="number" className={`ltr placeholder-rtl ${this.state.end_of_roll ? '' : 'invisible'}`} onChange={(e)=>this.changeInput(e,'end_of_roll_amount')} label='مقدار ته طاقه' placeholder='مقدار ته طاقه' />
+                            <Form.Input type="number" className={`ltr placeholder-rtl ${this.state.end_of_roll ? '' : 'invisible'}`} onChange={(e)=>this.changeInput(e,'end_of_roll_amount')} label='مقدار حساب شده' placeholder='مقدار حساب شده' />
                         </Form.Group>
                                                         
                         <div className="text-center">

@@ -48,7 +48,7 @@ class Sale extends React.Component {
 
 const mapStateToProps = state => {
     // console.log(state)
-//   return {
+  return {
 //     nextReceipt: state.receipts.nextReceipt,
 //     currentUser: state.auth.currentUser
 //       ? state.auth.currentUser
@@ -60,7 +60,7 @@ const mapStateToProps = state => {
 //       : localStorage.getItem("type")
 //       ? localStorage.getItem("type")
 //       : ""
-//   };
+  };
 };
 
 export default connect(
