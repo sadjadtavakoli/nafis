@@ -14,7 +14,7 @@ const BillLists = ({
   currentUser
 }) => {
   return (
-    <Table color="green" striped className="rtl">
+    <Table className="rtl">
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell colSpan="10" className="rtl text-right">

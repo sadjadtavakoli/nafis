@@ -25,7 +25,7 @@ class BillTable extends React.Component {
     }
     componentWillReceiveProps(newProps) {
         if ( newProps.newBillData && (newProps.newBillData.pk !== this.props.newBillData.pk) ) {
-            console.log('TRUUUUUUUUUEEEE', newProps.newBillData, this.props.newBillData);
+            // console.log('TRUUUUUUUUUEEEE', newProps.newBillData, this.props.newBillData);
             this.getActiveBill(this.state.activePage);
         }
     }
@@ -154,7 +154,7 @@ class BillTable extends React.Component {
 }
 
 const mapStateToProps = state => {
-    console.log(';oair[8w098w09w09we',state)
+    // console.log(';oair[8w098w09w09we',state)
   return {
         activeBill: state.sale.activeBill,
         newBillData: !state.sale.newBillData ? {pk:0}:state.sale.newBillData,

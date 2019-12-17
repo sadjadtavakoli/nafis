@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import history from "../../history";
-import { Button,Tab,Image,Header, Segment } from 'semantic-ui-react'
+import { Button,Tab,Container,Header, Segment } from 'semantic-ui-react'
 import { getActiveBill } from '../../actions/SaleActions'
 import AddBillModal from './addBillModal'
 import BillTable from './billTable'
@@ -32,6 +32,7 @@ class Sale extends React.Component {
     render() {
         return (
             <>
+            <Container>
                 <AddBillModal open={this.state.open} onClose={this.closeModal}/>
                 <div id="sale">
                     <Segment stacked className="rtl">
@@ -39,7 +40,8 @@ class Sale extends React.Component {
                     </Segment>
                     <Tab renderActiveOnly={true} menu={{ pointing: true }} panes={panes} />
                     
-                </div>
+              </div>
+              </Container>
             </>
         );
   }

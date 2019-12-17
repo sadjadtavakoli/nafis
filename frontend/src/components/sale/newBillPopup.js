@@ -75,7 +75,7 @@ class NewBillPopup extends React.Component {
                             notFound: false,
                             productData: this.props.productsList
                         }, () => {
-                            console.log(this.state.productData);
+                            // console.log(this.state.productData);
                         });
                     }).catch(() => {
                         this.setState({ notFound: true, disabled: true, productData: {} })

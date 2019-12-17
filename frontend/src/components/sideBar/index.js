@@ -3,7 +3,9 @@ import React from "react";
 import { connect } from "react-redux";
 import { Header, Icon, Input, Menu, Segment, Sidebar, Button } from 'semantic-ui-react'
 import history from "../../history";
-import {logOut} from "../../actions/LoginActions";
+import { logOut } from "../../actions/LoginActions";
+import {isPermit} from '../mainPage/permission'
+
 class SideBar extends React.Component {
     constructor(props) {
         super(props);
@@ -35,7 +37,9 @@ class SideBar extends React.Component {
         this.setState({ visible })
     }
     handleItemClick = (e, { name }) => this.setState({ activeItem: name })
-
+    componentWillReceiveProps(newProps) {
+        // console.log('new props in sidebar',newProps)
+    }
     render() {
 
         return (
@@ -76,22 +80,22 @@ class SideBar extends React.Component {
                         visible={this.state.visible}
                         width='thin'
                     >
-                        <Menu.Item onClick={() => { this.goTo('/') }}as='a'>
+                    <Menu.Item onClick={() => { this.goTo('/') }}as='a'>
                             <Icon name='home' />
                             <span>پیشخوان</span>
                     </Menu.Item>
-                        <Menu.Item onClick={()=>{this.goTo('/sale/')}} as='a'>
+                    {isPermit('sale') ? <Menu.Item onClick={() => { this.goTo('/sale/') }} as='a'>
                             <Icon name='money bill alternate' />
                             <span>فروش</span>
-                    </Menu.Item>
-                    <Menu.Item onClick={()=>{this.goTo('/cashregister/')}} as='a'>
+                    </Menu.Item>:null}
+                    {isPermit('cashregister') ? <Menu.Item onClick={() => { this.goTo('/cashregister/') }} as='a'>
                             <Icon name='fax' />
                             <span>صندوق</span>
-                    </Menu.Item>
-                    <Menu.Item onClick={()=>{this.goTo('/depository/')}} as='a'>
+                    </Menu.Item> : null}
+                    {isPermit('depository') ? <Menu.Item onClick={() => { this.goTo('/depository/') }} as='a'>
                             <Icon name='factory' />
                             <span>انبارداری</span>
-                    </Menu.Item>
+                    </Menu.Item> : null}
                     </Sidebar>
 
                     <Sidebar.Pusher>
@@ -107,24 +111,20 @@ class SideBar extends React.Component {
   }
 }
 
-// const mapStateToProps = state => {
-//   return {
-//     nextReceipt: state.receipts.nextReceipt,
-//     currentUser: state.auth.currentUser
-//       ? state.auth.currentUser
-//       : localStorage.getItem("user")
-//       ? localStorage.getItem("user")
-//       : "",
-//     type: state.auth.type
-//       ? state.auth.type
-//       : localStorage.getItem("type")
-//       ? localStorage.getItem("type")
-//       : ""
-//   };
-// };
+const mapStateToProps = state => {
+    // console.log(22,state)
+  return {
+    currentUser: state.auth.currentUser
+      ? state.auth.currentUser
+      : localStorage.getItem("user"),
+    type: state.auth.type
+      ? state.auth.type
+      : localStorage.getItem("type")
+  };
+};
 
 export default connect(
-    null,
+    mapStateToProps,
     {logOut}
 //   mapStateToProps,
 //   { initReceipt,navBarDisplay }
