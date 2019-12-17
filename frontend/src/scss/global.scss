@@ -1,5 +1,6 @@
 @import './normalize.css';
 @import './pagesSpecial.scss';
+@import './device.scss';
 @import 'react-redux-toastr/src/styles/index';
 
 @font-face {
@@ -34,6 +35,22 @@
 }
 .ui.pointing.menu{
   direction:rtl;
+}
+.only-device{
+  @media (min-width:768px){
+    display: none !important;
+  }
+  @media (max-width:768px){
+    display: block !important;
+  }
+}
+.only-desktop{
+  @media (min-width:768px){
+    display: block !important;
+  }
+  @media (max-width:768px){
+    display: none !important;
+  }
 }
 .ui.message>.icon,.ui.label>.icon {
     margin-left: .6em;
