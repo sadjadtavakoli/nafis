@@ -143,7 +143,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
         if int(used_points) > buyer.points:
             raise ValidationError('امتیاز استفاده شده بیشتر از حد مجاز است.')
 
-        bill = Bill.objects.create(buyer=buyer, seller=seller, discount=discount, branch_id=seller.branch,
+        bill = Bill.objects.create(buyer=buyer, seller=seller, discount=discount, branch=seller.branch,
                                    used_points=used_points)
 
         for item in items:

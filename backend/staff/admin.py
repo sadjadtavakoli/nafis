@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.forms import UserChangeForm, UserCreationForm
+from django.contrib.auth.forms import UserChangeForm
 
 from staff.models import Staff
 
@@ -17,7 +17,8 @@ class StaffAdmin(UserAdmin):
 
     fieldsets = UserAdmin.fieldsets + (
         (None, {'fields': (
-        'national_id', 'birth_date', 'national_card_picture', 'profile_picture', 'job', 'employment_date', 'address', 'branch')}),
+            'national_id', 'birth_date', 'national_card_picture', 'profile_picture', 'job', 'employment_date',
+            'address', 'branch')}),
     )
 
 
