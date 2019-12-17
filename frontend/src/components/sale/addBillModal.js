@@ -50,7 +50,7 @@ class AddBillModal extends React.Component {
        
     }
     submitItemPopup = (data) => {
-        console.log('data hast',data)
+        // console.log('data hast',data)
         let id = this.state.itemsDataSheet.length;
         const itemDOM = (<Card fluid key={id}>
             <Card.Content>
@@ -102,7 +102,7 @@ class AddBillModal extends React.Component {
         this.setState({
             [inputName]: event.target.value
         }, () => {
-            console.log(this.state.phone_number.length)
+            // console.log(this.state.phone_number.length)
             if (inputName === 'phone_number') {
                 if (this.state.phone_number.length === 11) {
                     this.getCustomerData(this.state.phone_number)

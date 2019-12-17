@@ -159,7 +159,7 @@ class ShowInformationModal extends React.Component {
         this.toggleAddItemPopup();
     };
     refetchModalData = (response) => {
-        console.log('response', response)
+        // console.log('response', response)
         this.setState({data:response.data,})
     };
     render() {

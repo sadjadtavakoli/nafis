@@ -21,7 +21,7 @@ class Login extends React.Component {
         })
     }
     onSubmit = () => {
-        console.log(this.state);
+        // console.log(this.state);
 
         this.setState({ isPendingToRecieveData: true });
         this.props.login(this.state.username, this.state.password).then(()=>{

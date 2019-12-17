@@ -1,19 +1,32 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Button, Header, Icon, Segment } from "semantic-ui-react";
+import { Card, Header, Icon, Segment } from "semantic-ui-react";
 import history from "../../history";
-
+import {isPermit} from './permission'
 class MainPage extends React.Component {
   state = { showModal: false, modalInput: "" };
-
+  componentWillReceiveProps() {
+    this.forceUpdate();
+  }
   render() {
     return (
       <div className="main-page__container">
         <div className="main-page__items-container">
           <Segment placeholder>
-            <Header icon>
-              <Icon name="wordpress forms" />
-              <span>صفحه‌ی پیشخوان در حال طراحی و اجرا می باشد</span>
+            <Header >
+              <Card.Group itemsPerRow={6} className="rtl" padded>
+                {isPermit('sale') ?
+                  <Card raised ><Segment className="text-center" compact padded><Icon padded size="massive" name="money bill alternate" /><span>فروش</span></Segment></Card> : null}
+                
+                {isPermit('cashregister') ?
+                  <Card raised ><Segment className="text-center" compact padded><Icon padded size="massive" name="fax" /><span>صندوق</span></Segment></Card> : null}
+                
+                {isPermit('depository') ?
+                  <Card raised ><Segment className="text-center" compact padded><Icon padded size="massive" name="factory" /><span>انبارداری</span></Segment></Card> : null}
+                
+              </Card.Group>
+              
+              
             </Header>
           </Segment>
         </div>

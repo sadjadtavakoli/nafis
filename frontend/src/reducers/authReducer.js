@@ -7,14 +7,14 @@ const INITIAL_VALUES = {
 };
 
 export default (state = INITIAL_VALUES, action) => {
-  console.log('LOGIN',action.payload)
+  // console.log('LOGIN',action.payload)
   switch (action.type) {
     case LOGIN:
       return {
         ...state,
         token: action.payload.token,
-        type: action.payload.user.job,
-        currentUser: action.payload.user
+        type: action.payload.user?action.payload.user.job:null,
+        currentUser: action.payload.user?action.payload.user.username:null
       };
     default:
       return state;
