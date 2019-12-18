@@ -82,7 +82,7 @@ class ProductTable extends React.Component {
                             </Table.HeaderCell>
                     </Table.Row>
                         <Table.Row>
-                            {!this.state.notFound ?<div>
+                            {!this.state.notFound ?<React.Fragment>
                                 <Table.HeaderCell className="text-center">رنگ پس زمینه</Table.HeaderCell>
                                 <Table.HeaderCell className="text-center">رنگ طرح</Table.HeaderCell>
                                 <Table.HeaderCell className="text-center">جنس</Table.HeaderCell>
@@ -92,7 +92,7 @@ class ProductTable extends React.Component {
                                 <Table.HeaderCell className="text-center">قیمت فروش</Table.HeaderCell>
                                 {/* <Table.HeaderCell className="text-center">قیمت خرید</Table.HeaderCell> */}
                                 <Table.HeaderCell className="text-center">نام محصول</Table.HeaderCell>
-                                <Table.HeaderCell className="text-center">کد محصول</Table.HeaderCell></div>: null}
+                                <Table.HeaderCell className="text-center">کد محصول</Table.HeaderCell></React.Fragment>: null}
             </Table.Row>
             </Table.Header>
 

@@ -62,7 +62,7 @@ class DailyReport extends React.Component {
             <Table.Cell className="text-center norm-latin" collapsing><span>{item.seller.username}</span></Table.Cell>
             <Table.Cell className="text-center norm-latin" collapsing><span>{item.pk}</span></Table.Cell>
           </Table.Row>);
-        }):<div></div>}
+        }):<React.Fragment></React.Fragment>}
         </Table.Body>
       </Table>)
   }

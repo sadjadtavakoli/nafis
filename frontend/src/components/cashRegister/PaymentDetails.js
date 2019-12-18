@@ -19,13 +19,13 @@ const PaymentDetails = props => {
   };
 
   return (
-    <div>
+    <React.Fragment>
       <Header as="h3" textAlign="right">
         <span>پرداخت‌ها: </span>
       </Header>
       {props.payments.map((payment, index) => {
         return (
-          <div>
+          <React.Fragment>
             <Form.Group
               className="rtl"
               widths="4"
@@ -63,7 +63,7 @@ const PaymentDetails = props => {
               </Form.Group>
             ) : null}
             <Divider />
-          </div>
+          </React.Fragment>
         );
       })}
       <div className="text-center padded">
@@ -90,7 +90,7 @@ const PaymentDetails = props => {
           }
         />
       </div>
-    </div>
+    </React.Fragment>
   );
 };
 
