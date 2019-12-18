@@ -31,7 +31,7 @@ class Sale extends React.Component {
     }
     render() {
         return (
-            <>
+            <React.Fragment>
             <Container>
                 <AddBillModal open={this.state.open} onClose={this.closeModal}/>
                 <div id="sale">
@@ -42,7 +42,7 @@ class Sale extends React.Component {
                     
               </div>
               </Container>
-            </>
+            </React.Fragment>
         );
   }
 }

@@ -62,7 +62,7 @@ class DailyReport extends React.Component {
             <Table.Cell className="text-center norm-latin" collapsing><span>{item.seller.username}</span></Table.Cell>
             <Table.Cell className="text-center norm-latin" collapsing><span>{item.pk}</span></Table.Cell>
           </Table.Row>);
-        }):<></>}
+        }):<React.Fragment></React.Fragment>}
         </Table.Body>
       </Table>)
   }
@@ -74,7 +74,7 @@ class DailyReport extends React.Component {
           </Table.Row>
       </Table.Header>
       {this.state.dailyReport.total_price ? (
-        <>
+        <div>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell className="text-center">‌فاکتورهای مانده‌حساب</Table.HeaderCell>
@@ -105,17 +105,17 @@ class DailyReport extends React.Component {
             <Table.Cell className="text-center norm-latin" collapsing><span>{priceToPersian(this.state.dailyReport.total_reminded_payments)}</span></Table.Cell>
           </Table.Row>
         </Table.Body>
-        </>
+        </div>
       ):<LoadingBar/>}
     
       </Table>)
   }
   render() {
     return (
-      <>
+      <div>
         {this.dailyReport()}
         {this.bills()}
-      </>
+      </div>
       );
   }
 }

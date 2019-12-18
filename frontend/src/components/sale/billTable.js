@@ -76,7 +76,7 @@ class BillTable extends React.Component {
         }
         if (this.state.activeBill.length > 0){
             return (
-                <>
+                <div>
                     <ShowInformationModal data={this.state.itemData} open={this.state.isOpenInformationModal} onClose={this.closeInformationModal} />
                 
                     <Table celled striped className="">
@@ -104,7 +104,7 @@ class BillTable extends React.Component {
                            
                             {this.state.activeBill.map((item, index) => {
                                 return (
-                                    <>
+                                    <div>
                                         <Table.Row key={index}>
                                             <Table.Cell className="norm-latin text-center">
                                                 <Popup
@@ -130,10 +130,10 @@ class BillTable extends React.Component {
                                             <Table.Cell className="norm-latin text-center"><span>{standardTimeToJalaali(item.create_date)}</span></Table.Cell>
                                             <Table.Cell className="norm-latin text-center rtl"><span>{digitToComma(item.price)}</span>&nbsp;<span className="yekan">تومان</span></Table.Cell>
                                             <Table.Cell className="norm-latin text-center rtl"><span>{digitToComma(item.final_price)}</span>&nbsp;<span className="yekan">تومان</span></Table.Cell>
-                                            <Table.Cell className="norm-latin text-center">{item.final_discount ? (<><span className="yekan">digitToComma(item.final_discount)</span><span className="yekan">تومان</span></>) : '--'}  </Table.Cell>
+                                            <Table.Cell className="norm-latin text-center">{item.final_discount ? (<React.Fragment><span className="yekan">digitToComma(item.final_discount)</span><span className="yekan">تومان</span></React.Fragment>) : '--'}  </Table.Cell>
                                             <Table.Cell className="norm-latin text-center"><span>{phoneNumberBeautifier(item.buyer.phone_number)}</span></Table.Cell>
                                         </Table.Row>
-                                    </>);
+                                    </div>);
                             })}
                 
                         </Table.Body>
@@ -145,7 +145,7 @@ class BillTable extends React.Component {
                             </Table.Row>
                         </Table.Footer>
                     </Table>
-                </>)
+                </div>)
     }else{
     return <LoadingBar />;
     }

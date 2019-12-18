@@ -4,7 +4,7 @@ import renderField from "./RenderField";
 
 const SellerDetails = props => {
   return (
-    <>
+    <React.Fragment>
       <Header as="h3" textAlign="right">
         <span>فروشنده: </span>
       </Header>
@@ -16,7 +16,7 @@ const SellerDetails = props => {
         {renderField(props.seller, "username", "شناسه‌ کاربری")}
         {renderField(props.seller, "national_id", "کد ملی")}
       </Form.Group>
-    </>
+    </React.Fragment>
   );
 };
 export default SellerDetails;

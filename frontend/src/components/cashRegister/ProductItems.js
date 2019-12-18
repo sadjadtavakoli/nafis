@@ -4,14 +4,14 @@ import RenderItem from "./RenderItem";
 
 const ProductItems = props => {
   return (
-    <>
+    <React.Fragment>
       <Header as="h3" textAlign="right">
         <span>اقلام: </span>
       </Header>
       {props.items.map((productItem, index) => (
         <RenderItem productItem={productItem} index={index} />
       ))}
-    </>
+    </React.Fragment>
   );
 };
 export default ProductItems;

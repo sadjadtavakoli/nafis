@@ -55,7 +55,7 @@ class ProductTable extends React.Component {
     };
     render() {
         return this.state.productsList.length > 0 ? (
-            <>
+            <div>
         <Table celled striped className="">
             <Table.Header >
             <Table.Row>
@@ -82,7 +82,7 @@ class ProductTable extends React.Component {
                             </Table.HeaderCell>
                     </Table.Row>
                         <Table.Row>
-                            {!this.state.notFound ?<>
+                            {!this.state.notFound ?<React.Fragment>
                                 <Table.HeaderCell className="text-center">رنگ پس زمینه</Table.HeaderCell>
                                 <Table.HeaderCell className="text-center">رنگ طرح</Table.HeaderCell>
                                 <Table.HeaderCell className="text-center">جنس</Table.HeaderCell>
@@ -92,7 +92,7 @@ class ProductTable extends React.Component {
                                 <Table.HeaderCell className="text-center">قیمت فروش</Table.HeaderCell>
                                 {/* <Table.HeaderCell className="text-center">قیمت خرید</Table.HeaderCell> */}
                                 <Table.HeaderCell className="text-center">نام محصول</Table.HeaderCell>
-                                <Table.HeaderCell className="text-center">کد محصول</Table.HeaderCell></>: null}
+                                <Table.HeaderCell className="text-center">کد محصول</Table.HeaderCell></React.Fragment>: null}
             </Table.Row>
             </Table.Header>
 
@@ -100,18 +100,18 @@ class ProductTable extends React.Component {
                     
                         {!this.state.notFound?this.state.productsList.map((item,index) => {
                             return(<Table.Row key={index}>
-                                    <Table.Cell className="norm-latin text-center"><span className="yekan">{item.background_color.name}</span></Table.Cell>
-                                    <Table.Cell className="norm-latin text-center"><span className="yekan">{item.design_color.name}</span></Table.Cell>
-                                    <Table.Cell className="norm-latin text-center"><span className="yekan">{item.material.name}</span></Table.Cell>
-                                    <Table.Cell className="norm-latin text-center"><span className="yekan">{item.f_type.name}</span></Table.Cell>
-                                    <Table.Cell className="norm-latin text-center"><span className="yekan">{item.design.name}</span></Table.Cell>
+                                    <Table.Cell className="norm-latin text-center"><span className="yekan">{item.background_color && item.background_color.name}</span></Table.Cell>
+                                    <Table.Cell className="norm-latin text-center"><span className="yekan">{item.design_color && item.design_color.name}</span></Table.Cell>
+                                    <Table.Cell className="norm-latin text-center"><span className="yekan">{item.material && item.material.name}</span></Table.Cell>
+                                    <Table.Cell className="norm-latin text-center"><span className="yekan">{item.f_type && item.f_type.name}</span></Table.Cell>
+                                    <Table.Cell className="norm-latin text-center"><span className="yekan">{item.design && item.design.name}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center ltr">
                                     <span>{digitToComma(item.stock_amount)}</span><span>&nbsp;</span>
                                     <span className="yekan">متر</span>
                                     </Table.Cell>
                                     <Table.Cell className="norm-latin text-center rtl"><span>{digitToComma(item.selling_price)}</span> <span className="yekan">تومان</span></Table.Cell>
                                     {/* <Table.Cell className="norm-latin text-center rtl"><span>{digitToComma(item.buying_price)}</span> <span className="yekan">تومان</span></Table.Cell> */}
-                                    <Table.Cell className="norm-latin text-center"><span>{item.code}</span></Table.Cell>
+                                    <Table.Cell className="norm-latin text-center"><span>{item.name}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center" textAlign='right'>
                                     <span>{item.code}</span>
                                     </Table.Cell>
@@ -130,7 +130,7 @@ class ProductTable extends React.Component {
                 </Table>
                 {this.state.notFound?<NotFound/>:null}
 
-            </>) : <LoadingBar />;
+            </div>) : <LoadingBar />;
     }
                                         
 }

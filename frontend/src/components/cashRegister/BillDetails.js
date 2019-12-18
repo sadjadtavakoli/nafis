@@ -7,7 +7,7 @@ import { compose } from "../../utils/FunctionalUtils";
 
 const BillDetails = props => {
   return (
-    <>
+    <div>
       <Header as="h3" textAlign="right">
         <span>فاکتور: </span>
       </Header>
@@ -36,7 +36,7 @@ const BillDetails = props => {
           priceToPersian(text)
         )}
       </Form.Group>
-    </>
+    </div>
   );
 };
 export default BillDetails;

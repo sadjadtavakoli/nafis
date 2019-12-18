@@ -4,7 +4,7 @@ import renderField from "./RenderField";
 
 const BranchDetails = props => {
   return (
-    <>
+    <React.Fragment>
       <Header as="h3" textAlign="right">
         <span>شعبه: </span>
       </Header>
@@ -12,7 +12,7 @@ const BranchDetails = props => {
         {renderField(props.branch, "name", "اسم شعبه")}
         {renderField(props.branch, "address", "آدرس شعبه")}
       </Form.Group>
-    </>
+    </React.Fragment>
   );
 };
 export default BranchDetails;

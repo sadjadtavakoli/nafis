@@ -27,7 +27,7 @@ const BillDoneModal = props => {
   };
 
   return (
-    <>
+    <React.Fragment>
       {fetchBillInfo && Number.isInteger(fetchBillInfo.pk) && redirect ? (
         <Redirect
           push
@@ -57,7 +57,7 @@ const BillDoneModal = props => {
           />
         </Segment>
       </DialogModal>
-    </>
+    </React.Fragment>
   );
 };
 
