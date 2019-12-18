@@ -7,8 +7,8 @@ from django.db.models import DO_NOTHING
 class Staff(User):
     national_id = models.CharField(max_length=10, blank=True, null=True)
     birth_date = models.DateField(blank=True, null=True)
-    national_card_picture = models.ImageField()
-    profile_picture = models.ImageField()
+    national_card_picture = models.ImageField(blank=True, null=True)
+    profile_picture = models.ImageField(blank=True, null=True)
     job = models.CharField(choices=settings.STAFF_JOB_CHOICES, max_length=30, null=False,
                            blank=False)
     employment_date = models.DateField(blank=True, null=True)
