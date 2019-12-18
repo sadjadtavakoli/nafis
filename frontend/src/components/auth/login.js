@@ -38,7 +38,11 @@ class Login extends React.Component {
         return (
         <Container id="login" className="rtl">
            <Segment placeholder>
-                <Grid columns={2} relaxed='very' stackable>
+                    <Grid columns={2} relaxed='very' stackable>
+
+                <Grid.Column className="ltr text-center only-device" verticalAlign='middle'>
+                    <img src={logo} height="230"/>
+                </Grid.Column>
                 <Grid.Column>
                     <Form>
                         <Form.Input
@@ -67,7 +71,7 @@ class Login extends React.Component {
                     </Form>
                 </Grid.Column>
 
-                        <Grid.Column className="ltr" verticalAlign='middle'>
+                        <Grid.Column className="ltr text-center only-desktop" verticalAlign='middle'>
                             <img src={logo} height="230"/>
                 </Grid.Column>
                 </Grid>

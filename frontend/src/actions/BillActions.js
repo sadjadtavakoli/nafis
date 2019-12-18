@@ -4,6 +4,7 @@ import {
   createSucssAction,
   createFaildAction
 } from "../utils/FunctionalUtils";
+import server from "../apis/server";
 
 export const getAllActiveBills = () => (dispatch, _, { api }) => {
   const fetch = createFetchAction(ActionTypes.GET_ACTIVE_BILL);
@@ -61,6 +62,11 @@ export const doneTheBill = (billID, sendSms) => (dispatch, _, { api }) => {
       dispatch(sucss({ billID }));
     });
 };
+
+export const getDailyReport = () => async (dispatch) => { 
+    const response = await server(localStorage.getItem("token")).get("/bills/daily-report/");
+    dispatch({ type: ActionTypes.GET_DAILY_REPORT, payload: response.data });
+}
 
 export const removeBill = billID => (dispatch, _, { api }) => {
   const fetch = createFetchAction(ActionTypes.REMOVE_BILL);

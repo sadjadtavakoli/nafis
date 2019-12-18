@@ -12,6 +12,7 @@ import Depository from "./depository";
 import CashRegister from "./cashRegister";
 import PrintableFactor from "./factor";
 import Login from "./auth/login";
+import DailyReport from "./dailyReport";
 
 const App = ({ token }) => {
   return (
@@ -24,6 +25,7 @@ const App = ({ token }) => {
             <Route path="/depository" exact component={Depository} />
             <Route path="/cashregister" exact component={CashRegister} />
             <Route path="/factor/:id" exact component={PrintableFactor} />
+            <Route path="/daily-report/" exact component={DailyReport} />
           </SideBar>
         </Router>
       ) : (

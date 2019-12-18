@@ -10,8 +10,6 @@ class Depository extends React.Component {
     constructor(props) {
         super(props);
     }
-    componentDidMount() {
-    }
     state = {
         open: false,
         productID:NaN

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Container, Segment, Button } from "semantic-ui-react";
 import AddBillModal from "./AddBillModal";
+import history from "../../history";
 
 import BillLists from "./BillLists";
 import { getAllActiveBills } from "../../actions/BillActions";
@@ -32,7 +33,7 @@ const CashRegister = ({
   return (
     <Container>
       <Segment stacked className="rtl">
-        <Button className="yekan" onClick={() => this.setState({ open: true })} color="yellow" content='مشاهده گزارش روزانه' icon='print' labelPosition='right' />
+        <Button className="yekan" onClick={() => history.push('/daily-report/')} color="yellow" content='مشاهده گزارش روزانه' icon='print' labelPosition='right' />
       </Segment>
       <AddBillModal
         open={modal}

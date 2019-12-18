@@ -38,5 +38,5 @@ export function priceToPersian(price) {
   let priceString = String(+price);
   if (isNaN(priceString)) priceString = "0";
   const answer = priceString.replace(/\B(?=(\d{3})+(?!\d))/g, comma);
-  return enToFa(answer);
+  return (answer);
 }
