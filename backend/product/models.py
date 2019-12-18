@@ -22,12 +22,16 @@ class Product(models.Model):
                                          on_delete=DO_NOTHING, blank=True, null=True)
     design_color = models.ForeignKey('product.Color', related_name='design_products',
                                      on_delete=DO_NOTHING, blank=True, null=True)
-    material = models.ForeignKey('product.Material', related_name='products', on_delete=DO_NOTHING, blank=True, null=True)
+    material = models.ForeignKey('product.Material', related_name='products', on_delete=DO_NOTHING, blank=True,
+                                 null=True)
     design = models.ForeignKey('product.Design', related_name='products', on_delete=DO_NOTHING, blank=True, null=True)
     selling_price = models.IntegerField()
     buying_price = models.IntegerField()
     stock_amount = models.FloatField()
     f_type = models.ForeignKey('product.FType', related_name='products', on_delete=DO_NOTHING, blank=True, null=True)
+
+    def __str__(self):
+        return str(self.code) + " " + self.name
 
     def update_stock_amount(self, amount):
         self.stock_amount -= amount

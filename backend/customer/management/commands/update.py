@@ -2,7 +2,6 @@ import json
 import subprocess
 
 from django.core.management.base import BaseCommand
-from django.db import IntegrityError
 
 from branch.models import Branch
 from customer.models import CustomerType, Customer
@@ -29,7 +28,7 @@ class Command(BaseCommand):
                     address += ", " + str(item['city'])
                 if item['address'] is not None:
                     address += ", " + str(item['address'])
-                Customer.objects.create(phone_number="0"+str(item['phone_number']),
+                Customer.objects.create(phone_number="0" + str(item['phone_number']),
                                         first_name=item['first_name'],
                                         last_name=item['last_name'],
                                         address=address,
@@ -54,12 +53,14 @@ class Command(BaseCommand):
                             name=bg_color_parts[0],
                             rgb=bg_color_parts[0])
                 if item['design_color'] is not None:
-		    design_color_parts = item['design_color'].split(' ')
-                        creation_data['design_color'], created = Color.objects.get_or_create(
-                            rgb=bg_color_parts[0],                                                                                                                                                  name=bg_color_parts[1])                                                                                                                                         except IndexError:
-                        creation_data['design_color'], created = Color.objects.get_or_create(
-                            name=bg_color_parts[0],
-                            rgb=bg_color_parts[0])
+                    try:
+                        design_color_parts = item['design_color'].split(' ')
+                        creation_data['design_color'], created = Color.objects.get_or_create(rgb=design_color_parts[0],
+                                                                                             name=design_color_parts[1])
+                    except IndexError:
+                        creation_data['design_color'], created = Color.objects.get_or_create(name=design_color_parts[0],
+                                                                                             rgb=design_color_parts[0])
+
                 if item['f_type'] is not None:
                     creation_data['f_type'], created = FType.objects.get_or_create(name=item['f_type'])
                 if item['design_type'] is not None:
@@ -71,11 +72,11 @@ class Command(BaseCommand):
                                        buying_price=item['purchase_price'], stock_amount=item['stock_amount'],
                                        **creation_data)
 
-        # with open('entries_data.json', encoding='UTF-8') as json_file:
-        #     data = json.load(json_file)
-        #     for item in data:
-        #         pass
-        #
+    # with open('entries_data.json', encoding='UTF-8') as json_file:
+    #     data = json.load(json_file)
+    #     for item in data:
+    #         pass
+    #
         with open('customer/management/commands/staffs_data.json', encoding='UTF-8') as json_file:
 
             data = json.load(json_file)
@@ -89,9 +90,9 @@ class Command(BaseCommand):
                                      last_name=item['last_name'],
                                      job=job_mapping[item['group_type']], email=item['email'],
                                      branch=Branch.objects.first())
-        
+
         with open('customer/management/commands/suppliers_data.json', encoding='UTF-8') as json_file:
             data = json.load(json_file)
             for item in data:
                 Supplier.objects.create(full_name=item['name'], email='', phone_number=item['phone_number'])
-#
+
