@@ -100,18 +100,18 @@ class ProductTable extends React.Component {
                     
                         {!this.state.notFound?this.state.productsList.map((item,index) => {
                             return(<Table.Row key={index}>
-                                    <Table.Cell className="norm-latin text-center"><span className="yekan">{item.background_color.name}</span></Table.Cell>
-                                    <Table.Cell className="norm-latin text-center"><span className="yekan">{item.design_color.name}</span></Table.Cell>
-                                    <Table.Cell className="norm-latin text-center"><span className="yekan">{item.material.name}</span></Table.Cell>
-                                    <Table.Cell className="norm-latin text-center"><span className="yekan">{item.f_type.name}</span></Table.Cell>
-                                    <Table.Cell className="norm-latin text-center"><span className="yekan">{item.design.name}</span></Table.Cell>
+                                    <Table.Cell className="norm-latin text-center"><span className="yekan">{item.background_color && item.background_color.name}</span></Table.Cell>
+                                    <Table.Cell className="norm-latin text-center"><span className="yekan">{item.design_color && item.design_color.name}</span></Table.Cell>
+                                    <Table.Cell className="norm-latin text-center"><span className="yekan">{item.material && item.material.name}</span></Table.Cell>
+                                    <Table.Cell className="norm-latin text-center"><span className="yekan">{item.f_type && item.f_type.name}</span></Table.Cell>
+                                    <Table.Cell className="norm-latin text-center"><span className="yekan">{item.design && item.design.name}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center ltr">
                                     <span>{digitToComma(item.stock_amount)}</span><span>&nbsp;</span>
                                     <span className="yekan">متر</span>
                                     </Table.Cell>
                                     <Table.Cell className="norm-latin text-center rtl"><span>{digitToComma(item.selling_price)}</span> <span className="yekan">تومان</span></Table.Cell>
                                     {/* <Table.Cell className="norm-latin text-center rtl"><span>{digitToComma(item.buying_price)}</span> <span className="yekan">تومان</span></Table.Cell> */}
-                                    <Table.Cell className="norm-latin text-center"><span>{item.code}</span></Table.Cell>
+                                    <Table.Cell className="norm-latin text-center"><span>{item.name}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center" textAlign='right'>
                                     <span>{item.code}</span>
                                     </Table.Cell>
