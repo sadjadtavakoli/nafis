@@ -3,7 +3,7 @@ import { Form, Label, Header } from "semantic-ui-react";
 import renderField from "./RenderField";
 const BuyerDetails = props => {
   return (
-    <>
+    <div>
       <Header as="h3" textAlign="right">
         <span>خریدار: </span>
       </Header>
@@ -17,7 +17,7 @@ const BuyerDetails = props => {
         {renderField(props.buyer, "address", "آدرس")}
         {renderField(props.buyer, "points", "امتیاز مشتری")}
       </Form.Group>
-    </>
+    </div>
   );
 };
 export default BuyerDetails;

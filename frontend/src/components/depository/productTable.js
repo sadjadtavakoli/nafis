@@ -55,7 +55,7 @@ class ProductTable extends React.Component {
     };
     render() {
         return this.state.productsList.length > 0 ? (
-            <>
+            <div>
         <Table celled striped className="">
             <Table.Header >
             <Table.Row>
@@ -82,7 +82,7 @@ class ProductTable extends React.Component {
                             </Table.HeaderCell>
                     </Table.Row>
                         <Table.Row>
-                            {!this.state.notFound ?<>
+                            {!this.state.notFound ?<div>
                                 <Table.HeaderCell className="text-center">رنگ پس زمینه</Table.HeaderCell>
                                 <Table.HeaderCell className="text-center">رنگ طرح</Table.HeaderCell>
                                 <Table.HeaderCell className="text-center">جنس</Table.HeaderCell>
@@ -92,7 +92,7 @@ class ProductTable extends React.Component {
                                 <Table.HeaderCell className="text-center">قیمت فروش</Table.HeaderCell>
                                 {/* <Table.HeaderCell className="text-center">قیمت خرید</Table.HeaderCell> */}
                                 <Table.HeaderCell className="text-center">نام محصول</Table.HeaderCell>
-                                <Table.HeaderCell className="text-center">کد محصول</Table.HeaderCell></>: null}
+                                <Table.HeaderCell className="text-center">کد محصول</Table.HeaderCell></div>: null}
             </Table.Row>
             </Table.Header>
 
@@ -130,7 +130,7 @@ class ProductTable extends React.Component {
                 </Table>
                 {this.state.notFound?<NotFound/>:null}
 
-            </>) : <LoadingBar />;
+            </div>) : <LoadingBar />;
     }
                                         
 }
