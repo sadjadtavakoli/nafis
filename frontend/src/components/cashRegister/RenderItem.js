@@ -7,7 +7,7 @@ import { useToggle } from "../../utils/Hooks";
 const RenderItem = props => {
   const [productInfoIsOpen, toggleProductInfoIsOpen] = useToggle(false);
   return (
-    <>
+    <div>
       <Form.Group
         className="rtl"
         widths="4"
@@ -68,7 +68,7 @@ const RenderItem = props => {
         )}
       </Form.Group>
       <Divider />
-    </>
+    </div>
   );
 };
 

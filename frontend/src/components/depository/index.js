@@ -26,7 +26,7 @@ class Depository extends React.Component {
     }
     render() {
         return (
-            <>
+            <div>
             <Container>
                 <AddProductModal open={this.state.open} code={this.state.productID} onClose={this.closeModal}/>
                 <div id="depository">
@@ -36,7 +36,7 @@ class Depository extends React.Component {
                     <ProductTable />
                     </div>
             </Container>
-            </>
+            </div>
         );
   }
 }
