@@ -47,17 +47,19 @@ class Command(BaseCommand):
                     try:
                         bg_color_parts = item['bg_color'].split(' ')
                         creation_data['background_color'], created = Color.objects.get_or_create(
-                            name=bg_color_parts[0],
-                            rgb=bg_color_parts[1])
+                            rgb=bg_color_parts[0],
+                            name=bg_color_parts[1])
                     except IndexError:
                         creation_data['background_color'], created = Color.objects.get_or_create(
                             name=bg_color_parts[0],
                             rgb=bg_color_parts[0])
                 if item['design_color'] is not None:
-                    if Color.objects.filter(name=item['design_color']).exists():
-                        creation_data['design_color'] = Color.objects.filter(name=item['design_color']).first()
-                    else:
-                        creation_data['design_color'] = Color.objects.create(name=item['design_color'])
+		    design_color_parts = item['design_color'].split(' ')
+                        creation_data['design_color'], created = Color.objects.get_or_create(
+                            rgb=bg_color_parts[0],                                                                                                                                                  name=bg_color_parts[1])                                                                                                                                         except IndexError:
+                        creation_data['design_color'], created = Color.objects.get_or_create(
+                            name=bg_color_parts[0],
+                            rgb=bg_color_parts[0])
                 if item['f_type'] is not None:
                     creation_data['f_type'], created = FType.objects.get_or_create(name=item['f_type'])
                 if item['design_type'] is not None:
@@ -87,7 +89,7 @@ class Command(BaseCommand):
                                      last_name=item['last_name'],
                                      job=job_mapping[item['group_type']], email=item['email'],
                                      branch=Branch.objects.first())
-        #
+        
         with open('customer/management/commands/suppliers_data.json', encoding='UTF-8') as json_file:
             data = json.load(json_file)
             for item in data:
