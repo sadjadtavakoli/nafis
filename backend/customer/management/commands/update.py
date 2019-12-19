@@ -29,7 +29,7 @@ class Command(BaseCommand):
                     address += ", " + str(item['city'])
                 if item['address'] is not None:
                     address += ", " + str(item['address'])
-                Customer.objects.create(phone_number=item['phone_number'],
+                Customer.objects.create(phone_number="0"+str(item['phone_number']),
                                         first_name=item['first_name'],
                                         last_name=item['last_name'],
                                         address=address,
