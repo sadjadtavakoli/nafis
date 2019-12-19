@@ -35,7 +35,7 @@ class Product(models.Model):
 
     def update_stock_amount(self, amount):
         self.stock_amount -= amount
-        self.stock_amount = round_down(self.stock_amount, 1)
+        self.stock_amount = round_down(self.stock_amount, 2)
         self.save()
 
     @property

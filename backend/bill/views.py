@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from bill.models import Bill, BillItem, CustomerPayment, CustomerCheque
-from bill.permissions import LoginRequired, CloseBillPermission, AddPaymentPermission
+from bill.permissions import LoginRequired, CloseBillPermission
 from bill.serializers import BillSerializer, CustomerPaymentSerializer, BillItemSerializer
 from customer.models import Customer, Point
 from nafis.paginations import PaginationClass
@@ -39,7 +39,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
                        " را حذف نموده سپس نسبت به حذف فاکتور اقدام نمایید.")
         response = super(BillsViewSet, self).destroy(request, *args, **kwargs)
         for data in bill_items_data:
-            data['product'].update_stock_amount(-1 * data['amount'])
+            data['product'].update_stock_amount(-1 * (float(data['amount']) + 0.05))
         return response
 
     @action(url_path='close-all', detail=False, methods=['post'], permission_classes=(CloseBillPermission,))
@@ -87,11 +87,15 @@ class BillsViewSet(NafisBase, ModelViewSet):
             if cash_amount:
                 payment_type = "cash"
                 payments.append(CustomerPaymentSerializer(CustomerPayment.objects.create(create_date=datetime.now(),
-                                                         amount=float(cash_amount), bill=bill, type=payment_type)).data)
+                                                                                         amount=float(cash_amount),
+                                                                                         bill=bill,
+                                                                                         type=payment_type)).data)
             if card_amount:
                 payment_type = "card"
                 payments.append(CustomerPaymentSerializer(CustomerPayment.objects.create(create_date=datetime.now(),
-                                                         amount=float(card_amount), bill=bill, type=payment_type)).data)
+                                                                                         amount=float(card_amount),
+                                                                                         bill=bill,
+                                                                                         type=payment_type)).data)
         elif payment_type == "cheque":
             amount = self.request.data.get('amount')
             payment = CustomerPayment.objects.create(create_date=datetime.now(),
@@ -201,7 +205,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
 
 class BillItemViewSet(ModelViewSet):
     serializer_class = BillItemSerializer
-    permission_classes = (LoginRequired,)
+    # permission_classes = (LoginRequired,)
     queryset = BillItem.objects.all()
     non_updaters = ["cashier", "accountant"]
     non_destroyers = ['cashier', "accountant"]
@@ -217,10 +221,12 @@ class BillItemViewSet(ModelViewSet):
         bill = self.get_object().bill
         bill_item_product = self.get_object().product
         bill_item_amount = self.get_object().amount
-        if bill.seller.username != request.user.username or bill.status != "active":
-            raise PermissionDenied
+        print(bill_item_product)
+        print(bill_item_amount)
+        # if bill.seller.username != request.user.username or bill.status != "active":
+        #     raise PermissionDenied
         super(BillItemViewSet, self).destroy(request, *args, **kwargs)
-        bill_item_product.update_stock_amount(-1 * bill_item_amount)
+        bill_item_product.update_stock_amount(-1 * (bill_item_amount + 0.05))
         serializer = BillSerializer(bill)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, headers=headers)
@@ -239,9 +245,9 @@ class BillItemViewSet(ModelViewSet):
         if bill.status != "active":
             raise PermissionDenied
 
-        staff = Staff.objects.get(username=request.user.username)
-        if staff.job in self.non_creator:
-            raise PermissionDenied
+        # staff = Staff.objects.get(username=request.user.username)
+        # if staff.job in self.non_creator:
+        #     raise PermissionDenied
 
         item = self.request.data
         product_code = item['product']
