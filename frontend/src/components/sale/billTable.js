@@ -96,15 +96,10 @@ class BillTable extends React.Component {
                         </Table.Header>
 
                         <Table.Body>
-                            {/* <Input
-                        iconPosition='left'
-                        icon={<Icon name='search' inverted circular link />}
-                        placeholder='Search...'
-                    /> */}
                            
                             {this.state.activeBill.map((item, index) => {
                                 return (
-                                    <div>
+                                    <React.Fragment>
                                         <Table.Row key={index}>
                                             <Table.Cell className="norm-latin text-center">
                                                 <Popup
@@ -133,7 +128,7 @@ class BillTable extends React.Component {
                                             <Table.Cell className="norm-latin text-center">{item.final_discount ? (<React.Fragment><span className="yekan">digitToComma(item.final_discount)</span><span className="yekan">تومان</span></React.Fragment>) : '--'}  </Table.Cell>
                                             <Table.Cell className="norm-latin text-center"><span>{phoneNumberBeautifier(item.buyer.phone_number)}</span></Table.Cell>
                                         </Table.Row>
-                                    </div>);
+                                    </React.Fragment>);
                             })}
                 
                         </Table.Body>
