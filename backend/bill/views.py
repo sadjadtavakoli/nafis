@@ -80,22 +80,20 @@ class BillsViewSet(NafisBase, ModelViewSet):
     def add_payments(self, request, **kwargs):
         payment_type = self.request.data.get('type')
         bill = self.get_object()
-        payments = []
         if payment_type == "cash_card":
             cash_amount = self.request.data.get('cash_amount', 0)
             card_amount = self.request.data.get('card_amount', 0)
             if cash_amount:
                 payment_type = "cash"
-                payments.append(CustomerPaymentSerializer(CustomerPayment.objects.create(create_date=datetime.now(),
-                                                                                         amount=float(cash_amount),
-                                                                                         bill=bill,
-                                                                                         type=payment_type)).data)
+                CustomerPayment.objects.create(create_date=datetime.now(), amount=float(cash_amount),
+                                               bill=bill,
+                                               type=payment_type)
             if card_amount:
                 payment_type = "card"
-                payments.append(CustomerPaymentSerializer(CustomerPayment.objects.create(create_date=datetime.now(),
-                                                                                         amount=float(card_amount),
-                                                                                         bill=bill,
-                                                                                         type=payment_type)).data)
+                CustomerPayment.objects.create(create_date=datetime.now(),
+                                               amount=float(card_amount),
+                                               bill=bill,
+                                               type=payment_type)
         elif payment_type == "cheque":
             amount = self.request.data.get('amount')
             payment = CustomerPayment.objects.create(create_date=datetime.now(),
@@ -111,8 +109,9 @@ class BillsViewSet(NafisBase, ModelViewSet):
 
             payment.cheque = cheque
             payment.save()
-            payments.append(CustomerPaymentSerializer(payment).data)
-        return Response(payments, status=status.HTTP_201_CREATED)
+
+        data = BillSerializer(Bill.objects.get(pk=bill.pk)).data
+        return Response(data, status=status.HTTP_201_CREATED)
 
     @action(methods=['post'], detail=True, url_path='done', permission_classes=(CloseBillPermission,))
     def close_bill(self, request, **kwargs):
