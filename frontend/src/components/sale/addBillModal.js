@@ -193,7 +193,7 @@ class AddBillModal extends React.Component {
                                     </div>
                                 </Segment>
                                   <Form.Group widths={1}>
-                                    <Form.Input className='ltr placeholder-rtl' label='تخفیف کلی' type="number" defaultValue='0' error={this.state.formValidation.discount} onChange={(e)=>this.inputChange(e,'discount')} placeholder='مقدار تخفیف' />
+                                    <Form.Input className='ltr placeholder-rtl' label='تخفیف کلی' type="number"  error={this.state.formValidation.discount} onChange={(e)=>this.inputChange(e,'discount')} placeholder='مقدار تخفیف' />
                                 </Form.Group>
                             </Form>
                         </Modal.Description>

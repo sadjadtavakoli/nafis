@@ -35,6 +35,7 @@ const AddBillModal = props => {
       <Modal.Header className="yekan">
         <Header as="h2">مشخصات فاکتور</Header>
         <Label color="green" size="medium" className="rtl yekan">
+          {console.log(props.data)}
           مبلغ نهایی:{" "}
           {props.data && enToFa(priceToPersian(props.data.final_price))} - مبلغ
           باقی‌مانده:{" "}

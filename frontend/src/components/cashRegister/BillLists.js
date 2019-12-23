@@ -63,9 +63,9 @@ const BillLists = ({
                 }}
                 icon
                 labelPosition="right"
-                color="blue"
+                color="teal"
               >
-                <span className="yekan">ویرایش</span>
+                <span className="yekan">مشاهده</span>
                 <Icon name="edit" />
               </Button>
 
