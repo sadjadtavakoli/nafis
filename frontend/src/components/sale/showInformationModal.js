@@ -179,7 +179,7 @@ class ShowInformationModal extends React.Component {
                             <Form>
                                 <Form.Group unstackable widths={2}>
                                     <Form.Input className='ltr placeholder-rtl' readOnly defaultValue={this.state.data.buyer.phone_number} label='شماره تلفن همراه' type="number" onChange={(e)=>this.inputChange(e,'phone_number')} placeholder='شماره تلفن همراه' />
-                                    <Form.Input className='ltr placeholder-rtl' readOnly={!this.state.isEnableEdit.used_points} error={!this.state.isEnableEdit.used_points} defaultValue={this.state.data.used_points} label={()=>this.labelRender('امتیاز استفاده شده','used_points')} type="number" onChange={(e)=>this.inputChange(e,'used_points')} placeholder='امتیاز استفاده شده' />
+                                    {/* <Form.Input className='ltr placeholder-rtl' readOnly={!this.state.isEnableEdit.used_points} error={!this.state.isEnableEdit.used_points} defaultValue={this.state.data.used_points} label={()=>this.labelRender('امتیاز استفاده شده','used_points')} type="number" onChange={(e)=>this.inputChange(e,'used_points')} placeholder='امتیاز استفاده شده' /> */}
                                 </Form.Group>
                                 <Form.Group widths={2}>
                                     <Form.Dropdown className='ltr placeholder-rtl text-right' readOnly defaultValue={'1'} placeholder='شعبه' selection label={'شعبه'} options={this.state.branchOptions} />
