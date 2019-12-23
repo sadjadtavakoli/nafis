@@ -74,48 +74,48 @@ class DailyReport extends React.Component {
           </Table.Row>
       </Table.Header>
       {this.state.dailyReport.total_price ? (
-        <div>
+        <React.Fragment>
         <Table.Header>
           <Table.Row>
+            <Table.HeaderCell className="text-center"> سود کل</Table.HeaderCell>
             <Table.HeaderCell className="text-center">‌فاکتورهای مانده‌حساب</Table.HeaderCell>
+            <Table.HeaderCell className="text-center"> مانده‌ حساب</Table.HeaderCell>
+            <Table.HeaderCell className="text-center"> کل پرداخت</Table.HeaderCell>
             <Table.HeaderCell className="text-center"> پرداخت‌های کارت</Table.HeaderCell>
             <Table.HeaderCell className="text-center"> پرداخت‌های نقد</Table.HeaderCell>
             <Table.HeaderCell className="text-center"> پرداخت‌های چک</Table.HeaderCell>
             <Table.HeaderCell className="text-center"> کل تخفیف داده‌شده</Table.HeaderCell>
             <Table.HeaderCell className="text-center"> مبلغ خالص فروش</Table.HeaderCell>
-            <Table.HeaderCell className="text-center"> تعداد اقلام</Table.HeaderCell>
-            <Table.HeaderCell className="text-center"> کل پرداخت</Table.HeaderCell>
             <Table.HeaderCell className="text-center"> مبلغ خام فروش</Table.HeaderCell>
-            <Table.HeaderCell className="text-center"> سود کل</Table.HeaderCell>
-            <Table.HeaderCell className="text-center"> مانده‌ حساب</Table.HeaderCell>
+            <Table.HeaderCell className="text-center"> تعداد اقلام</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
           <Table.Row>
+            <Table.Cell className="text-center norm-latin" collapsing><span>{priceToPersian(this.state.dailyReport.total_profit)}</span></Table.Cell>
             <Table.Cell className="text-center norm-latin" collapsing><span>{priceToPersian(this.state.dailyReport.bills_with_reminded_status)}</span></Table.Cell>
+            <Table.Cell className="text-center norm-latin" collapsing><span>{priceToPersian(this.state.dailyReport.total_reminded_payments)}</span></Table.Cell>
+            <Table.Cell className="text-center norm-latin" collapsing><span>{priceToPersian(this.state.dailyReport.total_paid)}</span></Table.Cell>
             <Table.Cell className="text-center norm-latin" collapsing><span>{priceToPersian(this.state.dailyReport.total_card_paid)}</span></Table.Cell>
             <Table.Cell className="text-center norm-latin" collapsing><span>{priceToPersian(this.state.dailyReport.total_cash_paid)}</span></Table.Cell>
             <Table.Cell className="text-center norm-latin" collapsing><span>{priceToPersian(this.state.dailyReport.total_cheque_paid)}</span></Table.Cell>
             <Table.Cell className="text-center norm-latin" collapsing><span>{priceToPersian(this.state.dailyReport.total_discount)}</span></Table.Cell>
             <Table.Cell className="text-center norm-latin" collapsing><span>{priceToPersian(this.state.dailyReport.total_final_price)}</span></Table.Cell>
-            <Table.Cell className="text-center norm-latin" collapsing><span>{priceToPersian(this.state.dailyReport.total_items)}</span></Table.Cell>
-            <Table.Cell className="text-center norm-latin" collapsing><span>{priceToPersian(this.state.dailyReport.total_paid)}</span></Table.Cell>
             <Table.Cell className="text-center norm-latin" collapsing><span>{priceToPersian(this.state.dailyReport.total_price)}</span></Table.Cell>
-            <Table.Cell className="text-center norm-latin" collapsing><span>{priceToPersian(this.state.dailyReport.total_profit)}</span></Table.Cell>
-            <Table.Cell className="text-center norm-latin" collapsing><span>{priceToPersian(this.state.dailyReport.total_reminded_payments)}</span></Table.Cell>
+            <Table.Cell className="text-center norm-latin" collapsing><span>{priceToPersian(this.state.dailyReport.total_items)}</span></Table.Cell>
           </Table.Row>
         </Table.Body>
-        </div>
+        </React.Fragment>
       ):<LoadingBar/>}
     
       </Table>)
   }
   render() {
     return (
-      <div>
+      <React.Fragment>
         {this.dailyReport()}
         {this.bills()}
-      </div>
+      </React.Fragment>
       );
   }
 }
