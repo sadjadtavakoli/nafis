@@ -24,7 +24,7 @@ const App = ({ token }) => {
             <Route path="/sale" exact component={Sale} />
             <Route path="/depository" exact component={Depository} />
             <Route path="/cashregister" exact component={CashRegister} />
-            <Route path="/factor/:id" exact component={PrintableFactor} />
+            <Route path="/factor/:id/:print" exact component={PrintableFactor} />
             <Route path="/daily-report/" exact component={DailyReport} />
           </SideBar>
         </Router>

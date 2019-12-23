@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Button, Form, Card, Label, Icon } from 'semantic-ui-react'
 import { getProductsByCode } from '../../actions/DepositoryActions'
 import { addNewItem } from '../../actions/SaleActions'
-import { enToFa, phoneNumberBeautifier } from '../utils/numberUtils';
+import { enToFa, phoneNumberBeautifier, priceToPersian } from '../utils/numberUtils';
 import { toastr } from 'react-redux-toastr';
 
 class NewBillPopup extends React.Component {
@@ -50,6 +50,7 @@ class NewBillPopup extends React.Component {
                 end_of_roll: this.state.end_of_roll,
                 discount: this.state.discount,
                 end_of_roll_amount: this.state.end_of_roll_amount,
+                selling_price: this.state.productData.selling_price
             }
             if (this.props.pk) {
                 this.props.addNewItem(this.props.pk, prepareData).then((res) => {
@@ -105,7 +106,10 @@ class NewBillPopup extends React.Component {
                             <Icon name='info'/>
                             <span>نام محصول:</span>&nbsp;<span>{enToFa(this.state.productData.name)}</span>
                             <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                            <span>مقدار باقی مانده:</span>&nbsp;<span>{enToFa(this.state.productData.stock_amount)}</span>&nbsp;<span>متر</span></Label>
+                            <span>مقدار باقی مانده:</span>&nbsp;<span>{enToFa(this.state.productData.stock_amount)}</span>&nbsp;<span>متر</span>
+                            <p>
+                            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                <span>قیمت هر متر:</span>&nbsp;<span>{enToFa(priceToPersian(this.state.productData.selling_price))}</span><span>&nbsp; تومان</span></p></Label>
                         : null}
                     {this.state.notFound === true ?
                         <Label color='red'><Icon name="warning circle"/><span>محصول مورد نظر یافت نشد</span></Label>:null}
@@ -113,7 +117,7 @@ class NewBillPopup extends React.Component {
                         <Form.Group widths='equal'>
                             <Form.Input className='ltr placeholder-rtl' type="number" fluid label='کد محصول' onChange={(e)=>this.changeInput(e,'product')} placeholder='' />
                             <Form.Input className='ltr placeholder-rtl' type="number" fluid label='مقدار(متر)' onChange={(e)=>this.changeInput(e,'amount')} placeholder='' />
-                            <Form.Input className='ltr placeholder-rtl' type="number" fluid label='تخفیف' defaultValue={this.state.discount}  onChange={(e)=>this.changeInput(e,'discount')} placeholder='' />
+                            <Form.Input className='ltr placeholder-rtl' type="number" fluid label='تخفیف'  onChange={(e)=>this.changeInput(e,'discount')} placeholder='' />
                         </Form.Group>
                         <Form.Group widths='equal'>
                             <Form.Checkbox toggle className='ltr placeholder-rtl' checked={this.state.end_of_roll} onChange={this.toggleIsEndOfRoll} label='ته طاقه؟' />

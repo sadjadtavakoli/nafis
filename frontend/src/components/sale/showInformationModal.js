@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { enToFa } from '../utils/numberUtils'
+import { enToFa,priceToPersian } from '../utils/numberUtils'
 import { setNewBill, deleteItem, getCustomerByPhoneNumber,updateBill } from '../../actions/SaleActions';
 import { Button, Modal, Divider, Header, Segment, Form, Card, Popup, Loader, Image, Icon, Message, Label } from 'semantic-ui-react'
 import {toastr} from 'react-redux-toastr'
@@ -70,7 +70,7 @@ class ShowInformationModal extends React.Component {
                         <Form.Group widths='equal'>
                             <Form.Input className='rtl text-right placeholder-rtl' readOnly fluid defaultValue={item.product.name} label='نام محصول' placeholder='' />
                             <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={item.product.code} label='کد محصول' placeholder='' />
-                            <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={item.amount} label='مقدار(متر)' placeholder='' />
+                            <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={item.amount} label={`مقدار(متر) -- ${enToFa(priceToPersian(item.product.selling_price))} تومان`} placeholder='' />
                             <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={item.discount} label='تخفیف' placeholder='' />
                         </Form.Group>
                         <Form.Group widths='3'>
@@ -179,7 +179,7 @@ class ShowInformationModal extends React.Component {
                             <Form>
                                 <Form.Group unstackable widths={2}>
                                     <Form.Input className='ltr placeholder-rtl' readOnly defaultValue={this.state.data.buyer.phone_number} label='شماره تلفن همراه' type="number" onChange={(e)=>this.inputChange(e,'phone_number')} placeholder='شماره تلفن همراه' />
-                                    <Form.Input className='ltr placeholder-rtl' readOnly={!this.state.isEnableEdit.used_points} error={!this.state.isEnableEdit.used_points} defaultValue={this.state.data.used_points} label={()=>this.labelRender('امتیاز استفاده شده','used_points')} type="number" onChange={(e)=>this.inputChange(e,'used_points')} placeholder='امتیاز استفاده شده' />
+                                    {/* <Form.Input className='ltr placeholder-rtl' readOnly={!this.state.isEnableEdit.used_points} error={!this.state.isEnableEdit.used_points} defaultValue={this.state.data.used_points} label={()=>this.labelRender('امتیاز استفاده شده','used_points')} type="number" onChange={(e)=>this.inputChange(e,'used_points')} placeholder='امتیاز استفاده شده' /> */}
                                 </Form.Group>
                                 <Form.Group widths={2}>
                                     <Form.Dropdown className='ltr placeholder-rtl text-right' readOnly defaultValue={'1'} placeholder='شعبه' selection label={'شعبه'} options={this.state.branchOptions} />

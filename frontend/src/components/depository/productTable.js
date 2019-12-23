@@ -13,10 +13,17 @@ class ProductTable extends React.Component {
         productsList: [],
         totalPageCount: 1,
         activePage: 1,
-        notFound:false
+        notFound: false,
+        width: 0
     }
     componentDidMount() {
-       this.getProductsList()
+        this.getProductsList()
+        this.updateWindowDimensions();
+        window.addEventListener('resize', this.updateWindowDimensions);
+    }
+
+    componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
     }
     getProductsList = (page = 1) => {
         this.props.getProductsList(page).then(() => {
@@ -26,6 +33,9 @@ class ProductTable extends React.Component {
                 totalPageCount: this.props.productsList ? Math.ceil(this.props.productsList.count / 25):1,
             });
         });
+    }
+    updateWindowDimensions=()=> {
+        this.setState({ width: window.innerWidth });
     }
     changePage = (event, { activePage }) => {
         this.setState({activePage})
@@ -61,10 +71,10 @@ class ProductTable extends React.Component {
             <Table.Row>
                         <Table.HeaderCell colSpan='10' className="rtl text-right">
                             <Grid>
-                                <Grid.Column width={2} style={{display:'flex',alignItems:'center'}}>
+                                <Grid.Column width={this.state.width < 768 ? 12: 2} style={{display:'flex',alignItems:'center'}}>
                                     <span>لیست محصولات موجود</span>
                                 </Grid.Column>
-                            <Grid.Column width={6}>
+                            <Grid.Column width={this.state.width < 768 ? 12: 6}>
                             <Search
                                 hidden={this.props.searchBar?'':'invisible'}
                                 input={{ icon: 'search', iconPosition: 'left' }}

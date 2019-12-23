@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import NewBillPopup from './newBillPopup'
 import { setNewBill,getCustomerByPhoneNumber } from '../../actions/SaleActions'
-import { enToFa } from '../utils/numberUtils'
+import { enToFa, priceToPersian } from '../utils/numberUtils'
 import { Button, Modal, Divider, Header, Segment, Form, Card, Popup, Icon, Message, Label } from 'semantic-ui-react'
 import {toastr} from 'react-redux-toastr'
 const INITIAL_STATE = {
@@ -71,7 +71,7 @@ class AddBillModal extends React.Component {
                     <Form.Group widths='equal'>
                         <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={data.name} label='نام محصول' placeholder='' />
                         <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={data.product} label='کد محصول' placeholder='' />
-                        <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={data.amount} label='مقدار(متر)' placeholder='' />
+                        <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={data.amount} label={`مقدار(متر) -- ${enToFa(priceToPersian(data.selling_price))} تومان`} placeholder='' />
                         <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={data.discount} label='تخفیف' placeholder='' />
                     </Form.Group>
                     <Form.Group widths='3'>
@@ -193,7 +193,7 @@ class AddBillModal extends React.Component {
                                     </div>
                                 </Segment>
                                   <Form.Group widths={1}>
-                                    <Form.Input className='ltr placeholder-rtl' label='تخفیف کلی' type="number" defaultValue='0' error={this.state.formValidation.discount} onChange={(e)=>this.inputChange(e,'discount')} placeholder='مقدار تخفیف' />
+                                    <Form.Input className='ltr placeholder-rtl' label='تخفیف کلی' type="number"  error={this.state.formValidation.discount} onChange={(e)=>this.inputChange(e,'discount')} placeholder='مقدار تخفیف' />
                                 </Form.Group>
                             </Form>
                         </Modal.Description>

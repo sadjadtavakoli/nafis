@@ -2,7 +2,7 @@ import React from "react";
 import { Table, Icon, Button } from "semantic-ui-react";
 import { standardTimeToJalaali } from "../utils/jalaaliUtils";
 import { enToFa, priceToPersian } from "../utils/numberUtils";
-
+import NotFound from '../utils/notFound'
 const BillLists = ({
   title,
   headerTitles,
@@ -22,18 +22,19 @@ const BillLists = ({
           </Table.HeaderCell>
         </Table.Row>
         <Table.Row>
-          {headerTitles.map((eachTitle, index) => (
+          {Object.keys(dataProvider).length > 0 ?headerTitles.map((eachTitle, index) => (
             <Table.HeaderCell
               className="text-center"
               key={`bill_list_header_${index}`}
             >
               {eachTitle}
             </Table.HeaderCell>
-          ))}
+          )):<NotFound/>}
         </Table.Row>
       </Table.Header>
 
       <Table.Body>
+
         {dataProvider.map((item, index) => (
           <Table.Row key={`bill_list_body_${index}`}>
             <Table.Cell className="norm-latin text-center">
@@ -63,9 +64,9 @@ const BillLists = ({
                 }}
                 icon
                 labelPosition="right"
-                color="blue"
+                color="teal"
               >
-                <span className="yekan">ویرایش</span>
+                <span className="yekan">مشاهده</span>
                 <Icon name="edit" />
               </Button>
 
