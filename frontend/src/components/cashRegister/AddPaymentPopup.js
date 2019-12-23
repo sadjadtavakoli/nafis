@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Form, Card, Button } from "semantic-ui-react";
 import { useStateObject } from "../../utils/Hooks";
 import { connect } from "react-redux";
-import { addPaymentToBill } from "../../actions/BillActions";
+import { addPaymentToBillv2 } from "../../actions/BillActions";
 import { toGregorian } from "../utils/jalaaliUtils";
 import { validatePaymentData } from "../../actions/validatePayment";
 
@@ -36,7 +36,7 @@ const AddPaymentPopup = props => {
   const handleSubmit = () => {
     try {
       const paymentData = validatePaymentData(paymentFormData);
-      props.addPaymentToBill(props.billID, paymentData).then(props.onClose);
+      props.addPaymentToBillv2(props.billID, paymentData).then(props.onClose);
     } catch (error) {
       setError({ content: error.message, pointing: "below" });
     }
@@ -205,5 +205,5 @@ export default connect(
         : 0
     };
   },
-  { addPaymentToBill }
+  { addPaymentToBillv2 }
 )(AddPaymentPopup);
