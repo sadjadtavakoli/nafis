@@ -3,7 +3,7 @@ import { Message } from 'semantic-ui-react'
 class NotFound extends React.Component {
     render() { 
         return (
-            <div>
+            <div id="not-found">
             <Message
                 error
                 className="rtl"

@@ -21,9 +21,15 @@ class PrintFactor extends React.Component {
   componentDidMount() {
     const params = this.props.match.params;
     const resivedData = this.props.location.state;
-    if (!(resivedData.pk === params.id && !isEmptyObject(resivedData)))
+    console.log(params,resivedData)
+
+    if ( (params.id && params.print === 'print') || !((resivedData.pk) === params.id && !isEmptyObject(resivedData)))
       this.props.getBillREQUEST(params.id).then(res => {
-        this.setState({ bill: res, receipt: res.items });
+        this.setState({ bill: res, receipt: res.items }, () => {
+          if (params.print === 'print'){
+            // window.print();
+          }
+        });
       });
     else this.setState({ bill: resivedData, receipt: resivedData.items });
   }
@@ -63,7 +69,7 @@ class PrintFactor extends React.Component {
     return (
       <div className="bootstrap factor">
         <div className="container rtl py-2">
-          <div className="row border-black border-radius-7 mb-2">
+          {/* <div className="row border-black border-radius-7 mb-2">
             <div className="col-6 d-flex align-items-center justify-content-center">
               <img src={logo} height="200" />
             </div>
@@ -73,7 +79,7 @@ class PrintFactor extends React.Component {
                 <h1 className="col">NAFIS</h1>
               </div>
             </div>
-          </div>
+          </div> */}
           <div className="row border-black border-radius-7 mb-2 rtl text-right p-2">
             <p className="col-3 font-weight-bold p-1">
               <span>شماره فاکتور:</span>

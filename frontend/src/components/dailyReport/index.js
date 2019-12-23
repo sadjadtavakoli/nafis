@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { getDailyReport } from "../../actions/BillActions";
-import { Table, Container } from 'semantic-ui-react'
+import { Table, Button, Icon } from 'semantic-ui-react'
 import {
   priceToPersian,
   enToFa
@@ -28,12 +28,13 @@ class DailyReport extends React.Component {
     return (<Table celled striped>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell className="text-right" colSpan='11'>فاکتور های بسته شده</Table.HeaderCell>
+            <Table.HeaderCell className="text-right" colSpan='12'>فاکتور های بسته شده</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         {this.state.dailyReport.bills_data && this.state.dailyReport.bills_data.length > 0 ? (
       <Table.Header>
           <Table.Row>
+            <Table.HeaderCell className="text-center">عملیات</Table.HeaderCell>
             <Table.HeaderCell className="text-center">قیمت کل</Table.HeaderCell>
             <Table.HeaderCell className="text-center">قیمت خام بدون تخفیف</Table.HeaderCell>
             <Table.HeaderCell className="text-center">تخفیف کل</Table.HeaderCell>
@@ -51,6 +52,12 @@ class DailyReport extends React.Component {
       <Table.Body>
         {this.state.dailyReport.bills_data?this.state.dailyReport.bills_data.map((item) => {
           return (<Table.Row>
+            <Table.Cell className="text-center norm-latin" collapsing>
+               <Button as="a" href={`/factor/${item.pk}/print`} target="_blank" icon labelPosition='right' color="yellow">
+                    <span className="yekan" >چاپ فاکتور</span>
+                    <Icon name='print' />
+                </Button>
+            </Table.Cell>
             <Table.Cell className="text-center norm-latin" collapsing><span>{priceToPersian(item.final_price)}</span></Table.Cell>
             <Table.Cell className="text-center norm-latin" collapsing><span>{priceToPersian(item.price)}</span></Table.Cell>
             <Table.Cell className="text-center norm-latin" collapsing><span>{priceToPersian(item.total_discount)}</span></Table.Cell>
