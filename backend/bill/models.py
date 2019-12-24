@@ -99,61 +99,6 @@ class Bill(models.Model):
     @property
     def items_count(self):
         return self.items.count()
-    # @staticmethod
-    # def total_sales(start_date, end_date):
-    #     bills = Bill.objects.filter(create_date__range=[start_date, end_date], status__in=["done", "remained"])
-    #     price = 0
-    #     for bill in bills:
-    #         price += bill.final_price
-    #     return price
-    #
-    # @staticmethod
-    # def total_sales_received(start_date, end_date):
-    #     bills = Bill.objects.filter(create_date__range=[start_date, end_date], status__in=["done", "remained"])
-    #     sum_ = 0
-    #     for bill in bills:
-    #         sum_ += bill.paid
-    #     return sum_
-    #
-    # @staticmethod
-    # def total_sales_remaining(start_date, end_date):
-    #     bills = Bill.objects.filter(create_date__range=[start_date, end_date], status__in=["done", "remained"])
-    #     sum_ = 0
-    #     for bill in bills:
-    #         sum_ += bill.remaining_payment
-    #     return sum_
-    #
-    # @staticmethod
-    # def total_profit(start_date, end_date):
-    #     bills = Bill.objects.filter(create_date__range=[start_date, end_date], status__in=["done", "remained"])
-    #     sum_ = 0
-    #     for bill in bills:
-    #         sum_ += bill.profit
-    #     return sum_
-    #
-    # @staticmethod
-    # def total_sales_card(start_date, end_date):
-    #     bills = Bill.objects.filter(create_date__range=[start_date, end_date], status__in=["done", "remained"])
-    #     sum_ = 0
-    #     for bill in bills:
-    #         sum_ += bill.card_paid
-    #     return sum_
-    #
-    # @staticmethod
-    # def total_sales_cash(start_date, end_date):
-    #     bills = Bill.objects.filter(create_date__range=[start_date, end_date], status__in=["done", "remained"])
-    #     sum_ = 0
-    #     for bill in bills:
-    #         sum_ += bill.cash_paid
-    #     return sum_
-    #
-    # @staticmethod
-    # def total_sales_cheque(start_date, end_date):
-    #     bills = Bill.objects.filter(create_date__range=[start_date, end_date], status__in=["done", "remained"])
-    #     sum_ = 0
-    #     for bill in bills:
-    #         sum_ += bill.card_paid
-    #     return sum_
 
 
 class BillItemManager(models.Manager):

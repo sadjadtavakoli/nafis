@@ -174,9 +174,9 @@ class BillsViewSet(NafisBase, ModelViewSet):
         total_benefit, total_discount, total_price, total_final_price, total_items, total_bills = 0, 0, 0, 0, 0, 0
         total_cheque_paid, total_cash_paid, total_card_paid, total_paid, reminded_payments = 0, 0, 0, 0, 0
         data = {}
-        bills_with_reminded_status = Bill.objects.filter(create_date__date=datetime.today().date(),
-                                                         status="remained").count()
-        total_bills = Bill.objects.filter(create_date__date=datetime.today().date()).count()
+        bills = Bill.objects.filter(create_date__date=datetime.today().date())
+        bills_with_reminded_status = bills.filter(status="remained").count()
+        total_bills = bills.count()
         for bill in bills:
             total_final_price += bill.final_price
             total_price += bill.price
@@ -202,6 +202,45 @@ class BillsViewSet(NafisBase, ModelViewSet):
         data['total_reminded_payments'] = reminded_payments
         data['bills_with_reminded_status'] = bills_with_reminded_status
         return Response(data)
+
+    @action(methods=["GET"], detail=False, url_path="interval-report")
+    def total_report(self, request, **kwargs):
+        start_date = self.request.query_params.get('start_date', None)
+        end_date = self.request.query_params.get('end_date', None)
+        bills = Bill.objects.filter(create_date__date__range=[start_date, end_date], status__in=["done", "remained"])
+        total_sales, total_sales_received, total_sales_remaining, total_profit, total_sales_card = 0, 0, 0, 0, 0
+        total_sales_cash, total_sales_cheque, total_discount, total_items, total_final_price = 0, 0, 0, 0, 0
+        bills_with_reminded_status = bills.filter(status="remained").count()
+        total_bills = bills.count()
+        data = {}
+        for bill in bills:
+            total_sales += bill.price
+            total_final_price += bill.final_price
+            total_sales_received += bill.paid
+            total_sales_remaining += bill.remaining_payment
+            total_profit += bill.profit
+            total_sales_cash += bill.cash_paid
+            total_sales_card += bill.card_paid
+            total_sales_cheque += bill.cheque_paid
+            total_discount += bill.total_discount
+            total_items += bill.items.count()
+
+        data['total_profit'] = total_profit
+        data['total_discount'] = total_discount
+        data['total_price'] = total_sales
+        data['total_final_price'] = total_final_price
+        data['total_items'] = total_items
+        data['total_bills'] = total_bills
+        data['total_cheque_paid'] = total_sales_cheque
+        data['total_cash_paid'] = total_sales_cash
+        data['total_card_paid'] = total_sales_card
+        data['total_paid'] = total_sales_received
+        data['total_reminded_payments'] = total_sales_remaining
+        data['bills_with_reminded_status'] = bills_with_reminded_status
+        return Response(data)
+
+
+
 
 
 class BillItemViewSet(ModelViewSet):
