@@ -26,7 +26,7 @@ const AddPaymentPopup = props => {
   const [paymentFormData, setPaymentFormData] = useStateObject({
     type: undefined,
     cash_amount: 0,
-    card_amount: undefined,
+    card_amount: 0,
     amount: undefined,
     number: undefined,
     bank: undefined,
@@ -39,6 +39,7 @@ const AddPaymentPopup = props => {
       const paymentData = validatePaymentData(paymentFormData);
       props.addPaymentToBillv2(props.billID, paymentData).then(props.onClose);
     } catch (error) {
+      console.log(error)
       setError({ content: error.message, pointing: "below" });
     }
   };
