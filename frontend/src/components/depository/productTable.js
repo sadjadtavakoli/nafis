@@ -71,10 +71,10 @@ class ProductTable extends React.Component {
             <Table.Row>
                         <Table.HeaderCell colSpan='10' className="rtl text-right">
                             <Grid>
-                                <Grid.Column width={this.state.width < 768 ? 12: 2} style={{display:'flex',alignItems:'center'}}>
+                                <Grid.Column width={this.state.width < 768 ? 16: 2} style={{display:'flex',alignItems:'center'}}>
                                     <span>لیست محصولات موجود</span>
                                 </Grid.Column>
-                            <Grid.Column width={this.state.width < 768 ? 12: 6}>
+                            <Grid.Column width={this.state.width < 768 ? 16: 6}>
                             <Search
                                 hidden={this.props.searchBar?'':'invisible'}
                                 input={{ icon: 'search', iconPosition: 'left' }}

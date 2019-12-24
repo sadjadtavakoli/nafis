@@ -4,16 +4,25 @@ import { Card, Header, Icon, Segment } from "semantic-ui-react";
 import history from "../../history";
 import {isPermit} from './permission'
 class MainPage extends React.Component {
-  state = { showModal: false, modalInput: "" };
+  state = { showModal: false, modalInput: "",width:0 };
   componentWillReceiveProps() {
     this.forceUpdate();
     this.setJob();
   }
   componentDidMount() {
     this.setJob();
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
   }
   setJob = () => {
     this.setState({ job: localStorage.getItem('type') });
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  };
+  updateWindowDimensions = () => {
+    this.setState({ width: window.innerWidth });
   }
   render() {
     return (
@@ -21,7 +30,7 @@ class MainPage extends React.Component {
         <div className="main-page__items-container">
           <Segment placeholder>
             <Header padded={true}>
-              <Card.Group itemsPerRow={6} className="rtl padded" >
+              <Card.Group itemsPerRow={this.state.width < 768 ? 16: 6} className="rtl padded" >
                 {isPermit('sale',this.state.job) ?
                   <Card raised className="p-5 pointer tale" onClick={()=>history.push('/sale/')}><Icon padded={true} size="huge" className="m-auto w-100" name="money bill alternate" /><h2 className="text-black yekan text-center">فروش</h2></Card> : null}
                 

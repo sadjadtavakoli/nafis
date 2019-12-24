@@ -110,14 +110,14 @@ class BillTable extends React.Component {
                                                     wide='very'
                                                     trigger={
                                                         <Button onClick={() => this.toggleAddItemPopup(index)} icon labelPosition='right' color="green">
-                                                            <span className="yekan" >افزودن آیتم جدید</span>
+                                                            <span className="yekan" >آیتم جدید</span>
                                                             <Icon name='add' />
                                                         </Button>
                                                     }
                                                     color='green' size='huge' icon='add' />
                            
                                                 <Button onClick={() => this.openInformationModal(item)} icon labelPosition='right' color="yellow">
-                                                    <span className="yekan" >نمایش اطلاعات</span>
+                                                    <span className="yekan" >مشاهده</span>
                                                     <Icon name='info' />
                                                 </Button>
                                             </Table.Cell>

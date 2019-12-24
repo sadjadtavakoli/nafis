@@ -49,7 +49,7 @@ const BillLists = ({
               </span>
             </Table.Cell>
             <Table.Cell className="norm-latin text-center">
-              <span className="yekan">{priceToPersian(item.final_price)}</span>
+              <b><span>{priceToPersian(item.final_price)}</span><span className="yekan"> تومان</span></b>
             </Table.Cell>
             <Table.Cell className="norm-latin text-center">
               <span className="yekan">
@@ -64,10 +64,10 @@ const BillLists = ({
                 }}
                 icon
                 labelPosition="right"
-                color="teal"
+                color="yellow"
               >
                 <span className="yekan">مشاهده</span>
-                <Icon name="edit" />
+                <Icon name="info" />
               </Button>
 
               {currentUser.job === "admin" ? (

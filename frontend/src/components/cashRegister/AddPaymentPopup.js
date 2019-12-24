@@ -17,9 +17,9 @@ const AddPaymentPopup = props => {
   const selectHandler = (e, { value }) => {
     setSelectedPaymentType(value);
     setPaymentFormData("type")(value);
-    if (value !== "cash_card")
+    if (value === "cash_card")
       setPaymentFormData("card_amount")(Number(props.remainingPrice));
-    else 
+    else
       setPaymentFormData("amount")(Number(props.remainingPrice));
   };
 
