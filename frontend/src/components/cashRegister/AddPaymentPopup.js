@@ -65,12 +65,14 @@ const AddPaymentPopup = props => {
     } else {
       setAmountValidation(true);
     };
-    console.log('paymentFormData',paymentFormData);
     
 }
   
   useEffect(() => {
-      chequeAmountsValidationHandler();
+    chequeAmountsValidationHandler();
+    console.log(paymentFormData.cash_amount=== '',paymentFormData.card_amount=== '')
+    if (paymentFormData.cash_amount === '' || paymentFormData.card_amount === '')
+      setAmountValidation(true)
   }, [paymentFormData.cash_amount,paymentFormData.card_amount]);
   
   return (
@@ -99,7 +101,7 @@ const AddPaymentPopup = props => {
             }`}
             onChange={e => {
               setError(undefined);
-              setPaymentFormData("card_amount")(Number(e.target.value));
+              setPaymentFormData("card_amount")(e.target.value===''?'':Number(e.target.value));
             }}
             value={paymentFormData.card_amount}
             label="مبلغ پرداخت کارتی"
@@ -115,7 +117,7 @@ const AddPaymentPopup = props => {
             }`}
             onChange={e => {
               setError(undefined);
-              setPaymentFormData("cash_amount")(Number(e.target.value));
+              setPaymentFormData("cash_amount")(e.target.value===''?'':Number(e.target.value));
             }}
             value={paymentFormData.cash_amount}
             label="مبلغ پرداخت نقدی"
