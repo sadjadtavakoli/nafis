@@ -21,7 +21,7 @@ class PrintFactor extends React.Component {
   componentDidMount() {
     const params = this.props.match.params;
     const resivedData = this.props.location.state;
-    console.log(params,resivedData)
+    // console.log(params,resivedData)
 
     if ( (params.id && params.print === 'print') || !((resivedData.pk) === params.id && !isEmptyObject(resivedData)))
       this.props.getBillREQUEST(params.id).then(res => {

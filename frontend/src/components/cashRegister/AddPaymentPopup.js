@@ -68,7 +68,7 @@ const AddPaymentPopup = props => {
   
   useEffect(() => {
     chequeAmountsValidationHandler();
-    console.log(paymentFormData.cash_amount=== '',paymentFormData.card_amount=== '')
+    console.log(paymentFormData.cash_amount === '',paymentFormData.card_amount=== '')
     if (paymentFormData.cash_amount === '' || paymentFormData.card_amount === '')
       setAmountValidation(true)
   }, [paymentFormData.cash_amount,paymentFormData.card_amount]);
