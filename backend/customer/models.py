@@ -21,6 +21,22 @@ class Customer(models.Model):
             discount += item.value(value)
         return discount
 
+    @property
+    def remained_bills(self):
+        return self.bills.filter(status="remained")
+
+    @property
+    def done_bills(self):
+        return self.bills.filter(status="done")
+
+    @property
+    def remained_cheques(self):
+        return self.cheques.filter(status="remained")
+
+    @property
+    def done_cheques(self):
+        return self.cheques.filter(status="done")
+
 
 class CustomerType(models.Model):
     name = models.CharField(max_length=32, null=False, blank=False)

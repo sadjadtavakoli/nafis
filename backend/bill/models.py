@@ -285,8 +285,8 @@ class Cheque(models.Model):
     issue_date = models.DateField(null=True)
     expiry_date = models.DateField()
     amount = models.IntegerField()
-    status = models.CharField(choices=(('تسویه', 'تسویه'), ('مانده', 'مانده')), max_length=10,
-                              default='مانده')
+    status = models.CharField(choices=(('done', 'done'), ('remained', 'remained')), max_length=10,
+                              default='remained')
 
 
 class CustomerCheque(Cheque):
