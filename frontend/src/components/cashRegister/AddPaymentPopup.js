@@ -18,16 +18,15 @@ const AddPaymentPopup = props => {
     setSelectedPaymentType(value);
     setPaymentFormData("type")(value);
     if (value !== "cash_card")
+      setPaymentFormData("card_amount")(Number(props.remainingPrice));
+    else 
       setPaymentFormData("amount")(Number(props.remainingPrice));
-      // setPaymentFormData("card_amount")(Number(props.remainingPrice));
-    // else 
-      // setPaymentFormData("amount")(Number(props.remainingPrice));
   };
 
   const [paymentFormData, setPaymentFormData] = useStateObject({
     type: undefined,
     cash_amount: 0,
-    card_amount: 0,
+    card_amount: undefined,
     amount: undefined,
     number: undefined,
     bank: undefined,
@@ -36,7 +35,6 @@ const AddPaymentPopup = props => {
   });
   let [amountIsNotValid, setAmountValidation] = useState(false);
   const handleSubmit = () => {
-    // if( selectedPaymentType === 'cash_card')
     try {
       const paymentData = validatePaymentData(paymentFormData);
       props.addPaymentToBillv2(props.billID, paymentData).then(props.onClose);
