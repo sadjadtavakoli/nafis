@@ -70,7 +70,8 @@ class AddBillModal extends React.Component {
                     <Form.Group widths='equal'>
                         <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={data.name} label='نام محصول' placeholder='' />
                         <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={data.product} label='کد محصول' placeholder='' />
-                        <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={data.amount} label={`مقدار(متر) -- ${enToFa(priceToPersian(data.selling_price))} تومان`} placeholder='' />
+                        <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={priceToPersian(data.selling_price)} label='قیمت واحد' placeholder='' />
+                        <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={data.amount} label={`مقدار(متر)`} placeholder='' />
                         <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={data.discount} label='تخفیف' placeholder='' />
                     </Form.Group>
                     <Form.Group widths='3'>
