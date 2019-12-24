@@ -170,11 +170,10 @@ class BillsViewSet(NafisBase, ModelViewSet):
 
     @action(methods=['GET'], detail=False, url_path="daily-report")
     def daily_report(self, request):
-        bills = Bill.objects.filter(create_date__date=datetime.today().date(), status__in=["remained", "done"])
         total_benefit, total_discount, total_price, total_final_price, total_items, total_bills = 0, 0, 0, 0, 0, 0
         total_cheque_paid, total_cash_paid, total_card_paid, total_paid, reminded_payments = 0, 0, 0, 0, 0
         data = {}
-        bills = Bill.objects.filter(create_date__date=datetime.today().date())
+        bills = Bill.objects.filter(create_date__date=datetime.today().date(), status__in=["remained", "done"])
         bills_with_reminded_status = bills.filter(status="remained").count()
         total_bills = bills.count()
         for bill in bills:
@@ -239,8 +238,17 @@ class BillsViewSet(NafisBase, ModelViewSet):
         data['bills_with_reminded_status'] = bills_with_reminded_status
         return Response(data)
 
-
-
+    @action(methods=["GET"], detail=False, url_path="charts")
+    def chart_data(self, request, **kwargs):
+        result = dict()
+        result['sells_per_design'] = Bill.sells_per_design()
+        result['sells_per_design_color'] = Bill.sells_per_design_color()
+        result['sells_per_bg_color'] = Bill.sells_per_bg_color()
+        result['sells_per_f_type'] = Bill.sells_per_f_type()
+        result['sells_per_material'] = Bill.sells_per_material()
+        result['sells_per_customer_age'] = Bill.profit_per_customer_age()
+        result['sells_per_customer_type'] = Bill.profit_per_customer_type()
+        return Response(result)
 
 
 class BillItemViewSet(ModelViewSet):

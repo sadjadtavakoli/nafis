@@ -1,9 +1,12 @@
+from datetime import datetime
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import DO_NOTHING, CASCADE, Sum
 
-from product.models import round_up
+from customer.models import Customer, CustomerType
+from product.models import round_up, Color, FType, Material, Design
 
 
 class Bill(models.Model):
@@ -91,14 +94,118 @@ class Bill(models.Model):
 
     @property
     def profit(self):
-        benefit = 0
+        profit = 0
         for item in self.items.all():
-            benefit += item.benefit
-        return benefit
+            profit += item.profit
+        return profit
 
     @property
     def items_count(self):
         return self.items.count()
+
+    @staticmethod
+    def sells_per_design_color():
+        result = dict()
+        for design_color in set(Color.objects.all().values_list("name", flat=True)):
+            bill_items = BillItem.objects.filter(bill__status__in=["done", "remained"],
+                                                 product__design_color__name=design_color, rejected=False)
+            profit = 0
+            price = 0
+            amount = 0
+            for bill_item in bill_items:
+                profit += bill_item.profit
+                price += bill_item.price
+                amount += bill_item.amount
+            result[design_color] = dict(amount=amount, profit=profit, price=price)
+        return result
+
+    @staticmethod
+    def sells_per_bg_color():
+        result = dict()
+        for bg_color in set(Color.objects.all().values_list("name", flat=True)):
+            bill_items = BillItem.objects.filter(bill__status__in=["done", "remained"],
+                                                 product__background_color__name=bg_color, rejected=False)
+            profit = 0
+            price = 0
+            amount = 0
+            for bill_item in bill_items:
+                profit += bill_item.profit
+                price += bill_item.price
+                amount += bill_item.amount
+            result[bg_color] = dict(amount=amount, profit=profit, price=price)
+        return result
+
+    @staticmethod
+    def sells_per_f_type():
+        result = dict()
+        for f_type in FType.objects.all():
+            bill_items = BillItem.objects.filter(bill__status__in=["done", "remained"], product__f_type=f_type,
+                                                 rejected=False)
+            profit = 0
+            price = 0
+            amount = 0
+            for bill_item in bill_items:
+                profit += bill_item.profit
+                price += bill_item.price
+                amount += bill_item.amount
+            result[f_type.name] = dict(amount=amount, profit=profit, price=price)
+        return result
+
+    @staticmethod
+    def sells_per_material():
+        result = dict()
+        for material in Material.objects.all():
+            bill_items = BillItem.objects.filter(bill__status__in=["done", "remained"], product__material=material,
+                                                 rejected=False)
+            profit = 0
+            price = 0
+            amount = 0
+            for bill_item in bill_items:
+                profit += bill_item.profit
+                price += bill_item.price
+                amount += bill_item.amount
+            result[material.name] = dict(amount=amount, profit=profit, price=price)
+        return result
+
+    @staticmethod
+    def sells_per_design():
+        result = dict()
+        for design in Design.objects.all():
+            bill_items = BillItem.objects.filter(bill__status__in=["done", "remained"], product__design=design,
+                                                 rejected=False)
+            profit = 0
+            price = 0
+            amount = 0
+            for bill_item in bill_items:
+                profit += bill_item.profit
+                price += bill_item.price
+                amount += bill_item.amount
+            result[design.name] = dict(amount=amount, profit=profit, price=price)
+        return result
+
+    @staticmethod
+    def profit_per_customer_age():
+        result = dict()
+        for birth_date in set(Customer.objects.all().values_list("birth_date", flat=True)):
+            if birth_date is not None:
+                customers = Customer.objects.filter(birth_date=birth_date)
+                bills = Bill.objects.filter(buyer__in=customers)
+                profit = 0
+                for bill in bills:
+                    profit += bill.profit
+                result[datetime.now().year - birth_date.year] = dict(profit=profit)
+        return result
+
+    @staticmethod
+    def profit_per_customer_type():
+        result = dict()
+        for customer_type in CustomerType.objects.all():
+            bills = Bill.objects.filter(buyer__class_type=customer_type)
+            profit = 0
+            for bill in bills:
+                profit += bill.profit
+            result[customer_type.name] = dict(profit=profit)
+        return result
 
 
 class BillItemManager(models.Manager):
@@ -128,7 +235,7 @@ class BillItem(models.Model):
     objects = BillItemManager()
 
     @property
-    def benefit(self):
+    def profit(self):
         total_buying_price = int(self.amount * float(self.product.buying_price))
         return self.final_price - total_buying_price
 
