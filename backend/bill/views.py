@@ -171,11 +171,12 @@ class BillsViewSet(NafisBase, ModelViewSet):
     @action(methods=['GET'], detail=False, url_path="daily-report")
     def daily_report(self, request):
         bills = Bill.objects.filter(create_date__date=datetime.today().date(), status__in=["remained", "done"])
-        total_benefit, total_discount, total_price, total_final_price, total_items = 0, 0, 0, 0, 0
+        total_benefit, total_discount, total_price, total_final_price, total_items, total_bills = 0, 0, 0, 0, 0, 0
         total_cheque_paid, total_cash_paid, total_card_paid, total_paid, reminded_payments = 0, 0, 0, 0, 0
         data = {}
         bills_with_reminded_status = Bill.objects.filter(create_date__date=datetime.today().date(),
                                                          status="remained").count()
+        total_bills = Bill.objects.filter(create_date__date=datetime.today().date()).count()
         for bill in bills:
             total_final_price += bill.final_price
             total_price += bill.price
@@ -193,6 +194,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
         data['total_price'] = total_price
         data['total_final_price'] = total_final_price
         data['total_items'] = total_items
+        data['total_bills'] = total_bills
         data['total_cheque_paid'] = total_cheque_paid
         data['total_cash_paid'] = total_cash_paid
         data['total_card_paid'] = total_card_paid
