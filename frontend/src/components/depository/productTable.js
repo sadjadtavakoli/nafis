@@ -63,31 +63,35 @@ class ProductTable extends React.Component {
             })
         }, 300)
     };
+    searchBar = () => {
+        return (<Search
+            hidden={this.props.searchBar ? '' : 'invisible'}
+            input={{ icon: 'search', iconPosition: 'left' }}
+            loading={this.state.searchLoading}
+            showNoResults={false}
+            placeholder='کد محصول را وارد نمایید'
+            className="placeholder-rtl yekan ltr"
+            onSearchChange={this.handleSearchChange}
+        // results={results}
+        // value={value}
+        // {...this.props}
+        />);
+    }
     render() {
         return this.state.productsList.length > 0 ? (
             <div>
         <Table celled striped className="">
             <Table.Header >
-            <Table.Row>
+                        <Table.Row>
                         <Table.HeaderCell colSpan='10' className="rtl text-right">
+                            {this.state.width < 768?this.searchBar():null}
                             <Grid>
                                 <Grid.Column width={this.state.width < 768 ? 16: 2} style={{display:'flex',alignItems:'center'}}>
                                     <span>لیست محصولات موجود</span>
                                 </Grid.Column>
-                            <Grid.Column width={this.state.width < 768 ? 16: 6}>
-                            <Search
-                                hidden={this.props.searchBar?'':'invisible'}
-                                input={{ icon: 'search', iconPosition: 'left' }}
-                                loading={this.state.searchLoading}
-                                showNoResults={false}
-                                placeholder='کد محصول را وارد نمایید'   
-                                className="placeholder-rtl yekan ltr"        
-                                onSearchChange={this.handleSearchChange}
-                                // results={results}
-                                // value={value}
-                                // {...this.props}
-                            />
-                                </Grid.Column>
+                                    <Grid.Column style={{display:this.state.width < 768 ? 'none': 'block'}} width={this.state.width < 768 ? 16: 6}>
+                            {this.searchBar()}
+                            </Grid.Column>
                             </Grid>
                             </Table.HeaderCell>
                     </Table.Row>
