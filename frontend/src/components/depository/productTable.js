@@ -83,8 +83,8 @@ class ProductTable extends React.Component {
         <Table celled striped className="">
             <Table.Header >
                         <Table.Row>
-                        <Table.HeaderCell colSpan='10' className="rtl text-right">
                             {this.state.width < 768?this.searchBar():null}
+                        <Table.HeaderCell colSpan='10' className="rtl text-right">
                             <Grid>
                                 <Grid.Column width={this.state.width < 768 ? 16: 2} style={{display:'flex',alignItems:'center'}}>
                                     <span>لیست محصولات موجود</span>
@@ -135,8 +135,8 @@ class ProductTable extends React.Component {
                 
                     <Table.Footer fullWidth hidden={this.state.totalPageCount < 2}>
                 <Table.Row>
-                    <Table.HeaderCell colSpan='10' className="norm-latin">
-                      <Pagination className="norm-latin" defaultActivePage={1} onPageChange={this.changePage} totalPages={this.state.totalPageCount} />
+                    <Table.HeaderCell colSpan='10' className="norm-latin" style={{overflow:'scroll',maxWidth:this.state.width /2}}>
+                        <Pagination className="norm-latin" defaultActivePage={1} onPageChange={this.changePage} totalPages={this.state.totalPageCount} />
                     </Table.HeaderCell>
                         </Table.Row>
                         
