@@ -1,5 +1,4 @@
-let job = localStorage.getItem('type');
-export const isPermit = (section) => {
+export const isPermit = (section,job) => {
     switch (section) {
         case 'sale':
             return job === 'admin' || job === 'salesperson' || job === 'storekeeper';

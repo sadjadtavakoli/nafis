@@ -7,22 +7,29 @@ class MainPage extends React.Component {
   state = { showModal: false, modalInput: "" };
   componentWillReceiveProps() {
     this.forceUpdate();
+    this.setJob();
+  }
+  componentDidMount() {
+    this.setJob();
+  }
+  setJob = () => {
+    this.setState({ job: localStorage.getItem('type') });
   }
   render() {
     return (
       <div className="main-page__container">
         <div className="main-page__items-container">
           <Segment placeholder>
-            <Header padded>
+            <Header padded={true}>
               <Card.Group itemsPerRow={6} className="rtl padded" >
-                {isPermit('sale') ?
-                  <Card raised className="p-5 pointer tale" onClick={()=>history.push('/sale/')}><Icon padded size="huge" className="m-auto w-100" name="money bill alternate" /><h2 className="text-black yekan text-center">فروش</h2></Card> : null}
+                {isPermit('sale',this.state.job) ?
+                  <Card raised className="p-5 pointer tale" onClick={()=>history.push('/sale/')}><Icon padded={true} size="huge" className="m-auto w-100" name="money bill alternate" /><h2 className="text-black yekan text-center">فروش</h2></Card> : null}
                 
-                {isPermit('cashregister') ?
-                  <Card raised className="p-5 pointer tale" onClick={()=>history.push('/cashregister/')}><Icon padded size="huge" className="m-auto w-100" name="fax" /><h2 className="text-black yekan text-center">صندوق</h2></Card> : null}
+                {isPermit('cashregister',this.state.job) ?
+                  <Card raised className="p-5 pointer tale" onClick={()=>history.push('/cashregister/')}><Icon padded={true} size="huge" className="m-auto w-100" name="fax" /><h2 className="text-black yekan text-center">صندوق</h2></Card> : null}
                 
-                {isPermit('depository') ?
-                  <Card raised className="p-5 pointer tale" onClick={()=>history.push('/depository/')}><Icon padded size="huge" className="m-auto w-100" name="factory" /><h2 className="text-black yekan text-center">انبارداری</h2></Card> : null}
+                {isPermit('depository',this.state.job) ?
+                  <Card raised className="p-5 pointer tale" onClick={()=>history.push('/depository/')}><Icon padded={true} size="huge" className="m-auto w-100" name="factory" /><h2 className="text-black yekan text-center">انبارداری</h2></Card> : null}
                 
               </Card.Group>
               
