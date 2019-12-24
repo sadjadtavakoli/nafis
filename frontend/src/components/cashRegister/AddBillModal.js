@@ -49,7 +49,7 @@ const AddBillModal = props => {
               <Divider clearing />
               <SellerDetails seller={props.data && props.data.seller} />
               <Divider clearing />
-              <ProductItems items={props.data && props.data.items} />
+              <ProductItems data={props.data} />
               <Divider clearing />
               <BranchDetails branch={props.data && !!props.data.branch} />
               <Divider clearing />
