@@ -50,7 +50,6 @@ class AddBillModal extends React.Component {
        
     }
     submitItemPopup = (data) => {
-        // console.log('data hast',data)
         let id = this.state.itemsDataSheet.length;
         const itemDOM = (<Card fluid key={id}>
             <Card.Content>
@@ -71,7 +70,8 @@ class AddBillModal extends React.Component {
                     <Form.Group widths='equal'>
                         <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={data.name} label='نام محصول' placeholder='' />
                         <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={data.product} label='کد محصول' placeholder='' />
-                        <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={data.amount} label={`مقدار(متر) -- ${enToFa(priceToPersian(data.selling_price))} تومان`} placeholder='' />
+                        <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={priceToPersian(data.selling_price)} label='قیمت واحد' placeholder='' />
+                        <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={data.amount} label={`مقدار(متر)`} placeholder='' />
                         <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={data.discount} label='تخفیف' placeholder='' />
                     </Form.Group>
                     <Form.Group widths='3'>
@@ -102,7 +102,6 @@ class AddBillModal extends React.Component {
         this.setState({
             [inputName]: event.target.value
         }, () => {
-            // console.log(this.state.phone_number.length)
             if (inputName === 'phone_number') {
                 if (this.state.phone_number.length === 11) {
                     this.getCustomerData(this.state.phone_number)

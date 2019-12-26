@@ -63,31 +63,34 @@ class ProductTable extends React.Component {
             })
         }, 300)
     };
+    searchBar = () => {
+        return (<Search
+            hidden={this.props.searchBar ? '' : 'invisible'}
+            input={{ icon: 'search', iconPosition: 'left' }}
+            loading={this.state.searchLoading}
+            showNoResults={false}
+            placeholder='کد محصول را وارد نمایید'
+            className="placeholder-rtl yekan ltr"
+            onSearchChange={this.handleSearchChange}
+        // results={results}
+        // value={value}
+        // {...this.props}
+        />);
+    }
     render() {
         return this.state.productsList.length > 0 ? (
             <div>
         <Table celled striped className="">
             <Table.Header >
-            <Table.Row>
+                        <Table.Row>
                         <Table.HeaderCell colSpan='10' className="rtl text-right">
                             <Grid>
-                                <Grid.Column width={this.state.width < 768 ? 12: 2} style={{display:'flex',alignItems:'center'}}>
+                                <Grid.Column width={this.state.width < 768 ? 16: 2} style={{display:'flex',alignItems:'center'}}>
                                     <span>لیست محصولات موجود</span>
                                 </Grid.Column>
-                            <Grid.Column width={this.state.width < 768 ? 12: 6}>
-                            <Search
-                                hidden={this.props.searchBar?'':'invisible'}
-                                input={{ icon: 'search', iconPosition: 'left' }}
-                                loading={this.state.searchLoading}
-                                showNoResults={false}
-                                placeholder='کد محصول را وارد نمایید'   
-                                className="placeholder-rtl yekan ltr"        
-                                onSearchChange={this.handleSearchChange}
-                                // results={results}
-                                // value={value}
-                                // {...this.props}
-                            />
-                                </Grid.Column>
+                                    <Grid.Column width={this.state.width < 768 ? 16: 6}>
+                            {this.searchBar()}
+                            </Grid.Column>
                             </Grid>
                             </Table.HeaderCell>
                     </Table.Row>
@@ -116,12 +119,13 @@ class ProductTable extends React.Component {
                                     <Table.Cell className="norm-latin text-center"><span className="yekan">{item.f_type && item.f_type.name}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center"><span className="yekan">{item.design && item.design.name}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center ltr">
-                                    <span>{digitToComma(item.stock_amount)}</span><span>&nbsp;</span>
                                     <span className="yekan">متر</span>
+                                    <span>&nbsp;</span>
+                                    <span>{(item.stock_amount)}</span>
                                     </Table.Cell>
                                     <Table.Cell className="norm-latin text-center rtl"><span>{digitToComma(item.selling_price)}</span> <span className="yekan">تومان</span></Table.Cell>
                                     {/* <Table.Cell className="norm-latin text-center rtl"><span>{digitToComma(item.buying_price)}</span> <span className="yekan">تومان</span></Table.Cell> */}
-                                    <Table.Cell className="norm-latin text-center"><span>{item.name}</span></Table.Cell>
+                                    <Table.Cell className="yekan text-center"><span>{item.name}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center" textAlign='right'>
                                     <span>{item.code}</span>
                                     </Table.Cell>
@@ -131,8 +135,8 @@ class ProductTable extends React.Component {
                 
                     <Table.Footer fullWidth hidden={this.state.totalPageCount < 2}>
                 <Table.Row>
-                    <Table.HeaderCell colSpan='10' className="norm-latin">
-                      <Pagination className="norm-latin" defaultActivePage={1} onPageChange={this.changePage} totalPages={this.state.totalPageCount} />
+                    <Table.HeaderCell colSpan='10' className="norm-latin" style={{overflow:'scroll',maxWidth:this.state.width /2}}>
+                        <Pagination className="norm-latin" defaultActivePage={1} onPageChange={this.changePage} totalPages={this.state.totalPageCount} />
                     </Table.HeaderCell>
                         </Table.Row>
                         

@@ -33,7 +33,7 @@ const BillDoneModal = props => {
           push
           exact
           to={{
-            pathname: `/factor/${fetchBillInfo.pk}`,
+            pathname: `/factor/${fetchBillInfo.pk}/print`,
             state: fetchBillInfo
           }}
         />

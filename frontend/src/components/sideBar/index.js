@@ -11,14 +11,19 @@ class SideBar extends React.Component {
         super(props);
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     }
-
-    componentDidMount() {
-    this.updateWindowDimensions();
-    window.addEventListener('resize', this.updateWindowDimensions);
+    componentWillReceiveProps() {
+        this.setJob();
     }
-
+    componentDidMount() {
+        this.updateWindowDimensions();
+        window.addEventListener('resize', this.updateWindowDimensions);
+        this.setJob();
+    }
+    setJob = () => {
+        this.setState({ job: localStorage.getItem('type') });
+    }
     componentWillUnmount() {
-    window.removeEventListener('resize', this.updateWindowDimensions);
+        window.removeEventListener('resize', this.updateWindowDimensions);
     }
 
     updateWindowDimensions() {
@@ -84,15 +89,15 @@ class SideBar extends React.Component {
                             <Icon name='home' />
                             <span>پیشخوان</span>
                     </Menu.Item>
-                    {isPermit('sale') ? <Menu.Item onClick={() => { this.goTo('/sale/') }} as='a'>
+                    {isPermit('sale',this.state.job) ? <Menu.Item onClick={() => { this.goTo('/sale/') }} as='a'>
                             <Icon name='money bill alternate' />
                             <span>فروش</span>
                     </Menu.Item>:null}
-                    {isPermit('cashregister') ? <Menu.Item onClick={() => { this.goTo('/cashregister/') }} as='a'>
+                    {isPermit('cashregister',this.state.job) ? <Menu.Item onClick={() => { this.goTo('/cashregister/') }} as='a'>
                             <Icon name='fax' />
                             <span>صندوق</span>
                     </Menu.Item> : null}
-                    {isPermit('depository') ? <Menu.Item onClick={() => { this.goTo('/depository/') }} as='a'>
+                    {isPermit('depository',this.state.job) ? <Menu.Item onClick={() => { this.goTo('/depository/') }} as='a'>
                             <Icon name='factory' />
                             <span>انبارداری</span>
                     </Menu.Item> : null}

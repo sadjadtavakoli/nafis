@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Form, Card, Button } from "semantic-ui-react";
 import { useStateObject } from "../../utils/Hooks";
 import { connect } from "react-redux";
-import { addPaymentToBill } from "../../actions/BillActions";
+import { addPaymentToBillv2 } from "../../actions/BillActions";
 import { toGregorian } from "../utils/jalaaliUtils";
 import { validatePaymentData } from "../../actions/validatePayment";
 
@@ -19,25 +19,27 @@ const AddPaymentPopup = props => {
     setPaymentFormData("type")(value);
     if (value === "cash_card")
       setPaymentFormData("card_amount")(Number(props.remainingPrice));
-    else setPaymentFormData("amount")(Number(props.remainingPrice));
+    else
+      setPaymentFormData("amount")(Number(props.remainingPrice));
   };
 
   const [paymentFormData, setPaymentFormData] = useStateObject({
     type: undefined,
-    cash_amount: undefined,
-    card_amount: undefined,
+    cash_amount: 0,
+    card_amount: 0,
     amount: undefined,
     number: undefined,
     bank: undefined,
     issue_date: undefined,
     expiry_date: undefined
   });
-
+  let [amountIsNotValid, setAmountValidation] = useState(false);
   const handleSubmit = () => {
     try {
       const paymentData = validatePaymentData(paymentFormData);
-      props.addPaymentToBill(props.billID, paymentData).then(props.onClose);
+      props.addPaymentToBillv2(props.billID, paymentData).then(props.onClose);
     } catch (error) {
+      console.log(error)
       setError({ content: error.message, pointing: "below" });
     }
   };
@@ -54,7 +56,24 @@ const AddPaymentPopup = props => {
 
     return false;
   };
-
+  const chequeAmountsValidationHandler = () => {
+      let sum = 0;
+        sum = paymentFormData.card_amount + paymentFormData.cash_amount;
+    if ( sum <= props.remainingPrice) {
+      setAmountValidation(false);
+    } else {
+      setAmountValidation(true);
+    };
+    
+}
+  
+  useEffect(() => {
+    chequeAmountsValidationHandler();
+    console.log(paymentFormData.cash_amount === '',paymentFormData.card_amount=== '')
+    if (paymentFormData.cash_amount === '' || paymentFormData.card_amount === '')
+      setAmountValidation(true)
+  }, [paymentFormData.cash_amount,paymentFormData.card_amount]);
+  
   return (
     <Card className="rtl">
       <Card.Content>
@@ -75,13 +94,13 @@ const AddPaymentPopup = props => {
           <Form.Input
             type="number"
             required={anotherInputIsEmpty("cash_amount")}
-            disabled={!anotherInputIsEmpty("cash_amount")}
+            // disabled={!anotherInputIsEmpty("cash_amount")}
             className={`ltr placeholder-rtl ${
               selectedPaymentType === "cash_card" ? "" : "d-none"
             }`}
             onChange={e => {
               setError(undefined);
-              setPaymentFormData("card_amount")(Number(e.target.value));
+              setPaymentFormData("card_amount")(e.target.value===''?'':Number(e.target.value));
             }}
             value={paymentFormData.card_amount}
             label="مبلغ پرداخت کارتی"
@@ -91,13 +110,13 @@ const AddPaymentPopup = props => {
           <Form.Input
             type="number"
             required={anotherInputIsEmpty("card_amount")}
-            disabled={!anotherInputIsEmpty("card_amount")}
+            // disabled={!anotherInputIsEmpty("card_amount")}
             className={`ltr placeholder-rtl ${
               selectedPaymentType === "cash_card" ? "" : "d-none"
             }`}
             onChange={e => {
               setError(undefined);
-              setPaymentFormData("cash_amount")(Number(e.target.value));
+              setPaymentFormData("cash_amount")(e.target.value===''?'':Number(e.target.value));
             }}
             value={paymentFormData.cash_amount}
             label="مبلغ پرداخت نقدی"
@@ -170,7 +189,7 @@ const AddPaymentPopup = props => {
                 بستن&nbsp;&nbsp;&nbsp;
               </Button>
               <Button.Or text="یا" />
-              <Button className="yekan" onClick={handleSubmit} positive>
+              <Button className="yekan" disabled={amountIsNotValid} onClick={handleSubmit} positive>
                 افزودن
               </Button>
             </Button.Group>
@@ -202,8 +221,8 @@ export default connect(
         frontEndComputedRemainingPrice
       )
         ? Number(frontEndComputedRemainingPrice)
-        : 0
+        : ''
     };
   },
-  { addPaymentToBill }
+  { addPaymentToBillv2 }
 )(AddPaymentPopup);

@@ -35,7 +35,6 @@ const AddBillModal = props => {
       <Modal.Header className="yekan">
         <Header as="h2">مشخصات فاکتور</Header>
         <Label color="green" size="medium" className="rtl yekan">
-          {console.log(props.data)}
           مبلغ نهایی:{" "}
           {props.data && enToFa(priceToPersian(props.data.final_price))} - مبلغ
           باقی‌مانده:{" "}
@@ -50,7 +49,7 @@ const AddBillModal = props => {
               <Divider clearing />
               <SellerDetails seller={props.data && props.data.seller} />
               <Divider clearing />
-              <ProductItems items={props.data && props.data.items} />
+              <ProductItems data={props.data} />
               <Divider clearing />
               <BranchDetails branch={props.data && !!props.data.branch} />
               <Divider clearing />

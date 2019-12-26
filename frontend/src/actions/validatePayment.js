@@ -29,11 +29,11 @@ export const validatePaymentData = paymentObject => {
     )
       throw new Error(errorMsgTwoFieldIsEmpty);
 
-    if (
-      output.hasOwnProperty("cash_amount") === true &&
-      output.hasOwnProperty("card_amount") === true
-    )
-      throw new Error(errorMsgTwoFieldIsFilled);
+    // if (
+    //   output.hasOwnProperty("cash_amount") === true &&
+    //   output.hasOwnProperty("card_amount") === true
+    // )
+    //   throw new Error(errorMsgTwoFieldIsFilled);
     return output;
   }
 

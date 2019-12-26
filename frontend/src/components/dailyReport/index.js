@@ -77,13 +77,14 @@ class DailyReport extends React.Component {
     return (<Table celled striped>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell className="text-right" colSpan='11'>گزارش روزانه</Table.HeaderCell>
+            <Table.HeaderCell className="text-right" colSpan='12'>گزارش روزانه</Table.HeaderCell>
           </Table.Row>
       </Table.Header>
       {this.state.dailyReport.total_price ? (
         <React.Fragment>
         <Table.Header>
           <Table.Row>
+            <Table.HeaderCell className="text-center">تعداد کل فاکتور ها</Table.HeaderCell>
             <Table.HeaderCell className="text-center"> سود کل</Table.HeaderCell>
             <Table.HeaderCell className="text-center">‌فاکتورهای مانده‌حساب</Table.HeaderCell>
             <Table.HeaderCell className="text-center"> مانده‌ حساب</Table.HeaderCell>
@@ -99,6 +100,7 @@ class DailyReport extends React.Component {
         </Table.Header>
         <Table.Body>
           <Table.Row>
+            <Table.Cell className="text-center norm-latin" collapsing><span>{priceToPersian(this.state.dailyReport.bills_data.length)}</span></Table.Cell>
             <Table.Cell className="text-center norm-latin" collapsing><span>{priceToPersian(this.state.dailyReport.total_profit)}</span></Table.Cell>
             <Table.Cell className="text-center norm-latin" collapsing><span>{priceToPersian(this.state.dailyReport.bills_with_reminded_status)}</span></Table.Cell>
             <Table.Cell className="text-center norm-latin" collapsing><span>{priceToPersian(this.state.dailyReport.total_reminded_payments)}</span></Table.Cell>

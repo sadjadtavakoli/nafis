@@ -70,7 +70,8 @@ class ShowInformationModal extends React.Component {
                         <Form.Group widths='equal'>
                             <Form.Input className='rtl text-right placeholder-rtl' readOnly fluid defaultValue={item.product.name} label='نام محصول' placeholder='' />
                             <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={item.product.code} label='کد محصول' placeholder='' />
-                            <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={item.amount} label={`مقدار(متر) -- ${enToFa(priceToPersian(item.product.selling_price))} تومان`} placeholder='' />
+                            <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={priceToPersian(item.product.selling_price)} label='قیمت واحد' placeholder='' />
+                            <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={item.amount} label={`مقدار(متر)`} placeholder='' />
                             <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={item.discount} label='تخفیف' placeholder='' />
                         </Form.Group>
                         <Form.Group widths='3'>

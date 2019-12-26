@@ -37,6 +37,24 @@ export const addPaymentToBill = (billID, payment) => (dispatch, _, { api }) => {
     });
 };
 
+export const addPaymentToBillv2 = (billID, payment) => (
+  dispatch,
+  _,
+  { api }
+) => {
+  const fetch = createFetchAction(ActionTypes.UPDATE_Bill);
+  const sucss = createSucssAction(ActionTypes.UPDATE_Bill);
+  const faild = createFaildAction(ActionTypes.UPDATE_Bill);
+
+  dispatch(fetch());
+  return api
+    .post(`/bills/${billID}/add-payments/`, payment)
+    .then(res => res.data)
+    .then(res => {
+      dispatch(sucss({ bill: res, billID }));
+    });
+};
+
 export const removePayment = (billID, paymentID) => (dispatch, _, { api }) => {
   const fetch = createFetchAction(ActionTypes.REMOVE_PAYMENT);
   const sucss = createSucssAction(ActionTypes.REMOVE_PAYMENT);
