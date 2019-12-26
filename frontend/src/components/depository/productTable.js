@@ -119,12 +119,12 @@ class ProductTable extends React.Component {
                                     <Table.Cell className="norm-latin text-center"><span className="yekan">{item.f_type && item.f_type.name}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center"><span className="yekan">{item.design && item.design.name}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center ltr">
-                                    <span>{digitToComma(item.stock_amount)}</span><span>&nbsp;</span>
+                                    <span>{(item.stock_amount)}</span><span>&nbsp;</span>
                                     <span className="yekan">متر</span>
                                     </Table.Cell>
                                     <Table.Cell className="norm-latin text-center rtl"><span>{digitToComma(item.selling_price)}</span> <span className="yekan">تومان</span></Table.Cell>
                                     {/* <Table.Cell className="norm-latin text-center rtl"><span>{digitToComma(item.buying_price)}</span> <span className="yekan">تومان</span></Table.Cell> */}
-                                    <Table.Cell className="norm-latin text-center"><span>{item.name}</span></Table.Cell>
+                                    <Table.Cell className="yekan text-center"><span>{item.name}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center" textAlign='right'>
                                     <span>{item.code}</span>
                                     </Table.Cell>
