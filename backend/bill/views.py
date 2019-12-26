@@ -240,14 +240,18 @@ class BillsViewSet(NafisBase, ModelViewSet):
 
     @action(methods=["GET"], detail=False, url_path="charts")
     def chart_data(self, request, **kwargs):
+        start_date = self.request.query_params.get('start_date', None)
+        end_date = self.request.query_params.get('end_date', None)
+        print(start_date)
+        print(end_date)
         result = dict()
-        result['sells_per_design'] = Bill.sells_per_design()
-        result['sells_per_design_color'] = Bill.sells_per_design_color()
-        result['sells_per_bg_color'] = Bill.sells_per_bg_color()
-        result['sells_per_f_type'] = Bill.sells_per_f_type()
-        result['sells_per_material'] = Bill.sells_per_material()
-        result['sells_per_customer_age'] = Bill.profit_per_customer_age()
-        result['sells_per_customer_type'] = Bill.profit_per_customer_type()
+        result['sells_per_design'] = Bill.sells_per_design(start_date, end_date)
+        result['sells_per_design_color'] = Bill.sells_per_design_color(start_date, end_date)
+        result['sells_per_bg_color'] = Bill.sells_per_bg_color(start_date, end_date)
+        result['sells_per_f_type'] = Bill.sells_per_f_type(start_date, end_date)
+        result['sells_per_material'] = Bill.sells_per_material(start_date, end_date)
+        result['sells_per_customer_age'] = Bill.profit_per_customer_age(start_date, end_date)
+        result['sells_per_customer_type'] = Bill.profit_per_customer_type(start_date, end_date)
         return Response(result)
 
 
