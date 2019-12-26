@@ -42,22 +42,22 @@ class PrintFactor extends React.Component {
             key={index}
             className="row border-black border-radius-7 mb-1 rtl text-right"
           >
-            <p className="col-1 text-center font-weight-bold border-left-3 m-0 p-2">
+            <p className="d-flex align-items-center justify-content-center col-1 text-center font-weight-bold border-left-3 m-0 p-2">
               {enToFa(index + 1)}
             </p>
-            <p className="col-3 text-center font-weight-bold border-left-3 m-0 p-2">
-              {enToFa(item.product.name)}
+            <p className="d-flex align-items-center justify-content-center col-3 text-center font-weight-bold border-left-3 m-0 py-2 px-0">
+              <small><b>{enToFa(item.product.name)}</b></small>
             </p>
-            <p className="col text-center font-weight-bold border-left-3 m-0 p-2">
+            <p className="d-flex align-items-center justify-content-center col text-center font-weight-bold border-left-3 m-0 p-2">
               {enToFa(item.amount)}
             </p>
-            <p className="col text-center font-weight-bold border-left-3 m-0 p-2">
+            <p className="d-flex align-items-center justify-content-center col text-center font-weight-bold border-left-3 m-0 p-2">
               {enToFa(priceToPersian(parseInt(item.product.selling_price)))}
             </p>
-            <p className="col text-center font-weight-bold border-left-3 m-0 p-2">
+            <p className="d-flex align-items-center justify-content-center col text-center font-weight-bold border-left-3 m-0 p-2">
               {enToFa(priceToPersian(item.discount))}
             </p>
-            <p className="col text-center font-weight-bold m-0 p-2">
+            <p className="d-flex align-items-center justify-content-center col text-center font-weight-bold m-0 p-2">
               {enToFa(priceToPersian(parseInt(item.price)))}
             </p>
           </div>
@@ -68,18 +68,19 @@ class PrintFactor extends React.Component {
   render() {
     return (
       <div className="bootstrap factor">
-        <div className="container rtl py-2">
-          {/* <div className="row border-black border-radius-7 mb-2">
-            <div className="col-6 d-flex align-items-center justify-content-center">
+        <div className="container rtl py-2" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <div style={{width:'76mm'}}>
+          <div className="row border-black border-radius-7 mb-2">
+            <div className="col-12 d-flex align-items-center justify-content-center">
               <img src={logo} height="200" />
             </div>
-            <div className="col-6 d-flex align-items-center justify-content-center">
+            {/* <div className="col-6 d-flex align-items-center justify-content-center">
               <div className="row norm-latin">
                 <h1 className="col">GALLERY</h1>
                 <h1 className="col">NAFIS</h1>
               </div>
-            </div>
-          </div> */}
+            </div> */}
+          </div>
           <div className="row border-black border-radius-7 mb-2 rtl text-right p-2">
             <p className="col-3 font-weight-bold p-1">
               <span>شماره فاکتور:</span>
@@ -102,7 +103,7 @@ class PrintFactor extends React.Component {
               <span>{enToFa(getTodayJalaali())}</span>
             </p>
             <p className="col-3 font-weight-bold p-1">
-              <span>ساعت صدور:</span>
+              <span>ساعت‌صدور:</span>
             </p>
             <p className="col-3 font-weight-bold p-1">
               <span>{enToFa(getNow())}</span>
@@ -125,34 +126,34 @@ class PrintFactor extends React.Component {
               <span>صندوق:</span>
             </p>
             <p className="col-3 font-weight-bold p-1">
-              <span>{this.state.bill.seller && this.state.bill.seller.pk}</span>
+              <span>{enToFa(this.state.bill.seller && this.state.bill.seller.pk)}</span>
             </p>
           </div>
           <div className="row border-black border-radius-7 mb-1 rtl text-right">
-            <p className="col-1 text-center font-weight-bold border-left-3 m-0 p-2">
-              ردیف
+            <p className="col-1 norm-latin text-center font-weight-bold border-left-3 m-0 py-2 px-0">
+              <small><b>#</b></small>
             </p>
-            <p className="col-3 text-center font-weight-bold border-left-3 m-0 p-2">
-              شرح کالا
+            <p className="col-3 text-center font-weight-bold border-left-3 m-0 py-2 px-0">
+              <small><b>کالا</b></small>
             </p>
-            <p className="col text-center font-weight-bold border-left-3 m-0 p-2">
-              مقدار
+            <p className="col text-center font-weight-bold border-left-3 m-0 py-2 px-0">
+              <small><b>مقدار</b></small>
             </p>
-            <p className="col text-center font-weight-bold border-left-3 m-0 p-2">
-              مبلغ‌واحد
+            <p className="col text-center font-weight-bold border-left-3 m-0 py-2 px-0">
+              <small><b>مبلغ‌واحد</b></small>
             </p>
-            <p className="col text-center font-weight-bold border-left-3 m-0 p-2">
-              تخفیف
+            <p className="col text-center font-weight-bold border-left-3 m-0 py-2 px-0">
+              <small><b>تخفیف</b></small>
             </p>
-            <p className="col text-center font-weight-bold m-0 p-2">
-              مبلغ‌خالص
+            <p className="col text-center font-weight-bold m-0 py-2 px-0">
+              <small><b>مبلغ‌خالص</b></small>
             </p>
           </div>
           {this.renderItems()}
 
           <div className="row-not-flex border-black border-radius-7 mb-1 rtl text-right">
             <div className="row border-bottom-3">
-              <div className="col font-weight-bold p-2 h5 text-left">
+              <div className="col-6 font-weight-bold py-2 px-0 h5 text-left">
                 جمع کل:
               </div>
               <div className="col font-weight-bold p-2 h5 text-center">
@@ -163,7 +164,7 @@ class PrintFactor extends React.Component {
               </div>
             </div>
             <div className="row border-bottom-3">
-              <div className="col font-weight-bold p-2 h5 text-left">
+              <div className="col-6 font-weight-bold py-2 px-0 h5 text-left">
                 تخفیف کالایی:
               </div>
               <div className="col font-weight-bold p-2 h5 text-center">
@@ -174,7 +175,7 @@ class PrintFactor extends React.Component {
               </div>
             </div>
             <div className="row border-bottom-3">
-              <div className="col font-weight-bold p-2 h5 text-left">
+              <div className="col-6 font-weight-bold py-2 px-0 h5 text-left">
                 تخفیف فاکتوری:
               </div>
               <div className="col font-weight-bold p-2 h5 text-center">
@@ -185,7 +186,7 @@ class PrintFactor extends React.Component {
               </div>
             </div>
             <div className="row ">
-              <div className="col font-weight-bold p-2 h5 text-left">
+              <div className="col-6 font-weight-bold py-2 px-0 h5 text-left">
                 مبلغ قابل پرداخت:
               </div>
               <div className="col font-weight-bold p-2 h5 text-center">
@@ -196,7 +197,8 @@ class PrintFactor extends React.Component {
               </div>
             </div>
           </div>
-        </div>
+            </div>
+        </div> 
       </div>
     );
   }
