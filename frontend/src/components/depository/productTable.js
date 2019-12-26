@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { Table, Pagination, Grid, Search } from 'semantic-ui-react'
 import { getProductsList,getProductsByCode } from '../../actions/DepositoryActions'
-import { digitToComma,priceToPersian } from '../utils/numberUtils';
+import { digitToComma } from '../utils/numberUtils';
 import LoadingBar from '../utils/loadingBar'
 import NotFound from '../utils/notFound'
 class ProductTable extends React.Component {
@@ -119,8 +119,9 @@ class ProductTable extends React.Component {
                                     <Table.Cell className="norm-latin text-center"><span className="yekan">{item.f_type && item.f_type.name}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center"><span className="yekan">{item.design && item.design.name}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center ltr">
-                                    <span>{priceToPersian(item.stock_amount)}</span><span>&nbsp;</span>
                                     <span className="yekan">متر</span>
+                                    <span>&nbsp;</span>
+                                    <span>{(item.stock_amount)}</span>
                                     </Table.Cell>
                                     <Table.Cell className="norm-latin text-center rtl"><span>{digitToComma(item.selling_price)}</span> <span className="yekan">تومان</span></Table.Cell>
                                     {/* <Table.Cell className="norm-latin text-center rtl"><span>{digitToComma(item.buying_price)}</span> <span className="yekan">تومان</span></Table.Cell> */}
