@@ -1,3 +1,6 @@
+import ast
+import json
+
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import mixins
 from rest_framework.decorators import action
@@ -42,6 +45,32 @@ class ProductViewSet(NafisBase, mixins.CreateModelMixin,
             return Response(ProductDetailSerializer(product).data)
         except ObjectDoesNotExist:
             return Response({'چنین محصولی یافت نشد.'}, status=HTTP_404_NOT_FOUND)
+
+    @action(methods=["GET"], detail=False, url_path="filter")
+    def filter_products(self,request, **kwargs):
+        bg_colors = self.request.query_params.get('bg_colors', None)
+        design_colors = self.request.query_params.get('design_colors', None)
+        designs = self.request.query_params.get('designs', None)
+        f_types = self.request.query_params.get('f_types', None)
+        branches = self.request.query_params.get('branches', None)
+        materials = self.request.query_params.get('materials', None)
+
+        filter_items = {}
+        if bg_colors is not None and len(ast.literal_eval(bg_colors)):
+            filter_items['background_color__pk__in'] = ast.literal_eval(bg_colors)
+        if design_colors is not None and len(ast.literal_eval(design_colors)):
+            filter_items['design_color__pk__in'] = ast.literal_eval(design_colors)
+        if designs is not None and len(ast.literal_eval(designs)):
+            filter_items['design__pk__in'] = ast.literal_eval(designs)
+        if f_types is not None and len(ast.literal_eval(f_types)):
+            filter_items['f_type__pk__in'] = ast.literal_eval(f_types)
+        if branches is not None and len(ast.literal_eval(branches)):
+            filter_items['branch__pk__in'] = ast.literal_eval(branches)
+        if materials is not None and len(ast.literal_eval(materials)):
+            filter_items['material__pk__in'] = ast.literal_eval(materials)
+
+        products = Product.objects.filter(**filter_items)
+        return Response(ProductDetailSerializer(products, many=True).data)
 
 
 class ProductIdCreateApiView(NafisBase, CreateAPIView):

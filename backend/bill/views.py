@@ -170,12 +170,12 @@ class BillsViewSet(NafisBase, ModelViewSet):
 
     @action(methods=['GET'], detail=False, url_path="daily-report")
     def daily_report(self, request):
-        bills = Bill.objects.filter(create_date__date=datetime.today().date(), status__in=["remained", "done"])
-        total_benefit, total_discount, total_price, total_final_price, total_items = 0, 0, 0, 0, 0
+        total_benefit, total_discount, total_price, total_final_price, total_items, total_bills = 0, 0, 0, 0, 0, 0
         total_cheque_paid, total_cash_paid, total_card_paid, total_paid, reminded_payments = 0, 0, 0, 0, 0
         data = {}
-        bills_with_reminded_status = Bill.objects.filter(create_date__date=datetime.today().date(),
-                                                         status="remained").count()
+        bills = Bill.objects.filter(close_date__date=datetime.today().date(), status__in=["remained", "done"])
+        bills_with_reminded_status = bills.filter(status="remained").count()
+        total_bills = bills.count()
         for bill in bills:
             total_final_price += bill.final_price
             total_price += bill.price
@@ -193,6 +193,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
         data['total_price'] = total_price
         data['total_final_price'] = total_final_price
         data['total_items'] = total_items
+        data['total_bills'] = total_bills
         data['total_cheque_paid'] = total_cheque_paid
         data['total_cash_paid'] = total_cash_paid
         data['total_card_paid'] = total_card_paid
@@ -200,6 +201,58 @@ class BillsViewSet(NafisBase, ModelViewSet):
         data['total_reminded_payments'] = reminded_payments
         data['bills_with_reminded_status'] = bills_with_reminded_status
         return Response(data)
+
+    @action(methods=["GET"], detail=False, url_path="interval-report")
+    def total_report(self, request, **kwargs):
+        start_date = self.request.query_params.get('start_date', None)
+        end_date = self.request.query_params.get('end_date', None)
+        bills = Bill.objects.filter(close_date__date__range=[start_date, end_date], status__in=["done", "remained"])
+        total_sales, total_sales_received, total_sales_remaining, total_profit, total_sales_card = 0, 0, 0, 0, 0
+        total_sales_cash, total_sales_cheque, total_discount, total_items, total_final_price = 0, 0, 0, 0, 0
+        bills_with_reminded_status = bills.filter(status="remained").count()
+        total_bills = bills.count()
+        data = {}
+        for bill in bills:
+            total_sales += bill.price
+            total_final_price += bill.final_price
+            total_sales_received += bill.paid
+            total_sales_remaining += bill.remaining_payment
+            total_profit += bill.profit
+            total_sales_cash += bill.cash_paid
+            total_sales_card += bill.card_paid
+            total_sales_cheque += bill.cheque_paid
+            total_discount += bill.total_discount
+            total_items += bill.items.count()
+
+        data['total_profit'] = total_profit
+        data['total_discount'] = total_discount
+        data['total_price'] = total_sales
+        data['total_final_price'] = total_final_price
+        data['total_items'] = total_items
+        data['total_bills'] = total_bills
+        data['total_cheque_paid'] = total_sales_cheque
+        data['total_cash_paid'] = total_sales_cash
+        data['total_card_paid'] = total_sales_card
+        data['total_paid'] = total_sales_received
+        data['total_reminded_payments'] = total_sales_remaining
+        data['bills_with_reminded_status'] = bills_with_reminded_status
+        return Response(data)
+
+    @action(methods=["GET"], detail=False, url_path="charts")
+    def chart_data(self, request, **kwargs):
+        start_date = self.request.query_params.get('start_date', None)
+        end_date = self.request.query_params.get('end_date', None)
+        print(start_date)
+        print(end_date)
+        result = dict()
+        result['sells_per_design'] = Bill.sells_per_design(start_date, end_date)
+        result['sells_per_design_color'] = Bill.sells_per_design_color(start_date, end_date)
+        result['sells_per_bg_color'] = Bill.sells_per_bg_color(start_date, end_date)
+        result['sells_per_f_type'] = Bill.sells_per_f_type(start_date, end_date)
+        result['sells_per_material'] = Bill.sells_per_material(start_date, end_date)
+        result['sells_per_customer_age'] = Bill.profit_per_customer_age(start_date, end_date)
+        result['sells_per_customer_type'] = Bill.profit_per_customer_type(start_date, end_date)
+        return Response(result)
 
 
 class BillItemViewSet(ModelViewSet):

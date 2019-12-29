@@ -1,9 +1,12 @@
+from datetime import datetime
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import DO_NOTHING, CASCADE, Sum
 
-from product.models import round_up
+from customer.models import Customer, CustomerType
+from product.models import round_up, Color, FType, Material, Design
 
 
 class Bill(models.Model):
@@ -91,69 +94,127 @@ class Bill(models.Model):
 
     @property
     def profit(self):
-        benefit = 0
+        profit = 0
         for item in self.items.all():
-            benefit += item.benefit
-        return benefit
+            profit += item.profit
+        return round_up(profit, -2)
 
     @property
     def items_count(self):
         return self.items.count()
-    # @staticmethod
-    # def total_sales(start_date, end_date):
-    #     bills = Bill.objects.filter(create_date__range=[start_date, end_date], status__in=["done", "remained"])
-    #     price = 0
-    #     for bill in bills:
-    #         price += bill.final_price
-    #     return price
-    #
-    # @staticmethod
-    # def total_sales_received(start_date, end_date):
-    #     bills = Bill.objects.filter(create_date__range=[start_date, end_date], status__in=["done", "remained"])
-    #     sum_ = 0
-    #     for bill in bills:
-    #         sum_ += bill.paid
-    #     return sum_
-    #
-    # @staticmethod
-    # def total_sales_remaining(start_date, end_date):
-    #     bills = Bill.objects.filter(create_date__range=[start_date, end_date], status__in=["done", "remained"])
-    #     sum_ = 0
-    #     for bill in bills:
-    #         sum_ += bill.remaining_payment
-    #     return sum_
-    #
-    # @staticmethod
-    # def total_profit(start_date, end_date):
-    #     bills = Bill.objects.filter(create_date__range=[start_date, end_date], status__in=["done", "remained"])
-    #     sum_ = 0
-    #     for bill in bills:
-    #         sum_ += bill.profit
-    #     return sum_
-    #
-    # @staticmethod
-    # def total_sales_card(start_date, end_date):
-    #     bills = Bill.objects.filter(create_date__range=[start_date, end_date], status__in=["done", "remained"])
-    #     sum_ = 0
-    #     for bill in bills:
-    #         sum_ += bill.card_paid
-    #     return sum_
-    #
-    # @staticmethod
-    # def total_sales_cash(start_date, end_date):
-    #     bills = Bill.objects.filter(create_date__range=[start_date, end_date], status__in=["done", "remained"])
-    #     sum_ = 0
-    #     for bill in bills:
-    #         sum_ += bill.cash_paid
-    #     return sum_
-    #
-    # @staticmethod
-    # def total_sales_cheque(start_date, end_date):
-    #     bills = Bill.objects.filter(create_date__range=[start_date, end_date], status__in=["done", "remained"])
-    #     sum_ = 0
-    #     for bill in bills:
-    #         sum_ += bill.card_paid
-    #     return sum_
+
+    @staticmethod
+    def sells_per_design_color(start_date, end_date):
+        result = dict()
+        query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
+                                        bill__status__in=["done", "remained"], rejected=False)
+        for design_color in set(Color.objects.all().values_list("name", flat=True)):
+            bill_items = query.filter(product__design_color__name=design_color)
+            profit = 0
+            price = 0
+            amount = 0
+            for bill_item in bill_items:
+                profit += bill_item.profit
+                price += bill_item.price
+                amount += bill_item.amount
+            result[design_color] = dict(amount=amount, profit=profit, price=price)
+        return result
+
+    @staticmethod
+    def sells_per_bg_color(start_date, end_date):
+        result = dict()
+        query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
+                                        bill__status__in=["done", "remained"], rejected=False)
+        for bg_color in set(Color.objects.all().values_list("name", flat=True)):
+            bill_items = query.filter(product__background_color__name=bg_color)
+            profit = 0
+            price = 0
+            amount = 0
+            for bill_item in bill_items:
+                profit += bill_item.profit
+                price += bill_item.price
+                amount += bill_item.amount
+            result[bg_color] = dict(amount=amount, profit=profit, price=price)
+        return result
+
+    @staticmethod
+    def sells_per_f_type(start_date, end_date):
+        result = dict()
+        query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
+                                        bill__status__in=["done", "remained"], rejected=False)
+        for f_type in FType.objects.all():
+            bill_items = query.filter(product__f_type=f_type)
+            profit = 0
+            price = 0
+            amount = 0
+            for bill_item in bill_items:
+                profit += bill_item.profit
+                price += bill_item.price
+                amount += bill_item.amount
+            result[f_type.name] = dict(amount=amount, profit=profit, price=price)
+        return result
+
+    @staticmethod
+    def sells_per_material(start_date, end_date):
+        result = dict()
+        query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
+                                        bill__status__in=["done", "remained"], rejected=False)
+        for material in Material.objects.all():
+            bill_items = query.filter(product__material=material)
+            profit = 0
+            price = 0
+            amount = 0
+            for bill_item in bill_items:
+                profit += bill_item.profit
+                price += bill_item.price
+                amount += bill_item.amount
+            result[material.name] = dict(amount=amount, profit=profit, price=price)
+        return result
+
+    @staticmethod
+    def sells_per_design(start_date, end_date):
+        result = dict()
+        query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
+                                        bill__status__in=["done", "remained"], rejected=False)
+        for design in Design.objects.all():
+            bill_items = query.filter(product__design=design)
+            profit = 0
+            price = 0
+            amount = 0
+            for bill_item in bill_items:
+                profit += bill_item.profit
+                price += bill_item.price
+                amount += bill_item.amount
+            result[design.name] = dict(amount=amount, profit=profit, price=price)
+        return result
+
+    @staticmethod
+    def profit_per_customer_age(start_date, end_date):
+        result = dict()
+        query = Bill.objects.filter(close_date__date__range=[start_date, end_date],
+                                    status__in=["done", "remained"])
+        for birth_date in set(Customer.objects.all().values_list("birth_date", flat=True)):
+            if birth_date is not None:
+                customers = Customer.objects.filter(birth_date=birth_date)
+                bills = query.filter(buyer__in=customers)
+                profit = 0
+                for bill in bills:
+                    profit += bill.profit
+                result[datetime.now().year - birth_date.year] = dict(profit=profit)
+        return result
+
+    @staticmethod
+    def profit_per_customer_type(start_date, end_date):
+        result = dict()
+        query = Bill.objects.filter(close_date__date__range=[start_date, end_date],
+                                    status__in=["done", "remained"])
+        for customer_type in CustomerType.objects.all():
+            bills = query.filter(buyer__class_type=customer_type)
+            profit = 0
+            for bill in bills:
+                profit += bill.profit
+            result[customer_type.name] = dict(profit=profit)
+        return result
 
 
 class BillItemManager(models.Manager):
@@ -183,7 +244,7 @@ class BillItem(models.Model):
     objects = BillItemManager()
 
     @property
-    def benefit(self):
+    def profit(self):
         total_buying_price = int(self.amount * float(self.product.buying_price))
         return self.final_price - total_buying_price
 
@@ -285,8 +346,8 @@ class Cheque(models.Model):
     issue_date = models.DateField(null=True)
     expiry_date = models.DateField()
     amount = models.IntegerField()
-    status = models.CharField(choices=(('تسویه', 'تسویه'), ('مانده', 'مانده')), max_length=10,
-                              default='مانده')
+    status = models.CharField(choices=(('done', 'done'), ('remained', 'remained')), max_length=10,
+                              default='remained')
 
 
 class CustomerCheque(Cheque):
