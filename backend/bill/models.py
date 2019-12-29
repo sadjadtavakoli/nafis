@@ -97,7 +97,7 @@ class Bill(models.Model):
         profit = 0
         for item in self.items.all():
             profit += item.profit
-        return profit
+        return round_up(profit, -2)
 
     @property
     def items_count(self):
