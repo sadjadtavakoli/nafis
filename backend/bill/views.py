@@ -173,7 +173,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
         total_benefit, total_discount, total_price, total_final_price, total_items, total_bills = 0, 0, 0, 0, 0, 0
         total_cheque_paid, total_cash_paid, total_card_paid, total_paid, reminded_payments = 0, 0, 0, 0, 0
         data = {}
-        bills = Bill.objects.filter(create_date__date=datetime.today().date(), status__in=["remained", "done"])
+        bills = Bill.objects.filter(close_date__date=datetime.today().date(), status__in=["remained", "done"])
         bills_with_reminded_status = bills.filter(status="remained").count()
         total_bills = bills.count()
         for bill in bills:
@@ -206,7 +206,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
     def total_report(self, request, **kwargs):
         start_date = self.request.query_params.get('start_date', None)
         end_date = self.request.query_params.get('end_date', None)
-        bills = Bill.objects.filter(create_date__date__range=[start_date, end_date], status__in=["done", "remained"])
+        bills = Bill.objects.filter(close_date__date__range=[start_date, end_date], status__in=["done", "remained"])
         total_sales, total_sales_received, total_sales_remaining, total_profit, total_sales_card = 0, 0, 0, 0, 0
         total_sales_cash, total_sales_cheque, total_discount, total_items, total_final_price = 0, 0, 0, 0, 0
         bills_with_reminded_status = bills.filter(status="remained").count()
