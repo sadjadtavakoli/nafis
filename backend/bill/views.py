@@ -132,20 +132,32 @@ class BillsViewSet(NafisBase, ModelViewSet):
                 instance.buyer.save()
         return Response({'status': instance.status})
 
+    def update(self, request, *args, **kwargs):
+        if self.request.data.get('used_points', None):
+            points = self.request.data.get('used_points')
+            buyer = self.get_object().buyer
+            total_points = int(buyer.points) + self.get_object().used_points
+            if int(points) > total_points:
+                raise ValidationError('امتیاز استفاده شده بیشتر از حد مجاز است.')
+            old_points = self.get_object().used_points
+
+        response = super(BillsViewSet, self).update(request, *args, **kwargs)
+        if self.request.data.get('used_points', None):
+            points = int(self.request.data.get('used_points'))
+            buyer = self.get_object().buyer
+            buyer.points += (old_points - points)
+            buyer.save()
+        return response
+
     def create(self, request, *args, **kwargs):
         data = self.request.data
         phone_number = data.get('phone_number')
         buyer, created = Customer.objects.get_or_create(phone_number=phone_number)
         seller = Staff.objects.get(username=self.request.user.username)
         discount = data.get('discount', 0)
-        used_points = data.get('used_points', 0)
         items = data.get('items')
 
-        if int(used_points) > buyer.points:
-            raise ValidationError('امتیاز استفاده شده بیشتر از حد مجاز است.')
-
-        bill = Bill.objects.create(buyer=buyer, seller=seller, discount=discount, branch=seller.branch,
-                                   used_points=used_points)
+        bill = Bill.objects.create(buyer=buyer, seller=seller, discount=discount, branch=seller.branch)
 
         for item in items:
             product_code = item['product']
