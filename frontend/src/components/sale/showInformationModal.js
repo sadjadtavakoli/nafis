@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { enToFa,priceToPersian } from '../utils/numberUtils'
+import { enToFa,priceToPersian, digitToComma } from '../utils/numberUtils'
 import { setNewBill, deleteItem, getCustomerByPhoneNumber,updateBill } from '../../actions/SaleActions';
 import { Button, Modal, Divider, Header, Segment, Form, Card, Popup, Loader, Image, Icon, Message, Label } from 'semantic-ui-react'
 import {toastr} from 'react-redux-toastr'
@@ -11,8 +11,11 @@ class ShowInformationModal extends React.Component {
     }
     componentWillReceiveProps() {
         this.setState({ data: this.props.data }, () => {
-            if(this.state.data.buyer)
+            if (this.state.data.buyer) {
                 this.getCustomerData(this.state.data.buyer.phone_number)
+        this.sumProductTotalPrice();
+                
+            }
         })
     }
     componentDidMount() {
@@ -20,6 +23,7 @@ class ShowInformationModal extends React.Component {
         // toastr.success('asdf','sadfsdfdfssdf')
     }
     state = {
+        sumProductTotalPrice:0,
         data: {},
         isOpenAddItem: false,
         formValidation: {
@@ -28,7 +32,6 @@ class ShowInformationModal extends React.Component {
         used_points: '',
         branch: 1,
         discount: 0,
-        itemsDOM: [],
         branchOptions: [
             { key: '1', value: '1', flag: 'ir', text: 'شعبه یک' },
         ],
@@ -45,13 +48,14 @@ class ShowInformationModal extends React.Component {
         var r = window.confirm("آیا از حذف این مورد مطمئن هستید؟");
         if (r == true) {
             this.props.deleteItem(this.state.data.items[index].pk).then(({ data }) => {
-                this.setState({ data });
+                this.setState({ data }, () => {
+                    this.sumProductTotalPrice()
+                });
             });
         }
         
     }
-    itemsRender = (item,index) => {
-        let id = Object.keys(this.state.data.items).length;
+    itemsRender = (item, index) => {
         return (<Card.Group key={index}>
             <Card fluid>
                 <Card.Content>
@@ -151,18 +155,30 @@ class ShowInformationModal extends React.Component {
         let id = this.state.itemsDataSheet.length;
         this.setState(
             {
-                // itemsDOM: [...this.state.itemsDOM, itemDOM],
                 itemsDataSheet: [...this.state.itemsDataSheet, data],
                 formValidation: { ...this.state.formValidation, items: false }
             }
             , () => {
+                this.sumProductTotalPrice()
             });
         this.toggleAddItemPopup();
     };
     refetchModalData = (response) => {
         // console.log('response', response)
-        this.setState({data:response.data,})
+        this.setState({ data: response.data }, () => {
+                this.sumProductTotalPrice()
+        })
     };
+    sumProductTotalPrice = (item) => {
+        let preSumArray = [];
+        let sum = 0;
+        if (this.state.data.items)
+            preSumArray = this.state.data.items.map((item) => {
+                return Number(item.price)
+            });
+        preSumArray.forEach((item)=>{sum+=item})
+        this.setState({sumProductTotalPrice:sum}) 
+    }
     render() {
 
         return Object.keys(this.state.data).length > 0?(
@@ -195,7 +211,7 @@ class ShowInformationModal extends React.Component {
                                 />
                                 <Segment hidden={Object.keys(this.state.data.items).length === 0}>
                                     <Header as='h3' floated='right'>
-                                    <span>اقلام</span>
+                                        <span>اقلام فاکتور</span> <Label className="norm-latin"><span className="yekan">قیمت نهایی فاکتور:&nbsp;</span><span>{(digitToComma(this.state.sumProductTotalPrice))}</span><span className="yekan">&nbsp;تومان</span></Label>
                                     </Header>
                                     
                                     <Divider clearing />

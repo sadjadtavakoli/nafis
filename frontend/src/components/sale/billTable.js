@@ -125,7 +125,7 @@ class BillTable extends React.Component {
                                             <Table.Cell className="norm-latin text-center"><span>{standardTimeToJalaali(item.create_date)}</span></Table.Cell>
                                             <Table.Cell className="norm-latin text-center rtl"><span>{digitToComma(item.price)}</span>&nbsp;<span className="yekan">تومان</span></Table.Cell>
                                             <Table.Cell className="norm-latin text-center rtl"><b><span>{digitToComma(item.final_price)}</span>&nbsp;<span className="yekan">تومان</span></b></Table.Cell>
-                                            <Table.Cell className="norm-latin text-center">{item.final_discount ? (<React.Fragment><span className="yekan">digitToComma(item.final_discount)</span><span className="yekan">تومان</span></React.Fragment>) : '--'}  </Table.Cell>
+                                            <Table.Cell className="norm-latin text-center rtl">{item.total_discount ? (<React.Fragment><span>{digitToComma(item.total_discount)}</span><span className="yekan">تومان</span></React.Fragment>) : '--'}  </Table.Cell>
                                             <Table.Cell className="norm-latin text-center"><span>{phoneNumberBeautifier(item.buyer.phone_number)}</span></Table.Cell>
                                         </Table.Row>
                                     </React.Fragment>);
