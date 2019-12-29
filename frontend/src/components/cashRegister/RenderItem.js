@@ -13,7 +13,7 @@ const RenderItem = props => {
         widths="4"
         key={`bill_productItem_${props.index}`}
       >
-        {renderField(props.productItem, "pk", "کد قلم", enToFa)}
+        {/* {renderField(props.productItem, "pk", "کد قلم", enToFa)} */}
         <Form.Field>
           <Popup
             content={
