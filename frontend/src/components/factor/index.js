@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { getBillREQUEST } from "../../actions/BillActions";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/logo_printable.png";
 // import "./bootstrap.min.css";
 import {
   priceToPersian,

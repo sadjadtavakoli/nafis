@@ -1,5 +1,6 @@
 import {  GET_ACTIVE_BILL,ADD_BILL } from "./types";
-import server from "../apis/server";
+import server, { putServer } from "../apis/server";
+import axios from "axios";
 
 export const getActiveBill = (page=1) => async dispatch => {
     const response = await server(localStorage.getItem("token")).get("/bills/actives/", {params:{page}});
@@ -13,8 +14,8 @@ export const setNewBill = (data) => async dispatch => {
     const response = await server(localStorage.getItem("token")).post("/bills/", data)
     dispatch({type: ADD_BILL, payload: response.data});
 }
-export const updateBill = (pk,data) => async dispatch => {
-    return await server(localStorage.getItem("token")).patch(`/bills/${pk}/`, data)
+export const updateBill = (pk, data) => async dispatch => {
+    return await putServer(localStorage.getItem("token"),`/bills/${pk}/`,data)
 }
 export const addNewItem = (pk,data) => async dispatch => {
     return await server(localStorage.getItem("token")).post(`/bill-items/`, data)
