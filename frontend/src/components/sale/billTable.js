@@ -77,7 +77,7 @@ class BillTable extends React.Component {
         if (this.state.activeBill.length > 0){
             return (
                 <div>
-                    <ShowInformationModal data={this.state.itemData} open={this.state.isOpenInformationModal} onClose={this.closeInformationModal} />
+                    <ShowInformationModal refetch={() => this.getActiveBill(this.state.activePage)} data={this.state.itemData} open={this.state.isOpenInformationModal} onClose={this.closeInformationModal} />
                 
                     <Table celled striped className="">
                         <Table.Header>

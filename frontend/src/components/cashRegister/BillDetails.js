@@ -18,7 +18,7 @@ const BillDetails = props => {
           "تاریخ ایجاد",
           compose(enToFa, standardTimeToJalaali)
         )}
-        {renderField(props.bill, "discount", "تخفیف فاکتور", text =>
+        {renderField(props.bill, "total_discount", "تخفیف فاکتور", text =>
           priceToPersian(text)
         )}
         {renderField(props.bill, "used_points", "امتیاز استفاده شده", text =>

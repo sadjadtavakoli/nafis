@@ -13,8 +13,7 @@ class ShowInformationModal extends React.Component {
         this.setState({ data: this.props.data }, () => {
             if (this.state.data.buyer) {
                 this.getCustomerData(this.state.data.buyer.phone_number)
-        this.sumProductTotalPrice();
-                
+                this.sumProductTotalPrice();
             }
         })
     }
@@ -126,7 +125,7 @@ class ShowInformationModal extends React.Component {
             }
         } else if(inputName === 'discount'){
             this.props.updateBill(this.state.data.pk, { discount: Number(this.state.discount) }).then((res) => {
-                // console.log(res)
+                this.props.refetch();
             })
         }
     }
