@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Label, Header } from "semantic-ui-react";
+import { Form, Header } from "semantic-ui-react";
 import { enToFa, priceToPersian } from "../utils/numberUtils";
 import { standardTimeToJalaali } from "../utils/jalaaliUtils";
 import renderField from "./RenderField";

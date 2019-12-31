@@ -2,13 +2,9 @@ import React from "react";
 import { connect } from "react-redux";
 import { enToFa,priceToPersian, digitToComma } from '../utils/numberUtils'
 import { setNewBill, deleteItem, getCustomerByPhoneNumber,updateBill } from '../../actions/SaleActions';
-import { Button, Modal, Divider, Header, Segment, Form, Card, Popup, Loader, Image, Icon, Message, Label } from 'semantic-ui-react'
-import {toastr} from 'react-redux-toastr'
+import { Button, Modal, Divider, Header, Segment, Form, Card, Popup, Icon, Message, Label } from 'semantic-ui-react'
 import NewBillPopup from './newBillPopup'
 class ShowInformationModal extends React.Component {
-    constructor(props) {
-        super(props);
-    }
     componentWillReceiveProps() {
         this.setState({ data: this.props.data }, () => {
             if (this.state.data.buyer) {
@@ -46,7 +42,7 @@ class ShowInformationModal extends React.Component {
     }
     deleteItem = (index) => {
         var r = window.confirm("آیا از حذف این مورد مطمئن هستید؟");
-        if (r == true) {
+        if (r === true) {
             this.props.deleteItem(this.state.data.items[index].pk).then(({ data }) => {
                 this.setState({ data }, () => {
                     this.sumProductTotalPrice()
@@ -152,7 +148,6 @@ class ShowInformationModal extends React.Component {
         }
     };
     submitItemPopup = (data) => {
-        let id = this.state.itemsDataSheet.length;
         this.setState(
             {
                 itemsDataSheet: [...this.state.itemsDataSheet, data],
@@ -200,7 +195,16 @@ class ShowInformationModal extends React.Component {
                                 </Form.Group>
                                 <Form.Group widths={2}>
                                     <Form.Dropdown className='ltr placeholder-rtl text-right' readOnly defaultValue={'1'} placeholder='شعبه' selection label={'شعبه'} options={this.state.branchOptions} />
-                                    <Form.Input className='ltr placeholder-rtl' readOnly={!this.state.isEnableEdit.discount} error={!this.state.isEnableEdit.discount} defaultValue={this.state.data.discount} label={()=>this.labelRender('تخفیف کلی','discount')}  type="number" defaultValue='0' onChange={(e)=>this.inputChange(e,'discount')} placeholder='مقدار تخفیف' />
+                                    <Form.Input
+                                      className='ltr placeholder-rtl'
+                                      readOnly={!this.state.isEnableEdit.discount}
+                                      error={!this.state.isEnableEdit.discount}
+                                      defaultValue={this.state.data.discount}
+                                      label={()=>this.labelRender('تخفیف کلی','discount')}
+                                      type="number"
+                                      onChange={(e)=>this.inputChange(e,'discount')}
+                                      placeholder='مقدار تخفیف'
+                                    />
                                 </Form.Group>
                                 <Message
                                     hidden={Object.keys(this.state.data.items).length > 0}

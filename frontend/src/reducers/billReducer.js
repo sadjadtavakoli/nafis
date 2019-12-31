@@ -1,6 +1,5 @@
 import * as ActionTypes from "../actions/types";
 import {
-  updateObject,
   updateItemInArray,
   createReducer
 } from "../utils/FunctionalUtils";

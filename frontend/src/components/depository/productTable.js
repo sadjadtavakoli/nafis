@@ -6,9 +6,6 @@ import { digitToComma } from '../utils/numberUtils';
 import LoadingBar from '../utils/loadingBar'
 import NotFound from '../utils/notFound'
 class ProductTable extends React.Component {
-    constructor(props) {
-        super(props);
-    }
     state = {
         productsList: [],
         totalPageCount: 1,

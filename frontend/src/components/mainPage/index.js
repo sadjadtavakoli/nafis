@@ -60,20 +60,20 @@ class MainPage extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    nextReceipt: state.receipts.nextReceipt,
-    currentUser: state.auth.currentUser
-      ? state.auth.currentUser
-      : localStorage.getItem("user")
-      ? localStorage.getItem("user")
-      : "",
-    type: state.auth.type
-      ? state.auth.type
-      : localStorage.getItem("type")
-      ? localStorage.getItem("type")
-      : ""
-  };
-};
+// const mapStateToProps = state => {
+//   return {
+//     nextReceipt: state.receipts.nextReceipt,
+//     currentUser: state.auth.currentUser
+//       ? state.auth.currentUser
+//       : localStorage.getItem("user")
+//       ? localStorage.getItem("user")
+//       : "",
+//     type: state.auth.type
+//       ? state.auth.type
+//       : localStorage.getItem("type")
+//       ? localStorage.getItem("type")
+//       : ""
+//   };
+// };
 
 export default connect(null, null)(MainPage);

@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { getIntervalReports, getChartsReport } from "../../actions/ReportsActions";
-import { Container, Segment, Input, Button, Table, Grid, Image, Label } from 'semantic-ui-react';
+import { Container, Segment, Input, Button, Table, Grid, Label } from 'semantic-ui-react';
 import { Doughnut, Bar, Pie } from 'react-chartjs-2';
 
 const colors = {
@@ -10,100 +10,96 @@ const colors = {
   green: "#21ba45"
 }
 
-const initData = {
-  labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-  datasets: [{
-      label: 'Sales',
-      type:'bar',
-      data: [51, 65, 40, 49, 60, 37, 40],
-      fill: false,
-      borderColor: colors.blue,
-      backgroundColor: colors.blue,
-      pointBorderColor: colors.blue,
-      pointBackgroundColor: colors.blue,
-      pointHoverBackgroundColor: colors.blue,
-      pointHoverBorderColor: colors.blue,
-      yAxisID: 'y-axis-2'
-    },{
-      type: 'bar',
-      label: 'Visitor',
-      data: [200, 185, 590, 621, 250, 400, 95],
-      fill: false,
-      backgroundColor: colors.orange,
-      borderColor: colors.orange,
-      hoverBackgroundColor: colors.orange,
-      hoverBorderColor: colors.orange,
-      yAxisID: 'y-axis-1'
-    },{
-      type: 'bar',
-      label: 'Visitor',
-      data: [200, 185, 590, 621, 250, 400, 95],
-      fill: false,
-      backgroundColor: colors.green,
-      borderColor: colors.green,
-      hoverBackgroundColor: colors.green,
-      hoverBorderColor: colors.green,
-      yAxisID: 'y-axis-1'
-    }]
-};
-
-const options = {
-  responsive: true,
-  tooltips: {
-    mode: 'label'
-  },
-  elements: {
-    line: {
-      fill: false
-    }
-  },
-  scales: {
-    xAxes: [
-      {
-        display: true,
-        gridLines: {
-          display: false
-        },
-        labels: {
-          show: true
-        }
-      }
-    ],
-    yAxes: [
-      {
-        type: 'linear',
-        display: true,
-        position: 'left',
-        id: 'y-axis-1',
-        gridLines: {
-          display: false
-        },
-        labels: {
-          show: true
-        }
-      },
-      {
-        type: 'linear',
-        display: true,
-        position: 'right',
-        id: 'y-axis-2',
-        gridLines: {
-          display: false
-        },
-        labels: {
-          show: true
-        }
-      }
-    ]
-  }
-};
-
-
 class Reports extends React.Component {
   state = {
     design: {
-      data: initData,
-      options: options
+      data: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        datasets: [{
+            label: 'Sales',
+            type:'bar',
+            data: [51, 65, 40, 49, 60, 37, 40],
+            fill: false,
+            borderColor: colors.blue,
+            backgroundColor: colors.blue,
+            pointBorderColor: colors.blue,
+            pointBackgroundColor: colors.blue,
+            pointHoverBackgroundColor: colors.blue,
+            pointHoverBorderColor: colors.blue,
+            yAxisID: 'y-axis-2'
+          },{
+            type: 'bar',
+            label: 'Visitor',
+            data: [200, 185, 590, 621, 250, 400, 95],
+            fill: false,
+            backgroundColor: colors.orange,
+            borderColor: colors.orange,
+            hoverBackgroundColor: colors.orange,
+            hoverBorderColor: colors.orange,
+            yAxisID: 'y-axis-1'
+          },{
+            type: 'bar',
+            label: 'Visitor',
+            data: [200, 185, 590, 621, 250, 400, 95],
+            fill: false,
+            backgroundColor: colors.green,
+            borderColor: colors.green,
+            hoverBackgroundColor: colors.green,
+            hoverBorderColor: colors.green,
+            yAxisID: 'y-axis-1'
+          }]
+      },
+
+      options: {
+        responsive: true,
+        tooltips: {
+          mode: 'label'
+        },
+        elements: {
+          line: {
+            fill: false
+          }
+        },
+        scales: {
+          xAxes: [
+            {
+              display: true,
+              gridLines: {
+                display: false
+              },
+              labels: {
+                show: true
+              }
+            }
+          ],
+          yAxes: [
+            {
+              type: 'linear',
+              display: true,
+              position: 'left',
+              id: 'y-axis-1',
+              gridLines: {
+                display: false
+              },
+              labels: {
+                show: true
+              }
+            },
+            {
+              type: 'linear',
+              display: true,
+              position: 'right',
+              id: 'y-axis-2',
+              gridLines: {
+                display: false
+              },
+              labels: {
+                show: true
+              }
+            }
+          ]
+        }  
+      }
     },
 
     donought: {
@@ -148,14 +144,17 @@ class Reports extends React.Component {
       }]
     }
   }
+
   componentDidMount() {
     this.props.getChartsReport();
     this.props.getIntervalReports();
   }
+
   componentDidUpdate() {
     console.log(1, this.props.chartReports); 
     console.log(2, this.props.intervalReports);
   }
+  
   render() {
     return (
       <React.Fragment>

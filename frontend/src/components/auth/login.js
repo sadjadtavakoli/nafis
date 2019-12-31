@@ -41,7 +41,7 @@ class Login extends React.Component {
                     <Grid columns={2} relaxed='very' stackable>
 
                 <Grid.Column className="ltr text-center only-device" verticalAlign='middle'>
-                    <img src={logo} height="230"/>
+                    <img src={logo} alt="logo" height="230"/>
                 </Grid.Column>
                 <Grid.Column>
                     <Form>
@@ -72,7 +72,7 @@ class Login extends React.Component {
                 </Grid.Column>
 
                         <Grid.Column className="ltr text-center only-desktop" verticalAlign='middle'>
-                            <img src={logo} height="230"/>
+                            <img src={logo} alt="logo" height="230"/>
                 </Grid.Column>
                 </Grid>
 

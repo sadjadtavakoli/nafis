@@ -11,9 +11,6 @@ import NewBillPopup from './newBillPopup'
 
 const colSpan = 7;
 class BillTable extends React.Component {
-    constructor(props) {
-        super(props);
-    }
     state = {
         activeBill: [],
         totalPageCount: 1,
@@ -59,7 +56,6 @@ class BillTable extends React.Component {
         this.setState({ isOpenAddItem: id });
     };
     submitItemPopup = (data) => {
-        let id = this.state.itemsDataSheet.length;
         this.setState(
             {
                 // itemsDOM: [...this.state.itemsDOM, itemDOM],

@@ -1,15 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
-import history from "../../history";
-import { Button,Container,Image,Header, Segment } from 'semantic-ui-react'
+import { Button,Container, Segment } from 'semantic-ui-react'
 import AddProductModal from './addProductModal'
 import ProductTable from './productTable'
 import { getProductID } from '../../actions/DepositoryActions'
 
 class Depository extends React.Component {
-    constructor(props) {
-        super(props);
-    }
     state = {
         open: false,
         productID:NaN

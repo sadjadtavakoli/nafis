@@ -24,9 +24,6 @@ const INITIAL_STATE = {
     customerData:{}
 };
 class AddBillModal extends React.Component {
-    constructor(props) {
-        super(props);
-    }
     componentDidMount() {
         // toastr.success('asdf','sadfsdfdfssdf')
     }
@@ -36,7 +33,7 @@ class AddBillModal extends React.Component {
     }
     deleteItem = (id) => {
         var r = window.confirm("آیا از حذف این مورد مطمئن هستید؟");
-        if (r == true) {
+        if (r === true) {
             let itemsDataSheet = this.state.itemsDataSheet;
             let itemsDOM = this.state.itemsDOM;
             for( var i = 0; i < itemsDataSheet.length; i++){ 
@@ -215,7 +212,7 @@ class AddBillModal extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
+// const mapStateToProps = state => {
 //   return {
 //     nextReceipt: state.receipts.nextReceipt,
 //     currentUser: state.auth.currentUser
@@ -229,7 +226,7 @@ const mapStateToProps = state => {
 //       ? localStorage.getItem("type")
 //       : ""
 //   };
-};
+// };
 
 export default connect(
   null,
