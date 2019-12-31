@@ -158,3 +158,29 @@ label{
   }
   
 }
+
+// REPORT STYLE SHEET\
+
+.table-border-left {
+  border-left: 1px solid #ddd !important;
+}
+
+.grid-padding {
+  padding: 20px !important;
+}
+
+.grid-left {
+  float: left;
+  text-align: left;
+  direction: ltr;
+}
+
+.grid-right {
+  float: right;
+  text-align: right;
+  direction: rtl;
+}
+
+.grid-label-rabon {
+  float: left;
+}

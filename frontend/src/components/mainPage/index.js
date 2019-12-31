@@ -34,6 +34,7 @@ class MainPage extends React.Component {
         <div className="main-page__items-container">
           <Segment placeholder>
             <Header padded={true}>
+              
               <Card.Group itemsPerRow={this.state.width < 768 ? 16: 6} className="rtl padded" >
 
                 {isPermit('sale',this.state.job) ?

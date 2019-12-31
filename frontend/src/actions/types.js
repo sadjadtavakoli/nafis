@@ -11,7 +11,10 @@ export const REMOVE_BILL = "REMOVE_BILL";
 export const GET_BILL = "GET_BILL";
 export const GET_DAILY_REPORT = "GET_DAILY_REPORT";
 export const UPDATE_Bill = "UPDATE_Bill";
+export const GET_INTERVAL_REPORTS = "GET_INTERVAL_REPORTS"; 
+export const GET_CHARTS_REPORT = "GET_CHARTS_REPORT";
 
+// kari nadashte bashim
 export const FETCH = types => `FETCH_${types}`;
 export const SUCSS = types => `SUCSS_${types}`;
 export const FAILD = types => `FAILD_${types}`;
