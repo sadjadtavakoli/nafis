@@ -7,10 +7,9 @@ export const server = (token = localStorage.getItem("token")) =>
   });
 export const putServer = (token = localStorage.getItem("token"),url,data) =>
   axios({
-    
         method: 'patch',
         url: `${auth.PROTOCOL}://${auth.BASE}:${auth.PORT}/api${url}`,
-        headers: { withCredentials: true,Authorization: "Token " + token },
+        headers: { Authorization: "Token " + token },
         data: data,
     });
 
