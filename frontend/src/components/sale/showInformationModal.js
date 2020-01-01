@@ -182,6 +182,7 @@ class ShowInformationModal extends React.Component {
 
         return Object.keys(this.state.data).length > 0?(
             <div >
+                {console.log(this.state.data)}
                 <Modal id="add-bill"
                     closeOnDimmerClick={false}
                     dimmer='blurring'
@@ -199,7 +200,7 @@ class ShowInformationModal extends React.Component {
                                 </Form.Group>
                                 <Form.Group widths={2}>
                                     <Form.Dropdown className='ltr placeholder-rtl text-right' readOnly defaultValue={'1'} placeholder='شعبه' selection label={'شعبه'} options={this.state.branchOptions} />
-                                    <Form.Input className='ltr placeholder-rtl' readOnly={!this.state.isEnableEdit.discount} error={!this.state.isEnableEdit.discount} defaultValue={this.state.data.discount} label={()=>this.labelRender('تخفیف کلی','discount')}  type="number" defaultValue='0' onChange={(e)=>this.inputChange(e,'discount')} placeholder='مقدار تخفیف' />
+                                    <Form.Input className='ltr placeholder-rtl' readOnly={!this.state.isEnableEdit.discount} error={!this.state.isEnableEdit.discount} defaultValue={this.state.data.discount} label={()=>this.labelRender('تخفیف کلی','discount')}  type="number" onChange={(e)=>this.inputChange(e,'discount')} placeholder='مقدار تخفیف' />
                                 </Form.Group>
                                 <Message
                                     hidden={Object.keys(this.state.data.items).length > 0}
