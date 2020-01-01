@@ -36,6 +36,6 @@ urlpatterns = [
     url(r'^login/', LoginAPIView.as_view(), name='login'),
     url(r'^api/product-id/', ProductIdCreateApiView.as_view(), name='create-product-id'),
     url(r'^api/product-fields/', ProductFieldsOptionsView.as_view(), name='product-fields'),
-    url(r'^index/', TemplateView.as_view(template_name="customer/index.html"), name='client'),
+    url(r'^', TemplateView.as_view(template_name="customer/index.html"), name='client'),
     path('api/', include(router.urls)),
 ]
