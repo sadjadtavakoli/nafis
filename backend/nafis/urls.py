@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import TemplateView
 from rest_framework import routers
 
 from bill.views import BillsViewSet, BillItemViewSet, CustomerPaymentViewSet
@@ -35,5 +36,6 @@ urlpatterns = [
     url(r'^login/', LoginAPIView.as_view(), name='login'),
     url(r'^api/product-id/', ProductIdCreateApiView.as_view(), name='create-product-id'),
     url(r'^api/product-fields/', ProductFieldsOptionsView.as_view(), name='product-fields'),
+    url(r'^client/', TemplateView.as_view(template_name="customer/client.html"), name='client'),
     path('api/', include(router.urls)),
 ]
