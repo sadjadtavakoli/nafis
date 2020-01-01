@@ -138,6 +138,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static')
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media')
 
 BILL_STATUS = (
@@ -172,3 +173,4 @@ PRODUCT_DESIGN_CHOICES = [
     , "پرنس دوگال", "جناقی (7ی 8ی)", "پلیسه", "هاوایی", "خالدار ریز", "خامه دوزی", "پیچازی", "لمه دار"
     , "برگ", "هندسی", "طرح سنتی", "گل درشت"]
 POINT_PERCENTAGE = 0
+
