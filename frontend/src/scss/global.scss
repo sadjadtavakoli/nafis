@@ -75,6 +75,13 @@
 .text-right{
   text-align: right !important;
 }
+.field{
+  &.text-right{
+    input{
+      text-align: right !important;
+    }
+  }
+}
 .text-center{
   text-align: center !important;
 }
