@@ -121,7 +121,7 @@ class AddBillModal extends React.Component {
         if (this.state.itemsDataSheet)
             preSumArray = this.state.itemsDataSheet.map((item) => {
                 console.log(item)
-                return Number(item.selling_price)
+                return Number(item.selling_price * item.amount)
             });
          preSumArray.forEach((item) => { sum += item })
         this.setState({sumProductTotalPrice:sum}) 

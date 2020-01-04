@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Table, Pagination, Grid, Search } from 'semantic-ui-react'
+import { Table, Pagination, Grid, Search,Button,Icon } from 'semantic-ui-react'
 import { getProductsList,getProductsByCode } from '../../actions/DepositoryActions'
 import { digitToComma } from '../utils/numberUtils';
 import LoadingBar from '../utils/loadingBar'
@@ -85,8 +85,9 @@ class ProductTable extends React.Component {
                         <Table.Row>
                         <Table.HeaderCell colSpan='10' className="rtl text-right">
                             <Grid>
-                                <Grid.Column width={this.state.width < 768 ? 16: 2} style={{display:'flex',alignItems:'center'}}>
-                                    <span>لیست محصولات موجود</span>
+                                <Grid.Column width={this.state.width < 768 ? 16: 3} style={{display:'flex',alignItems:'center',paddingLeft: 0}}>
+                                        <span>لیست محصولات موجود</span>
+                                        <Button icon onClick={() => this.getProductsList(this.state.activePage)}><Icon name='repeat' /></Button>
                                 </Grid.Column>
                                     <Grid.Column width={this.state.width < 768 ? 16: 6}>
                             {this.searchBar()}

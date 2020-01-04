@@ -9,6 +9,7 @@ import {
 
 import { standardTimeToJalaali } from "../utils/jalaaliUtils";
 import LoadingBar from '../utils/loadingBar'
+import NotFound from '../utils/notFound'
 import '../../scss/bootstrap.scss';
 const TOMAN = "تومان";
 
@@ -16,12 +17,13 @@ class DailyReport extends React.Component {
   state = {
     receipt: {},
     bill: {},
-    dailyReport:{}
+    dailyReport: {},
+    firstTime:true
   };
   componentDidMount() {
     this.props.getDailyReport().then((res) => {
       console.log(this.props.dailyReport);
-      this.setState({ dailyReport: this.props.dailyReport });
+      this.setState({ firstTime:false,dailyReport: this.props.dailyReport });
     })
   }
   bills = () => {
@@ -30,8 +32,9 @@ class DailyReport extends React.Component {
           <Table.Row>
             <Table.HeaderCell className="text-right" colSpan='12'>فاکتور های بسته شده</Table.HeaderCell>
           </Table.Row>
-        </Table.Header>
-        {this.state.dailyReport.bills_data && this.state.dailyReport.bills_data.length > 0 ? (
+      </Table.Header>
+      {this.prefetchModule()}
+      {this.state.dailyReport.bills_data && this.state.dailyReport.bills_data.length > 0 ? (
       <Table.Header>
           <Table.Row>
             <Table.HeaderCell className="text-center">عملیات</Table.HeaderCell>
@@ -47,7 +50,7 @@ class DailyReport extends React.Component {
             <Table.HeaderCell className="text-center">شماره فاکتور</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
-        ) : <LoadingBar/>}
+        ) : null}
           
       <Table.Body>
         {this.state.dailyReport.bills_data?this.state.dailyReport.bills_data.map((item) => {
@@ -73,6 +76,17 @@ class DailyReport extends React.Component {
         </Table.Body>
       </Table>)
   }
+  prefetchModule = () => {
+    console.log('conditional',this.state.firstTime,!this.state.dailyReport.total_price && !this.state.firstTime)
+    
+    if (this.state.firstTime) {
+      return <LoadingBar />
+    } else if (!this.state.dailyReport.total_price && !this.state.firstTime) {
+      return <NotFound />
+    } else {
+      return null
+    }
+  }
   dailyReport = () => {
     return (<Table celled striped>
         <Table.Header>
@@ -80,6 +94,7 @@ class DailyReport extends React.Component {
             <Table.HeaderCell className="text-right" colSpan='12'>گزارش روزانه</Table.HeaderCell>
           </Table.Row>
       </Table.Header>
+      {this.prefetchModule()}
       {this.state.dailyReport.total_price ? (
         <React.Fragment>
         <Table.Header>
@@ -115,7 +130,7 @@ class DailyReport extends React.Component {
           </Table.Row>
         </Table.Body>
         </React.Fragment>
-      ):<LoadingBar/>}
+      ):null}
     
       </Table>)
   }

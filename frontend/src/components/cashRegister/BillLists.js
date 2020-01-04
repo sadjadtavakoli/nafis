@@ -11,7 +11,8 @@ const BillLists = ({
   togglePreviewModal,
   setDoneDialog,
   setDeleteDialog,
-  currentUser
+  currentUser,
+  refetch
 }) => {
   return (
     <Table className="rtl">
@@ -19,6 +20,7 @@ const BillLists = ({
         <Table.Row>
           <Table.HeaderCell colSpan="10" className="rtl text-right">
             {title}
+            <Button icon onClick={refetch}><Icon name='repeat' /></Button>
           </Table.HeaderCell>
         </Table.Row>
         <Table.Row>

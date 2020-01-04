@@ -46,7 +46,8 @@ const CashRegister = ({
       {loading ? (
         <LoadingBar />
       ) : (
-        <BillLists
+          <BillLists
+          refetch={getAllActiveBills}
           title="لیست فاکتور‌های فعال"
           headerTitles={[
             "موبایل خریدار",
