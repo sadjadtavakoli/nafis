@@ -25,6 +25,7 @@ class NewBillPopup extends React.Component {
         this.setState({ [inputName]: value }, () => {
             
             if (inputName === 'product') {
+                console.log(this.state.product)
                 this.handleSearchChange(this.state.product)
             }
                 if (this.state.amount <= Number(this.state.productData.stock_amount)){
@@ -32,13 +33,14 @@ class NewBillPopup extends React.Component {
                 } else {
                     this.setState({ disabled: true });
                 }
-        });
+            });
             
-    }
-    toggleIsEndOfRoll = () => {
-        this.setState((prevState)=>({end_of_roll: !prevState.end_of_roll,end_of_roll_amount:''}))
-    }
-    submitForm = () => {
+        }
+        toggleIsEndOfRoll = () => {
+            this.setState((prevState)=>({end_of_roll: !prevState.end_of_roll,end_of_roll_amount:''}))
+        }
+        submitForm = () => {
+            console.log('submitForm',this.props.pk)
         if (String(this.state.product).length < 1 || String(this.state.amount).length < 1 || String(this.state.discount).length < 1 || (this.state.end_of_roll && this.state.end_of_roll_amount.length < 1)) {
             alert('فرم افزودن آیتم معتبر نبوده است');
         } else {
@@ -76,7 +78,7 @@ class NewBillPopup extends React.Component {
                             notFound: false,
                             productData: this.props.productsList
                         }, () => {
-                            // console.log(this.state.productData);
+                            console.log('this.state.productData',this.state.productData);
                         });
                     }).catch(() => {
                         this.setState({ notFound: true, disabled: true, productData: {} })

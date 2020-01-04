@@ -3,43 +3,42 @@ import { connect } from "react-redux";
 import { enToFa,priceToPersian, digitToComma } from '../utils/numberUtils'
 import { setNewBill, deleteItem, getCustomerByPhoneNumber,updateBill } from '../../actions/SaleActions';
 import { Button, Modal, Divider, Header, Segment, Form, Card, Popup, Loader, Image, Icon, Message, Label } from 'semantic-ui-react'
-import {toastr} from 'react-redux-toastr'
+import { reverseObject } from '../utils/objectUtils'
 import NewBillPopup from './newBillPopup'
+const INITIAL_STATE = {
+    sumProductTotalPrice: 0,
+    data: {},
+    isOpenAddItem: false,
+    formValidation: {
+    },
+    phone_number: '',
+    used_points: '',
+    branch: 1,
+    discount: 0,
+    branchOptions: [
+        { key: '1', value: '1', flag: 'ir', text: 'شعبه یک' },
+    ],
+    isEnableEdit: {
+        discount: false,
+        used_points: false,
+    },
+    customerData: {}
+};
 class ShowInformationModal extends React.Component {
     constructor(props) {
         super(props);
     }
     componentWillReceiveProps() {
-        this.setState({ data: this.props.data }, () => {
-            if (this.state.data.buyer) {
-                this.getCustomerData(this.state.data.buyer.phone_number)
-                this.sumProductTotalPrice();
-            }
-        })
+        if (!this.state.data.items) {
+            this.setState({ data: this.props.data,discount:this.props.data.discount }, () => {
+                if (this.state.data.buyer) {
+                    this.getCustomerData(this.state.data.buyer.phone_number)
+                    this.sumProductTotalPrice();
+                }
+            })
+        }
     }
-    componentDidMount() {
-    //    this.setState({data:this.props.data})
-        // toastr.success('asdf','sadfsdfdfssdf')
-    }
-    state = {
-        sumProductTotalPrice:0,
-        data: {},
-        isOpenAddItem: false,
-        formValidation: {
-        },
-        phone_number: '',
-        used_points: '',
-        branch: 1,
-        discount: 0,
-        branchOptions: [
-            { key: '1', value: '1', flag: 'ir', text: 'شعبه یک' },
-        ],
-        isEnableEdit: {
-            discount: false,
-            used_points: false,
-        },
-        customerData:{}
-    };
+    state = INITIAL_STATE;
     toggleAddItemPopup = () => {
         this.setState((prevState)=>({isOpenAddItem: !prevState.isOpenAddItem}))
     }
@@ -125,6 +124,7 @@ class ShowInformationModal extends React.Component {
             }
         } else if(inputName === 'discount'){
             this.props.updateBill(this.state.data.pk, { discount: Number(this.state.discount) }).then((res) => {
+                this.setState({discount:Number(this.state.discount)})
                 this.props.refetch();
             })
         }
@@ -163,8 +163,8 @@ class ShowInformationModal extends React.Component {
         this.toggleAddItemPopup();
     };
     refetchModalData = (response) => {
-        // console.log('response', response)
-        this.setState({ data: response.data }, () => {
+        console.log('response', response)
+        this.setState({ ...this.state, data:response.data }, () => {
                 this.sumProductTotalPrice()
         })
     };
@@ -179,10 +179,8 @@ class ShowInformationModal extends React.Component {
         this.setState({sumProductTotalPrice:sum}) 
     }
     render() {
-
         return Object.keys(this.state.data).length > 0?(
             <div >
-                {console.log(this.state.data)}
                 <Modal id="add-bill"
                     closeOnDimmerClick={false}
                     dimmer='blurring'
@@ -202,24 +200,19 @@ class ShowInformationModal extends React.Component {
                                     <Form.Dropdown className='ltr placeholder-rtl text-right' readOnly defaultValue={'1'} placeholder='شعبه' selection label={'شعبه'} options={this.state.branchOptions} />
                                     <Form.Input className='ltr placeholder-rtl' readOnly={!this.state.isEnableEdit.discount} error={!this.state.isEnableEdit.discount} defaultValue={this.state.data.discount} label={()=>this.labelRender('تخفیف کلی','discount')}  type="number" onChange={(e)=>this.inputChange(e,'discount')} placeholder='مقدار تخفیف' />
                                 </Form.Group>
-                                <Message
-                                    hidden={Object.keys(this.state.data.items).length > 0}
+                                <Form.Group widths={2}>
+                                    <Form.Input className='invisible' hidden={true} />
+                                    <Form.Input className='rtl placeholder-rtl text-right' readOnly={true} label="قیمت نهایی فاکتور" value={`${digitToComma(this.state.sumProductTotalPrice - this.state.discount)} تومان`} type="text" />
+                                </Form.Group>
+                                {this.state.data.items && this.state.data.items.length > 0 ? null :
+                                    <Message
                                     icon='inbox'
                                     color='red'
                                     header='قلمی در این فاکتور موجود نمی باشد'
                                     content={<span>در راستای جلوگیری از خطای انسانی در فرآیند ثبت و ویرایش، جهت افزودن آیتم،توصیه میشود در صفحه‌ی قبلی بروی <b>افزودن آیتم جدید</b> کلیک نمایید</span>}
-                                />
-                                <Segment hidden={Object.keys(this.state.data.items).length === 0}>
-                                    <Header as='h3' floated='right'>
-                                        <span>اقلام فاکتور</span> <Label className="norm-latin"><span className="yekan">قیمت نهایی فاکتور:&nbsp;</span><span>{(digitToComma(this.state.sumProductTotalPrice))}</span><span className="yekan">&nbsp;تومان</span></Label>
-                                    </Header>
-                                    
-                                    <Divider clearing />
-                                    {this.state.data.items.map((item, index) => {
-                                        return this.itemsRender(item,index)
-                                    })}
-                                </Segment>
-                                <div className="text-center">
+                                    />
+                                }
+                                 <div className="text-center">
                                         <Popup
                                             style={{top:-35}}
                                         content={<NewBillPopup onClose={this.toggleAddItemPopup} phoneNumber={this.state.data.buyer.phone_number} refetch={this.refetchModalData} pk={this.state.data.pk} onSubmit={this.submitItemPopup}/>}
@@ -230,6 +223,17 @@ class ShowInformationModal extends React.Component {
                                             trigger={<Button circular onClick={() => {this.toggleAddItemPopup(this.state.isOpenAddItem) }} color='green' size='huge' icon='add' />}
                                         />
                                 </div>
+                                <Segment hidden={this.state.data.items && this.state.data.items.length <= 0}>
+                                    <Header as='h3' floated='right'>
+                                        <span>اقلام فاکتور</span> <Label className="norm-latin"><span className="yekan">مبلغ کل اقلام:&nbsp;</span><span>{digitToComma(this.state.sumProductTotalPrice)}</span><span className="yekan">&nbsp;تومان</span></Label>
+                                    </Header>
+                                    
+                                    <Divider clearing />
+                                    {this.state.data.items && this.state.data.items.map((item, index) => {
+                                        return this.itemsRender(item,index)
+                                    })}
+                                </Segment>
+                               
 
                                 
                             </Form>

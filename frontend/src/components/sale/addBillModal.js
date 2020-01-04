@@ -2,10 +2,11 @@ import React from "react";
 import { connect } from "react-redux";
 import NewBillPopup from './newBillPopup'
 import { setNewBill,getCustomerByPhoneNumber } from '../../actions/SaleActions'
-import { enToFa, priceToPersian } from '../utils/numberUtils'
+import { enToFa, priceToPersian,digitToComma } from '../utils/numberUtils'
 import { Button, Modal, Divider, Header, Segment, Form, Card, Popup, Icon, Message, Label } from 'semantic-ui-react'
-import {toastr} from 'react-redux-toastr'
+import { toastr } from 'react-redux-toastr'
 const INITIAL_STATE = {
+    sumProductTotalPrice: 0,
     isOpenAddItem: false,
     formValidation: {
         phone_number: false,
@@ -45,7 +46,9 @@ class AddBillModal extends React.Component {
                     itemsDOM.splice(i, 1); 
                 }
             };
-            this.setState({ itemsDataSheet, itemsDOM });
+            this.setState({ itemsDataSheet, itemsDOM }, () => {
+                this.sumProductTotalPrice()
+            });
         }
        
     }
@@ -83,11 +86,12 @@ class AddBillModal extends React.Component {
         </Card>);
         this.setState(
             {
-                itemsDOM: [...this.state.itemsDOM, itemDOM],
-                itemsDataSheet: [...this.state.itemsDataSheet, data],
+                itemsDOM: [itemDOM,...this.state.itemsDOM],
+                itemsDataSheet: [data,...this.state.itemsDataSheet ],
                 formValidation:{...this.state.formValidation,items:false}
             }
-            , () => {
+        , () => {
+                this.sumProductTotalPrice()
         });
         this.toggleAddItemPopup();
     }
@@ -110,6 +114,17 @@ class AddBillModal extends React.Component {
                 }
             };
         });
+    }
+     sumProductTotalPrice = (item) => {
+        let preSumArray = [];
+        let sum = 0;
+        if (this.state.itemsDataSheet)
+            preSumArray = this.state.itemsDataSheet.map((item) => {
+                console.log(item)
+                return Number(item.selling_price * item.amount)
+            });
+         preSumArray.forEach((item) => { sum += item })
+        this.setState({sumProductTotalPrice:sum}) 
     }
     formSubmitHandler = () => {
         this.setState({ formValidation: { ...this.state.formValidation, discount: false, phone_number: false,items:false } }, () => {
@@ -165,7 +180,7 @@ class AddBillModal extends React.Component {
                                 </Form.Group>
                                 <Segment >
                                     <Header as='h3' floated='right'>
-                                    <span>اقلام</span>
+                                    <span>اقلام</span> <Label className="norm-latin"><span className="yekan">مبلغ کل اقلام:&nbsp;</span><span>{digitToComma(this.state.sumProductTotalPrice)}</span><span className="yekan">&nbsp;تومان</span></Label>
                                     </Header>
                                     
                                     <Divider clearing />
@@ -175,9 +190,6 @@ class AddBillModal extends React.Component {
                                         جهت تکمیل فرم، فاکتور شما حتما باید حاوی حداقل یک قلم باشد
                                         </p>
                                     </Message>
-                                    {this.state.itemsDOM.map((item,index) => {
-                                        return(<Card.Group key={index}>{item}</Card.Group>)
-                                    })}
                                     <div className="text-center padded">
                                         <Popup
                                             style={{top:-70}}
@@ -188,18 +200,22 @@ class AddBillModal extends React.Component {
                                             wide='very'
                                             trigger={<Button circular onClick={() => {this.toggleAddItemPopup(this.state.isOpenAddItem) }} color='green' size='huge' icon='add' />}
                                         />
-                                        
                                     </div>
+                                    {this.state.itemsDOM.map((item,index) => {
+                                        return(<Card.Group key={index}>{item}</Card.Group>)
+                                    })}
+                                    
                                 </Segment>
-                                  <Form.Group widths={1}>
+                                  <Form.Group widths={2}>
                                     <Form.Input className='ltr placeholder-rtl' label='تخفیف کلی' type="number"  error={this.state.formValidation.discount} onChange={(e)=>this.inputChange(e,'discount')} placeholder='مقدار تخفیف' />
+                                    <Form.Input className='rtl placeholder-rtl text-right' label='قیمت نهایی فاکتور' type="text" readOnly value={`${digitToComma(this.state.sumProductTotalPrice - this.state.discount)} تومان`}/>
                                 </Form.Group>
                             </Form>
                         </Modal.Description>
                     </Modal.Content>
 
                     <Modal.Actions>
-                        <Button color='black' onClick={() => { this.props.onClose();this.setState({isOpenAddItem:false}) }}><span>بستن</span></Button>
+                        <Button color='black' onClick={() => { this.props.onClose(); this.setState(INITIAL_STATE) }}><span>بستن</span></Button>
                         <Button className="yekan"
                             positive
                             icon='checkmark'
