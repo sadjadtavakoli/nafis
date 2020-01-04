@@ -173,7 +173,7 @@ class ShowInformationModal extends React.Component {
         let sum = 0;
         if (this.state.data.items)
             preSumArray = this.state.data.items.map((item) => {
-                return Number(item.price)
+                return Number(item.final_price)
             });
         preSumArray.forEach((item)=>{sum+=item})
         this.setState({sumProductTotalPrice:sum}) 
@@ -202,7 +202,7 @@ class ShowInformationModal extends React.Component {
                                 </Form.Group>
                                 <Form.Group widths={2}>
                                     <Form.Input className='invisible' hidden={true} />
-                                    <Form.Input className='rtl placeholder-rtl text-right' readOnly={true} label="قیمت نهایی فاکتور" value={`${digitToComma(this.state.sumProductTotalPrice - this.state.discount)} تومان`} type="text" />
+                                    <Form.Input className='rtl placeholder-rtl text-right' readOnly={true} label="قیمت نهایی فاکتور" value={`${digitToComma(Math.round(this.state.sumProductTotalPrice - this.state.discount))} تومان`} type="text" />
                                 </Form.Group>
                                 {this.state.data.items && this.state.data.items.length > 0 ? null :
                                     <Message
@@ -225,7 +225,7 @@ class ShowInformationModal extends React.Component {
                                 </div>
                                 <Segment hidden={this.state.data.items && this.state.data.items.length <= 0}>
                                     <Header as='h3' floated='right'>
-                                        <span>اقلام فاکتور</span> <Label className="norm-latin"><span className="yekan">مبلغ کل اقلام:&nbsp;</span><span>{digitToComma(this.state.sumProductTotalPrice)}</span><span className="yekan">&nbsp;تومان</span></Label>
+                                        <span>اقلام فاکتور</span> <Label className="norm-latin"><span className="yekan">مبلغ کل اقلام:&nbsp;</span><span>{digitToComma(Math.round(this.state.sumProductTotalPrice))}</span><span className="yekan">&nbsp;تومان</span></Label>
                                     </Header>
                                     
                                     <Divider clearing />
@@ -241,7 +241,7 @@ class ShowInformationModal extends React.Component {
                     </Modal.Content>
 
                     <Modal.Actions>
-                        <Button color='black' onClick={this.props.onClose}><span>بستن</span></Button>
+                        <Button color='black' onClick={() => { this.props.onClose();this.setState(INITIAL_STATE)}}><span>بستن</span></Button>
                     </Modal.Actions>
                 </Modal>
                     
