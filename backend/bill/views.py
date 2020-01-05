@@ -31,7 +31,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
         bill_items_data = []
         for item in bill.items.all():
             bill_items_data.append({'product': item.product, 'amount': item.amount})
-        if bill.seller.username != request.user.username or bill.status != "active":
+        if (bill.seller.username != request.user.username and bill.seller.job != "admin") or bill.status != "active":
             raise PermissionDenied
         if len(bill.payments.all()):
             raise PermissionDenied(
