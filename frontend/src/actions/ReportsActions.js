@@ -1,22 +1,28 @@
-import { GET_INTERVAL_REPORTS, GET_CHARTS_REPORT } from "./types";
+import { GET_INTERVAL_REPORTS, GET_CHARTS_REPORT, GET_DATE_RANGE } from "./types";
 import server from "../apis/server";
 
-export const getIntervalReports = (page=1) => async dispatch => {
+export const getIntervalReports = (page=1, start_date, end_date) => async dispatch => {
     const response = await server(localStorage.getItem("token")).get("/bills/interval-report/", {
       params: {
-        start_date: "2019-10-10",
-        end_date: "2020-12-12"
+        page,
+        start_date,
+        end_date
       }
     });
     dispatch({ type: GET_INTERVAL_REPORTS, payload: response.data });
 }
 
-export const getChartsReport = (page=1) => async dispatch => {
+export const getChartsReport = (page=1, start_date, end_date) => async dispatch => {
   const response = await server(localStorage.getItem("token")).get("/bills/charts/", {
     params: {
-      start_date: "2019-10-9",
-      end_date: "2020-12-20"
+      page,
+      start_date,
+      end_date
     }
   });
   dispatch({ type: GET_CHARTS_REPORT, payload: response.data });
 }
+
+// export const getDateRange = () => {
+//   dispatch({ type: GET_DATE_RANGE })
+// }

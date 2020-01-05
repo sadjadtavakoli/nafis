@@ -159,7 +159,7 @@ label{
   
 }
 
-// REPORT STYLE SHEET\
+// REPORT STYLE SHEET \\
 
 .table-border-left {
   border-left: 1px solid #ddd !important;
@@ -175,12 +175,10 @@ label{
   direction: ltr;
 }
 
-.grid-right {
-  float: right;
-  text-align: right;
-  direction: rtl;
-}
-
 .grid-label-rabon {
   float: left;
+}
+
+.date-picker-icon:hover {
+  cursor: pointer;
 }

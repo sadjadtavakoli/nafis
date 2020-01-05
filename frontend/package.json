@@ -10,6 +10,7 @@
     "react": "^16.12.0",
     "react-chartjs-2": "^2.8.0",
     "react-dom": "^16.12.0",
+    "react-modern-calendar-datepicker": "^2.0.0",
     "react-redux": "^7.1.3",
     "react-redux-toastr": "^7.6.4",
     "react-router-dom": "^5.1.2",
