@@ -75,7 +75,7 @@ class AddBillModal extends React.Component {
                         <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={data.product} label='کد محصول' placeholder='' />
                         <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={priceToPersian(data.selling_price)} label='قیمت واحد' placeholder='' />
                         <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={data.amount} label={`مقدار(متر)`} placeholder='' />
-                        <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={data.discount} label='تخفیف' placeholder='' />
+                        <Form.Input className='ltr placeholder-rtl' readOnly fluid defaultValue={priceToPersian(data.discount)} label='تخفیف' placeholder='' />
                     </Form.Group>
                     <Form.Group widths='3'>
                         <Form.Checkbox toggle className='ltr placeholder-rtl' readOnly checked={data.end_of_roll} label='ته طاقه؟' />
@@ -121,7 +121,7 @@ class AddBillModal extends React.Component {
         if (this.state.itemsDataSheet)
             preSumArray = this.state.itemsDataSheet.map((item) => {
                 console.log(item)
-                return Number(item.selling_price * item.amount)
+                return Number((item.selling_price * item.amount) - (item.discount * item.amount))
             });
          preSumArray.forEach((item) => { sum += item })
         this.setState({sumProductTotalPrice:sum}) 
@@ -180,7 +180,7 @@ class AddBillModal extends React.Component {
                                 </Form.Group>
                                 <Segment >
                                     <Header as='h3' floated='right'>
-                                    <span>اقلام</span> <Label className="norm-latin"><span className="yekan">مبلغ کل اقلام:&nbsp;</span><span>{digitToComma(this.state.sumProductTotalPrice)}</span><span className="yekan">&nbsp;تومان</span></Label>
+                                    <span>اقلام</span> <Label className="norm-latin"><span className="yekan">مبلغ کل اقلام:&nbsp;</span><span>{digitToComma(Math.round(this.state.sumProductTotalPrice))}</span><span className="yekan">&nbsp;تومان</span></Label>
                                     </Header>
                                     
                                     <Divider clearing />
@@ -208,14 +208,14 @@ class AddBillModal extends React.Component {
                                 </Segment>
                                   <Form.Group widths={2}>
                                     <Form.Input className='ltr placeholder-rtl' label='تخفیف کلی' type="number"  error={this.state.formValidation.discount} onChange={(e)=>this.inputChange(e,'discount')} placeholder='مقدار تخفیف' />
-                                    <Form.Input className='rtl placeholder-rtl text-right' label='قیمت نهایی فاکتور' type="text" readOnly value={`${digitToComma(this.state.sumProductTotalPrice - this.state.discount)} تومان`}/>
+                                    <Form.Input className='rtl placeholder-rtl text-right' label='قیمت نهایی فاکتور' type="text" readOnly value={`${digitToComma(Math.round(this.state.sumProductTotalPrice - this.state.discount))} تومان`}/>
                                 </Form.Group>
                             </Form>
                         </Modal.Description>
                     </Modal.Content>
 
                     <Modal.Actions>
-                        <Button color='black' onClick={() => { this.props.onClose(); this.setState(INITIAL_STATE) }}><span>بستن</span></Button>
+                        <Button color='black' onClick={() => { this.props.onClose(); this.setState(INITIAL_STATE, () => { console.log(this.state)}) }}><span>بستن</span></Button>
                         <Button className="yekan"
                             positive
                             icon='checkmark'
