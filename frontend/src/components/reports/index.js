@@ -513,7 +513,7 @@ class Reports extends React.Component {
             </form>
           </Segment>
 
-          <Table celled className="rtl text-right yekan">
+          <Table celled className="rtl text-center yekan">
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell colSpan="12" className="rtl text-right">
