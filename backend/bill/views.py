@@ -35,6 +35,8 @@ class BillsViewSet(NafisBase, ModelViewSet):
             staff = Staff.objects.get(username=request.user.username)
             if staff.job != "admin":
                 raise PermissionDenied
+                # TODO permissionDenied for who except "admin" wants to delete a bill
+               
         if len(bill.payments.all()):
             raise PermissionDenied(
                 detail="نمی‌توانید فاکتوری را که پرداخت دارد حذف کنید، ابتدا پرداخت‌ها"
@@ -58,7 +60,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
         queryset = Bill.objects.filter(status='active').order_by('-pk')
         staff = Staff.objects.get(username=self.request.user.username)
         if staff.job == "salesperson":
-            queryset.filter(seller=staff)
+            queryset = queryset.filter(seller=staff)
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
