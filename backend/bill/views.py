@@ -56,7 +56,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
         queryset = Bill.objects.filter(status='active').order_by('-pk')
         staff = Staff.objects.get(username=self.request.user.username)
         if staff.job == "salesperson":
-            queryset.filter(buyer=staff)
+            queryset.filter(seller=staff)
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
