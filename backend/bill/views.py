@@ -6,6 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError, PermissionDenied
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from django.utils import timezone
 
 from bill.models import Bill, BillItem, CustomerPayment, CustomerCheque
 from bill.permissions import LoginRequired, CloseBillPermission
@@ -89,22 +90,22 @@ class BillsViewSet(NafisBase, ModelViewSet):
             card_amount = self.request.data.get('card_amount', 0)
             if cash_amount:
                 payment_type = "cash"
-                CustomerPayment.objects.create(create_date=datetime.now(), amount=float(cash_amount),
+                CustomerPayment.objects.create(create_date=timezone.localtime(), amount=float(cash_amount),
                                                bill=bill,
                                                type=payment_type)
             if card_amount:
                 payment_type = "card"
-                CustomerPayment.objects.create(create_date=datetime.now(),
+                CustomerPayment.objects.create(create_date=timezone.localtime(),
                                                amount=float(card_amount),
                                                bill=bill,
                                                type=payment_type)
         elif payment_type == "cheque":
             amount = self.request.data.get('amount')
-            payment = CustomerPayment.objects.create(create_date=datetime.now(),
+            payment = CustomerPayment.objects.create(create_date=timezone.localtime(),
                                                      amount=float(amount), bill=bill, type=payment_type)
             bank = self.request.data.get('bank')
             number = self.request.data.get('number')
-            issue_date = self.request.data.get('issue_date', datetime.now().date())
+            issue_date = self.request.data.get('issue_date', timezone.localtime().date())
             expiry_date = self.request.data.get('expiry_date')
             cheque = CustomerCheque.objects.create(number=int(number), bank=bank,
                                                    issue_date=issue_date,
@@ -122,7 +123,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
         instance = self.get_object()
         if instance.status == "active":
             instance.check_status()
-            instance.close_date = datetime.now()
+            instance.close_date = timezone.localtime()
             instance.save()
             send_message = self.request.data.get('send_message', True)
             if send_message:

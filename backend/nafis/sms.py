@@ -1,6 +1,5 @@
-from datetime import datetime
-
 import requests
+from django.utils import timezone
 from khayyam import JalaliDate
 
 
@@ -11,7 +10,7 @@ class SendSMS:
     def group_sms(self, message, mobiles, yourMessageIds):
         api = "http://niksms.com/fa/PublicApi/GroupSms"
         now = JalaliDate.today()
-        now_time = datetime.now()
+        now_time = timezone.localtime()
         post_data = {
             'username': self.username,
             'password': self.password,
@@ -31,7 +30,7 @@ def create_message(bill, ):
     items_part = ""
     for index, item in enumerate(bill.items.all()):
         items_part += "{}- {} | {} متر | {} تومان".format(index + 1, item.product.name, item.amount,
-                                                         item.final_price)
+                                                          item.final_price)
         items_part += '\n'
 
     template = "«فاکتور خرید پارچه نفیس»" \

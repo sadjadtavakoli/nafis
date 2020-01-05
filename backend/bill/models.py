@@ -1,10 +1,8 @@
-from datetime import datetime
-
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import DO_NOTHING, CASCADE, Sum
-
+from django.utils import timezone
 from customer.models import Customer, CustomerType
 from product.models import round_up, Color, FType, Material, Design
 
@@ -200,7 +198,7 @@ class Bill(models.Model):
                 profit = 0
                 for bill in bills:
                     profit += bill.profit
-                result[datetime.now().year - birth_date.year] = dict(profit=profit)
+                result[timezone.localtime().year - birth_date.year] = dict(profit=profit)
         return result
 
     @staticmethod
