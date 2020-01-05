@@ -31,8 +31,10 @@ class BillsViewSet(NafisBase, ModelViewSet):
         bill_items_data = []
         for item in bill.items.all():
             bill_items_data.append({'product': item.product, 'amount': item.amount})
-        if (bill.seller.username != request.user.username and bill.seller.job != "admin") or bill.status != "active":
-            raise PermissionDenied
+        if (bill.seller.username != request.user.username) or bill.status != "active":
+            staff = Staff.objects.get(username=request.user.username)
+            if staff.job != "admin":
+                raise PermissionDenied
         if len(bill.payments.all()):
             raise PermissionDenied(
                 detail="نمی‌توانید فاکتوری را که پرداخت دارد حذف کنید، ابتدا پرداخت‌ها"
