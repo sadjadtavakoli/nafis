@@ -26,10 +26,10 @@ class PrintFactor extends React.Component {
     if ( (params.id && params.print === 'print') || !((resivedData.pk) === params.id && !isEmptyObject(resivedData)))
       this.props.getBillREQUEST(params.id).then(res => {
         this.setState({ bill: res, receipt: res.items }, () => {
-          console.log(res)
-          // if (params.print === 'print'){
-          //   window.print();
-          // }
+          // console.log(res)
+          if (params.print === 'print'){
+            window.print();
+          }
         });
       });
     else this.setState({ bill: resivedData, receipt: resivedData.items });
