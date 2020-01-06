@@ -15,7 +15,7 @@ class NewBillPopup extends React.Component {
         amount: '',
         end_of_roll: false,
         discount: 0,
-        end_of_roll_amount: '',
+        end_of_roll_amount: 0,
         disabled: true,
         notFound: NaN,
         productData:{}

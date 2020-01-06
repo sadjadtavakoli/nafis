@@ -26,9 +26,10 @@ class PrintFactor extends React.Component {
     if ( (params.id && params.print === 'print') || !((resivedData.pk) === params.id && !isEmptyObject(resivedData)))
       this.props.getBillREQUEST(params.id).then(res => {
         this.setState({ bill: res, receipt: res.items }, () => {
-          if (params.print === 'print'){
-            window.print();
-          }
+          console.log(res)
+          // if (params.print === 'print'){
+          //   window.print();
+          // }
         });
       });
     else this.setState({ bill: resivedData, receipt: resivedData.items });
@@ -86,7 +87,7 @@ class PrintFactor extends React.Component {
               <span>شماره فاکتور:</span>
             </p>
             <p className="col-3 font-weight-bold p-1">
-              <span>{enToFa(this.state.bill.pk)}</span>
+              <span>{enToFa(this.state.bill.bill_code)}</span>
             </p>
 
             <p className="col-3 font-weight-bold p-1">
