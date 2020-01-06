@@ -12,7 +12,7 @@ import { getTodayJalaali, getNow } from "../utils/jalaaliUtils";
 import { isEmptyObject } from "../../utils/FunctionalUtils";
 import '../../scss/bootstrap.scss'
 const TOMAN = "تومان";
-
+const BORDER_BOTTOM = { borderBottom: '3px solid black' }
 class PrintFactor extends React.Component {
   state = {
     receipt: {},
@@ -46,8 +46,8 @@ class PrintFactor extends React.Component {
             <p className="d-flex align-items-center justify-content-center col-1 text-center font-weight-bold border-left-3 m-0 p-2">
               {enToFa(index + 1)}
             </p>
-            <p className="d-flex align-items-center justify-content-center col-3 text-center font-weight-bold border-left-3 m-0 py-2 px-0">
-              <small><b>{enToFa(item.product.name)}</b></small>
+            <p className="d-flex align-items-center justify-content-center col-3 text-center font-weight-bold border-left-3 m-0 py-0 px-0">
+                <small className="w-100"><b>{enToFa(item.product.name)}</b><hr class="m-0" style={BORDER_BOTTOM}/><b>{enToFa(item.product.pk)}</b></small>
             </p>
             <p className="d-flex align-items-center justify-content-center col text-center font-weight-bold border-left-3 m-0 p-2">
               {enToFa(item.amount)}
@@ -84,7 +84,7 @@ class PrintFactor extends React.Component {
           </div>
           <div className="row border-black border-radius-7 mb-2 rtl text-right p-2">
             <p className="col-3 font-weight-bold p-1">
-              <span>شماره فاکتور:</span>
+              <span>شماره‌فاکتور:</span>
             </p>
             <p className="col-3 font-weight-bold p-1">
               <span>{enToFa(this.state.bill.bill_code)}</span>
@@ -134,19 +134,19 @@ class PrintFactor extends React.Component {
             <p className="col-1 norm-latin text-center font-weight-bold border-left-3 m-0 py-2 px-0">
               <small><b>#</b></small>
             </p>
-            <p className="col-3 text-center font-weight-bold border-left-3 m-0 py-2 px-0">
-              <small><b>کالا</b></small>
+            <p className="col-3 text-center font-weight-bold border-left-3 m-0 py-0 px-0">
+                <small><b>شرح کالا</b><hr class="m-0" style={BORDER_BOTTOM}/><b>کد کالا</b></small>
             </p>
-            <p className="col text-center font-weight-bold border-left-3 m-0 py-2 px-0">
+            <p className="d-flex justify-content-center align-items-center col text-center font-weight-bold border-left-3 m-0 py-2 px-0">
               <small><b>مقدار</b></small>
             </p>
-            <p className="col text-center font-weight-bold border-left-3 m-0 py-2 px-0">
+            <p className="d-flex justify-content-center align-items-center col text-center font-weight-bold border-left-3 m-0 py-2 px-0">
               <small><b>مبلغ‌واحد</b></small>
             </p>
-            <p className="col text-center font-weight-bold border-left-3 m-0 py-2 px-0">
+            <p className="d-flex justify-content-center align-items-center col text-center font-weight-bold border-left-3 m-0 py-2 px-0">
               <small><b>تخفیف</b></small>
             </p>
-            <p className="col text-center font-weight-bold m-0 py-2 px-0">
+            <p className="d-flex justify-content-center align-items-center col text-center font-weight-bold m-0 py-2 px-0">
               <small><b>مبلغ‌خالص</b></small>
             </p>
           </div>
