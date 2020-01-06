@@ -90,22 +90,22 @@ class BillsViewSet(NafisBase, ModelViewSet):
             card_amount = self.request.data.get('card_amount', 0)
             if cash_amount:
                 payment_type = "cash"
-                CustomerPayment.objects.create(create_date=timezone.localtime(), amount=float(cash_amount),
+                CustomerPayment.objects.create(create_date=timezone.now(), amount=float(cash_amount),
                                                bill=bill,
                                                type=payment_type)
             if card_amount:
                 payment_type = "card"
-                CustomerPayment.objects.create(create_date=timezone.localtime(),
+                CustomerPayment.objects.create(create_date=timezone.now(),
                                                amount=float(card_amount),
                                                bill=bill,
                                                type=payment_type)
         elif payment_type == "cheque":
             amount = self.request.data.get('amount')
-            payment = CustomerPayment.objects.create(create_date=timezone.localtime(),
+            payment = CustomerPayment.objects.create(create_date=timezone.now(),
                                                      amount=float(amount), bill=bill, type=payment_type)
             bank = self.request.data.get('bank')
             number = self.request.data.get('number')
-            issue_date = self.request.data.get('issue_date', timezone.localtime().date())
+            issue_date = self.request.data.get('issue_date', timezone.now().date())
             expiry_date = self.request.data.get('expiry_date')
             cheque = CustomerCheque.objects.create(number=int(number), bank=bank,
                                                    issue_date=issue_date,
@@ -118,12 +118,13 @@ class BillsViewSet(NafisBase, ModelViewSet):
         data = BillSerializer(Bill.objects.get(pk=bill.pk)).data
         return Response(data, status=status.HTTP_201_CREATED)
 
-    @action(methods=['post'], detail=True, url_path='done', permission_classes=(CloseBillPermission,))
+    @action(methods=['post'], detail=True, url_path='done')
     def close_bill(self, request, **kwargs):
         instance = self.get_object()
         if instance.status == "active":
             instance.check_status()
-            instance.close_date = timezone.localtime()
+            print(timezone.now())
+            instance.close_date = timezone.now()
             instance.save()
             send_message = self.request.data.get('send_message', True)
             if send_message:

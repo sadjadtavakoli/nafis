@@ -10,7 +10,7 @@ class SendSMS:
     def group_sms(self, message, mobiles, yourMessageIds):
         api = "http://niksms.com/fa/PublicApi/GroupSms"
         now = JalaliDate.today()
-        now_time = timezone.localtime()
+        now_time = timezone.now()
         post_data = {
             'username': self.username,
             'password': self.password,
