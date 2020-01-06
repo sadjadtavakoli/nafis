@@ -70,7 +70,7 @@ class DailyReport extends React.Component {
             <Table.Cell className="text-center norm-latin" collapsing><span>{item.buyer.phone_number}</span></Table.Cell>
             <Table.Cell className="text-center norm-latin" collapsing><span>{item.branch && item.branch.name}</span></Table.Cell>
             <Table.Cell className="text-center norm-latin" collapsing><span>{item.seller.username}</span></Table.Cell>
-            <Table.Cell className="text-center norm-latin" collapsing><span>{item.pk}</span></Table.Cell>
+            <Table.Cell className="text-center norm-latin" collapsing><span>{item.bill_code}</span></Table.Cell>
           </Table.Row>);
         }):<React.Fragment></React.Fragment>}
         </Table.Body>
