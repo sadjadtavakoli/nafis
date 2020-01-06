@@ -17,7 +17,7 @@ class Bill(models.Model):
     used_points = models.IntegerField(default=0)
     branch = models.ForeignKey('branch.Branch', related_name='bills', on_delete=DO_NOTHING, blank=True, null=True)
     bill_image = models.ImageField(null=True, blank=True)
-    # bill_code = models.IntegerField(default=0)
+    bill_code = models.IntegerField(default=0)
 
     def check_status(self):
         if round(self.remaining_payment) > 5000:

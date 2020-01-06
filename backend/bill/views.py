@@ -118,7 +118,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
         data = BillSerializer(Bill.objects.get(pk=bill.pk)).data
         return Response(data, status=status.HTTP_201_CREATED)
 
-    @action(methods=['post'], detail=True, url_path='done')
+    @action(methods=['post'], detail=True, url_path='done', permission_classes=(CloseBillPermission,))
     def close_bill(self, request, **kwargs):
         instance = self.get_object()
         if instance.status == "active":
@@ -162,8 +162,8 @@ class BillsViewSet(NafisBase, ModelViewSet):
         seller = Staff.objects.get(username=self.request.user.username)
         discount = data.get('discount', 0)
         items = data.get('items')
-
-        bill = Bill.objects.create(buyer=buyer, seller=seller, discount=discount, branch=seller.branch)
+        bill_code = Bill.objects.filter(create_date__date=timezone.now().date()).count() + 1
+        bill = Bill.objects.create(buyer=buyer, seller=seller, discount=discount, branch=seller.branch, bill_code=bill_code)
 
         for item in items:
             product_code = item['product']
