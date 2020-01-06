@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from rest_framework.fields import SerializerMethodField
 
 from bill.models import Bill, BillItem, SupplierBill, SupplierBillItem, CustomerPayment, \
     OurPayment, CustomerCheque, OurCheque

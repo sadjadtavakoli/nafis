@@ -73,4 +73,5 @@ class FType(models.Model):
 
 
 class ProductId(models.Model):
+    is_used = models.BooleanField(default=False)
     pass

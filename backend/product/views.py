@@ -2,7 +2,7 @@ import ast
 import json
 
 from django.core.exceptions import ObjectDoesNotExist
-from rest_framework import mixins
+from rest_framework import mixins, status
 from rest_framework.decorators import action
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
@@ -36,6 +36,14 @@ class ProductViewSet(NafisBase, mixins.CreateModelMixin,
             return ProductDetailSerializer
         else:
             return ProductSerializer
+
+    def create(self, request, *args, **kwargs):
+        response = super(ProductViewSet, self).create(request, *args, **kwargs)
+        code = self.request.data['code']
+        product_id = ProductId.objects.get(pk=code)
+        product_id.is_used = True
+        product_id.save()
+        return response
 
     @action(methods=['GET'], detail=False, url_path="code")
     def get_product_using_code(self, request):
@@ -77,6 +85,16 @@ class ProductIdCreateApiView(NafisBase, CreateAPIView):
     serializer_class = ProductIdSerializer
     permission_classes = (LoginRequired,)
     queryset = ProductId.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        if not self.queryset.last().is_used:
+            instance = self.queryset.last()
+        else:
+            ProductId.objects.create()
+            instance = ProductId.objects.last()
+        serializer = ProductIdSerializer(instance)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class ProductFieldsOptionsView(NafisBase, APIView):

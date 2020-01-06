@@ -1,12 +1,12 @@
 from datetime import datetime
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError, PermissionDenied
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from django.utils import timezone
 
 from bill.models import Bill, BillItem, CustomerPayment, CustomerCheque
 from bill.permissions import LoginRequired, CloseBillPermission
@@ -37,7 +37,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
             if staff.job != "admin":
                 raise PermissionDenied
                 # TODO permissionDenied for who except "admin" wants to delete a bill
-               
+
         if len(bill.payments.all()):
             raise PermissionDenied(
                 detail="نمی‌توانید فاکتوری را که پرداخت دارد حذف کنید، ابتدا پرداخت‌ها"
@@ -163,7 +163,8 @@ class BillsViewSet(NafisBase, ModelViewSet):
         discount = data.get('discount', 0)
         items = data.get('items')
         bill_code = Bill.objects.filter(create_date__date=timezone.now().date()).count() + 1
-        bill = Bill.objects.create(buyer=buyer, seller=seller, discount=discount, branch=seller.branch, bill_code=bill_code)
+        bill = Bill.objects.create(buyer=buyer, seller=seller, discount=discount, branch=seller.branch,
+                                   bill_code=bill_code)
 
         for item in items:
             product_code = item['product']
