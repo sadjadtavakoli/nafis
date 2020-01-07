@@ -46,9 +46,7 @@ class SideBar extends React.Component {
     this.setState({ visible });
   };
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
-  componentWillReceiveProps(newProps) {
-    // console.log('new props in sidebar',newProps)
-  }
+
   render() {
     return (
       <div id="sidebar">
@@ -73,7 +71,10 @@ class SideBar extends React.Component {
                   this.state.userData.last_name}
               </Menu.Item>
               <Menu.Item style={{ paddingLeft: 0 }}>
-                <img src="http://uupload.ir/files/6dzr_business-user-account-png-image-min.png" />
+                <img
+                  src="http://uupload.ir/files/6dzr_business-user-account-png-image-min.png"
+                  alt="logo"
+                />
               </Menu.Item>
             </Menu.Menu>
           </Menu>

@@ -1,6 +1,5 @@
 import { GET_ACTIVE_BILL, ADD_BILL } from "./types";
 import server, { putServer } from "../apis/server";
-import axios from "axios";
 
 export const getActiveBill = (page = 1) => async dispatch => {
   const response = await server(

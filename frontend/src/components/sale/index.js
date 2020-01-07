@@ -24,9 +24,6 @@ const panes = [
   }
 ];
 class Sale extends React.Component {
-  constructor(props) {
-    super(props);
-  }
   componentDidMount() {
     this.props.getActiveBill();
   }
@@ -64,21 +61,21 @@ class Sale extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  // console.log(state)
-  return {
-    //     nextReceipt: state.receipts.nextReceipt,
-    //     currentUser: state.auth.currentUser
-    //       ? state.auth.currentUser
-    //       : localStorage.getItem("user")
-    //       ? localStorage.getItem("user")
-    //       : "",
-    //     type: state.auth.type
-    //       ? state.auth.type
-    //       : localStorage.getItem("type")
-    //       ? localStorage.getItem("type")
-    //       : ""
-  };
-};
+// const mapStateToProps = state => {
+// console.log(state)
+// return {
+//     nextReceipt: state.receipts.nextReceipt,
+//     currentUser: state.auth.currentUser
+//       ? state.auth.currentUser
+//       : localStorage.getItem("user")
+//       ? localStorage.getItem("user")
+//       : "",
+//     type: state.auth.type
+//       ? state.auth.type
+//       : localStorage.getItem("type")
+//       ? localStorage.getItem("type")
+//       : ""
+//   };
+// };
 
 export default connect(null, { getActiveBill })(Sale);
