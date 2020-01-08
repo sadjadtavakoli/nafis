@@ -75,7 +75,7 @@ class BillSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Bill
-        fields = ('pk', 'create_date', 'status', 'close_date', 'buyer', 'seller',
+        fields = ('pk', 'bill_code', 'create_date', 'status', 'close_date', 'buyer', 'seller',
                   'discount', 'used_points', 'branch', 'payments', 'items',
                   'bill_image', 'price', 'total_discount', 'buyer_special_discount',
                   'items_discount', 'final_price', 'paid', 'cheque_paid', 'cash_paid', 'card_paid',

@@ -220,6 +220,59 @@ class AddBillModal extends React.Component {
           });
           hasError = true;
         }
+    };
+    inputChange = (event, inputName) => {
+        this.setState({
+            [inputName]: event.target.value
+        }, () => {
+            if (inputName === 'phone_number') {
+                if (this.state.phone_number.length === 11) {
+                    this.getCustomerData(this.state.phone_number)
+                } else {
+                    this.setState({ customerData: {} })
+                }
+            };
+        });
+    }
+     sumProductTotalPrice = (item) => {
+        let preSumArray = [];
+        let sum = 0;
+        if (this.state.itemsDataSheet)
+            preSumArray = this.state.itemsDataSheet.map((item) => {
+                console.log(item)
+                let finalAmount = item.end_of_roll_amount ? item.end_of_roll_amount : item.amount;
+                return Number((item.selling_price * finalAmount) - (item.discount * finalAmount))
+            });
+         preSumArray.forEach((item) => { sum += item })
+        this.setState({sumProductTotalPrice:sum}) 
+    }
+    formSubmitHandler = () => {
+        this.setState({ formValidation: { ...this.state.formValidation, discount: false, phone_number: false,items:false } }, () => {
+            let hasError = false;
+            if (this.state.phone_number.length !== 11) {
+                this.setState({ formValidation: { ...this.state.formValidation, phone_number: true } });
+                hasError = true;
+            }
+          
+            if (this.state.discount.length < 1) {
+                this.setState({ formValidation: { ...this.state.formValidation, discount: true } });
+                hasError = true;
+            }
+            if (this.state.itemsDataSheet.length < 1) {
+                this.setState({ formValidation: { ...this.state.formValidation, items: true } });
+                hasError = true;
+            }
+            if (!hasError) {
+                const prepareData = {
+                    phone_number: this.state.phone_number,
+                    discount: this.state.discount,
+                    branch: this.state.branch,
+                    items: this.state.itemsDataSheet
+                }
+                this.props.setNewBill(prepareData).then(() => {
+                    this.setState(INITIAL_STATE);
+                    this.props.onClose();
+                    toastr.success('ثبت فاکتور جدید', 'فاکتور جدید با موفقیت ثبت شد');
 
         if (this.state.discount.length < 1) {
           this.setState({

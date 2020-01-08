@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError, PermissionDenied
@@ -31,8 +32,12 @@ class BillsViewSet(NafisBase, ModelViewSet):
         bill_items_data = []
         for item in bill.items.all():
             bill_items_data.append({'product': item.product, 'amount': item.amount})
-        if bill.seller.username != request.user.username or bill.status != "active":
-            raise PermissionDenied
+        if (bill.seller.username != request.user.username) or bill.status != "active":
+            staff = Staff.objects.get(username=request.user.username)
+            if staff.job != "admin":
+                raise PermissionDenied
+                # TODO permissionDenied for who except "admin" wants to delete a bill
+
         if len(bill.payments.all()):
             raise PermissionDenied(
                 detail="نمی‌توانید فاکتوری را که پرداخت دارد حذف کنید، ابتدا پرداخت‌ها"
@@ -56,7 +61,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
         queryset = Bill.objects.filter(status='active').order_by('-pk')
         staff = Staff.objects.get(username=self.request.user.username)
         if staff.job == "salesperson":
-            queryset.filter(buyer=staff)
+            queryset = queryset.filter(seller=staff)
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
@@ -85,22 +90,22 @@ class BillsViewSet(NafisBase, ModelViewSet):
             card_amount = self.request.data.get('card_amount', 0)
             if cash_amount:
                 payment_type = "cash"
-                CustomerPayment.objects.create(create_date=datetime.now(), amount=float(cash_amount),
+                CustomerPayment.objects.create(create_date=timezone.now(), amount=float(cash_amount),
                                                bill=bill,
                                                type=payment_type)
             if card_amount:
                 payment_type = "card"
-                CustomerPayment.objects.create(create_date=datetime.now(),
+                CustomerPayment.objects.create(create_date=timezone.now(),
                                                amount=float(card_amount),
                                                bill=bill,
                                                type=payment_type)
         elif payment_type == "cheque":
             amount = self.request.data.get('amount')
-            payment = CustomerPayment.objects.create(create_date=datetime.now(),
+            payment = CustomerPayment.objects.create(create_date=timezone.now(),
                                                      amount=float(amount), bill=bill, type=payment_type)
             bank = self.request.data.get('bank')
             number = self.request.data.get('number')
-            issue_date = self.request.data.get('issue_date', datetime.now().date())
+            issue_date = self.request.data.get('issue_date', timezone.now().date())
             expiry_date = self.request.data.get('expiry_date')
             cheque = CustomerCheque.objects.create(number=int(number), bank=bank,
                                                    issue_date=issue_date,
@@ -118,7 +123,8 @@ class BillsViewSet(NafisBase, ModelViewSet):
         instance = self.get_object()
         if instance.status == "active":
             instance.check_status()
-            instance.close_date = datetime.now()
+            print(timezone.now())
+            instance.close_date = timezone.now()
             instance.save()
             send_message = self.request.data.get('send_message', True)
             if send_message:
@@ -156,8 +162,9 @@ class BillsViewSet(NafisBase, ModelViewSet):
         seller = Staff.objects.get(username=self.request.user.username)
         discount = data.get('discount', 0)
         items = data.get('items')
-
-        bill = Bill.objects.create(buyer=buyer, seller=seller, discount=discount, branch=seller.branch)
+        bill_code = Bill.objects.filter(create_date__date=timezone.now().date()).count() + 1
+        bill = Bill.objects.create(buyer=buyer, seller=seller, discount=discount, branch=seller.branch,
+                                   bill_code=bill_code)
 
         for item in items:
             product_code = item['product']

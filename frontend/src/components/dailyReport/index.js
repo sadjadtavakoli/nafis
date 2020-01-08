@@ -116,7 +116,7 @@ class DailyReport extends React.Component {
                     <span>{item.seller.username}</span>
                   </Table.Cell>
                   <Table.Cell className="text-center norm-latin" collapsing>
-                    <span>{item.pk}</span>
+                    <span>{item.bill_code}</span>
                   </Table.Cell>
                 </Table.Row>
               );

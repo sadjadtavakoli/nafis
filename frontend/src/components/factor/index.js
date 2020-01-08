@@ -8,7 +8,7 @@ import { getTodayJalaali, getNow } from "../utils/jalaaliUtils";
 import { isEmptyObject } from "../../utils/FunctionalUtils";
 import "../../scss/bootstrap.scss";
 const TOMAN = "تومان";
-
+const BORDER_BOTTOM = { borderBottom: "3px solid black" };
 class PrintFactor extends React.Component {
   state = {
     receipt: {},
@@ -25,6 +25,7 @@ class PrintFactor extends React.Component {
     )
       this.props.getBillREQUEST(params.id).then(res => {
         this.setState({ bill: res, receipt: res.items }, () => {
+          // console.log(res)
           if (params.print === "print") {
             window.print();
           }
@@ -44,9 +45,11 @@ class PrintFactor extends React.Component {
             <p className="d-flex align-items-center justify-content-center col-1 text-center font-weight-bold border-left-3 m-0 p-2">
               {enToFa(index + 1)}
             </p>
-            <p className="d-flex align-items-center justify-content-center col-3 text-center font-weight-bold border-left-3 m-0 py-2 px-0">
-              <small>
+            <p className="d-flex align-items-center justify-content-center col-3 text-center font-weight-bold border-left-3 m-0 py-0 px-0">
+              <small className="w-100">
                 <b>{enToFa(item.product.name)}</b>
+                <hr class="m-0" style={BORDER_BOTTOM} />
+                <b>{enToFa(item.product.pk)}</b>
               </small>
             </p>
             <p className="d-flex align-items-center justify-content-center col text-center font-weight-bold border-left-3 m-0 p-2">
@@ -87,10 +90,17 @@ class PrintFactor extends React.Component {
             </div>
             <div className="row border-black border-radius-7 mb-2 rtl text-right p-2">
               <p className="col-3 font-weight-bold p-1">
-                <span>شماره فاکتور:</span>
+                <span>شماره‌فاکتور:</span>
               </p>
               <p className="col-3 font-weight-bold p-1">
-                <span>{enToFa(this.state.bill.pk)}</span>
+                <span>{enToFa(this.state.bill.bill_code)}</span>
+              </p>
+
+              <p className="col-3 font-weight-bold p-1">
+                <span>شماره نهایی:</span>
+              </p>
+              <p className="col-3 font-weight-bold p-1">
+                <span>--</span>
               </p>
 
               <p className="col-3 font-weight-bold p-1">
@@ -114,15 +124,6 @@ class PrintFactor extends React.Component {
               </p>
 
               <p className="col-3 font-weight-bold p-1">
-                <span>کد مشترک:</span>
-              </p>
-              <p className="col-3 font-weight-bold p-1">
-                <span>
-                  {enToFa(this.state.bill.buyer && this.state.bill.buyer.pk)}
-                </span>
-              </p>
-
-              <p className="col-3 font-weight-bold p-1">
                 <span>صندوق:</span>
               </p>
               <p className="col-3 font-weight-bold p-1">
@@ -137,27 +138,29 @@ class PrintFactor extends React.Component {
                   <b>#</b>
                 </small>
               </p>
-              <p className="col-3 text-center font-weight-bold border-left-3 m-0 py-2 px-0">
+              <p className="col-3 text-center font-weight-bold border-left-3 m-0 py-0 px-0">
                 <small>
-                  <b>کالا</b>
+                  <b>شرح کالا</b>
+                  <hr class="m-0" style={BORDER_BOTTOM} />
+                  <b>کد کالا</b>
                 </small>
               </p>
-              <p className="col text-center font-weight-bold border-left-3 m-0 py-2 px-0">
+              <p className="d-flex justify-content-center align-items-center col text-center font-weight-bold border-left-3 m-0 py-2 px-0">
                 <small>
                   <b>مقدار</b>
                 </small>
               </p>
-              <p className="col text-center font-weight-bold border-left-3 m-0 py-2 px-0">
+              <p className="d-flex justify-content-center align-items-center col text-center font-weight-bold border-left-3 m-0 py-2 px-0">
                 <small>
                   <b>مبلغ‌واحد</b>
                 </small>
               </p>
-              <p className="col text-center font-weight-bold border-left-3 m-0 py-2 px-0">
+              <p className="d-flex justify-content-center align-items-center col text-center font-weight-bold border-left-3 m-0 py-2 px-0">
                 <small>
                   <b>تخفیف</b>
                 </small>
               </p>
-              <p className="col text-center font-weight-bold m-0 py-2 px-0">
+              <p className="d-flex justify-content-center align-items-center col text-center font-weight-bold m-0 py-2 px-0">
                 <small>
                   <b>مبلغ‌خالص</b>
                 </small>
@@ -165,52 +168,92 @@ class PrintFactor extends React.Component {
             </div>
             {this.renderItems()}
 
-            <div className="row-not-flex border-black border-radius-7 mb-1 rtl text-right">
-              <div className="row border-bottom-3">
-                <div className="col-6 font-weight-bold py-2 px-0 h5 text-left">
-                  جمع کل:
-                </div>
-                <div className="col font-weight-bold p-2 h5 text-center">
-                  {enToFa(priceToPersian(this.state.bill.price))}
-                </div>
-                <div className="col font-weight-bold p-2 h5 text-left">
-                  {this.state.bill.price ? TOMAN : "-"}
-                </div>
+            <p className="col-3 font-weight-bold p-1">
+              <span>صندوق:</span>
+            </p>
+            <p className="col-3 font-weight-bold p-1">
+              <span>
+                {enToFa(this.state.bill.seller && this.state.bill.seller.pk)}
+              </span>
+            </p>
+          </div>
+          <div className="row border-black border-radius-7 mb-1 rtl text-right">
+            <p className="col-1 norm-latin text-center font-weight-bold border-left-3 m-0 py-2 px-0">
+              <small>
+                <b>#</b>
+              </small>
+            </p>
+            <p className="col-3 text-center font-weight-bold border-left-3 m-0 py-2 px-0">
+              <small>
+                <b>کالا</b>
+              </small>
+            </p>
+            <p className="col text-center font-weight-bold border-left-3 m-0 py-2 px-0">
+              <small>
+                <b>مقدار</b>
+              </small>
+            </p>
+            <p className="col text-center font-weight-bold border-left-3 m-0 py-2 px-0">
+              <small>
+                <b>مبلغ‌واحد</b>
+              </small>
+            </p>
+            <p className="col text-center font-weight-bold border-left-3 m-0 py-2 px-0">
+              <small>
+                <b>تخفیف</b>
+              </small>
+            </p>
+            <p className="col text-center font-weight-bold m-0 py-2 px-0">
+              <small>
+                <b>مبلغ‌خالص</b>
+              </small>
+            </p>
+          </div>
+          {this.renderItems()}
+
+          <div className="row-not-flex border-black border-radius-7 mb-1 rtl text-right">
+            <div className="row border-bottom-3">
+              <div className="col-6 font-weight-bold py-2 px-0 h5 text-left">
+                جمع کل:
               </div>
-              <div className="row border-bottom-3">
-                <div className="col-6 font-weight-bold py-2 px-0 h5 text-left">
-                  تخفیف کالایی:
-                </div>
-                <div className="col font-weight-bold p-2 h5 text-center">
-                  {enToFa(
-                    priceToPersian(this.state.bill.buyer_special_discount)
-                  )}
-                </div>
-                <div className="col font-weight-bold p-2 h5 text-left">
-                  {this.state.bill.buyer_special_discount ? TOMAN : "-"}
-                </div>
+              <div className="col font-weight-bold p-2 h5 text-center">
+                {enToFa(priceToPersian(this.state.bill.price))}
               </div>
-              <div className="row border-bottom-3">
-                <div className="col-6 font-weight-bold py-2 px-0 h5 text-left">
-                  تخفیف فاکتوری:
-                </div>
-                <div className="col font-weight-bold p-2 h5 text-center">
-                  {enToFa(priceToPersian(this.state.bill.total_discount))}
-                </div>
-                <div className="col font-weight-bold p-2 h5 text-left">
-                  {this.state.bill.total_discount ? TOMAN : "-"}
-                </div>
+              <div className="col font-weight-bold p-2 h5 text-left">
+                {this.state.bill.price ? TOMAN : "-"}
               </div>
-              <div className="row ">
-                <div className="col-6 font-weight-bold py-2 px-0 h5 text-left">
-                  مبلغ قابل پرداخت:
-                </div>
-                <div className="col font-weight-bold p-2 h5 text-center">
-                  {enToFa(priceToPersian(this.state.bill.final_price))}
-                </div>
-                <div className="col font-weight-bold p-2 h5 text-left">
-                  {this.state.bill.final_price ? TOMAN : "-"}
-                </div>
+            </div>
+            <div className="row border-bottom-3">
+              <div className="col-6 font-weight-bold py-2 px-0 h5 text-left">
+                تخفیف کالایی:
+              </div>
+              <div className="col font-weight-bold p-2 h5 text-center">
+                {enToFa(priceToPersian(this.state.bill.buyer_special_discount))}
+              </div>
+              <div className="col font-weight-bold p-2 h5 text-left">
+                {this.state.bill.buyer_special_discount ? TOMAN : "-"}
+              </div>
+            </div>
+            <div className="row border-bottom-3">
+              <div className="col-6 font-weight-bold py-2 px-0 h5 text-left">
+                تخفیف فاکتوری:
+              </div>
+              <div className="col font-weight-bold p-2 h5 text-center">
+                {enToFa(priceToPersian(this.state.bill.total_discount))}
+              </div>
+              <div className="col font-weight-bold p-2 h5 text-left">
+                {this.state.bill.total_discount ? TOMAN : "-"}
+              </div>
+            </div>
+            <div className="row ">
+              <div className="col-6 font-weight-bold py-2 px-0 h5 text-left">
+                مبلغ قابل پرداخت:
+              </div>
+              <div className="col font-weight-bold p-2 h5 text-center">
+                {enToFa(priceToPersian(this.state.bill.final_price))}
+              </div>
+              <div className="col font-weight-bold p-2 h5 text-left">
+                {this.state.bill.final_price ? TOMAN : "-"}
               </div>
             </div>
           </div>

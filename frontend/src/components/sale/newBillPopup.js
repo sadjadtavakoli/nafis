@@ -11,67 +11,18 @@ import {
 import { toastr } from "react-redux-toastr";
 
 class NewBillPopup extends React.Component {
-  state = {
-    product: "",
-    amount: "",
-    end_of_roll: false,
-    discount: 0,
-    end_of_roll_amount: "",
-    disabled: true,
-    notFound: NaN,
-    productData: {}
-  };
-  changeInput = (event, inputName) => {
-    let value = Number(event.target.value);
-    this.setState({ [inputName]: value }, () => {
-      if (inputName === "product") {
-        console.log(this.state.product);
-        this.handleSearchChange(this.state.product);
-      }
-      if (this.state.amount <= Number(this.state.productData.stock_amount)) {
-        this.setState({ disabled: false });
-      } else {
-        this.setState({ disabled: true });
-      }
-    });
-  };
-  toggleIsEndOfRoll = () => {
-    this.setState(prevState => ({
-      end_of_roll: !prevState.end_of_roll,
-      end_of_roll_amount: ""
-    }));
-  };
-  submitForm = () => {
-    console.log("submitForm", this.props.pk);
-    if (
-      String(this.state.product).length < 1 ||
-      String(this.state.amount).length < 1 ||
-      String(this.state.discount).length < 1 ||
-      (this.state.end_of_roll && this.state.end_of_roll_amount.length < 1)
-    ) {
-      alert("فرم افزودن آیتم معتبر نبوده است");
-    } else {
-      let prepareData = {
-        name: this.state.productData.name,
-        bill: this.props.pk,
-        product: this.state.product,
-        amount: this.state.amount,
-        end_of_roll: this.state.end_of_roll,
-        discount: this.state.discount,
-        end_of_roll_amount: this.state.end_of_roll_amount,
-        selling_price: this.state.productData.selling_price
-      };
-      if (this.props.pk) {
-        this.props.addNewItem(this.props.pk, prepareData).then(res => {
-          this.props.refetch(res);
-          setTimeout(() => {
-            toastr.success("ثبت آیتم جدید", "ثبت آیتم جدید با موفقیت انجام شد");
-            this.props.onClose();
-          }, 500);
-        });
-      } else {
-        this.props.onSubmit(prepareData);
-      }
+    constructor(props) {
+        super(props);
+    }
+    state = {
+        product: '',
+        amount: '',
+        end_of_roll: false,
+        discount: 0,
+        end_of_roll_amount: 0,
+        disabled: true,
+        notFound: NaN,
+        productData:{}
     }
   };
   handleSearchChange = value => {
