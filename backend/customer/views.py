@@ -14,7 +14,7 @@ from nafis.views import NafisBase
 
 class CustomersViewSet(NafisBase, ModelViewSet):
     serializer_class = CustomerSerializer
-    permission_classes = (LoginRequired,)
+    # permission_classes = (LoginRequired,)
     queryset = Customer.objects.all()
     non_updaters = ["cashier", "salesperson", "accountant", "storekeeper"]
     non_destroyers = ["cashier", "salesperson", "accountant", "storekeeper"]
@@ -29,42 +29,22 @@ class CustomersViewSet(NafisBase, ModelViewSet):
         except ObjectDoesNotExist:
             return Response({'چنین کاربری یافت نشد.'}, status=HTTP_404_NOT_FOUND)
 
-    @action(methods=['GET'], detail=False, url_path="cheques")
+    @action(methods=['GET'], detail=True, url_path="cheques")
     def get_passed_cheques(self, request, **kwargs):
-        phone_number = self.request.query_params.get('phone_number', None)
-        try:
-            customer = Customer.objects.get(phone_number=phone_number)
-            return Response(CustomerChequeSerializer(customer.cheques.all(), many=True).data)
-        except ObjectDoesNotExist:
-            return Response({'چنین کاربری یافت نشد.'}, status=HTTP_404_NOT_FOUND)
+        customer = self.get_object()
+        return Response(CustomerChequeSerializer(customer.cheques.all(), many=True).data)
 
-    @action(methods=['GET'], detail=False, url_path="remained-cheques")
+    @action(methods=['GET'], detail=True, url_path="remained-cheques")
     def get_remained_cheques(self, request, **kwargs):
-        phone_number = self.request.query_params.get('phone_number', None)
-        try:
-            customer = Customer.objects.get(phone_number=phone_number)
-            return Response(CustomerChequeSerializer(customer.remained_cheques.all(), many=True).data)
-        except ObjectDoesNotExist:
-            return Response({'چنین کاربری یافت نشد.'}, status=HTTP_404_NOT_FOUND)
+        customer = self.get_object()
+        return Response(CustomerChequeSerializer(customer.remained_cheques.all(), many=True).data)
 
-    @action(methods=['GET'], detail=False, url_path="remained-bills")
+    @action(methods=['GET'], detail=True, url_path="remained-bills")
     def get_remained_bills(self, request, **kwargs):
-        print("inja")
-        print(self.request.query_params)
-        phone_number = self.request.query_params.get('phone_number', None)
-        try:
-            customer = Customer.objects.get(phone_number=phone_number)
-            print(customer)
-            print(customer.remained_bills.all())
-            return Response(BillSerializer(customer.remained_bills.all(), many=True).data)
-        except ObjectDoesNotExist:
-            return Response({'چنین کاربری یافت نشد.'}, status=HTTP_404_NOT_FOUND)
+        customer = self.get_object()
+        return Response(BillSerializer(customer.remained_bills.all(), many=True).data)
 
-    @action(methods=['GET'], detail=False, url_path="bills")
+    @action(methods=['GET'], detail=True, url_path="bills")
     def get_done_bills(self, request, **kwargs):
-        phone_number = self.request.query_params.get('phone_number', None)
-        try:
-            customer = Customer.objects.get(phone_number=phone_number)
-            return Response(BillSerializer(customer.bills.all(), many=True).data)
-        except ObjectDoesNotExist:
-            return Response({'چنین کاربری یافت نشد.'}, status=HTTP_404_NOT_FOUND)
+        customer = self.get_object()
+        return Response(BillSerializer(customer.bills.all(), many=True).data)
