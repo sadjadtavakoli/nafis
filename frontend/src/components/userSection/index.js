@@ -13,6 +13,7 @@ import NotFound from "../utils/notFound";
 import LoadingBar from "../utils/loadingBar";
 import FactorsModal from "./FactorsModal";
 import ChequeModal from "./ChequeModal";
+import EditModal from "./EditModal";
 
 class Users extends Component {
   state = {
@@ -20,7 +21,8 @@ class Users extends Component {
     activePage: 1,
     factorsModal: false,
     chequeModal: false,
-    pk: null
+    pk: null,
+    editModal: false
   };
 
   componentDidMount() {
@@ -45,9 +47,15 @@ class Users extends Component {
     });
   };
 
-  componentDidUpdate() {
-    // console.log(this.props.usersCustomers.results[0].pk);
-  }
+  handleEditClick = status => {
+    this.setState({
+      editModal: status
+    });
+  };
+
+  // componentDidUpdate() {
+  //   console.log(this.props.usersCustomers.results[0]);
+  // }
 
   passingPk = pk => {
     this.setState({ pk });
@@ -97,7 +105,13 @@ class Users extends Component {
                       </Table.Cell>
                       <Table.Cell>{item.phone_number}</Table.Cell>
                       <Table.Cell>
-                        <Button color="teal" icon labelPosition="right">
+                        <Button
+                          color="teal"
+                          icon
+                          labelPosition="right"
+                          labelPosition="right"
+                          onClick={() => this.handleEditClick(true)}
+                        >
                           <Icon name="edit" />
                           <span>ویراش</span>
                         </Button>
@@ -159,6 +173,11 @@ class Users extends Component {
         <ChequeModal
           isOpen={this.state.chequeModal}
           onClose={() => this.handleChequeClick(false)}
+        />
+
+        <EditModal
+          isOpen={this.state.editModal}
+          onClose={() => this.handleEditClick(false)}
         />
       </React.Fragment>
     );

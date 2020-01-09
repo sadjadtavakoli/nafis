@@ -13,6 +13,7 @@ export const GET_DAILY_REPORT = "GET_DAILY_REPORT";
 export const UPDATE_Bill = "UPDATE_Bill";
 export const GET_USERS_CUSTOMERS = "GET_USERS_CUSTOMERS";
 export const GET_ALL_BILLS = "GET_ALL_BILLS";
+export const GET_A_CUSTOMER = "GET_A_CUSTOMER";
 
 export const FETCH = types => `FETCH_${types}`;
 export const SUCSS = types => `SUCSS_${types}`;

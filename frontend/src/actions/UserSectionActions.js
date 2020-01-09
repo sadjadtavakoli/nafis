@@ -1,4 +1,4 @@
-import { GET_USERS_CUSTOMERS, GET_ALL_BILLS } from "./types";
+import { GET_USERS_CUSTOMERS, GET_ALL_BILLS, GET_A_CUSTOMER } from "./types";
 import server from "../apis/server";
 
 export const getCustomerUsers = (page = 1) => async dispatch => {
@@ -13,8 +13,16 @@ export const getCustomerUsers = (page = 1) => async dispatch => {
 
 export const getAllBills = pk => async dispatch => {
   const response = await server(localStorage.getItem("token")).get(
-    `/customers/${pk}/remained-bills/`
+    `/customers/${pk}/bills/`
   );
   console.log(response);
   dispatch({ type: GET_ALL_BILLS, payload: response.data });
+};
+
+export const getACustomer = pk => async dispatch => {
+  const response = await server(localStorage.getItem("token")).get(
+    `/customers/${pk}/`
+  );
+  console.log(response);
+  dispatch({ type: GET_A_CUSTOMER, payload: response.data });
 };
