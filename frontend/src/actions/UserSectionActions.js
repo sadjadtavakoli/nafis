@@ -15,7 +15,6 @@ export const getAllBills = pk => async dispatch => {
   const response = await server(localStorage.getItem("token")).get(
     `/customers/${pk}/bills/`
   );
-  console.log(response);
   dispatch({ type: GET_ALL_BILLS, payload: response.data });
 };
 
@@ -23,6 +22,5 @@ export const getACustomer = pk => async dispatch => {
   const response = await server(localStorage.getItem("token")).get(
     `/customers/${pk}/`
   );
-  console.log(response);
   dispatch({ type: GET_A_CUSTOMER, payload: response.data });
 };

@@ -13,11 +13,9 @@ class FactorsModal extends Component {
 
   componentDidMount() {}
 
-  componentDidUpdate() {
-    if (this.props.passingPk) {
-      this.props.getAllBills(this.props.passingPk);
-    }
-  }
+  // componentDidUpdate() {
+  //   console.log("FactorsModal", this.props.passingPk);
+  // }
 
   render() {
     return (

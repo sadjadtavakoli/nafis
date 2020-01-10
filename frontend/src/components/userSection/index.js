@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { getCustomerUsers } from "../../actions/UserSectionActions";
+
 import {
   Pagination,
   Table,
@@ -8,7 +10,6 @@ import {
   Button,
   Icon
 } from "semantic-ui-react";
-import { getCustomerUsers } from "../../actions/UserSectionActions";
 import NotFound from "../utils/notFound";
 import LoadingBar from "../utils/loadingBar";
 import FactorsModal from "./FactorsModal";
@@ -21,12 +22,12 @@ class Users extends Component {
     activePage: 1,
     factorsModal: false,
     chequeModal: false,
-    pk: null,
-    editModal: false
+    editModal: false,
+    pk: null
   };
 
   componentDidMount() {
-    this.props.getCustomerUsers();
+    this.props.getCustomerUsers(this.state.pk);
   }
 
   changePage = (_, { activePage }) => {
@@ -52,10 +53,6 @@ class Users extends Component {
       editModal: status
     });
   };
-
-  // componentDidUpdate() {
-  //   console.log(this.props.usersCustomers.results[0]);
-  // }
 
   passingPk = pk => {
     this.setState({ pk });
@@ -110,7 +107,10 @@ class Users extends Component {
                           icon
                           labelPosition="right"
                           labelPosition="right"
-                          onClick={() => this.handleEditClick(true)}
+                          onClick={() => {
+                            this.handleEditClick(true);
+                            this.passingPk(item.pk);
+                          }}
                         >
                           <Icon name="edit" />
                           <span>ویراش</span>
@@ -131,7 +131,10 @@ class Users extends Component {
                           color="yellow"
                           icon
                           labelPosition="right"
-                          onClick={() => this.handleChequeClick(true)}
+                          onClick={() => {
+                            this.handleChequeClick(true);
+                            this.passingPk(item.pk);
+                          }}
                         >
                           <Icon name="list" />
                           <span>نمایش چک‌ها</span>
@@ -173,11 +176,13 @@ class Users extends Component {
         <ChequeModal
           isOpen={this.state.chequeModal}
           onClose={() => this.handleChequeClick(false)}
+          passingPk={this.state.pk}
         />
 
         <EditModal
           isOpen={this.state.editModal}
           onClose={() => this.handleEditClick(false)}
+          passingPk={this.state.pk}
         />
       </React.Fragment>
     );
