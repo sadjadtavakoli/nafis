@@ -3,20 +3,31 @@ import { Button, Modal, Segment, Checkbox } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { getAllBills } from "../../actions/UserSectionActions";
 
-class FactorsModal extends Component {
-  state = {};
+const INITIAL_STATE = {
+  pk: null
+};
 
+class FactorsModal extends Component {
+  state = INITIAL_STATE;
   handleClick = () =>
     this.setState(prevState => ({
       active: !prevState.active
     }));
 
-  componentDidMount() {}
-
-  // componentDidUpdate() {
-  //   console.log("FactorsModal", this.props.passingPk);
-  // }
-
+  componentDidUpdate() {
+    if (this.state.pk !== this.props.passingPk) {
+      this.props.getAllBills(this.props.passingPk);
+      this.setState({
+        pk: this.props.passingPk
+      });
+    }
+    console.log("state pk", this.state.pk);
+    console.log("all bills", this.props.allBills);
+  }
+  onClose = () => {
+    this.props.onClose();
+    this.setState(INITIAL_STATE);
+  };
   render() {
     return (
       <div className="rtl text-center">
@@ -30,11 +41,10 @@ class FactorsModal extends Component {
             <Segment stacked className="text-right us-fm-segment">
               <Checkbox toggle className="us-fm-toggle" />
               <span className="us-fm-span">نمایش فاکتورهای باقی مانده</span>
-              <span>{this.props.passingPk}</span>
             </Segment>
           </Modal.Content>
           <Modal.Actions>
-            <Button color="black" onClick={this.props.onClose}>
+            <Button color="black" onClick={this.onClose}>
               <span>تایید</span>
             </Button>
           </Modal.Actions>
@@ -45,12 +55,10 @@ class FactorsModal extends Component {
 }
 
 const mapStateToProps = state => {
+  console.log("state", state.customers.allBills);
   return {
-    allBills: state.allBills
+    allBills: state.customers.allBills
   };
 };
-const mapDispathToProps = {
-  getAllBills
-};
 
-export default connect(mapStateToProps, mapDispathToProps)(FactorsModal);
+export default connect(mapStateToProps, { getAllBills })(FactorsModal);

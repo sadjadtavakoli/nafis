@@ -22,10 +22,6 @@ export const setNewBill = data => async dispatch => {
 };
 export const updateBill = (pk, data) => async dispatch => {
   return await putServer(localStorage.getItem("token"), `/bills/${pk}/`, data);
-  //  return await server(localStorage.getItem("token")).patch(
-  //     `/bills/${pk}/`,
-  //     data
-  // );
 };
 export const addNewItem = (pk, data) => async dispatch => {
   return await server(localStorage.getItem("token")).post(`/bill-items/`, data);

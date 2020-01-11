@@ -1,5 +1,5 @@
 import { GET_USERS_CUSTOMERS, GET_ALL_BILLS, GET_A_CUSTOMER } from "./types";
-import server from "../apis/server";
+import { server, putServer } from "../apis/server";
 
 export const getCustomerUsers = (page = 1) => async dispatch => {
   const response = await server(localStorage.getItem("token")).get(
@@ -23,4 +23,12 @@ export const getACustomer = pk => async dispatch => {
     `/customers/${pk}/`
   );
   dispatch({ type: GET_A_CUSTOMER, payload: response.data });
+};
+
+export const updateCustomer = (pk, data) => async dispatch => {
+  return await putServer(
+    localStorage.getItem("token"),
+    `/customers/${pk}/`,
+    data
+  );
 };
