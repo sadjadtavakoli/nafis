@@ -21,7 +21,8 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 from rest_framework import routers
 
-from bill.views import BillsViewSet, BillItemViewSet, CustomerPaymentViewSet, SupplierBillsViewSet
+from bill.views import BillsViewSet, BillItemViewSet, CustomerPaymentViewSet, SupplierBillsViewSet, \
+    SupplierBillItemViewSet, CustomerChequeViewSet, OurChequeViewSet
 from customer.views import CustomersViewSet
 from nafis.views import LoginAPIView
 from product.views import ProductIdCreateApiView, ProductViewSet, ProductFieldsOptionsView
@@ -29,10 +30,13 @@ from supplier.views import SupplierViewSet
 
 router = routers.DefaultRouter()
 router.register(r'bills', BillsViewSet, 'bill')
-router.register(r'supplier_bills', SupplierBillsViewSet, 'supplier-bill')
+router.register(r'supplier-bills', SupplierBillsViewSet, 'supplier-bill')
+router.register(r'supplier-bill-item', SupplierBillItemViewSet, 'supplier-bill-item')
 router.register(r'suppliers', SupplierViewSet, 'suppliers')
 router.register(r'bill-items', BillItemViewSet, 'bill-item')
 router.register(r'products', ProductViewSet, 'product')
+router.register(r'customer-cheque', CustomerChequeViewSet, 'customer-cheque')
+router.register(r'our-cheque', OurChequeViewSet, 'our-cheque')
 router.register(r'payments', CustomerPaymentViewSet, 'customer-payments')
 router.register(r'customers', CustomersViewSet, 'customers')
 

@@ -12,7 +12,7 @@ from bill.models import Bill, BillItem, CustomerPayment, CustomerCheque, OurCheq
     SupplierBillItem
 from bill.permissions import LoginRequired, CloseBillPermission
 from bill.serializers import BillSerializer, CustomerPaymentSerializer, BillItemSerializer, SupplierBillSerializer, \
-    SupplierBillItemSerializer
+    SupplierBillItemSerializer, CustomerChequeSerializer, OurChequeSerializer
 from customer.models import Customer, Point
 from nafis.paginations import PaginationClass
 from nafis.sms import SendSMS, create_message
@@ -443,13 +443,13 @@ class SupplierBillsViewSet(NafisBase, ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
-class SupplierBillItemViewSet(ModelViewSet):
+class SupplierBillItemViewSet(NafisBase, ModelViewSet):
     serializer_class = SupplierBillItemSerializer
     permission_classes = (LoginRequired,)
     queryset = SupplierBillItem.objects.all()
-    non_updaters = ["cashier", "accountant", "salesperson"]
-    non_destroyers = ['cashier', "accountant", "salesperson"]
-    non_creator = ['cashier', "accountant", "salesperson"]
+    non_updaters = ["cashier", "salesperson"]
+    non_destroyers = ['cashier', "salesperson"]
+    non_creator = ['cashier', "salesperson"]
 
     @action(methods=['post'], detail=True, url_path='reject', permission_classes=())
     def reject(self):
@@ -491,3 +491,21 @@ class SupplierBillItemViewSet(ModelViewSet):
         serializer = SupplierBillSerializer(bill)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class CustomerChequeViewSet(NafisBase, ModelViewSet):
+    serializer_class = CustomerChequeSerializer
+    permission_classes = (LoginRequired,)
+    queryset = CustomerCheque.objects.all()
+    non_updaters = ["cashier", "salesperson"]
+    non_destroyers = ['cashier', "salesperson"]
+    non_creator = ['cashier', "salesperson"]
+
+
+class OurChequeViewSet(NafisBase, ModelViewSet):
+    serializer_class = OurChequeSerializer
+    permission_classes = (LoginRequired,)
+    queryset = OurCheque.objects.all()
+    non_updaters = ["cashier", "salesperson"]
+    non_destroyers = ['cashier', "salesperson"]
+    non_creator = ['cashier', "salesperson"]
