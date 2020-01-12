@@ -8,9 +8,10 @@ from rest_framework.exceptions import ValidationError, PermissionDenied
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from bill.models import Bill, BillItem, CustomerPayment, CustomerCheque
+from bill.models import Bill, BillItem, CustomerPayment, CustomerCheque, OurCheque, SupplierBill, OurPayment, \
+    SupplierBillItem
 from bill.permissions import LoginRequired, CloseBillPermission
-from bill.serializers import BillSerializer, CustomerPaymentSerializer, BillItemSerializer
+from bill.serializers import BillSerializer, CustomerPaymentSerializer, BillItemSerializer, SupplierBillSerializer
 from customer.models import Customer, Point
 from nafis.paginations import PaginationClass
 from nafis.sms import SendSMS, create_message
@@ -276,7 +277,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
 
 class BillItemViewSet(ModelViewSet):
     serializer_class = BillItemSerializer
-    # permission_classes = (LoginRequired,)
+    permission_classes = (LoginRequired,)
     queryset = BillItem.objects.all()
     non_updaters = ["cashier", "accountant"]
     non_destroyers = ['cashier', "accountant"]
@@ -292,11 +293,8 @@ class BillItemViewSet(ModelViewSet):
         bill = self.get_object().bill
         bill_item_product = self.get_object().product
         bill_item_amount = self.get_object().amount
-        print(bill_item_product)
-        print(bill_item_amount)
-        # if bill.seller.username != request.user.username or bill.status != "active":
-        #     raise PermissionDenied
-        super(BillItemViewSet, self).destroy(request, *args, **kwargs)
+        if bill.seller.username != request.user.username or bill.status != "active":
+            raise PermissionDenied
         bill_item_product.update_stock_amount(-1 * (bill_item_amount + 0.05))
         serializer = BillSerializer(bill)
         headers = self.get_success_headers(serializer.data)
@@ -315,11 +313,9 @@ class BillItemViewSet(ModelViewSet):
         bill = Bill.objects.get(pk=self.request.data.get('bill', None))
         if bill.status != "active":
             raise PermissionDenied
-
-        # staff = Staff.objects.get(username=request.user.username)
-        # if staff.job in self.non_creator:
-        #     raise PermissionDenied
-
+        staff = Staff.objects.get(username=request.user.username)
+        if staff.job in self.non_creator:
+            raise PermissionDenied
         item = self.request.data
         product_code = item['product']
         try:
@@ -373,3 +369,74 @@ class CustomerPaymentViewSet(NafisBase, ModelViewSet):
         if bill.status == "done":
             raise PermissionDenied
         return super(CustomerPaymentViewSet, self).create(request, *args, **kwargs)
+
+
+class SupplierBillsViewSet(NafisBase, ModelViewSet):
+    serializer_class = SupplierBillSerializer
+    # permission_classes = (LoginRequired,)
+    queryset = SupplierBill.objects.all().order_by('-pk')
+    non_updaters = ['cashier', 'salesperson', 'storekeeper']
+    non_destroyers = ['cashier', 'salesperson', 'storekeeper']
+    pagination_class = PaginationClass
+
+    def destroy(self, request, *args, **kwargs):
+        bill = self.get_object()
+        bill_items_data = []
+        for item in bill.items.all():
+            bill_items_data.append({'product': item.product, 'amount': item.amount})
+
+        if len(bill.payments.all()):
+            raise PermissionDenied(
+                detail="نمی‌توانید فاکتوری را که پرداخت دارد حذف کنید، ابتدا پرداخت‌ها"
+                       " را حذف نموده سپس نسبت به حذف فاکتور اقدام نمایید.")
+        response = super(SupplierBillsViewSet, self).destroy(request, *args, **kwargs)
+        for data in bill_items_data:
+            data['product'].update_stock_amount(float(data['amount']))
+        return response
+
+    @action(methods=['post'], detail=True, url_path='add-payments')
+    def add_payments(self, request, **kwargs):
+        payment_type = self.request.data.get('type')
+        bill = self.get_object()
+        amount = self.request.data.get('amount')
+        payment = OurPayment.objects.create(create_date=timezone.now(),
+                                            amount=float(amount), bill=bill, type=payment_type)
+
+        if payment_type == "cheque":
+            amount = self.request.data.get('amount')
+            bank = self.request.data.get('bank')
+            number = self.request.data.get('number')
+            issue_date = self.request.data.get('issue_date', timezone.now().date())
+            expiry_date = self.request.data.get('expiry_date')
+            cheque = OurCheque.objects.create(number=int(number), bank=bank,
+                                              issue_date=issue_date,
+                                              expiry_date=expiry_date,
+                                              amount=int(amount), customer=bill.buyer)
+
+            payment.cheque = cheque
+            payment.save()
+
+        data = SupplierBillSerializer(SupplierBill.objects.get(pk=bill.pk)).data
+        return Response(data, status=status.HTTP_201_CREATED)
+
+    def create(self, request, *args, **kwargs):
+        data = self.request.data
+        items = data.get('items')
+        supplier = data.get('supplier')
+        currency_price = data.get('currency_price', 1)
+        currency = data.get('currency', 'ریال')
+        bill = SupplierBill.objects.create(supplier=supplier, currency_price=currency_price, currency=currency)
+
+        for item in items:
+            product_code = item['product']
+            try:
+                product = Product.objects.get(code=product_code)
+            except ObjectDoesNotExist:
+                raise ValidationError('محصولی با کد‌ {} وجود ندارد.'.format(product_code))
+            amount = item['amount']
+            raw_price = item.get('price', 0)
+            SupplierBillItem.objects.create(product=product, amount=amount, bill=bill, raw_price=raw_price)
+
+        serializer = self.get_serializer(bill)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

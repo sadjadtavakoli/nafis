@@ -283,7 +283,19 @@ class SupplierBill(models.Model):
     supplier = models.ForeignKey('supplier.Supplier', related_name='bills',
                                  on_delete=DO_NOTHING)
     status = models.CharField(choices=settings.SUPPLIER_BILL_STATUS, max_length=32,
-                              default='active')
+                              default='remained')
+    currency_price = models.IntegerField(default=1)
+    currency = models.CharField(
+        choices=(('ریال', 'ریال'), ('درهم', 'درهم'), ('دلار', 'دلار'), ('روپیه', 'روپیه'),
+                 ('یوان', 'یوان')),
+        max_length=20, default="ریال")
+
+    @property
+    def price(self):
+        price = 0
+        for item in self.items.filter(rejected=False).all():
+            price += int(item.price)
+        return round_up(price, -2)
 
 
 class SupplierBillItemManager(models.Manager):
@@ -298,15 +310,18 @@ class SupplierBillItem(models.Model):
     product = models.OneToOneField('product.Product', related_name='supplier_bill_item',
                                    on_delete=DO_NOTHING)
     amount = models.FloatField(blank=False, null=False)
-    bill = models.ForeignKey('bill.SupplierBill', related_name='bills', on_delete=CASCADE)
+    bill = models.ForeignKey('bill.SupplierBill', related_name='items', on_delete=CASCADE)
     rejected = models.BooleanField(default=False)
     raw_price = models.IntegerField()
-    currency_price = models.IntegerField(default=1)
-    currency = models.CharField(
-        choices=(('ریال', 'ریال'), ('درهم', 'درهم'), ('دلار', 'دلار'), ('روپیه', 'روپیه'),
-                 ('یوان', 'یوان')),
-        max_length=20, default="ریال")
     objects = SupplierBillItemManager()
+
+    @property
+    def currency(self):
+        return self.bill.currency
+
+    @property
+    def currency_price(self):
+        return self.bill.currency_price
 
     @property
     def price(self):
@@ -353,7 +368,7 @@ class CustomerCheque(Cheque):
     customer = models.ForeignKey('customer.Customer', related_name="cheques", on_delete=DO_NOTHING)
 
 
-class OurCheque(models.Model):
+class OurCheque(Cheque):
     supplier = models.ForeignKey('supplier.Supplier', related_name="cheques", on_delete=DO_NOTHING)
 
 

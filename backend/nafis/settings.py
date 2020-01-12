@@ -148,7 +148,7 @@ BILL_STATUS = (
 
 SUPPLIER_BILL_STATUS = (
     ('done', 'done'),
-    ('active', 'active'))
+    ('remained', 'remained'))
 
 STAFF_JOB_CHOICES = (
     ("salesperson", "salesperson"),
