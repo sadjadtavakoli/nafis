@@ -32,19 +32,46 @@ class CustomersViewSet(NafisBase, ModelViewSet):
     @action(methods=['GET'], detail=True, url_path="cheques")
     def get_passed_cheques(self, request, **kwargs):
         customer = self.get_object()
-        return Response(CustomerChequeSerializer(customer.cheques.all(), many=True).data)
+        queryset = customer.cheques.all()
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = CustomerChequeSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = CustomerChequeSerializer(queryset, many=True)
+        return Response(serializer.data)
 
     @action(methods=['GET'], detail=True, url_path="remained-cheques")
     def get_remained_cheques(self, request, **kwargs):
         customer = self.get_object()
-        return Response(CustomerChequeSerializer(customer.remained_cheques.all(), many=True).data)
+        queryset = customer.remained_cheques.all()
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = CustomerChequeSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = CustomerChequeSerializer(queryset, many=True)
+        return Response(serializer.data)
 
     @action(methods=['GET'], detail=True, url_path="remained-bills")
     def get_remained_bills(self, request, **kwargs):
         customer = self.get_object()
-        return Response(BillSerializer(customer.remained_bills.all(), many=True).data)
+        queryset = customer.remained_bills.all()
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = BillSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = BillSerializer(queryset, many=True)
+        return Response(serializer.data)
 
     @action(methods=['GET'], detail=True, url_path="bills")
     def get_done_bills(self, request, **kwargs):
         customer = self.get_object()
-        return Response(BillSerializer(customer.bills.all(), many=True).data)
+        queryset = customer.bills.all()
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = BillSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = BillSerializer(queryset, many=True)
+        return Response(serializer.data)
