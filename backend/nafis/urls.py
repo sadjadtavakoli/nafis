@@ -21,13 +21,16 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 from rest_framework import routers
 
-from bill.views import BillsViewSet, BillItemViewSet, CustomerPaymentViewSet
+from bill.views import BillsViewSet, BillItemViewSet, CustomerPaymentViewSet, SupplierBillsViewSet
 from customer.views import CustomersViewSet
 from nafis.views import LoginAPIView
 from product.views import ProductIdCreateApiView, ProductViewSet, ProductFieldsOptionsView
+from supplier.views import SupplierViewSet
 
 router = routers.DefaultRouter()
 router.register(r'bills', BillsViewSet, 'bill')
+router.register(r'supplier_bills', SupplierBillsViewSet, 'supplier-bill')
+router.register(r'suppliers', SupplierViewSet, 'suppliers')
 router.register(r'bill-items', BillItemViewSet, 'bill-item')
 router.register(r'products', ProductViewSet, 'product')
 router.register(r'payments', CustomerPaymentViewSet, 'customer-payments')

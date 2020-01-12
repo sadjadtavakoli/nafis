@@ -11,7 +11,8 @@ from rest_framework.viewsets import ModelViewSet
 from bill.models import Bill, BillItem, CustomerPayment, CustomerCheque, OurCheque, SupplierBill, OurPayment, \
     SupplierBillItem
 from bill.permissions import LoginRequired, CloseBillPermission
-from bill.serializers import BillSerializer, CustomerPaymentSerializer, BillItemSerializer, SupplierBillSerializer
+from bill.serializers import BillSerializer, CustomerPaymentSerializer, BillItemSerializer, SupplierBillSerializer, \
+    SupplierBillItemSerializer
 from customer.models import Customer, Point
 from nafis.paginations import PaginationClass
 from nafis.sms import SendSMS, create_message
@@ -438,5 +439,55 @@ class SupplierBillsViewSet(NafisBase, ModelViewSet):
             SupplierBillItem.objects.create(product=product, amount=amount, bill=bill, raw_price=raw_price)
 
         serializer = self.get_serializer(bill)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class SupplierBillItemViewSet(ModelViewSet):
+    serializer_class = SupplierBillItemSerializer
+    permission_classes = (LoginRequired,)
+    queryset = SupplierBillItem.objects.all()
+    non_updaters = ["cashier", "accountant", "salesperson"]
+    non_destroyers = ['cashier', "accountant", "salesperson"]
+    non_creator = ['cashier', "accountant", "salesperson"]
+
+    @action(methods=['post'], detail=True, url_path='reject', permission_classes=())
+    def reject(self):
+        bill_item = self.get_object()
+        bill_item.reject()
+        return Response({'done': True})
+
+    def destroy(self, request, *args, **kwargs):
+        bill = self.get_object().bill
+        bill_item_product = self.get_object().product
+        bill_item_amount = self.get_object().amount
+        bill_item_product.update_stock_amount(bill_item_amount)
+        serializer = SupplierBillSerializer(bill)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, headers=headers)
+
+    def update(self, request, *args, **kwargs):
+        bill = self.get_object().bill
+        super(SupplierBillItemViewSet, self).update(request, *args, **kwargs)
+        serializer = SupplierBillSerializer(bill)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, headers=headers)
+
+    def create(self, request, *args, **kwargs):
+        bill = Bill.objects.get(pk=self.request.data.get('bill', None))
+        staff = Staff.objects.get(username=request.user.username)
+        if staff.job in self.non_creator:
+            raise PermissionDenied
+        item = self.request.data
+        product_code = item['product']
+        try:
+            product = Product.objects.get(code=product_code)
+        except ObjectDoesNotExist:
+            raise ValidationError('محصولی با کد‌ {} وجود ندارد.'.format(product_code))
+        amount = item['amount']
+        raw_price = item.get('price', 0)
+        SupplierBillItem.objects.create(product=product, amount=amount, bill=bill, raw_price=raw_price)
+
+        serializer = SupplierBillSerializer(bill)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
