@@ -93,3 +93,9 @@ class SupplierViewSet(NafisBase, ModelViewSet):
             return self.get_paginated_response(serializer.data)
         serializer = SupplierBillSerializer(queryset, many=True)
         return Response(serializer.data)
+
+    @action(methods=['GET'], detail=True, url_path="products")
+    def get_products(self, request, **kwargs):
+        supplier = self.get_object()
+        ids = supplier.bills.values_list('items__product', flat=True)
+        return Product.objects.filter(pk__in=ids)
