@@ -10,7 +10,6 @@ class Depository extends React.Component {
   state = {
     open: false,
     productID: NaN,
-    filterOpen: false
   };
 
   closeModal = () => {
@@ -22,12 +21,6 @@ class Depository extends React.Component {
       this.setState({ productID: this.props.productID.pk }, () => {
         this.setState({ open: true });
       });
-    });
-  };
-
-  openFilter = status => {
-    this.setState({
-      filterOpen: status
     });
   };
 
@@ -50,15 +43,6 @@ class Depository extends React.Component {
                 icon="add"
                 labelPosition="right"
               />
-              <Button
-                className="yekan"
-                onClick={() => this.openFilter(!this.state.filterOpen)}
-                color={this.state.filterOpen ? "yellow" : "gray"}
-                content="فیلتر"
-                icon="filter"
-                labelPosition="right"
-              />
-              {this.state.filterOpen ? <FilterSegment /> : null}
             </Segment>
             <ProductTable />
           </div>
