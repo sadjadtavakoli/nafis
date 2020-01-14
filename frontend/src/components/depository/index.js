@@ -4,7 +4,6 @@ import { Button, Container, Segment } from "semantic-ui-react";
 import AddProductModal from "./addProductModal";
 import ProductTable from "./productTable";
 import { getProductID, getProductsList } from "../../actions/DepositoryActions";
-import FilterSegment from "./filterSegment";
 
 class Depository extends React.Component {
   state = {
