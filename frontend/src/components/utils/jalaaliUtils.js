@@ -11,6 +11,7 @@ module.exports = {
     d2g: d2g,
     convertToJalaali: convertToJalaali,
     getTodayJalaali: getTodayJalaali,
+    getTodayGregorian: getTodayGregorian,
     getNow:getNow,
     standardTimeToJalaali:standardTimeToJalaali
   };
@@ -272,12 +273,17 @@ function getNow() {
       date = date.getFullYear() + '/' + (date.getMonth()+1) + '/' + date.getDate();
       return convertToJalaali(date);
   }
+  function getTodayGregorian() {
+    let date = new Date();
+      date = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
+      return (date);
+  }
   function convertToJalaali(date) {
     if (!date) return '';
     let parts = date.split('/');
     if (parts.length > 1) {
       parts = toJalaali(parseInt(parts[0]), parseInt(parts[1]), parseInt(parts[2]));
-      date = parts['jy'].toString() + '/' + parts['jm'].toString() + '/' + parts['jd'].toString();
+      date = parts['jy'].toString() + '-' + parts['jm'].toString() + '-' + parts['jd'].toString();
     }
     return date;
   }

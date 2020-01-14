@@ -1,7 +1,7 @@
 import React from "react";
 // import animejs from "animejs";
 import { connect } from "react-redux";
-import { Header, Icon, Input, Menu, Segment, Sidebar, Button } from 'semantic-ui-react'
+import { Icon, Menu, Segment, Sidebar, Button } from 'semantic-ui-react'
 import history from "../../history";
 import { logOut } from "../../actions/LoginActions";
 import {isPermit} from '../mainPage/permission'
@@ -42,9 +42,6 @@ class SideBar extends React.Component {
         this.setState({ visible })
     }
     handleItemClick = (e, { name }) => this.setState({ activeItem: name })
-    componentWillReceiveProps(newProps) {
-        // console.log('new props in sidebar',newProps)
-    }
     render() {
 
         return (
@@ -69,7 +66,7 @@ class SideBar extends React.Component {
                         <Menu.Menu position='right'>
                             <Menu.Item style={{paddingRight: 0}}>{this.state.userData.first_name+' '+this.state.userData.last_name}</Menu.Item>
                             <Menu.Item style={{paddingLeft: 0}}>
-                                <img src='http://uupload.ir/files/6dzr_business-user-account-png-image-min.png' />
+                                <img src='http://uupload.ir/files/6dzr_business-user-account-png-image-min.png' alt="logo" />
                             </Menu.Item>
                         </Menu.Menu>
                     </Menu>
@@ -100,6 +97,10 @@ class SideBar extends React.Component {
                     {isPermit('depository',this.state.job) ? <Menu.Item onClick={() => { this.goTo('/depository/') }} as='a'>
                             <Icon name='factory' />
                             <span>انبارداری</span>
+                    </Menu.Item> : null}
+                    {isPermit('reports',this.state.job) ? <Menu.Item onClick={() => { this.goTo('/reports/') }} as='a'>
+                            <Icon name='chart pie' />
+                            <span>گزارشات</span>
                     </Menu.Item> : null}
                     </Sidebar>
 

@@ -7,9 +7,6 @@ import { enToFa, phoneNumberBeautifier, priceToPersian } from '../utils/numberUt
 import { toastr } from 'react-redux-toastr';
 
 class NewBillPopup extends React.Component {
-    constructor(props) {
-        super(props);
-    }
     state = {
         product: '',
         amount: '',

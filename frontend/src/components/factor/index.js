@@ -6,7 +6,6 @@ import logo from "../../assets/logo_printable.png";
 import {
   priceToPersian,
   enToFa,
-  phoneNumberBeautifier
 } from "../utils/numberUtils";
 import { getTodayJalaali, getNow } from "../utils/jalaaliUtils";
 import { isEmptyObject } from "../../utils/FunctionalUtils";
@@ -73,7 +72,7 @@ class PrintFactor extends React.Component {
           <div style={{width:'76mm'}}>
           <div className="row border-black border-radius-7 mb-2">
             <div className="col-12 d-flex align-items-center justify-content-center">
-              <img src={logo} height="200" />
+              <img src={logo} alt="logo" height="200" />
             </div>
             {/* <div className="col-6 d-flex align-items-center justify-content-center">
               <div className="row norm-latin">

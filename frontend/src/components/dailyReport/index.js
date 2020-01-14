@@ -2,16 +2,12 @@ import React from "react";
 import { connect } from "react-redux";
 import { getDailyReport } from "../../actions/BillActions";
 import { Table, Button, Icon } from 'semantic-ui-react'
-import {
-  priceToPersian,
-  enToFa
-} from "../utils/numberUtils";
+import { priceToPersian } from "../utils/numberUtils";
 
 import { standardTimeToJalaali } from "../utils/jalaaliUtils";
 import LoadingBar from '../utils/loadingBar'
 import NotFound from '../utils/notFound'
 import '../../scss/bootstrap.scss';
-const TOMAN = "تومان";
 
 class DailyReport extends React.Component {
   state = {

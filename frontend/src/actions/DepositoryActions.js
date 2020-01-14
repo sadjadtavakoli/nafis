@@ -27,9 +27,9 @@ export const getProductID = () => async dispatch => {
   dispatch({ type: GET_PRODUCT_ID, payload: response.data });
 };
 export const setNewProduct = data => async dispatch => {
-  const response = await server(localStorage.getItem("token")).post(
-    "/products/",
-    data
-  );
+  // const response = await server(localStorage.getItem("token")).post(
+  //   "/products/",
+  //   data
+  // );
   // dispatch({type: ADD_BILL, payload: response.data});
 };

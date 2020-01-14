@@ -2,8 +2,12 @@ import React from "react";
 import { connect } from "react-redux";
 import { enToFa,priceToPersian, digitToComma } from '../utils/numberUtils'
 import { setNewBill, deleteItem, getCustomerByPhoneNumber,updateBill } from '../../actions/SaleActions';
+<<<<<<< HEAD
 import { Button, Modal, Divider, Header, Segment, Form, Card, Popup, Loader, Image, Icon, Message, Label } from 'semantic-ui-react'
 import { reverseObject } from '../utils/objectUtils'
+=======
+import { Button, Modal, Divider, Header, Segment, Form, Card, Popup, Icon, Message, Label } from 'semantic-ui-react'
+>>>>>>> reports
 import NewBillPopup from './newBillPopup'
 const INITIAL_STATE = {
     sumProductTotalPrice: 0,
@@ -25,9 +29,6 @@ const INITIAL_STATE = {
     customerData: {}
 };
 class ShowInformationModal extends React.Component {
-    constructor(props) {
-        super(props);
-    }
     componentWillReceiveProps() {
         if (!this.state.data.items) {
             this.setState({ data: this.props.data,discount:this.props.data.discount }, () => {
@@ -44,7 +45,7 @@ class ShowInformationModal extends React.Component {
     }
     deleteItem = (index) => {
         var r = window.confirm("آیا از حذف این مورد مطمئن هستید؟");
-        if (r == true) {
+        if (r === true) {
             this.props.deleteItem(this.state.data.items[index].pk).then(({ data }) => {
                 this.setState({ data }, () => {
                     this.sumProductTotalPrice()
@@ -151,7 +152,6 @@ class ShowInformationModal extends React.Component {
         }
     };
     submitItemPopup = (data) => {
-        let id = this.state.itemsDataSheet.length;
         this.setState(
             {
                 itemsDataSheet: [...this.state.itemsDataSheet, data],
@@ -198,11 +198,24 @@ class ShowInformationModal extends React.Component {
                                 </Form.Group>
                                 <Form.Group widths={2}>
                                     <Form.Dropdown className='ltr placeholder-rtl text-right' readOnly defaultValue={'1'} placeholder='شعبه' selection label={'شعبه'} options={this.state.branchOptions} />
+<<<<<<< HEAD
                                     <Form.Input className='ltr placeholder-rtl' readOnly={!this.state.isEnableEdit.discount} error={!this.state.isEnableEdit.discount} defaultValue={this.state.data.discount} label={()=>this.labelRender('تخفیف کلی','discount')}  type="number" onChange={(e)=>this.inputChange(e,'discount')} placeholder='مقدار تخفیف' />
                                 </Form.Group>
                                 <Form.Group widths={2}>
                                     <Form.Input className='invisible' hidden={true} />
                                     <Form.Input className='rtl placeholder-rtl text-right' readOnly={true} label="قیمت نهایی فاکتور" value={`${digitToComma(Math.round(this.state.sumProductTotalPrice - this.state.discount))} تومان`} type="text" />
+=======
+                                    <Form.Input
+                                      className='ltr placeholder-rtl'
+                                      readOnly={!this.state.isEnableEdit.discount}
+                                      error={!this.state.isEnableEdit.discount}
+                                      defaultValue={this.state.data.discount}
+                                      label={()=>this.labelRender('تخفیف کلی','discount')}
+                                      type="number"
+                                      onChange={(e)=>this.inputChange(e,'discount')}
+                                      placeholder='مقدار تخفیف'
+                                    />
+>>>>>>> reports
                                 </Form.Group>
                                 {this.state.data.items && this.state.data.items.length > 0 ? null :
                                     <Message

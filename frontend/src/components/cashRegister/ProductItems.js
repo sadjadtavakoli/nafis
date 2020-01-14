@@ -1,7 +1,7 @@
 import React from "react";
 import { Header } from "semantic-ui-react";
 import RenderItem from "./RenderItem";
-import {enToFa,priceToPersian} from '../utils/numberUtils'
+
 const ProductItems = props => {
   return (
     <React.Fragment>

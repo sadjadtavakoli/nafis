@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Button, Modal, Divider, Label, Grid, Form, Card, Popup, Icon, Message } from 'semantic-ui-react'
+import { Button, Modal, Divider, Label, Grid, Form} from 'semantic-ui-react'
 import {toastr} from 'react-redux-toastr'
 import { getProductFields, setNewProduct } from '../../actions/DepositoryActions'
 import Num2persian from 'num2persian';
@@ -19,9 +19,6 @@ const FORM_VALIDATION = {
     design_color: false,
 };
 class AddBillModal extends React.Component {
-    constructor(props) {
-        super(props);
-    }
     componentWillReceiveProps() {
         this.setState({ code: this.props.code });
     }

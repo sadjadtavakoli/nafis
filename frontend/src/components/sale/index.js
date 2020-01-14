@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import history from "../../history";
-import { Button,Tab,Container,Header, Segment } from 'semantic-ui-react'
+import { Button,Tab,Container, Segment } from 'semantic-ui-react'
 import { getActiveBill } from '../../actions/SaleActions'
 import AddBillModal from './addBillModal'
 import BillTable from './billTable'
@@ -17,9 +16,6 @@ const panes = [
   }
 ]
 class Sale extends React.Component {
-    constructor(props) {
-        super(props);
-    }
     componentDidMount() {
         this.props.getActiveBill()
     }
@@ -47,9 +43,9 @@ class Sale extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
+// const mapStateToProps = state => {
     // console.log(state)
-  return {
+  // return {
 //     nextReceipt: state.receipts.nextReceipt,
 //     currentUser: state.auth.currentUser
 //       ? state.auth.currentUser
@@ -61,8 +57,8 @@ const mapStateToProps = state => {
 //       : localStorage.getItem("type")
 //       ? localStorage.getItem("type")
 //       : ""
-  };
-};
+//   };
+// };
 
 export default connect(
   null,

@@ -4,7 +4,6 @@ import DialogModal from "./DialogModal";
 import { useToggle } from "../../utils/Hooks";
 import { connect } from "react-redux";
 import { doneTheBill, getBillREQUEST } from "../../actions/BillActions";
-import { toastr } from "react-redux-toastr";
 import { Redirect } from "react-router-dom";
 
 const BillDoneModal = props => {
