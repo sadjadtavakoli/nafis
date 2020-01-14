@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Button,Container, Segment } from 'semantic-ui-react'
 import AddProductModal from './addProductModal'
 import ProductTable from './productTable'
-import { getProductID } from '../../actions/DepositoryActions'
+import { getProductID,getProductsByFilter } from '../../actions/DepositoryActions'
 import FilterSegment from "./filterSegment";
 
 class Depository extends React.Component {
@@ -43,7 +43,7 @@ class Depository extends React.Component {
                       icon="filter"
                       labelPosition="right"
                     />
-                    {this.state.filterOpen ? <FilterSegment /> : null}
+                  {this.state.filterOpen ? <FilterSegment submitFilter={this.props.getProductsByFilter}/> : null}
                     </Segment>
                     <ProductTable />
                     </div>
@@ -54,7 +54,6 @@ class Depository extends React.Component {
 }
 
 const mapStateToProps = state => {
-    // console.log('ppppppppp',state)
   return {
         productID: state.depository.productID,
   };
@@ -62,5 +61,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { getProductID }
+  { getProductID,getProductsByFilter }
 )(Depository);
