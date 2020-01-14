@@ -54,28 +54,34 @@ class ProductViewSet(NafisBase, mixins.CreateModelMixin,
         except ObjectDoesNotExist:
             return Response({'چنین محصولی یافت نشد.'}, status=HTTP_404_NOT_FOUND)
 
+    def get_filter_kwargs(self):
+        data = self.request.query_params
+        data = {k: (data.getlist(k) if k.endswith('[]') else data.get(k))
+                for k in data}
+        return data
+
     @action(methods=["GET"], detail=False, url_path="filter")
     def filter_products(self,request, **kwargs):
-        bg_colors = self.request.query_params.get('bg_color', None)
-        design_colors = self.request.query_params.get('design_color', None)
-        designs = self.request.query_params.get('design', None)
-        f_types = self.request.query_params.get('f_type', None)
-        branches = self.request.query_params.get('branch', None)
-        materials = self.request.query_params.get('material', None)
-
+        data = self.get_filter_kwargs()
+        bg_colors = data.get('bg_color[]', None)
+        design_colors = data.get('design_color[]', None)
+        designs = data.get('design[]', None)
+        f_types = data.get('f_type[]', None)
+        branches = data.get('branch[]', None)
+        materials = data.get('material[]', None)
         filter_items = {}
-        if bg_colors is not None and len(ast.literal_eval(bg_colors)):
-            filter_items['background_color__pk__in'] = ast.literal_eval(bg_colors)
-        if design_colors is not None and len(ast.literal_eval(design_colors)):
-            filter_items['design_color__pk__in'] = ast.literal_eval(design_colors)
-        if designs is not None and len(ast.literal_eval(designs)):
-            filter_items['design__pk__in'] = ast.literal_eval(designs)
-        if f_types is not None and len(ast.literal_eval(f_types)):
-            filter_items['f_type__pk__in'] = ast.literal_eval(f_types)
-        if branches is not None and len(ast.literal_eval(branches)):
-            filter_items['branch__pk__in'] = ast.literal_eval(branches)
-        if materials is not None and len(ast.literal_eval(materials)):
-            filter_items['material__pk__in'] = ast.literal_eval(materials)
+        if bg_colors is not None and len(bg_colors):
+            filter_items['background_color__pk__in'] = bg_colors
+        if design_colors is not None and len(design_colors):
+            filter_items['design_color__pk__in'] = design_colors
+        if designs is not None and len(designs):
+            filter_items['design__pk__in'] = designs
+        if f_types is not None and len(f_types):
+            filter_items['f_type__pk__in'] = f_types
+        if branches is not None and len(branches):
+            filter_items['branch__pk__in'] = branches
+        if materials is not None and len(materials):
+            filter_items['material__pk__in'] = materials
 
         products = Product.objects.filter(**filter_items)
         page = self.paginate_queryset(products)
