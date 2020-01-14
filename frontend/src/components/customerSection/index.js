@@ -12,11 +12,16 @@ class Customers extends Component {
   state = {
     totalPageCount: 1,
     activePage: 1,
+    customers: [],
     pk: null
   };
 
   componentDidMount() {
-    this.props.getCustomerUsers(this.state.pk);
+    this.props.getCustomerUsers(this.state.pk).then(() => {
+      this.setState({
+        customers: this.props.usersCustomers.results
+      });
+    });
   }
 
   changePage = (_, { activePage }) => {
@@ -39,14 +44,19 @@ class Customers extends Component {
                 <Grid columns={1}>
                   <Grid.Row className="us-header">
                     <span className="us-p us-users">مشتریان</span>
-                    <Search className="us-p" />
+                    <Search
+                      id="us-search"
+                      showNoResults={false}
+                      placeholder="جست و جو..."
+                      className="placeholder-rtl yekan ltr"
+                    />
                   </Grid.Row>
                 </Grid>
               </Table.HeaderCell>
             </Table.Row>
           </Table.Header>
 
-          {this.props.usersCustomers && this.props.usersCustomers !== null ? (
+          {this.props.usersCustomers && this.state.customers !== null ? (
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell style={{ borderLeft: "1px solid #ddd" }}>
@@ -59,17 +69,13 @@ class Customers extends Component {
           ) : null}
 
           <Table.Body>
-            {!this.props.usersCustomers ? <LoadingBar /> : null}
-            {this.props.usersCustomers &&
-            this.props.usersCustomers.results.length === 0 ? (
-              <NotFound />
-            ) : null}
-            {this.props.usersCustomers && this.props.usersCustomers !== null
-              ? this.props.usersCustomers.results.map(item => {
+            {this.props.usersCustomers && this.state.customers.length !== 0
+              ? this.state.customers.map(item => {
                   return (
                     <Table.Row key={item.pk}>
                       <Table.Cell style={{ borderLeft: "1px solid #ddd" }}>
-                        <span>{item.first_name}</span>{" "}
+                        <span>{item.first_name}</span>
+                        <span>&nbsp;</span>
                         <span>{item.last_name}</span>
                       </Table.Cell>
                       <Table.Cell className="norm-latin">
@@ -90,6 +96,14 @@ class Customers extends Component {
                   );
                 })
               : null}
+
+            {this.props.usersCustomers && !this.state.customers.length ? (
+              <LoadingBar />
+            ) : null}
+            {this.props.usersCustomers &&
+            this.props.usersCustomers.results.length === 0 ? (
+              <NotFound />
+            ) : null}
           </Table.Body>
 
           {this.props.usersCustomers && this.props.usersCustomers.count > 25 ? (

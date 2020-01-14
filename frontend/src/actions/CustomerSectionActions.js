@@ -16,6 +16,7 @@ export const getCustomerUsers = (page = 1) => async dispatch => {
     }
   );
   dispatch({ type: GET_USERS_CUSTOMERS, payload: response.data });
+  return response;
 };
 
 export const getAllBills = pk => async dispatch => {
