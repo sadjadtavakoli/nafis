@@ -8,6 +8,7 @@ import {
 import { digitToComma } from "../utils/numberUtils";
 import NotFound from "../utils/notFound";
 import LoadingBar from "../utils/loadingBar";
+import { standardTimeToJalaali } from "../utils/jalaaliUtils";
 
 class FactorsTab extends Component {
   state = {
@@ -81,10 +82,14 @@ class FactorsTab extends Component {
               </Table.Cell>
               <Table.Cell>{this.state.cheques[0].bank}</Table.Cell>
               <Table.Cell className="norm-latin">
-                <span>{this.state.cheques[0].issue_date}</span>
+                <span>
+                  {standardTimeToJalaali(this.state.cheques[0].issue_date)}
+                </span>
               </Table.Cell>
               <Table.Cell className="norm-latin">
-                <span>{this.state.cheques[0].expiry_date}</span>
+                <span>
+                  {standardTimeToJalaali(this.state.cheques[0].expiry_date)}
+                </span>
               </Table.Cell>
               <Table.Cell className="norm-latin">
                 <span>{digitToComma(this.state.cheques[0].amount)} </span>
