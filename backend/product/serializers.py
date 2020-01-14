@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from product.models import Product, ProductId, Color, Material, FType, Design
+from supplier.serializers import SupplierSerializer
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -12,6 +13,8 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ProductDetailSerializer(serializers.ModelSerializer):
+    supplier = SupplierSerializer()
+
     class Meta:
         model = Product
         fields = (
