@@ -4,11 +4,13 @@ import { Button,Container, Segment } from 'semantic-ui-react'
 import AddProductModal from './addProductModal'
 import ProductTable from './productTable'
 import { getProductID } from '../../actions/DepositoryActions'
+import FilterSegment from "./filterSegment";
 
 class Depository extends React.Component {
     state = {
         open: false,
-        productID:NaN
+        productID:NaN,
+        filterOpen: false
     }
     closeModal = () => {
         this.setState({ open: false });
@@ -20,6 +22,11 @@ class Depository extends React.Component {
             });
         });
     }
+    openFilter = status => {
+      this.setState({
+        filterOpen: status
+      });
+    };
     render() {
         return (
             <React.Fragment>
@@ -27,7 +34,16 @@ class Depository extends React.Component {
                 <AddProductModal open={this.state.open} code={this.state.productID} onClose={this.closeModal}/>
                 <div id="depository">
                     <Segment stacked className="rtl">
-                        <Button className="yekan" onClick={this.openModal} color="green" content='افزودن محصول جدید' icon='add' labelPosition='right' />
+                  <Button className="yekan" onClick={this.openModal} color="green" content='افزودن محصول جدید' icon='add' labelPosition='right' />
+                   <Button
+                      className="yekan"
+                      onClick={() => this.openFilter(!this.state.filterOpen)}
+                      color={this.state.filterOpen ? "yellow" : "gray"}
+                      content="فیلتر"
+                      icon="filter"
+                      labelPosition="right"
+                    />
+                    {this.state.filterOpen ? <FilterSegment /> : null}
                     </Segment>
                     <ProductTable />
                     </div>
