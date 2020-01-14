@@ -125,7 +125,8 @@ class FactorsTab extends Component {
           <span className="us-fm-span">نمایش فاکتورهای باقی مانده</span>
         </Segment>
         {this.state.virgin ? <LoadingBar /> : null}
-        {this.state.bills.length ? this.createTable() : <NotFound />}
+        {!this.state.virgin && !this.state.bills.length ? <NotFound /> : null}
+        {this.state.bills.length ? this.createTable() : null}
       </div>
     );
   }
