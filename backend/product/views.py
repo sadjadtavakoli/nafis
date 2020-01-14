@@ -27,7 +27,7 @@ class ProductViewSet(NafisBase, mixins.CreateModelMixin,
                      mixins.ListModelMixin,
                      GenericViewSet):
     serializer_class = ProductSerializer
-    permission_classes = (LoginRequired,)
+    # permission_classes = (LoginRequired,)
     queryset = Product.objects.all()
     pagination_class = PaginationClass
 
@@ -56,12 +56,12 @@ class ProductViewSet(NafisBase, mixins.CreateModelMixin,
 
     @action(methods=["GET"], detail=False, url_path="filter")
     def filter_products(self,request, **kwargs):
-        bg_colors = self.request.query_params.get('bg_colors', None)
-        design_colors = self.request.query_params.get('design_colors', None)
-        designs = self.request.query_params.get('designs', None)
-        f_types = self.request.query_params.get('f_types', None)
-        branches = self.request.query_params.get('branches', None)
-        materials = self.request.query_params.get('materials', None)
+        bg_colors = self.request.query_params.get('bg_color', None)
+        design_colors = self.request.query_params.get('design_color', None)
+        designs = self.request.query_params.get('design', None)
+        f_types = self.request.query_params.get('f_type', None)
+        branches = self.request.query_params.get('branch', None)
+        materials = self.request.query_params.get('material', None)
 
         filter_items = {}
         if bg_colors is not None and len(ast.literal_eval(bg_colors)):
@@ -78,7 +78,13 @@ class ProductViewSet(NafisBase, mixins.CreateModelMixin,
             filter_items['material__pk__in'] = ast.literal_eval(materials)
 
         products = Product.objects.filter(**filter_items)
-        return Response(ProductDetailSerializer(products, many=True).data)
+        page = self.paginate_queryset(products)
+        if page is not None:
+            serializer = ProductDetailSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = ProductDetailSerializer(products, many=True)
+        return Response(serializer.data)
 
 
 class ProductIdCreateApiView(NafisBase, CreateAPIView):
