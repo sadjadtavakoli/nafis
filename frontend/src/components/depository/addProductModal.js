@@ -364,7 +364,6 @@ class AddBillModal extends React.Component {
 }
 
 const mapStateToProps = state => {
-  // console.log('statXXXXXXXXXe',state)
   return {
     productFields: state.depository.productFields
   };

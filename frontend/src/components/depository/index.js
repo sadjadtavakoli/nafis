@@ -3,16 +3,20 @@ import { connect } from "react-redux";
 import { Button, Container, Segment } from "semantic-ui-react";
 import AddProductModal from "./addProductModal";
 import ProductTable from "./productTable";
-import { getProductID } from "../../actions/DepositoryActions";
+import { getProductID, getProductsList } from "../../actions/DepositoryActions";
+import FilterSegment from "./filterSegment";
 
 class Depository extends React.Component {
   state = {
     open: false,
-    productID: NaN
+    productID: NaN,
+    filterOpen: false
   };
+
   closeModal = () => {
     this.setState({ open: false });
   };
+
   openModal = () => {
     this.props.getProductID().then(() => {
       this.setState({ productID: this.props.productID.pk }, () => {
@@ -20,6 +24,13 @@ class Depository extends React.Component {
       });
     });
   };
+
+  openFilter = status => {
+    this.setState({
+      filterOpen: status
+    });
+  };
+
   render() {
     return (
       <React.Fragment>
@@ -39,6 +50,15 @@ class Depository extends React.Component {
                 icon="add"
                 labelPosition="right"
               />
+              <Button
+                className="yekan"
+                onClick={() => this.openFilter(!this.state.filterOpen)}
+                color={this.state.filterOpen ? "yellow" : "gray"}
+                content="فیلتر"
+                icon="filter"
+                labelPosition="right"
+              />
+              {this.state.filterOpen ? <FilterSegment /> : null}
             </Segment>
             <ProductTable />
           </div>
@@ -49,10 +69,12 @@ class Depository extends React.Component {
 }
 
 const mapStateToProps = state => {
-  // console.log('ppppppppp',state)
   return {
-    productID: state.depository.productID
+    productID: state.depository.productID,
+    productsList: state.depository.productsList
   };
 };
 
-export default connect(mapStateToProps, { getProductID })(Depository);
+export default connect(mapStateToProps, { getProductID, getProductsList })(
+  Depository
+);

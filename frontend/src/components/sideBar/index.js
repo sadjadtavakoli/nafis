@@ -132,15 +132,15 @@ class SideBar extends React.Component {
                 <span>انبارداری</span>
               </Menu.Item>
             ) : null}
-            {isPermit("users", this.state.job) ? (
+            {isPermit("customers", this.state.job) ? (
               <Menu.Item
                 onClick={() => {
-                  this.goTo("/users/");
+                  this.goTo("/customers/");
                 }}
                 as="a"
               >
                 <Icon name="users" />
-                <span>کاربران</span>
+                <span>مشتریان</span>
               </Menu.Item>
             ) : null}
           </Sidebar>

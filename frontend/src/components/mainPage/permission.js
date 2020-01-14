@@ -9,7 +9,7 @@ export const isPermit = (section, job) => {
     case "depository":
       return job === "admin" || job === "storekeeper" || job === "accountant";
 
-    case "users":
+    case "customers":
       return job === "admin" || job === "storekeeper" || job === "accountant";
 
     default:

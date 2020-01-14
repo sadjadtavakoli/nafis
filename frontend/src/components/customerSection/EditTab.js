@@ -1,9 +1,12 @@
 import React, { Component } from "react";
-import { Button, Modal, Form, Label, Icon } from "semantic-ui-react";
+import { Button, Form, Label, Icon } from "semantic-ui-react";
 import { connect } from "react-redux";
-import { getACustomer, updateCustomer } from "../../actions/UserSectionActions";
+import {
+  getACustomer,
+  updateCustomer
+} from "../../actions/CustomerSectionActions";
 
-class EditModal extends Component {
+class EditTab extends Component {
   state = {
     pk: null,
     first_name: null,
@@ -26,17 +29,12 @@ class EditModal extends Component {
     class_type_b: false
   };
 
+  componentDidMount() {
+    this.props.getACustomer(this.props.passingPk);
+  }
   componentDidUpdate() {
-    if (this.state.pk !== this.props.passingPk) {
-      this.setState({
-        pk: this.props.passingPk
-      });
-      this.props.getACustomer(this.props.passingPk);
-    }
-
     if (
       this.props.theCustomer &&
-      this.state.first_name !== this.props.theCustomer.first_name &&
       this.state.phone_number !== this.props.theCustomer.phone_number
     ) {
       this.setState({
@@ -161,35 +159,24 @@ class EditModal extends Component {
   render() {
     return (
       <div className="rtl text-right">
-        <Modal
-          closeOnDimmerClick={false}
-          dimmer={"blurring"}
-          open={this.props.isOpen}
-          onClose={this.props.onClose}
-        >
-          <Modal.Header className="text-right">ویرایش</Modal.Header>
-          <Modal.Content className="rtl text-right">
-            <Form>
-              <Form.Group unstackable widths={2}>
-                {this.createInput("first_name", "نام")}
-                {this.createInput("last_name", "نام خانوداگی")}
-              </Form.Group>
-              <Form.Group unstackable widths={2}>
-                {this.createInput("email", "ایمیل")}
-                {this.createInput("phone_number", "شماره تلفن")}
-              </Form.Group>
-              <Form.Group unstackable widths={2}>
-                {this.createInput("address", "آدرس")}
-                {this.createInput("birth_date", "تاریخ تولد")}
-              </Form.Group>
-              <Form.Group unstackable widths={2}>
-                {this.createInput("marriage_date", "تاریخ ازدواج")}
-                {this.createInput("points", "امتیازات")}
-              </Form.Group>
-            </Form>
-          </Modal.Content>
-          <Modal.Actions>{this.createCloseButton()}</Modal.Actions>
-        </Modal>
+        <Form>
+          <Form.Group unstackable widths={2}>
+            {this.createInput("first_name", "نام")}
+            {this.createInput("last_name", "نام خانوداگی")}
+          </Form.Group>
+          <Form.Group unstackable widths={2}>
+            {this.createInput("email", "ایمیل")}
+            {this.createInput("phone_number", "شماره تلفن")}
+          </Form.Group>
+          <Form.Group unstackable widths={2}>
+            {this.createInput("address", "آدرس")}
+            {this.createInput("birth_date", "تاریخ تولد")}
+          </Form.Group>
+          <Form.Group unstackable widths={2}>
+            {this.createInput("marriage_date", "تاریخ ازدواج")}
+            {this.createInput("points", "امتیازات")}
+          </Form.Group>
+        </Form>
       </div>
     );
   }
@@ -202,5 +189,5 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, { getACustomer, updateCustomer })(
-  EditModal
+  EditTab
 );

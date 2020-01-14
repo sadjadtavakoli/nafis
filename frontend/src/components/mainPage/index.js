@@ -82,11 +82,11 @@ class MainPage extends React.Component {
                   </Card>
                 ) : null}
 
-                {isPermit("users", this.state.job) ? (
+                {isPermit("customers", this.state.job) ? (
                   <Card
                     raised
                     className="p-5 pointer tale"
-                    onClick={() => history.push("/users/")}
+                    onClick={() => history.push("/customers/")}
                   >
                     <Icon
                       padded={true}
@@ -94,7 +94,7 @@ class MainPage extends React.Component {
                       className="m-auto w-100"
                       name="users"
                     />
-                    <h2 className="text-black yekan text-center">کاربران</h2>
+                    <h2 className="text-black yekan text-center">مشتریان</h2>
                   </Card>
                 ) : null}
               </Card.Group>
