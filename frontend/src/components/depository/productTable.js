@@ -197,10 +197,10 @@ class ProductTable extends React.Component {
                           {item.design && item.design.name}
                         </span>
                       </Table.Cell>
-                      <Table.Cell className="norm-latin text-center ltr">
-                        <span className="yekan">متر</span>
-                        <span>&nbsp;</span>
+                      <Table.Cell className="norm-latin text-center rtl">
                         <span>{item.stock_amount}</span>
+                        <span>&nbsp;</span>
+                        <span className="yekan">متر</span>
                       </Table.Cell>
                       <Table.Cell className="norm-latin text-center rtl">
                         <span>{digitToComma(item.selling_price)}</span>{" "}
