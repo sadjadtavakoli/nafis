@@ -166,5 +166,4 @@ const mapStateToProps = state => {
     productFields: state.depository.productFields
   };
 };
-const X = connect(mapStateToProps, { getProductFields })(FilterSegment)
-export default X;
+export default connect(mapStateToProps, { getProductFields })(FilterSegment);
