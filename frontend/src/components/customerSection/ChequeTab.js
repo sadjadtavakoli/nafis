@@ -7,12 +7,13 @@ import {
 } from "../../actions/CustomerSectionActions";
 import { digitToComma } from "../utils/numberUtils";
 import NotFound from "../utils/notFound";
+import LoadingBar from "../utils/loadingBar";
 
 class FactorsTab extends Component {
   state = {
     virgin: true,
     cheques: [],
-    remainedCheques: false
+    remainedChequesToggle: false
   };
 
   componentDidMount() {
@@ -21,7 +22,6 @@ class FactorsTab extends Component {
         virgin: false,
         cheques: this.props.allCheques
       });
-      console.log(this.props.allCheques);
     });
   }
 
@@ -30,19 +30,32 @@ class FactorsTab extends Component {
   };
 
   handleToggleClick = () => {
-    this.setState({
-      remainedCheques: !this.state.remainedCheques
-    });
-    if (this.state.remainedCheques) {
-      this.setState({
-        cheques: this.props.allCheques
-      });
-    } else {
-      this.props.getRemainedCheques(this.props.passingPk);
-      this.setState({
-        cheques: this.props.remainedCheques
-      });
-    }
+    this.setState(
+      {
+        virgin: false,
+        remainedChequesToggle: !this.state.remainedBillsToggle
+      },
+      () => {
+        if (this.state.remainedChequesToggle) {
+          this.props.getRemainedCheques(this.props.passingPk).then(() => {
+            this.setState({
+              virgin: false,
+              cheques: this.props.remainedCheques
+            });
+          });
+          this.setState({
+            cheques: this.props.allCheques
+          });
+        } else {
+          this.props.getRemainedCheques(this.props.passingPk).then(() => {
+            this.setState({
+              virgin: false,
+              cheques: this.props.allCheques
+            });
+          });
+        }
+      }
+    );
   };
 
   createTable = () => {
@@ -100,7 +113,9 @@ class FactorsTab extends Component {
           />
           <span className="us-fm-span">نمایش چک های باقی مانده</span>
         </Segment>
-        {this.state.virgin ? this.createTable() : <NotFound />}
+        {this.state.virgin ? <LoadingBar /> : null}
+        {!this.state.virgin && !this.state.cheques.length ? <NotFound /> : null}
+        {this.state.cheques.length ? this.createTable() : null}
       </div>
     );
   }

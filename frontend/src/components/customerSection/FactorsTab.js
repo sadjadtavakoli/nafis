@@ -7,6 +7,7 @@ import {
 } from "../../actions/CustomerSectionActions";
 import NotFound from "../utils/notFound";
 import LoadingBar from "../utils/loadingBar";
+import { digitToComma } from "../utils/numberUtils";
 
 class FactorsTab extends Component {
   state = {
@@ -34,7 +35,7 @@ class FactorsTab extends Component {
               </Table.HeaderCell>
               <Table.HeaderCell>کد محصول</Table.HeaderCell>
               <Table.HeaderCell>قیمت واحد</Table.HeaderCell>
-              <Table.HeaderCell>مقدار (متر)</Table.HeaderCell>
+              <Table.HeaderCell>مقدار</Table.HeaderCell>
               <Table.HeaderCell>تخفیف</Table.HeaderCell>
               <Table.HeaderCell>قیمت نهایی فاکتو</Table.HeaderCell>
               <Table.HeaderCell>تخفیف کل</Table.HeaderCell>
@@ -48,12 +49,27 @@ class FactorsTab extends Component {
                     <Table.Cell className="d-table-border">
                       {item.product.name}
                     </Table.Cell>
-                    <Table.Cell>{item.product.code}</Table.Cell>
-                    <Table.Cell>{item.product.selling_price}</Table.Cell>
-                    <Table.Cell>{item.amount}</Table.Cell>
-                    <Table.Cell>{item.discount}</Table.Cell>
-                    <Table.Cell>{item.final_price}</Table.Cell>
-                    <Table.Cell>{item.total_discount}</Table.Cell>
+                    <Table.Cell className="norm-latin">
+                      <span>{item.product.code}</span>
+                    </Table.Cell>
+                    <Table.Cell className="norm-latin">
+                      <span>{digitToComma(item.product.selling_price)}</span>
+                      <span className="yekan"> تومان</span>
+                    </Table.Cell>
+                    <Table.Cell className="norm-latin">
+                      <span>{item.amount}</span>
+                      <span className="yekan"> متر</span>
+                    </Table.Cell>
+                    <Table.Cell className="norm-latin">
+                      <span>{item.discount}</span>
+                    </Table.Cell>
+                    <Table.Cell className="norm-latin">
+                      <span>{digitToComma(item.final_price)}</span>
+                      <span className="yekan"> تومان</span>
+                    </Table.Cell>
+                    <Table.Cell className="norm-latin">
+                      <span>{item.total_discount}</span>
+                    </Table.Cell>
                   </React.Fragment>
                 );
               })}
