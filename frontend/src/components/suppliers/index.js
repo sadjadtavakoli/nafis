@@ -8,9 +8,9 @@ class Suppliers extends Component {
     this.props.getSuppliersAction();
   }
 
-  componentDidUpdate() {
+  handleClick = () => {
     console.log(this.props.suppliers);
-  }
+  };
 
   render() {
     return (
@@ -54,7 +54,7 @@ class Suppliers extends Component {
                   <span>phone number</span>
                 </Table.Cell>
                 <Table.Cell>
-                  <Button color="teal">
+                  <Button color="teal" onClick={this.handleClick}>
                     <span>مشاهده</span>
                   </Button>
                 </Table.Cell>
@@ -88,7 +88,6 @@ class Suppliers extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log(state);
   return {
     suppliers: state.suppliers
   };

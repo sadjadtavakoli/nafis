@@ -1,13 +1,9 @@
 import { GET_SUPPLIERS } from "./types";
 import { server } from "../apis/server";
 
-export const getSuppliersAction = (page = 1) => async dispatch => {
+export const getSuppliersAction = pk => async dispatch => {
   const response = await server(localStorage.getItem("token")).get(
-    "/suppliers/",
-    {
-      // params: { page }
-    }
+    `/suppliers/${pk}/`
   );
   dispatch({ type: GET_SUPPLIERS, payload: response.data });
-  return response;
 };
