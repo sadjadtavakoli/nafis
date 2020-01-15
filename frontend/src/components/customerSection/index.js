@@ -86,7 +86,7 @@ class Customers extends Component {
                           color="teal"
                           onClick={() => {
                             this.handleViewClick(item.pk);
-                            history.push(`/customers/CustomerPage/${item.pk}/`);
+                            history.push(`/customers/customer/${item.pk}/`);
                           }}
                         >
                           <span>مشاهده</span>

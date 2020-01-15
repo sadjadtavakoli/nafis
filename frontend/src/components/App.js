@@ -34,7 +34,7 @@ const App = ({ token }) => {
             <Route path="/daily-report/" exact component={DailyReport} />
             <Route path="/customers/" exact component={Customers} />
             <Route
-              path="/customers/CustomerPage/:pk/"
+              path="/customers/customer/:pk/"
               exact
               component={CustomerPage}
             />
