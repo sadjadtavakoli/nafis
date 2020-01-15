@@ -34,6 +34,9 @@ export const addPaymentToBill = (billID, payment) => (dispatch, _, { api }) => {
     .then(res => res.data)
     .then(res => {
       dispatch(sucss({ payment: res, billID }));
+    })
+    .catch(error => {
+      dispatch(faild(error));
     });
 };
 
@@ -52,6 +55,9 @@ export const addPaymentToBillv2 = (billID, payment) => (
     .then(res => res.data)
     .then(res => {
       dispatch(sucss({ bill: res, billID }));
+    })
+    .catch(error => {
+      dispatch(faild(error));
     });
 };
 
@@ -61,10 +67,15 @@ export const removePayment = (billID, paymentID) => (dispatch, _, { api }) => {
   const faild = createFaildAction(ActionTypes.REMOVE_PAYMENT);
 
   dispatch(fetch());
-  return api.delete(`/payments/${paymentID}/`).then(res => {
-    if (res.status >= 200 && res.status < 300)
-      dispatch(sucss({ billID, paymentID }));
-  });
+  return api
+    .delete(`/payments/${paymentID}/`)
+    .then(res => {
+      if (res.status >= 200 && res.status < 300)
+        dispatch(sucss({ billID, paymentID }));
+    })
+    .catch(error => {
+      dispatch(faild(error));
+    });
 };
 
 export const doneTheBill = (billID, sendSms) => (dispatch, _, { api }) => {
@@ -78,13 +89,18 @@ export const doneTheBill = (billID, sendSms) => (dispatch, _, { api }) => {
     .then(res => res.data)
     .then(res => {
       dispatch(sucss({ billID }));
+    })
+    .catch(error => {
+      dispatch(faild(error));
     });
 };
 
-export const getDailyReport = () => async (dispatch) => { 
-    const response = await server(localStorage.getItem("token")).get("/bills/daily-report/");
-    dispatch({ type: ActionTypes.GET_DAILY_REPORT, payload: response.data });
-}
+export const getDailyReport = () => async dispatch => {
+  const response = await server(localStorage.getItem("token")).get(
+    "/bills/daily-report/"
+  );
+  dispatch({ type: ActionTypes.GET_DAILY_REPORT, payload: response.data });
+};
 
 export const removeBill = billID => (dispatch, _, { api }) => {
   const fetch = createFetchAction(ActionTypes.REMOVE_BILL);
@@ -100,6 +116,9 @@ export const removeBill = billID => (dispatch, _, { api }) => {
     })
     .catch(err => {
       throw err.response.data;
+    })
+    .catch(error => {
+      dispatch(faild(error));
     });
 };
 
@@ -115,5 +134,8 @@ export const getBillREQUEST = billID => (dispatch, _, { api }) => {
     .then(res => {
       dispatch(sucss({ bill: res }));
       return res;
+    })
+    .catch(error => {
+      dispatch(faild(error));
     });
 };
