@@ -30,7 +30,11 @@ class Depository extends React.Component {
       filterOpen: status
     });
   };
-
+  getProductsByFilter = (filterParams) => {
+    this.props.getProductsByFilter(filterParams).then((response) => {
+      console.log('response',response.data)
+    });
+  };
   render() {
     return (
       <React.Fragment>
@@ -58,7 +62,7 @@ class Depository extends React.Component {
                 icon="filter"
                 labelPosition="right"
               />
-              {this.state.filterOpen ? <FilterSegment submitFilter={this.props.getProductsByFilter}/> : null}
+              {this.state.filterOpen ? <FilterSegment submitFilter={this.getProductsByFilter}/> : null}
             </Segment>
             <ProductTable />
           </div>

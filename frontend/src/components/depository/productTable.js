@@ -18,9 +18,13 @@ class ProductTable extends React.Component {
         this.updateWindowDimensions();
         window.addEventListener('resize', this.updateWindowDimensions);
     }
-
+    componentWillReceiveProps(newProps) {
+        if (newProps.productsList && newProps.productsList.results) {
+            this.setState({ notFound: false, productsList: newProps.productsList.results });
+        }
+    }
     componentWillUnmount() {
-    window.removeEventListener('resize', this.updateWindowDimensions);
+        window.removeEventListener('resize', this.updateWindowDimensions);
     }
     getProductsList = (page = 1) => {
         this.props.getProductsList(page).then(() => {
@@ -75,82 +79,85 @@ class ProductTable extends React.Component {
         />);
     }
     render() {
-        return this.state.productsList.length > 0 ? (
+        return (
             <div>
-        <Table celled striped className="">
-            <Table.Header >
-                        <Table.Row>
-                        <Table.HeaderCell colSpan='10' className="rtl text-right">
-                            <Grid>
-                                <Grid.Column width={this.state.width < 768 ? 16: 3} style={{display:'flex',alignItems:'center',paddingLeft: 0}}>
-                                        <span>لیست محصولات موجود</span>
-                                        <Button icon onClick={() => this.getProductsList(this.state.activePage)}><Icon name='repeat' /></Button>
-                                </Grid.Column>
-                                    <Grid.Column width={this.state.width < 768 ? 16: 6}>
-                            {this.searchBar()}
-                            </Grid.Column>
-                            </Grid>
-                            </Table.HeaderCell>
-                    </Table.Row>
-                        <Table.Row>
-                            {!this.state.notFound ?<React.Fragment>
-                                <Table.HeaderCell className="text-center">رنگ پس زمینه</Table.HeaderCell>
-                                <Table.HeaderCell className="text-center">رنگ طرح</Table.HeaderCell>
-                                <Table.HeaderCell className="text-center">جنس</Table.HeaderCell>
-                                <Table.HeaderCell className="text-center">نوع پارچه</Table.HeaderCell>
-                                <Table.HeaderCell className="text-center">نوع طرح</Table.HeaderCell>
-                                <Table.HeaderCell className="text-center">مقدار باقی مانده</Table.HeaderCell>
-                                <Table.HeaderCell className="text-center">قیمت فروش</Table.HeaderCell>
-                                {/* <Table.HeaderCell className="text-center">قیمت خرید</Table.HeaderCell> */}
-                                <Table.HeaderCell className="text-center">نام محصول</Table.HeaderCell>
-                                <Table.HeaderCell className="text-center">کد محصول</Table.HeaderCell></React.Fragment>: null}
-            </Table.Row>
-            </Table.Header>
+                {this.state.productsList.length > 0 ? (
+                    <Table celled striped className="">
+                        <Table.Header >
+                            <Table.Row>
+                                <Table.HeaderCell colSpan='10' className="rtl text-right">
+                                    <Grid>
+                                        <Grid.Column width={this.state.width < 768 ? 16 : 3} style={{ display: 'flex', alignItems: 'center', paddingLeft: 0 }}>
+                                            <span>لیست محصولات موجود</span>
+                                            <Button icon onClick={() => this.getProductsList(this.state.activePage)}><Icon name='repeat' /></Button>
+                                        </Grid.Column>
+                                        <Grid.Column width={this.state.width < 768 ? 16 : 6}>
+                                            {this.searchBar()}
+                                        </Grid.Column>
+                                    </Grid>
+                                </Table.HeaderCell>
+                            </Table.Row>
+                            <Table.Row>
+                                {!this.state.notFound ? <React.Fragment>
+                                    <Table.HeaderCell className="text-center">رنگ پس زمینه</Table.HeaderCell>
+                                    <Table.HeaderCell className="text-center">رنگ طرح</Table.HeaderCell>
+                                    <Table.HeaderCell className="text-center">جنس</Table.HeaderCell>
+                                    <Table.HeaderCell className="text-center">نوع پارچه</Table.HeaderCell>
+                                    <Table.HeaderCell className="text-center">نوع طرح</Table.HeaderCell>
+                                    <Table.HeaderCell className="text-center">مقدار باقی مانده</Table.HeaderCell>
+                                    <Table.HeaderCell className="text-center">قیمت فروش</Table.HeaderCell>
+                                    {/* <Table.HeaderCell className="text-center">قیمت خرید</Table.HeaderCell> */}
+                                    <Table.HeaderCell className="text-center">نام محصول</Table.HeaderCell>
+                                    <Table.HeaderCell className="text-center">کد محصول</Table.HeaderCell></React.Fragment> : null}
+                            </Table.Row>
+                        </Table.Header>
 
-                <Table.Body>
+                        <Table.Body>
                     
-                        {!this.state.notFound?this.state.productsList.map((item,index) => {
-                            return(<Table.Row key={index}>
+                            {!this.state.notFound ? this.state.productsList.map((item, index) => {
+                                return (<Table.Row key={index}>
                                     <Table.Cell className="norm-latin text-center"><span className="yekan">{item.background_color && item.background_color.name}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center"><span className="yekan">{item.design_color && item.design_color.name}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center"><span className="yekan">{item.material && item.material.name}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center"><span className="yekan">{item.f_type && item.f_type.name}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center"><span className="yekan">{item.design && item.design.name}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center ltr">
-                                    <span className="yekan">متر</span>
-                                    <span>&nbsp;</span>
-                                    <span>{(item.stock_amount)}</span>
+                                        <span className="yekan">متر</span>
+                                        <span>&nbsp;</span>
+                                        <span>{(item.stock_amount)}</span>
                                     </Table.Cell>
                                     <Table.Cell className="norm-latin text-center rtl"><span>{digitToComma(item.selling_price)}</span> <span className="yekan">تومان</span></Table.Cell>
                                     {/* <Table.Cell className="norm-latin text-center rtl"><span>{digitToComma(item.buying_price)}</span> <span className="yekan">تومان</span></Table.Cell> */}
                                     <Table.Cell className="yekan text-center"><span>{item.name}</span></Table.Cell>
                                     <Table.Cell className="norm-latin text-center" textAlign='right'>
-                                    <span>{item.code}</span>
+                                        <span>{item.code}</span>
                                     </Table.Cell>
                                 </Table.Row>);
-                        }):null}
-                </Table.Body>
+                            }) : null}
+                        </Table.Body>
                 
-                    <Table.Footer fullWidth hidden={this.state.totalPageCount < 2}>
-                <Table.Row>
-                    <Table.HeaderCell colSpan='10' className="norm-latin" style={{overflow:'scroll',maxWidth:this.state.width /2}}>
-                        <Pagination className="norm-latin" defaultActivePage={1} onPageChange={this.changePage} totalPages={this.state.totalPageCount} />
-                    </Table.HeaderCell>
-                        </Table.Row>
+                        <Table.Footer fullWidth hidden={this.state.totalPageCount < 2}>
+                            <Table.Row>
+                                <Table.HeaderCell colSpan='10' className="norm-latin" style={{ overflow: 'scroll', maxWidth: this.state.width / 2 }}>
+                                    <Pagination className="norm-latin" defaultActivePage={1} onPageChange={this.changePage} totalPages={this.state.totalPageCount} />
+                                </Table.HeaderCell>
+                            </Table.Row>
                         
-                </Table.Footer>
-                </Table>
-                {this.state.notFound?<NotFound/>:null}
-
-            </div>) : <LoadingBar />;
+                        </Table.Footer>
+                    </Table>
+                        
+                ) : null}
+                { !this.props.productsList? <LoadingBar /> : null}
+                {this.props.productsList && this.props.productsList.count === 0 ? <NotFound /> : null}
+            </div>);
     }
                                         
 }
 
 const mapStateToProps = state => {
+    // console.log('NEEWWW STATE REDUX',state)
   return {
-            productsList: state.depository.productsList,
-
+    productsList: state.depository.productsList,
   };
 };
 

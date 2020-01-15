@@ -9,11 +9,11 @@ export const getProductsList = (page = 1) => async dispatch => {
   dispatch({ type: GET_PRODUCT_LIST, payload: response.data });
 };
 export const getProductsByFilter = (params, page = 1) => async dispatch => {
-  console.log('params',params)
   const response = await server(
     localStorage.getItem("token")
   ).get("/products/filter/", { params });
   dispatch({ type: GET_PRODUCT_LIST, payload: response.data });
+  return response;
 };
 
 export const getProductsByCode = (code, page = 1) => async dispatch => {
