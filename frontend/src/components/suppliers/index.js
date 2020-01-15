@@ -4,25 +4,32 @@ import { getSuppliersAction } from "../../actions/SuppliersActions";
 import { Table, Grid, Search, Button, Pagination } from "semantic-ui-react";
 import NotFound from "../utils/notFound";
 import history from "../../history";
+import LoadingBar from "../utils/loadingBar";
 
 class Suppliers extends Component {
   state = {
     totalPageCount: 1,
     activePage: 1,
     allSuppliers: [],
+    loading: true,
     pk: null
   };
 
   componentDidMount() {
     this.props.getSuppliersAction().then(() => {
-      this.setState({
-        allSuppliers: this.props.allSuppliers.results
-      });
+      this.setState(
+        {
+          allSuppliers: this.props.allSuppliers.results
+        },
+        () => {
+          this.setState({ loading: false });
+        }
+      );
     });
   }
 
   handleClick = pk => {
-    console.log(pk);
+    this.setState({ pk });
   };
 
   changePage = (_, { activePage }) => {
@@ -66,7 +73,7 @@ class Suppliers extends Component {
             </Table.Header>
 
             <Table.Body>
-              {this.state.allSuppliers.length ? (
+              {/* {!this.state.loading ? (
                 this.state.allSuppliers.map(item => {
                   return (
                     <Table.Row key={item.pk}>
@@ -96,9 +103,9 @@ class Suppliers extends Component {
                     </Table.Row>
                   );
                 })
-              ) : (
-                <NotFound />
-              )}
+              ) : ( */}
+              <LoadingBar />
+              {/* )} */}
             </Table.Body>
 
             {this.props.allSuppliers && this.props.allSuppliers.count > 25 ? (

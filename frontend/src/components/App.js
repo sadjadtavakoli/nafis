@@ -14,6 +14,7 @@ import PrintableFactor from "./factor";
 import Login from "./auth/login";
 import DailyReport from "./dailyReport";
 import Suppliers from "./suppliers";
+import Supplier from "./suppliers/Supplier";
 
 const App = ({ token }) => {
   return (
@@ -32,6 +33,7 @@ const App = ({ token }) => {
             />
             <Route path="/daily-report/" exact component={DailyReport} />
             <Route path="/suppliers/" exact component={Suppliers} />
+            <Route path="/suppliers/supplier/" exact component={Supplier} />
           </SideBar>
         </Router>
       ) : (

@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 
 class Supplier extends Component {
+  componentDidMount() {
+    console.log("MOUNTED");
+  }
   render() {
     return (
       <div>
