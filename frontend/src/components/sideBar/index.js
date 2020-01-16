@@ -1,7 +1,13 @@
 import React from "react";
 // import animejs from "animejs";
 import { connect } from "react-redux";
-import { Icon, Menu, Segment, Sidebar, Button } from "semantic-ui-react";
+import {
+  Icon,
+  Menu,
+  Segment,
+  Sidebar,
+  Button
+} from "semantic-ui-react";
 import history from "../../history";
 import { logOut } from "../../actions/LoginActions";
 import { isPermit } from "../mainPage/permission";
@@ -45,7 +51,9 @@ class SideBar extends React.Component {
     this.setState({ visible });
   };
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
-
+  componentWillReceiveProps(newProps) {
+    // console.log('new props in sidebar',newProps)
+  }
   render() {
     return (
       <div id="sidebar">
@@ -70,10 +78,7 @@ class SideBar extends React.Component {
                   this.state.userData.last_name}
               </Menu.Item>
               <Menu.Item style={{ paddingLeft: 0 }}>
-                <img
-                  src="http://uupload.ir/files/6dzr_business-user-account-png-image-min.png"
-                  alt="logo"
-                />
+                <img src="http://uupload.ir/files/6dzr_business-user-account-png-image-min.png" />
               </Menu.Item>
             </Menu.Menu>
           </Menu>
@@ -142,7 +147,6 @@ class SideBar extends React.Component {
                 <span>گزارشات</span>
               </Menu.Item>
             ) : null}
-
             {isPermit("customers", this.state.job) ? (
               <Menu.Item
                 onClick={() => {
@@ -152,6 +156,17 @@ class SideBar extends React.Component {
               >
                 <Icon name="users" />
                 <span>مشتریان</span>
+              </Menu.Item>
+            ) : null}
+            {isPermit("suppliers", this.state.job) ? (
+              <Menu.Item
+                onClick={() => {
+                  this.goTo("/suppliers/");
+                }}
+                as="a"
+              >
+                <Icon name="truck" />
+                <span>تامین کنندگان</span>
               </Menu.Item>
             ) : null}
           </Sidebar>

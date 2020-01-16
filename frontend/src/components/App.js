@@ -16,6 +16,8 @@ import DailyReport from "./dailyReport";
 import Reports from "./reports"
 import Customers from "./customerSection";
 import CustomerPage from "./customerSection/CustomerPage";
+import Suppliers from "./suppliers";
+import Supplier from "./suppliers/Supplier";
 
 const App = ({ token }) => {
   return (
@@ -24,11 +26,11 @@ const App = ({ token }) => {
         <Router history={history}>
           <SideBar>
             <Route path="/" exact component={mainPage} />
-            <Route path="/sale/" exact component={Sale} />
-            <Route path="/depository/" exact component={Depository} />
-            <Route path="/cashregister/" exact component={CashRegister} />
+            <Route path="/sale" exact component={Sale} />
+            <Route path="/depository" exact component={Depository} />
+            <Route path="/cashregister" exact component={CashRegister} />
             <Route
-              path="/factor/:id/:print/"
+              path="/factor/:id/:print"
               exact
               component={PrintableFactor}
             />
@@ -40,6 +42,8 @@ const App = ({ token }) => {
               exact
               component={CustomerPage}
             />
+            <Route path="/suppliers/" exact component={Suppliers} />
+            <Route path="/suppliers/supplier/:pk/" exact component={Supplier} />
           </SideBar>
         </Router>
       ) : (

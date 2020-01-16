@@ -81,25 +81,14 @@ class MainPage extends React.Component {
                     <h2 className="text-black yekan text-center">انبارداری</h2>
                   </Card>
                 ) : null}
-
                 {isPermit('reports',this.state.job) ?
-                  <Card raised className="p-5 pointer tale" onClick={()=>history.push('/reports/')}><Icon padded={true} size="huge" className="m-auto w-100" name="chart pie" /><h2 className="text-black yekan text-center">گزارشات</h2></Card> : null}
-
-                {isPermit("customers", this.state.job) ? (
-                  <Card
-                    raised
-                    className="p-5 pointer tale"
-                    onClick={() => history.push("/customers/")}
-                  >
-                    <Icon
-                      padded={true}
-                      size="huge"
-                      className="m-auto w-100"
-                      name="users"
-                    />
-                    <h2 className="text-black yekan text-center">مشتریان</h2>
-                  </Card>
-                ) : null}
+                  <Card raised className="p-5 pointer tale" onClick={() => history.push('/reports/')}><Icon padded={true} size="huge" className="m-auto w-100" name="chart pie" /><h2 className="text-black yekan text-center">گزارشات</h2></Card> : null}
+                
+                {isPermit('customers',this.state.job) ?
+                  <Card raised className="p-5 pointer tale" onClick={() => history.push('/customers/')}><Icon padded={true} size="huge" className="m-auto w-100" name="users" /><h2 className="text-black yekan text-center">مشتریان</h2></Card> : null}
+                
+                {isPermit('suppliers',this.state.job) ?
+                  <Card raised className="p-5 pointer tale" onClick={()=>history.push('/suppliers/')}><Icon padded={true} size="huge" className="m-auto w-100" name="truck" /><h2 className="text-black yekan text-center">تامین کنندگان</h2></Card> : null}
               </Card.Group>
             </Header>
           </Segment>
