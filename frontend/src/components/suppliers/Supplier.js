@@ -26,7 +26,14 @@ class Edit extends Component {
 
   componentDidMount() {
     this.props.getTheSupplier(this.props.match.params.pk).then(() => {
-      console.log(this.props.supplier);
+      this.setState(
+        {
+          pk: this.props.match.params.pk
+        },
+        () => {
+          console.log(this.state.pk);
+        }
+      );
     });
   }
   componentDidUpdate() {
