@@ -132,6 +132,18 @@ class SideBar extends React.Component {
                 <span>انبارداری</span>
               </Menu.Item>
             ) : null}
+            {isPermit("reports", this.state.job) ? (
+              <Menu.Item
+                onClick={() => {
+                  this.goTo("/reports/");
+                }}
+                as="a"
+              >
+                <Icon name="chart pie" />
+                <span>گزارشات</span>
+              </Menu.Item>
+            ) : null}
+
             {isPermit("customers", this.state.job) ? (
               <Menu.Item
                 onClick={() => {
