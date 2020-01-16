@@ -21,7 +21,7 @@ import {
   getTodayJalaali
 } from "../utils/jalaaliUtils";
 import DatePickerModal from "./DatePickerModal";
-
+import NotFound from '../utils/notFound'
 const colors = {
   blue: "#2185d0",
   orange: "#f2711c",
@@ -519,13 +519,13 @@ class Reports extends React.Component {
                 <Table.HeaderCell colSpan="12" className="rtl text-right">
                   <Grid>
                     <Grid.Column>
-                      <span>لیست محصولات موجود</span>
+                      <span>آمار کلی</span>
                     </Grid.Column>
                   </Grid>
                 </Table.HeaderCell>
               </Table.Row>
 
-              <Table.Row>
+              {this.props.intervalReports && (<Table.Row>
                 <Table.HeaderCell className="table-border-left">
                   مجموع سود
                 </Table.HeaderCell>
@@ -540,7 +540,8 @@ class Reports extends React.Component {
                 <Table.HeaderCell>مجموع پرداخت ها</Table.HeaderCell>
                 <Table.HeaderCell>مجموع پرداخت های باقی مانده</Table.HeaderCell>
                 <Table.HeaderCell>فاکتورهای پرداخت نشده</Table.HeaderCell>
-              </Table.Row>
+              </Table.Row>)}
+              {!this.props.intervalReports && <NotFound />}
             </Table.Header>
 
             <Table.Body>
