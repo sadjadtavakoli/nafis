@@ -88,51 +88,37 @@ class EditTab extends Component {
 
   createInput = (status, title) => {
     const convertedStatus = this.convertStatus(status);
-    if (this.state[convertedStatus] === false) {
-      return (
-        <Form.Input
-          className="text-right error"
-          label={
-            <React.Fragment>
-              <span className="us-em-span">{title}</span>
-              <Label
-                className="pointer"
-                size="mini"
-                color="teal"
-                style={{ marginBottom: "3px", marginRight: "5px" }}
-                onClick={() => this.handleEdit(status)}
-              >
-                <Icon name="edit" /> ویرایش
-              </Label>
-            </React.Fragment>
-          }
-          value={this.state[status]}
-          readOnly
-        />
-      );
-    }
-    if (this.state[convertedStatus] === true) {
-      return (
-        <Form.Input
-          className="text-right"
-          label={
-            <React.Fragment>
-              <span className="us-em-span">{title}</span>
-              <Label
-                className="pointer"
-                size="mini"
-                color="green"
-                style={{ marginBottom: "3px", marginRight: "5px" }}
-                onClick={() => this.handleSubmit(status)}
-              >
-                <Icon name="edit" /> اعمال
-              </Label>
-            </React.Fragment>
-          }
-          onChange={e => this.handleEditChange(status, e)}
-        />
-      );
-    }
+    return (
+      <Form.Input
+        className={`text-right`}
+        error={!this.state[convertedStatus]}
+        label={
+          <React.Fragment>
+            <span className="us-em-span">{title}</span>
+            <Label
+              className="pointer"
+              size="mini"
+              color={`${this.state[convertedStatus] ? "green" : "teal"}`}
+              style={{ marginBottom: "3px", marginRight: "5px" }}
+              onClick={() => {
+                this.handleEdit(status);
+                this.state[convertedStatus]
+                  ? this.handleSubmit(status)
+                  : this.handleEdit(status);
+              }}
+            >
+              <Icon
+                name={`${this.state[convertedStatus] ? "checkmark" : "edit"}`}
+              />
+              {`${this.state[convertedStatus] ? "اعمال" : "ویرایش"}`}
+            </Label>
+          </React.Fragment>
+        }
+        onChange={e => this.handleEditChange(status, e)}
+        defaultValue={this.state[status]}
+        readOnly={!this.state[convertedStatus]}
+      />
+    );
   };
 
   render() {
