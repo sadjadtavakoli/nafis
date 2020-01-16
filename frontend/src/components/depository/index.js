@@ -3,12 +3,14 @@ import { connect } from "react-redux";
 import { Button, Container, Segment } from "semantic-ui-react";
 import AddProductModal from "./addProductModal";
 import ProductTable from "./productTable";
-import { getProductID, getProductsList } from "../../actions/DepositoryActions";
+import { getProductID, getProductsByFilter } from "../../actions/DepositoryActions";
+import FilterSegment from "./filterSegment";
 
 class Depository extends React.Component {
   state = {
     open: false,
     productID: NaN,
+    filterOpen: false
   };
 
   closeModal = () => {
@@ -23,6 +25,16 @@ class Depository extends React.Component {
     });
   };
 
+  openFilter = status => {
+    this.setState({
+      filterOpen: status
+    });
+  };
+  getProductsByFilter = (filterParams) => {
+    this.props.getProductsByFilter(filterParams).then((response) => {
+      console.log('response',response.data)
+    });
+  };
   render() {
     return (
       <React.Fragment>
@@ -42,6 +54,15 @@ class Depository extends React.Component {
                 icon="add"
                 labelPosition="right"
               />
+              <Button
+                className="yekan"
+                onClick={() => this.openFilter(!this.state.filterOpen)}
+                color={this.state.filterOpen ? "yellow" : "gray"}
+                content="فیلتر"
+                icon="filter"
+                labelPosition="right"
+              />
+              {this.state.filterOpen ? <FilterSegment submitFilter={this.getProductsByFilter}/> : null}
             </Segment>
             <ProductTable />
           </div>
@@ -58,6 +79,6 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, { getProductID, getProductsList })(
+export default connect(mapStateToProps, { getProductID, getProductsByFilter })(
   Depository
 );

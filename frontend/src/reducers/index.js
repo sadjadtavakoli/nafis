@@ -5,6 +5,7 @@ import authReducer from "./authReducer";
 import saleReducer from "./saleReducer";
 import depositoryReducer from "./depositoryReducer";
 import billReducer from "./billReducer";
+import reportsReducer from "./reportsReducer";
 import usersCustomers from "./usersReducer";
 
 export default combineReducers({
@@ -13,5 +14,6 @@ export default combineReducers({
   depository: depositoryReducer,
   bills: billReducer,
   toastr: toastrReducer,
+  reports: reportsReducer,
   customers: usersCustomers
 });

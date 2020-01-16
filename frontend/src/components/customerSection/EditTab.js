@@ -32,6 +32,7 @@ class EditTab extends Component {
   componentDidMount() {
     this.props.getACustomer(this.props.passingPk);
   }
+
   componentDidUpdate() {
     if (
       this.props.theCustomer &&
@@ -127,31 +128,6 @@ class EditTab extends Component {
           }
           onChange={e => this.handleEditChange(status, e)}
         />
-      );
-    }
-  };
-
-  createCloseButton = () => {
-    if (
-      this.state.first_name_b === false &&
-      this.state.last_name_b === false &&
-      this.state.email_b === false &&
-      this.state.phone_number_b === false &&
-      this.state.address_b === false &&
-      this.state.birth_date_b === false &&
-      this.state.marriage_date_b === false &&
-      this.state.points_b === false
-    ) {
-      return (
-        <Button color="black" onClick={this.props.onClose}>
-          <span>بستن</span>
-        </Button>
-      );
-    } else {
-      return (
-        <Button color="black" disabled>
-          <span>بستن</span>
-        </Button>
       );
     }
   };

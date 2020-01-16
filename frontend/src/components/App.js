@@ -13,6 +13,7 @@ import CashRegister from "./cashRegister";
 import PrintableFactor from "./factor";
 import Login from "./auth/login";
 import DailyReport from "./dailyReport";
+import Reports from "./reports"
 import Customers from "./customerSection";
 import CustomerPage from "./customerSection/CustomerPage";
 
@@ -32,6 +33,7 @@ const App = ({ token }) => {
               component={PrintableFactor}
             />
             <Route path="/daily-report/" exact component={DailyReport} />
+            <Route path="/reports/" exact component={Reports} />
             <Route path="/customers/" exact component={Customers} />
             <Route
               path="/customers/customer/:pk/"

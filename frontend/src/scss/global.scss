@@ -29,7 +29,10 @@
 .p-5 {
   padding: 1em !important;
 }
-.text-black {
+.pt-5{
+  padding-top: 1em !important;
+}
+.text-black{
   color: black !important;
 }
 .norm-latin {
@@ -71,8 +74,26 @@
   margin: 0;
   font-family: yekan;
 }
-.rtl {
-  direction: rtl;
+div[role="combobox"]{
+  .default.text{
+    right: 0 !important;
+    left: unset !important
+  }
+  .message{
+    text-align: right !important;
+  }
+  direction: rtl !important;
+  text-align: right !important;
+    a.ui.label{
+      margin: .14285714rem 0 .14285714rem .28571429rem !important;
+    }
+}
+.rtl .ui.label>.close.icon, .ui.label>.delete.icon{
+    margin-left: 0 !important;
+    margin-right: .5em !important;
+}
+.rtl{
+    direction: rtl;
 }
 .ltr {
   direction: ltr;
@@ -167,6 +188,31 @@ label {
   .hidden-print {
     display: none !important;
   }
+  
+}
+
+// REPORT STYLE SHEET \\
+
+.table-border-left {
+  border-left: 1px solid #ddd !important;
+}
+
+.grid-padding {
+  padding: 20px !important;
+}
+
+.grid-left {
+  float: left;
+  text-align: left;
+  direction: ltr;
+}
+
+.grid-label-rabon {
+  float: left;
+}
+
+.date-picker-icon:hover {
+  cursor: pointer;
 }
 
 // UESR SECTION STYLES

@@ -248,6 +248,7 @@ class ProductTable extends React.Component {
 }
 
 const mapStateToProps = state => {
+    // console.log('NEEWWW STATE REDUX',state)
   return {
     productsList: state.depository.productsList
   };
