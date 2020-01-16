@@ -1,9 +1,12 @@
 import { GET_SUPPLIERS, GET_THE_SUPPLIER } from "./types";
 import { server, putServer } from "../apis/server";
 
-export const getSuppliersAction = pk => async dispatch => {
+export const getSuppliersAction = (page = 1) => async dispatch => {
   const response = await server(localStorage.getItem("token")).get(
-    `/suppliers/`
+    `/suppliers/`,
+    {
+      params: { page }
+    }
   );
   dispatch({ type: GET_SUPPLIERS, payload: response.data });
   return response;

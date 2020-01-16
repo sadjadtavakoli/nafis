@@ -37,6 +37,7 @@ class Suppliers extends Component {
   changePage = (_, { activePage }) => {
     this.setState({ activePage: activePage }, () => {
       this.props.getSuppliersAction(this.state.activePage);
+      console.log(this.state.activePage);
     });
   };
 
