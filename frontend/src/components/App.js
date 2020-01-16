@@ -14,6 +14,8 @@ import PrintableFactor from "./factor";
 import Login from "./auth/login";
 import DailyReport from "./dailyReport";
 import Reports from "./reports"
+import Customers from "./customerSection";
+import CustomerPage from "./customerSection/CustomerPage";
 
 const App = ({ token }) => {
   return (
@@ -22,12 +24,22 @@ const App = ({ token }) => {
         <Router history={history}>
           <SideBar>
             <Route path="/" exact component={mainPage} />
-            <Route path="/sale" exact component={Sale} />
-            <Route path="/depository" exact component={Depository} />
-            <Route path="/cashregister" exact component={CashRegister} />
-            <Route path="/factor/:id/:print" exact component={PrintableFactor} />
+            <Route path="/sale/" exact component={Sale} />
+            <Route path="/depository/" exact component={Depository} />
+            <Route path="/cashregister/" exact component={CashRegister} />
+            <Route
+              path="/factor/:id/:print/"
+              exact
+              component={PrintableFactor}
+            />
             <Route path="/daily-report/" exact component={DailyReport} />
             <Route path="/reports/" exact component={Reports} />
+            <Route path="/customers/" exact component={Customers} />
+            <Route
+              path="/customers/customer/:pk/"
+              exact
+              component={CustomerPage}
+            />
           </SideBar>
         </Router>
       ) : (

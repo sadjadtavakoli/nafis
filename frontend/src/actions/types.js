@@ -15,6 +15,12 @@ export const GET_INTERVAL_REPORTS = "GET_INTERVAL_REPORTS";
 export const GET_CHARTS_REPORT = "GET_CHARTS_REPORT";
 export const FETCH_DATE = "FETCH_DATE";
 export const GET_DATE_RANGE = "GET_DATE_RANGE";
+export const GET_USERS_CUSTOMERS = "GET_USERS_CUSTOMERS";
+export const GET_ALL_BILLS = "GET_ALL_BILLS";
+export const GET_A_CUSTOMER = "GET_A_CUSTOMER";
+export const GET_ALL_CHEQUES = "GET_ALL_CHEQUES";
+export const GET_REMAINED_BILLS = "GET_REMAINED_BILLS";
+export const GET_REMAINED_CHEQUES = "GET_REMAINED_CHEQUES";
 
 // kari nadashte bashim
 export const FETCH = types => `FETCH_${types}`;

@@ -3,15 +3,12 @@ import { connect } from "react-redux";
 import { getBillREQUEST } from "../../actions/BillActions";
 import logo from "../../assets/logo_printable.png";
 // import "./bootstrap.min.css";
-import {
-  priceToPersian,
-  enToFa,
-} from "../utils/numberUtils";
+import { priceToPersian, enToFa } from "../utils/numberUtils";
 import { getTodayJalaali, getNow } from "../utils/jalaaliUtils";
 import { isEmptyObject } from "../../utils/FunctionalUtils";
-import '../../scss/bootstrap.scss'
+import "../../scss/bootstrap.scss";
 const TOMAN = "تومان";
-const BORDER_BOTTOM = { borderBottom: '3px solid black' }
+const BORDER_BOTTOM = { borderBottom: "3px solid black" };
 class PrintFactor extends React.Component {
   state = {
     receipt: {},
@@ -22,11 +19,14 @@ class PrintFactor extends React.Component {
     const resivedData = this.props.location.state;
     // console.log(params,resivedData)
 
-    if ( (params.id && params.print === 'print') || !((resivedData.pk) === params.id && !isEmptyObject(resivedData)))
+    if (
+      (params.id && params.print === "print") ||
+      !(resivedData.pk === params.id && !isEmptyObject(resivedData))
+    )
       this.props.getBillREQUEST(params.id).then(res => {
         this.setState({ bill: res, receipt: res.items }, () => {
           // console.log(res)
-          if (params.print === 'print'){
+          if (params.print === "print") {
             window.print();
           }
         });
@@ -46,7 +46,11 @@ class PrintFactor extends React.Component {
               {enToFa(index + 1)}
             </p>
             <p className="d-flex align-items-center justify-content-center col-3 text-center font-weight-bold border-left-3 m-0 py-0 px-0">
-                <small className="w-100"><b>{enToFa(item.product.name)}</b><hr class="m-0" style={BORDER_BOTTOM}/><b>{enToFa(item.product.pk)}</b></small>
+              <small className="w-100">
+                <b>{enToFa(item.product.name)}</b>
+                <hr class="m-0" style={BORDER_BOTTOM} />
+                <b>{enToFa(item.product.pk)}</b>
+              </small>
             </p>
             <p className="d-flex align-items-center justify-content-center col text-center font-weight-bold border-left-3 m-0 p-2">
               {enToFa(item.amount)}
@@ -68,85 +72,141 @@ class PrintFactor extends React.Component {
   render() {
     return (
       <div className="bootstrap factor">
-        <div className="container rtl py-2" style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <div style={{width:'76mm'}}>
-          <div className="row border-black border-radius-7 mb-2">
-            <div className="col-12 d-flex align-items-center justify-content-center">
-              <img src={logo} alt="logo" height="200" />
-            </div>
-            {/* <div className="col-6 d-flex align-items-center justify-content-center">
+        <div
+          className="container rtl py-2"
+          style={{ display: "flex", justifyContent: "flex-end" }}
+        >
+          <div style={{ width: "76mm" }}>
+            <div className="row border-black border-radius-7 mb-2">
+              <div className="col-12 d-flex align-items-center justify-content-center">
+                <img src={logo} height="200" alt="logo" />
+              </div>
+              {/* <div className="col-6 d-flex align-items-center justify-content-center">
               <div className="row norm-latin">
                 <h1 className="col">GALLERY</h1>
                 <h1 className="col">NAFIS</h1>
               </div>
             </div> */}
-          </div>
-          <div className="row border-black border-radius-7 mb-2 rtl text-right p-2">
-            <p className="col-3 font-weight-bold p-1">
-              <span>شماره‌فاکتور:</span>
-            </p>
-            <p className="col-3 font-weight-bold p-1">
-              <span>{enToFa(this.state.bill.bill_code)}</span>
-            </p>
+            </div>
+            <div className="row border-black border-radius-7 mb-2 rtl text-right p-2">
+              <p className="col-3 font-weight-bold p-1">
+                <span>شماره‌فاکتور:</span>
+              </p>
+              <p className="col-3 font-weight-bold p-1">
+                <span>{enToFa(this.state.bill.bill_code)}</span>
+              </p>
 
-            <p className="col-3 font-weight-bold p-1">
-              <span>شماره نهایی:</span>
-            </p>
-            <p className="col-3 font-weight-bold p-1">
-              <span>--</span>
-            </p>
+              <p className="col-3 font-weight-bold p-1">
+                <span>شماره نهایی:</span>
+              </p>
+              <p className="col-3 font-weight-bold p-1">
+                <span>--</span>
+              </p>
 
-            <p className="col-3 font-weight-bold p-1">
-              <span>تاریخ فاکتور:</span>
-            </p>
-            <p className="col-3 font-weight-bold p-1">
-              <span>{enToFa(getTodayJalaali())}</span>
-            </p>
-            <p className="col-3 font-weight-bold p-1">
-              <span>ساعت‌صدور:</span>
-            </p>
-            <p className="col-3 font-weight-bold p-1">
-              <span>{enToFa(getNow())}</span>
-            </p>
+              <p className="col-3 font-weight-bold p-1">
+                <span>شماره نهایی:</span>
+              </p>
+              <p className="col-3 font-weight-bold p-1">
+                <span>--</span>
+              </p>
 
-            <p className="col-3 font-weight-bold p-1">
-              <span>کد مشترک:</span>
-            </p>
-            <p className="col-3 font-weight-bold p-1">
-              <span>
-                {enToFa(
-                  (
-                    this.state.bill.buyer && this.state.bill.buyer.pk
-                  )
-                )}
-              </span>
-            </p>
+              <p className="col-3 font-weight-bold p-1">
+                <span>تاریخ فاکتور:</span>
+              </p>
+              <p className="col-3 font-weight-bold p-1">
+                <span>{enToFa(getTodayJalaali())}</span>
+              </p>
+              <p className="col-3 font-weight-bold p-1">
+                <span>ساعت‌صدور:</span>
+              </p>
+              <p className="col-3 font-weight-bold p-1">
+                <span>{enToFa(getNow())}</span>
+              </p>
+
+              <p className="col-3 font-weight-bold p-1">
+                <span>صندوق:</span>
+              </p>
+              <p className="col-3 font-weight-bold p-1">
+                <span>
+                  {enToFa(this.state.bill.seller && this.state.bill.seller.pk)}
+                </span>
+              </p>
+            </div>
+            <div className="row border-black border-radius-7 mb-1 rtl text-right">
+              <p className="col-1 norm-latin text-center font-weight-bold border-left-3 m-0 py-2 px-0">
+                <small>
+                  <b>#</b>
+                </small>
+              </p>
+              <p className="col-3 text-center font-weight-bold border-left-3 m-0 py-0 px-0">
+                <small>
+                  <b>شرح کالا</b>
+                  <hr class="m-0" style={BORDER_BOTTOM} />
+                  <b>کد کالا</b>
+                </small>
+              </p>
+              <p className="d-flex justify-content-center align-items-center col text-center font-weight-bold border-left-3 m-0 py-2 px-0">
+                <small>
+                  <b>مقدار</b>
+                </small>
+              </p>
+              <p className="d-flex justify-content-center align-items-center col text-center font-weight-bold border-left-3 m-0 py-2 px-0">
+                <small>
+                  <b>مبلغ‌واحد</b>
+                </small>
+              </p>
+              <p className="d-flex justify-content-center align-items-center col text-center font-weight-bold border-left-3 m-0 py-2 px-0">
+                <small>
+                  <b>تخفیف</b>
+                </small>
+              </p>
+              <p className="d-flex justify-content-center align-items-center col text-center font-weight-bold m-0 py-2 px-0">
+                <small>
+                  <b>مبلغ‌خالص</b>
+                </small>
+              </p>
+            </div>
+            {this.renderItems()}
 
             <p className="col-3 font-weight-bold p-1">
               <span>صندوق:</span>
             </p>
             <p className="col-3 font-weight-bold p-1">
-              <span>{enToFa(this.state.bill.seller && this.state.bill.seller.pk)}</span>
+              <span>
+                {enToFa(this.state.bill.seller && this.state.bill.seller.pk)}
+              </span>
             </p>
           </div>
           <div className="row border-black border-radius-7 mb-1 rtl text-right">
             <p className="col-1 norm-latin text-center font-weight-bold border-left-3 m-0 py-2 px-0">
-              <small><b>#</b></small>
+              <small>
+                <b>#</b>
+              </small>
             </p>
-            <p className="col-3 text-center font-weight-bold border-left-3 m-0 py-0 px-0">
-                <small><b>شرح کالا</b><hr class="m-0" style={BORDER_BOTTOM}/><b>کد کالا</b></small>
+            <p className="col-3 text-center font-weight-bold border-left-3 m-0 py-2 px-0">
+              <small>
+                <b>کالا</b>
+              </small>
             </p>
-            <p className="d-flex justify-content-center align-items-center col text-center font-weight-bold border-left-3 m-0 py-2 px-0">
-              <small><b>مقدار</b></small>
+            <p className="col text-center font-weight-bold border-left-3 m-0 py-2 px-0">
+              <small>
+                <b>مقدار</b>
+              </small>
             </p>
-            <p className="d-flex justify-content-center align-items-center col text-center font-weight-bold border-left-3 m-0 py-2 px-0">
-              <small><b>مبلغ‌واحد</b></small>
+            <p className="col text-center font-weight-bold border-left-3 m-0 py-2 px-0">
+              <small>
+                <b>مبلغ‌واحد</b>
+              </small>
             </p>
-            <p className="d-flex justify-content-center align-items-center col text-center font-weight-bold border-left-3 m-0 py-2 px-0">
-              <small><b>تخفیف</b></small>
+            <p className="col text-center font-weight-bold border-left-3 m-0 py-2 px-0">
+              <small>
+                <b>تخفیف</b>
+              </small>
             </p>
-            <p className="d-flex justify-content-center align-items-center col text-center font-weight-bold m-0 py-2 px-0">
-              <small><b>مبلغ‌خالص</b></small>
+            <p className="col text-center font-weight-bold m-0 py-2 px-0">
+              <small>
+                <b>مبلغ‌خالص</b>
+              </small>
             </p>
           </div>
           {this.renderItems()}
@@ -197,8 +257,7 @@ class PrintFactor extends React.Component {
               </div>
             </div>
           </div>
-            </div>
-        </div> 
+        </div>
       </div>
     );
   }
