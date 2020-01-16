@@ -171,6 +171,8 @@ label {
 
 // SUPPLIERS
 
-.s-h2-padding {
-  padding: 0 1em;
+.error input {
+  background-color: #f3f4f5 !important;
+  color: rgb(100, 100, 100) !important;
+  border-color: #aaaaaa !important;
 }

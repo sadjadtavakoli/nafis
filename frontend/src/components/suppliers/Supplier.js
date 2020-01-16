@@ -86,7 +86,8 @@ class Edit extends Component {
     const convertedStatus = this.convertStatus(status);
     return (
       <Form.Input
-        className={`text-right ${this.state[convertedStatus] ? "" : "error"}`}
+        className={`text-right`}
+        error={!this.state[convertedStatus]}
         label={
           <React.Fragment>
             <span className="us-em-span">{title}</span>
