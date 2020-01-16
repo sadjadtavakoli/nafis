@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import { Button, Form, Label, Icon } from "semantic-ui-react";
+import { Form, Label, Icon } from "semantic-ui-react";
 import { connect } from "react-redux";
 import {
   getACustomer,
   updateCustomer
 } from "../../actions/CustomerSectionActions";
+import { toastr } from "react-redux-toastr";
 
 class EditTab extends Component {
   state = {
@@ -79,6 +80,12 @@ class EditTab extends Component {
       })
       .then(res => {
         this.setState({ [status]: this.state[status] });
+        toastr.success(".عملیات ویرایش با موفقیت انجام شد");
+      })
+      .catch(() => {
+        toastr.error(
+          ".عملیات ویرایش موفقیت آمیز نبود. لطفا با پشتیبانی سایت در تماس باشید"
+        );
       });
     const convertedStatus = this.convertStatus(status);
     this.setState({
