@@ -5,7 +5,6 @@ import { Icon, Menu, Segment, Sidebar, Button } from "semantic-ui-react";
 import history from "../../history";
 import { logOut } from "../../actions/LoginActions";
 import { isPermit } from "../mainPage/permission";
-
 class SideBar extends React.Component {
   constructor(props) {
     super(props);
