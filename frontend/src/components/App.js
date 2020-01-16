@@ -33,7 +33,7 @@ const App = ({ token }) => {
             />
             <Route path="/daily-report/" exact component={DailyReport} />
             <Route path="/suppliers/" exact component={Suppliers} />
-            <Route path="/suppliers/supplier/" exact component={Supplier} />
+            <Route path="/suppliers/supplier/:pk/" exact component={Supplier} />
           </SideBar>
         </Router>
       ) : (

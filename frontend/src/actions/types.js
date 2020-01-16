@@ -12,6 +12,7 @@ export const GET_BILL = "GET_BILL";
 export const GET_DAILY_REPORT = "GET_DAILY_REPORT";
 export const UPDATE_Bill = "UPDATE_Bill";
 export const GET_SUPPLIERS = "GET_SUPPLIERS";
+export const GET_THE_SUPPLIER = "GET_THE_SUPPLIER";
 
 export const FETCH = types => `FETCH_${types}`;
 export const SUCSS = types => `SUCSS_${types}`;

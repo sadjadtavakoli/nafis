@@ -1,167 +1,176 @@
-@import './normalize.css';
-@import './pagesSpecial.scss';
-@import './device.scss';
-@import 'react-redux-toastr/src/styles/index';
+@import "./normalize.css";
+@import "./pagesSpecial.scss";
+@import "./device.scss";
+@import "react-redux-toastr/src/styles/index";
 
 @font-face {
-    font-family: "yekan";
-    src: url(../assets/fonts/yekan/Yekan.eot);
-    src: url(../assets/fonts/yekan/Yekan.eot?#iefix) format("embedded-opentype"), url(../assets/fonts/yekan/Yekan.woff) format("woff"), url(../assets/fonts/yekan/Yekan.ttf) format("truetype"), url(../assets/fonts/yekan/Yekan.svg#BYekan) format("svg");
-    font-weight: normal;
-    font-style: normal;
+  font-family: "yekan";
+  src: url(../assets/fonts/yekan/Yekan.eot);
+  src: url(../assets/fonts/yekan/Yekan.eot?#iefix) format("embedded-opentype"),
+    url(../assets/fonts/yekan/Yekan.woff) format("woff"),
+    url(../assets/fonts/yekan/Yekan.ttf) format("truetype"),
+    url(../assets/fonts/yekan/Yekan.svg#BYekan) format("svg");
+  font-weight: normal;
+  font-style: normal;
 }
-.pointer{
+.pointer {
   cursor: pointer;
 }
-.yekan,.header{
-    font-family: yekan !important;
+.yekan,
+.header {
+  font-family: yekan !important;
 }
-.m-auto{
-  margin:auto;
+.m-auto {
+  margin: auto;
 }
-.w-100{
+.w-100 {
   width: 100% !important;
 }
-.p-5{
+.p-5 {
   padding: 1em !important;
 }
-.text-black{
+.text-black {
   color: black !important;
 }
-.norm-latin{
-  *{
-    font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
+.norm-latin {
+  * {
+    font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
   }
 }
-.ui.pointing.menu{
-  direction:rtl;
+.ui.pointing.menu {
+  direction: rtl;
 }
-.only-device{
-  @media (min-width:768px){
+.only-device {
+  @media (min-width: 768px) {
     display: none !important;
   }
-  @media (max-width:768px){
+  @media (max-width: 768px) {
     display: block !important;
   }
 }
-.only-desktop{
-  @media (min-width:768px){
+.only-desktop {
+  @media (min-width: 768px) {
     display: block !important;
   }
-  @media (max-width:768px){
+  @media (max-width: 768px) {
     display: none !important;
   }
 }
-.ui.message>.icon,.ui.label>.icon {
-    margin-left: .6em;
-    margin-right: 0;
+.ui.message > .icon,
+.ui.label > .icon {
+  margin-left: 0.6em;
+  margin-right: 0;
 }
-*[role="option"]{
+*[role="option"] {
   text-align: right;
-  span{
+  span {
     display: flex;
   }
 }
-*{
-    margin: 0;
-    font-family: yekan;
+* {
+  margin: 0;
+  font-family: yekan;
 }
-.rtl{
-    direction: rtl;
+.rtl {
+  direction: rtl;
 }
-.ltr{
-    direction: ltr;
+.ltr {
+  direction: ltr;
 }
-.text-right{
+.text-right {
   text-align: right !important;
 }
-.field{
-  &.text-right{
-    input{
+.field {
+  &.text-right {
+    input {
       text-align: right !important;
     }
   }
 }
-.text-center{
+.text-center {
   text-align: center !important;
 }
-.padded{
+.padded {
   padding: 1.5em;
 }
-.no-filter{
+.no-filter {
   filter: unset !important;
 }
-.d-flex{
+.d-flex {
   display: flex !important;
 }
-.d-none{
+.d-none {
   display: none;
 }
-.m-0{
+.m-0 {
   margin: 0 !important;
 }
-.invisible{
+.invisible {
   visibility: hidden;
 }
-.placeholder-rtl{
-  ::placeholder{
+.placeholder-rtl {
+  ::placeholder {
     text-align: right !important;
     direction: rtl !important;
     font-family: yekan;
   }
 }
-.placeholder-ltr{
-  ::placeholder{
+.placeholder-ltr {
+  ::placeholder {
     text-align: left !important;
     direction: ltr !important;
     font-family: yekan;
   }
 }
-label{
-    direction: rtl;
+label {
+  direction: rtl;
 }
-.factor{
-  .border-black{
+.factor {
+  .border-black {
     border: 3px solid black;
-}
-.border-radius-7{
+  }
+  .border-radius-7 {
     border-radius: 7px;
-}
-.border-left-3{
+  }
+  .border-left-3 {
     border-left: 3px solid black;
-}
-.border-bottom-3{
+  }
+  .border-bottom-3 {
     border-bottom: 3px solid black;
-}
-.row-not-flex{
+  }
+  .row-not-flex {
     padding-left: 15px;
     padding-right: 15px;
     margin-right: -15px;
     margin-left: -15px;
-}
+  }
 }
 @media print {
-  .ui{
-    &.segment{
-        position: relative;
-    background: #fff;
-    box-shadow: unset !important;
-    margin: unset !important;
-    padding: unset !important;
-    border-radius: unset !important;
-    border:  unset !important;
-      &.pushable{
+  .ui {
+    &.segment {
+      position: relative;
+      background: #fff;
+      box-shadow: unset !important;
+      margin: unset !important;
+      padding: unset !important;
+      border-radius: unset !important;
+      border: unset !important;
+      &.pushable {
         // width:990px;
         height: unset !important;
       }
     }
-    
   }
-  .factor{
-    margin:auto;
+  .factor {
+    margin: auto;
   }
   .hidden-print {
     display: none !important;
   }
-  
+}
+
+// SUPPLIERS
+
+.s-h2-padding {
+  padding: 0 1em;
 }
