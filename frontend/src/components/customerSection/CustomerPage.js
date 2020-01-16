@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Tab } from "semantic-ui-react";
+import { Tab, Container } from "semantic-ui-react";
 
 import ChequeTab from "./ChequeTab";
 import EditTab from "./EditTab";
@@ -35,11 +35,13 @@ const panes = pk => [
 class CustomerPage extends Component {
   render() {
     return (
-      <div className="rtl" style={{ width: "1130px", margin: "0 auto" }}>
-        <Tab
-          menu={{ pointing: true }}
-          panes={panes(this.props.match.params.pk)}
-        />
+      <div className="rtl">
+        <Container>
+          <Tab
+            menu={{ pointing: true }}
+            panes={panes(this.props.match.params.pk)}
+          />
+        </Container>
       </div>
     );
   }

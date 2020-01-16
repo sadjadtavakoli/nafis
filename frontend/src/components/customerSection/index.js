@@ -13,14 +13,20 @@ class Customers extends Component {
     totalPageCount: 1,
     activePage: 1,
     customers: [],
-    pk: null
+    pk: null,
+    loading: true
   };
 
   componentDidMount() {
     this.props.getCustomerUsers(this.state.pk).then(() => {
-      this.setState({
-        customers: this.props.usersCustomers.results
-      });
+      this.setState(
+        {
+          customers: this.props.usersCustomers.results
+        },
+        () => {
+          this.setState({ loading: false });
+        }
+      );
     });
   }
 
@@ -56,7 +62,9 @@ class Customers extends Component {
             </Table.Row>
           </Table.Header>
 
-          {this.props.usersCustomers && this.state.customers !== null ? (
+          {this.props.usersCustomers &&
+          this.state.customers &&
+          !this.state.loading !== null ? (
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell style={{ borderLeft: "1px solid #ddd" }}>
@@ -97,9 +105,7 @@ class Customers extends Component {
                 })
               : null}
 
-            {this.props.usersCustomers && !this.state.customers.length ? (
-              <LoadingBar />
-            ) : null}
+            {this.state.loading ? <LoadingBar /> : null}
             {this.props.usersCustomers &&
             this.props.usersCustomers.results.length === 0 ? (
               <NotFound />
