@@ -26,6 +26,7 @@ export const getAllActiveBills = () => (dispatch, _, { api }) => {
 export const addPaymentToBill = (billID, payment) => (dispatch, _, { api }) => {
   const fetch = createFetchAction(ActionTypes.ADD_PAYMENT_TO_BILL);
   const sucss = createSucssAction(ActionTypes.ADD_PAYMENT_TO_BILL);
+  const faild = createFaildAction(ActionTypes.ADD_PAYMENT_TO_BILL);
 
   dispatch(fetch());
   return api
@@ -46,6 +47,7 @@ export const addPaymentToBillv2 = (billID, payment) => (
 ) => {
   const fetch = createFetchAction(ActionTypes.UPDATE_Bill);
   const sucss = createSucssAction(ActionTypes.UPDATE_Bill);
+  const faild = createFaildAction(ActionTypes.UPDATE_Bill);
 
   dispatch(fetch());
   return api
@@ -62,6 +64,7 @@ export const addPaymentToBillv2 = (billID, payment) => (
 export const removePayment = (billID, paymentID) => (dispatch, _, { api }) => {
   const fetch = createFetchAction(ActionTypes.REMOVE_PAYMENT);
   const sucss = createSucssAction(ActionTypes.REMOVE_PAYMENT);
+  const faild = createFaildAction(ActionTypes.REMOVE_PAYMENT);
 
   dispatch(fetch());
   return api
@@ -78,6 +81,7 @@ export const removePayment = (billID, paymentID) => (dispatch, _, { api }) => {
 export const doneTheBill = (billID, sendSms) => (dispatch, _, { api }) => {
   const fetch = createFetchAction(ActionTypes.CHANGE_BILL_TO_DONE);
   const sucss = createSucssAction(ActionTypes.CHANGE_BILL_TO_DONE);
+  const faild = createFaildAction(ActionTypes.CHANGE_BILL_TO_DONE);
 
   dispatch(fetch());
   return api
@@ -101,6 +105,7 @@ export const getDailyReport = () => async dispatch => {
 export const removeBill = billID => (dispatch, _, { api }) => {
   const fetch = createFetchAction(ActionTypes.REMOVE_BILL);
   const sucss = createSucssAction(ActionTypes.REMOVE_BILL);
+  const faild = createFaildAction(ActionTypes.REMOVE_BILL);
 
   dispatch(fetch());
   return api
@@ -120,6 +125,7 @@ export const removeBill = billID => (dispatch, _, { api }) => {
 export const getBillREQUEST = billID => (dispatch, _, { api }) => {
   const fetch = createFetchAction(ActionTypes.GET_BILL);
   const sucss = createSucssAction(ActionTypes.GET_BILL);
+  const faild = createFaildAction(ActionTypes.GET_BILL);
 
   dispatch(fetch());
   return api

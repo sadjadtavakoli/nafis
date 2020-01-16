@@ -79,6 +79,6 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, { getProductID, getProductsList })(
+export default connect(mapStateToProps, { getProductID, getProductsByFilter })(
   Depository
 );
