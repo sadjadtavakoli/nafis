@@ -21,7 +21,7 @@ import {
   getTodayJalaali
 } from "../utils/jalaaliUtils";
 import DatePickerModal from "./DatePickerModal";
-import NotFound from '../utils/notFound'
+import NotFound from "../utils/notFound";
 const colors = {
   blue: "#2185d0",
   orange: "#f2711c",
@@ -525,22 +525,26 @@ class Reports extends React.Component {
                 </Table.HeaderCell>
               </Table.Row>
 
-              {this.props.intervalReports && (<Table.Row>
-                <Table.HeaderCell className="table-border-left">
-                  مجموع سود
-                </Table.HeaderCell>
-                <Table.HeaderCell>تخفیف</Table.HeaderCell>
-                <Table.HeaderCell>مبلغ</Table.HeaderCell>
-                <Table.HeaderCell>مبلغ نهایی</Table.HeaderCell>
-                <Table.HeaderCell>مجموع اقلام</Table.HeaderCell>
-                <Table.HeaderCell>مجموع فاکتورها</Table.HeaderCell>
-                <Table.HeaderCell>مجموع چک های پرداخت شده</Table.HeaderCell>
-                <Table.HeaderCell>مجموع پرداخت های نقدی</Table.HeaderCell>
-                <Table.HeaderCell>مجموع پرداخت های کارتی</Table.HeaderCell>
-                <Table.HeaderCell>مجموع پرداخت ها</Table.HeaderCell>
-                <Table.HeaderCell>مجموع پرداخت های باقی مانده</Table.HeaderCell>
-                <Table.HeaderCell>فاکتورهای پرداخت نشده</Table.HeaderCell>
-              </Table.Row>)}
+              {this.props.intervalReports && (
+                <Table.Row>
+                  <Table.HeaderCell className="table-border-left">
+                    مجموع سود
+                  </Table.HeaderCell>
+                  <Table.HeaderCell>تخفیف</Table.HeaderCell>
+                  <Table.HeaderCell>مبلغ</Table.HeaderCell>
+                  <Table.HeaderCell>مبلغ نهایی</Table.HeaderCell>
+                  <Table.HeaderCell>مجموع اقلام</Table.HeaderCell>
+                  <Table.HeaderCell>مجموع فاکتورها</Table.HeaderCell>
+                  <Table.HeaderCell>مجموع چک های پرداخت شده</Table.HeaderCell>
+                  <Table.HeaderCell>مجموع پرداخت های نقدی</Table.HeaderCell>
+                  <Table.HeaderCell>مجموع پرداخت های کارتی</Table.HeaderCell>
+                  <Table.HeaderCell>مجموع پرداخت ها</Table.HeaderCell>
+                  <Table.HeaderCell>
+                    مجموع پرداخت های باقی مانده
+                  </Table.HeaderCell>
+                  <Table.HeaderCell>فاکتورهای پرداخت نشده</Table.HeaderCell>
+                </Table.Row>
+              )}
               {!this.props.intervalReports && <NotFound />}
             </Table.Header>
 
