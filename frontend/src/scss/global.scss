@@ -92,8 +92,8 @@ div[role="combobox"]{
     margin-left: 0 !important;
     margin-right: .5em !important;
 }
-.rtl{
-    direction: rtl;
+.rtl {
+  direction: rtl;
 }
 .ltr {
   direction: ltr;
@@ -259,4 +259,12 @@ label {
 
 .d-table-border {
   border-left: 1px solid #ddd !important;
+}
+
+// SUPPLIERS
+
+.error input {
+  background-color: #f3f4f5 !important;
+  color: rgb(100, 100, 100) !important;
+  border-color: #aaaaaa !important;
 }

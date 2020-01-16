@@ -1,5 +1,6 @@
 import React from "react";
 import { Message } from "semantic-ui-react";
+
 class NotFound extends React.Component {
   render() {
     return (
@@ -15,4 +16,5 @@ class NotFound extends React.Component {
     );
   }
 }
+
 export default NotFound;

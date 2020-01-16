@@ -21,6 +21,8 @@ export const GET_A_CUSTOMER = "GET_A_CUSTOMER";
 export const GET_ALL_CHEQUES = "GET_ALL_CHEQUES";
 export const GET_REMAINED_BILLS = "GET_REMAINED_BILLS";
 export const GET_REMAINED_CHEQUES = "GET_REMAINED_CHEQUES";
+export const GET_SUPPLIERS = "GET_SUPPLIERS";
+export const GET_THE_SUPPLIER = "GET_THE_SUPPLIER";
 
 // kari nadashte bashim
 export const FETCH = types => `FETCH_${types}`;
