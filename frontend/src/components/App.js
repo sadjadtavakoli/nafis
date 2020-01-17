@@ -13,11 +13,12 @@ import CashRegister from "./cashRegister";
 import PrintableFactor from "./factor";
 import Login from "./auth/login";
 import DailyReport from "./dailyReport";
-import Reports from "./reports"
+import Reports from "./reports";
 import Customers from "./customerSection";
 import CustomerPage from "./customerSection/CustomerPage";
 import Suppliers from "./suppliers";
 import Supplier from "./suppliers/Supplier";
+import depositoryEdit from "./depository/depositoryEdit";
 
 const App = ({ token }) => {
   return (
@@ -44,6 +45,11 @@ const App = ({ token }) => {
             />
             <Route path="/suppliers/" exact component={Suppliers} />
             <Route path="/suppliers/supplier/:pk/" exact component={Supplier} />
+            <Route
+              path="/depository/depository-edit/:code/"
+              exact
+              component={depositoryEdit}
+            />
           </SideBar>
         </Router>
       ) : (

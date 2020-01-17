@@ -14,6 +14,7 @@ import {
 } from "../../actions/DepositoryActions";
 import { digitToComma } from "../utils/numberUtils";
 import LoadingBar from "../utils/loadingBar";
+import history from "../../history";
 import NotFound from "../utils/notFound";
 
 class ProductTable extends React.Component {
@@ -22,13 +23,18 @@ class ProductTable extends React.Component {
     totalPageCount: 1,
     activePage: 1,
     notFound: false,
-    width: 0
+    width: 0,
+    pk: null
   };
 
   componentDidMount() {
     this.getProductsList();
     this.updateWindowDimensions();
     window.addEventListener("resize", this.updateWindowDimensions);
+  }
+
+  componentDidUpdate() {
+    console.log(this.props.productsList);
   }
 
   componentWillUnmount() {
@@ -83,6 +89,7 @@ class ProductTable extends React.Component {
       });
     }, 300);
   };
+
   searchBar = () => {
     return (
       <Search
@@ -99,6 +106,11 @@ class ProductTable extends React.Component {
       />
     );
   };
+
+  handleClick = pk => {
+    this.setState({ pk });
+  };
+
   render() {
     return this.state.productsList.length > 0 ? (
       <div>
@@ -134,6 +146,9 @@ class ProductTable extends React.Component {
             <Table.Row>
               {!this.state.notFound ? (
                 <React.Fragment>
+                  <Table.HeaderCell className="text-center">
+                    عملیات
+                  </Table.HeaderCell>
                   <Table.HeaderCell className="text-center">
                     رنگ پس زمینه
                   </Table.HeaderCell>
@@ -172,6 +187,19 @@ class ProductTable extends React.Component {
               ? this.state.productsList.map((item, index) => {
                   return (
                     <Table.Row key={index}>
+                      <Table.Cell className="norm-latin text-center">
+                        <Button
+                          color="teal"
+                          onClick={() => {
+                            this.handleClick(item.pk);
+                            history.push(
+                              `/depository/depository-edit/${item.code}/`
+                            );
+                          }}
+                        >
+                          <span className="yekan">مشاهده</span>
+                        </Button>
+                      </Table.Cell>
                       <Table.Cell className="norm-latin text-center">
                         <span className="yekan">
                           {item.background_color && item.background_color.name}
@@ -248,7 +276,6 @@ class ProductTable extends React.Component {
 }
 
 const mapStateToProps = state => {
-    // console.log('NEEWWW STATE REDUX',state)
   return {
     productsList: state.depository.productsList
   };
