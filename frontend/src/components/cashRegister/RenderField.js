@@ -2,7 +2,6 @@ import React from "react";
 import { Form, Label } from "semantic-ui-react";
 
 const renderField = (obj, key, labelName, customText = undefined) => {
-  console.log(obj, key, labelName, customText);
   return (
     <Form.Field>
       <Label>
