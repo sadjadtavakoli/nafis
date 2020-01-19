@@ -1,5 +1,5 @@
-import React from "react";
-import { Segment } from "semantic-ui-react";
+import React, { useEffect } from "react";
+import { Segment, Checkbox } from "semantic-ui-react";
 import DialogModal from "./DialogModal";
 import { connect } from "react-redux";
 import { removeBill } from "../../actions/BillActions";

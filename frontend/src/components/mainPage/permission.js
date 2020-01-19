@@ -11,12 +11,15 @@ export const isPermit = (section, job) => {
 
     case "customers":
       return job === "admin" || job === "storekeeper" || job === "accountant";
-    
-    case 'reports':
-      return job === 'admin' || job === 'storekeeper'; 
-    
+
+    case "reports":
+      return job === "admin" || job === "storekeeper";
+
     case "suppliers":
       return job === "admin" || job === "storekeeper" || job === "accountant";
+
+    case "adminOnly":
+      return job === "admin";
 
     default:
       return false;
