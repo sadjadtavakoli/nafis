@@ -41,7 +41,12 @@ class depositoryEdit extends Component {
     design_Options_b: false,
     material_Options_b: false,
     background_color_Options_b: false,
-    design_color_Options_b: false
+    design_color_Options_b: false,
+    background_color_after: null,
+    design_color_after: null,
+    material_after: null,
+    f_type_after: null,
+    design_after: null
   };
 
   componentDidMount() {
@@ -57,9 +62,15 @@ class depositoryEdit extends Component {
         design_color: this.props.depositoryProduct.design_color.name,
         material: this.props.depositoryProduct.material.name,
         f_type: this.props.depositoryProduct.f_type.name,
-        design: this.props.depositoryProduct.design.name
+        design: this.props.depositoryProduct.design.name,
+
+        background_color_after: this.props.depositoryProduct.background_color
+          .name,
+        design_color_after: this.props.depositoryProduct.design_color.name,
+        material_after: this.props.depositoryProduct.material.name,
+        f_type_after: this.props.depositoryProduct.f_type.name,
+        design_after: this.props.depositoryProduct.design.name
       });
-      console.log(this.props.depositoryProduct);
     });
     this.props.getProductFields().then(() => {
       this.setState({
@@ -69,7 +80,6 @@ class depositoryEdit extends Component {
         design_Options: this.props.productFields.design,
         f_type_Options: this.props.productFields.f_type
       });
-      console.log(this.state.background_color_Options);
     });
   }
 
@@ -79,6 +89,10 @@ class depositoryEdit extends Component {
 
   selectConvertedStatus = status => {
     return status.concat("_Options");
+  };
+
+  afterConvertedStatus = status => {
+    return status.concat("_after");
   };
 
   handleEdit = status => {
@@ -98,10 +112,13 @@ class depositoryEdit extends Component {
     );
   };
 
-  selectChange = (_, { name, value }) => {
+  selectChange = (e, { name, value }) => {
+    const afterConvertedStatus = this.afterConvertedStatus(name);
     this.setState({
-      [name]: value
+      [name]: value,
+      [afterConvertedStatus]: e.target.textContent
     });
+    console.log(name, value);
   };
 
   handleSubmit = status => {
@@ -123,6 +140,14 @@ class depositoryEdit extends Component {
     });
   };
 
+  selectDefaultValue = status => {
+    this.props.getProductsByCode(this.props.match.params.code).then(() => {
+      this.setState({
+        [status]: this.props.depositoryProduct[status].id
+      });
+    });
+  };
+
   createInput = (status, title) => {
     const convertedStatus = this.convertStatus(status);
     return (
@@ -138,7 +163,6 @@ class depositoryEdit extends Component {
               color={`${this.state[convertedStatus] ? "green" : "teal"}`}
               style={{ marginBottom: "3px", marginRight: "5px" }}
               onClick={() => {
-                console.log(this.state);
                 this.state[convertedStatus]
                   ? this.handleSubmit(status)
                   : this.handleEdit(status);
@@ -152,7 +176,7 @@ class depositoryEdit extends Component {
           </React.Fragment>
         }
         onChange={e => this.handleProductChange(status, e)}
-        defaultValue={this.state[status]}
+        value={this.state[status]}
         readOnly={!this.state[convertedStatus]}
       />
     );
@@ -161,6 +185,7 @@ class depositoryEdit extends Component {
   createSelect = (status, title) => {
     const convertedStatus = this.convertStatus(status);
     const selectConvertedStatus = this.selectConvertedStatus(status);
+    const afterConvertedStatus = this.afterConvertedStatus(status);
     if (
       this.state.background_color_Options.length &&
       !this.state[convertedStatus]
@@ -186,8 +211,8 @@ class depositoryEdit extends Component {
               </Label>
             </React.Fragment>
           }
-          onChange={e => this.handleProductChange(status, e)}
-          defaultValue={this.state[status]}
+          value={this.state[afterConvertedStatus]}
+          defaultValue={this.state[afterConvertedStatus]}
           readOnly={!this.state[convertedStatus]}
         />
       );
@@ -199,6 +224,7 @@ class depositoryEdit extends Component {
       return (
         <Form.Select
           fluid
+          defaultValue={() => this.selectDefaultValue(status)}
           placeholder={
             this.props.productsList &&
             this.props.depositoryProduct.background_color.name
@@ -233,7 +259,7 @@ class depositoryEdit extends Component {
 
   render() {
     return (
-      <Container className="rtl text-right">
+      <Container id="depository-edit" className="rtl text-right">
         <Segment>
           <Header as="h3" block style={{ wordSpacing: "3px" }}>
             ویرایش اطلاعات محصول {this.state.name}
