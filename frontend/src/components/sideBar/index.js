@@ -11,7 +11,6 @@ import {
 import history from "../../history";
 import { logOut } from "../../actions/LoginActions";
 import { isPermit } from "../mainPage/permission";
-
 class SideBar extends React.Component {
   constructor(props) {
     super(props);
