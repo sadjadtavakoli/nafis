@@ -21,7 +21,8 @@ class Customers extends Component {
     this.props.getCustomerUsers(this.state.pk).then(() => {
       this.setState(
         {
-          customers: this.props.usersCustomers.results
+          customers:
+            this.props.usersCustomers && this.props.usersCustomers.results
         },
         () => {
           this.setState({ loading: false });
