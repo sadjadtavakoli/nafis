@@ -287,4 +287,10 @@ label {
   .ui.form input[type="text"] {
     font-family: yekan;
   }
+  .ui.form .field.error .ui.dropdown .text {
+    color: rgb(100, 100, 100);
+  }
+  .ui.dropdown {
+    text-align: right;
+  }
 }

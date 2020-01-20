@@ -193,7 +193,7 @@ class ProductTable extends React.Component {
                           onClick={() => {
                             this.handleClick(item.pk);
                             history.push(
-                              `/depository/depository-edit/${item.code}/`
+                              `/depository/depository-edit/${item.code}/${item.pk}/`
                             );
                           }}
                         >

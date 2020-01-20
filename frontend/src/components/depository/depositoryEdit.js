@@ -17,22 +17,25 @@ import { toastr } from "react-redux-toastr";
 
 class depositoryEdit extends Component {
   state = {
+    // Initial Values
     code: null,
     pk: null,
     name: null,
     stock_amount: null,
     selling_price: null,
     buying_price: null,
-    background_color: null,
+    background_color: "",
     design_color: null,
     material: null,
     f_type: null,
     design: null,
+    // Options
     f_type_Options: {},
     design_Options: {},
     material_Options: {},
     background_color_Options: {},
     design_color_Options: {},
+    // Booleans
     name_b: false,
     stock_amount_b: false,
     selling_price_b: false,
@@ -41,38 +44,28 @@ class depositoryEdit extends Component {
     design_Options_b: false,
     material_Options_b: false,
     background_color_Options_b: false,
-    design_color_Options_b: false,
-    background_color_after: null,
-    design_color_after: null,
-    material_after: null,
-    f_type_after: null,
-    design_after: null
+    design_color_Options_b: false
   };
 
   componentDidMount() {
     this.props.getProductsByCode(this.props.match.params.code).then(() => {
+      console.log(this.props.depositoryProduct);
       this.setState({
         code: this.props.match.params.code,
-        pk: 2,
+        pk: this.props.match.params.pk,
         name: this.props.depositoryProduct.name,
         stock_amount: this.props.depositoryProduct.stock_amount,
         selling_price: this.props.depositoryProduct.selling_price,
         buying_price: this.props.depositoryProduct.buying_price,
-        background_color: this.props.depositoryProduct.background_color.name,
-        design_color: this.props.depositoryProduct.design_color.name,
-        material: this.props.depositoryProduct.material.name,
-        f_type: this.props.depositoryProduct.f_type.name,
-        design: this.props.depositoryProduct.design.name,
-
-        background_color_after: this.props.depositoryProduct.background_color
-          .name,
-        design_color_after: this.props.depositoryProduct.design_color.name,
-        material_after: this.props.depositoryProduct.material.name,
-        f_type_after: this.props.depositoryProduct.f_type.name,
-        design_after: this.props.depositoryProduct.design.name
+        background_color: this.props.depositoryProduct.background_color.id,
+        design_color: this.props.depositoryProduct.design_color.id,
+        material: this.props.depositoryProduct.material.id,
+        f_type: this.props.depositoryProduct.f_type.id,
+        design: this.props.depositoryProduct.design.id
       });
     });
     this.props.getProductFields().then(() => {
+      console.log(this.props.productFields);
       this.setState({
         background_color_Options: this.props.productFields.background_color,
         design_color_Options: this.props.productFields.design_color,
@@ -83,42 +76,32 @@ class depositoryEdit extends Component {
     });
   }
 
-  convertStatus = status => {
+  convertStatus_b = status => {
     return status.concat("_b");
   };
 
-  selectConvertedStatus = status => {
+  convertStatus_Options = status => {
     return status.concat("_Options");
   };
 
-  afterConvertedStatus = status => {
-    return status.concat("_after");
-  };
-
   handleEdit = status => {
-    const convertedStatus = this.convertStatus(status);
+    const convertStatus_b = this.convertStatus_b(status);
     this.setState({
-      [convertedStatus]: true
+      [convertStatus_b]: true
     });
   };
 
   handleProductChange = (status, e) => {
-    this.setState(
-      {
-        ...this.state,
-        [status]: e.target.value
-      },
-      () => {}
-    );
+    this.setState({
+      ...this.state,
+      [status]: e.target.value
+    });
   };
 
-  selectChange = (e, { name, value }) => {
-    const afterConvertedStatus = this.afterConvertedStatus(name);
+  selectChange = (_, { status, value }) => {
     this.setState({
-      [name]: value,
-      [afterConvertedStatus]: e.target.textContent
+      [status]: value
     });
-    console.log(name, value);
   };
 
   handleSubmit = status => {
@@ -126,7 +109,8 @@ class depositoryEdit extends Component {
       .updateProduct(this.state.pk, {
         [status]: this.state[status]
       })
-      .then(() => {
+      .then(res => {
+        this.setState({ [status]: res.data[status] });
         toastr.success(".عملیات ویرایش موفقیت آمیز بود");
       })
       .catch(() => {
@@ -134,13 +118,13 @@ class depositoryEdit extends Component {
           "عملیات ویرایش موفقیت آمیز نبود. لطفا با تیم پشتیبانی در تماس باشید"
         );
       });
-    const convertedStatus = this.convertStatus(status);
+    const convertStatus_b = this.convertStatus_b(status);
     this.setState({
-      [convertedStatus]: false
+      [convertStatus_b]: false
     });
   };
 
-  selectDefaultValue = status => {
+  getTheValue = status => {
     this.props.getProductsByCode(this.props.match.params.code).then(() => {
       this.setState({
         [status]: this.props.depositoryProduct[status].id
@@ -149,51 +133,51 @@ class depositoryEdit extends Component {
   };
 
   createInput = (status, title) => {
-    const convertedStatus = this.convertStatus(status);
+    const convertStatus_b = this.convertStatus_b(status);
     return (
       <Form.Input
+        error={!this.state[convertStatus_b]}
         className={"text-right"}
-        error={!this.state[convertedStatus]}
         label={
           <React.Fragment>
             <span className="us-em-span">{title}</span>
             <Label
               className="pointer"
               size="mini"
-              color={`${this.state[convertedStatus] ? "green" : "teal"}`}
+              color={`${this.state[convertStatus_b] ? "green" : "teal"}`}
               style={{ marginBottom: "3px", marginRight: "5px" }}
               onClick={() => {
-                this.state[convertedStatus]
+                this.state[convertStatus_b]
                   ? this.handleSubmit(status)
                   : this.handleEdit(status);
               }}
             >
               <Icon
-                name={`${this.state[convertedStatus] ? "checkmark" : "edit"}`}
+                name={`${this.state[convertStatus_b] ? "checkmark" : "edit"}`}
               />
-              {`${this.state[convertedStatus] ? "اعمال" : "ویرایش"}`}
+              {`${this.state[convertStatus_b] ? "اعمال" : "ویرایش"}`}
             </Label>
           </React.Fragment>
         }
-        onChange={e => this.handleProductChange(status, e)}
         value={this.state[status]}
-        readOnly={!this.state[convertedStatus]}
+        readOnly={!this.state[convertStatus_b]}
+        onChange={e => this.handleProductChange(status, e)}
       />
     );
   };
 
   createSelect = (status, title) => {
-    const convertedStatus = this.convertStatus(status);
-    const selectConvertedStatus = this.selectConvertedStatus(status);
-    const afterConvertedStatus = this.afterConvertedStatus(status);
-    if (
-      this.state.background_color_Options.length &&
-      !this.state[convertedStatus]
-    ) {
+    const convertStatus_b = this.convertStatus_b(status);
+    const convertStatus_Options = this.convertStatus_Options(status);
+    if (!this.state[convertStatus_b]) {
       return (
-        <Form.Input
-          className={"text-right"}
+        <Form.Select
+          value={this.state[status]}
           error
+          fluid
+          selection
+          search
+          disabled
           label={
             <React.Fragment>
               <span className="us-em-span">{title}</span>
@@ -211,24 +195,19 @@ class depositoryEdit extends Component {
               </Label>
             </React.Fragment>
           }
-          value={this.state[afterConvertedStatus]}
-          defaultValue={this.state[afterConvertedStatus]}
-          readOnly={!this.state[convertedStatus]}
+          options={this.props.productFields && this.props.productFields[status]}
         />
       );
     }
-    if (
-      this.state.background_color_Options.length &&
-      this.state[convertedStatus] === true
-    ) {
+    if (this.state[convertStatus_b]) {
       return (
         <Form.Select
+          status={status}
+          options={this.state[convertStatus_Options]}
+          onChange={this.selectChange}
           fluid
-          defaultValue={() => this.selectDefaultValue(status)}
-          placeholder={
-            this.props.productsList &&
-            this.props.depositoryProduct.background_color.name
-          }
+          selection
+          search
           label={
             <React.Fragment>
               <span className="us-em-span">{title}</span>
@@ -246,12 +225,7 @@ class depositoryEdit extends Component {
               </Label>
             </React.Fragment>
           }
-          search
-          selection
-          onChange={this.selectChange}
-          name={status}
-          options={this.state[selectConvertedStatus]}
-          readOnly={!this.state[convertedStatus]}
+          placeholder="THIS IS A PLACEHOLDER"
         />
       );
     }

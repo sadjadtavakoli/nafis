@@ -46,7 +46,7 @@ const App = ({ token }) => {
             <Route path="/suppliers/" exact component={Suppliers} />
             <Route path="/suppliers/supplier/:pk/" exact component={Supplier} />
             <Route
-              path="/depository/depository-edit/:code/"
+              path="/depository/depository-edit/:code/:pk/"
               exact
               component={depositoryEdit}
             />
