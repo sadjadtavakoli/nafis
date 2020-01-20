@@ -1,7 +1,8 @@
 import {
   GET_PRODUCT_FIELDS,
   GET_PRODUCT_LIST,
-  GET_PRODUCT_ID
+  GET_PRODUCT_ID,
+  GET_PRODUCT_PROFILE
 } from "../actions/types";
 
 const INITIAL_VALUES = {};

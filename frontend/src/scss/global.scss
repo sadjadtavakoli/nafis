@@ -268,3 +268,29 @@ label {
   color: rgb(100, 100, 100) !important;
   border-color: #aaaaaa !important;
 }
+
+// DEPOSITORY EDIT
+
+#depository-edit {
+  .ui.form .disabled.field {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .ui.disabled.dropdown {
+    opacity: 1;
+  }
+  .ui.form .field.error .ui.dropdown {
+    background-color: #f3f4f5 !important;
+    color: rgb(100, 100, 100) !important;
+    border-color: #aaaaaa !important;
+  }
+  .ui.form input[type="text"] {
+    font-family: yekan;
+  }
+  .ui.form .field.error .ui.dropdown .text {
+    color: rgb(100, 100, 100);
+  }
+  .ui.dropdown {
+    text-align: right;
+  }
+}

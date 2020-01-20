@@ -13,8 +13,7 @@ class Suppliers extends Component {
     activePage: 1,
     allSuppliers: [],
     loading: true,
-    pk: null,
-    viewButtonClick: false
+    pk: null
   };
 
   componentDidMount() {
@@ -31,7 +30,7 @@ class Suppliers extends Component {
   }
 
   handleClick = pk => {
-    this.setState({ pk, viewButtonClick: true });
+    this.setState({ pk });
   };
 
   changePage = (_, { activePage }) => {
