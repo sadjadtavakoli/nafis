@@ -29,10 +29,10 @@
 .p-5 {
   padding: 1em !important;
 }
-.pt-5{
+.pt-5 {
   padding-top: 1em !important;
 }
-.text-black{
+.text-black {
   color: black !important;
 }
 .norm-latin {
@@ -74,23 +74,24 @@
   margin: 0;
   font-family: yekan;
 }
-div[role="combobox"]{
-  .default.text{
+div[role="combobox"] {
+  .default.text {
     right: 0 !important;
-    left: unset !important
+    left: unset !important;
   }
-  .message{
+  .message {
     text-align: right !important;
   }
   direction: rtl !important;
   text-align: right !important;
-    a.ui.label{
-      margin: .14285714rem 0 .14285714rem .28571429rem !important;
-    }
+  a.ui.label {
+    margin: 0.14285714rem 0 0.14285714rem 0.28571429rem !important;
+  }
 }
-.rtl .ui.label>.close.icon, .ui.label>.delete.icon{
-    margin-left: 0 !important;
-    margin-right: .5em !important;
+.rtl .ui.label > .close.icon,
+.ui.label > .delete.icon {
+  margin-left: 0 !important;
+  margin-right: 0.5em !important;
 }
 .rtl {
   direction: rtl;
@@ -188,7 +189,6 @@ label {
   .hidden-print {
     display: none !important;
   }
-  
 }
 
 // REPORT STYLE SHEET \\
