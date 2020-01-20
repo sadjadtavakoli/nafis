@@ -13,20 +13,27 @@ class Suppliers extends Component {
     activePage: 1,
     allSuppliers: [],
     loading: true,
-    pk: null
+    pk: null,
+    viewButtonClick: false,
+    notFound: false
   };
 
   componentDidMount() {
-    this.props.getSuppliersAction().then(() => {
-      this.setState(
-        {
-          allSuppliers: this.props.allSuppliers.results
-        },
-        () => {
-          this.setState({ loading: false });
-        }
-      );
-    });
+    this.props
+      .getSuppliersAction()
+      .then(() => {
+        this.setState(
+          {
+            allSuppliers: this.props.allSuppliers.results
+          },
+          () => {
+            this.setState({ loading: false });
+          }
+        );
+      })
+      .catch(() => {
+        this.setState({ notFound: true });
+      });
   }
 
   handleClick = pk => {
@@ -109,7 +116,7 @@ class Suppliers extends Component {
             ) : (
               <LoadingBar />
             )}
-            {this.state.allSuppliers.length ? null : <NotFound />}
+            {this.state.notFound ? <NotFound /> : null}
           </Table.Body>
 
           {this.props.allSuppliers && this.props.allSuppliers.count > 25 ? (
