@@ -3,7 +3,10 @@ import { connect } from "react-redux";
 import { Button, Container, Segment } from "semantic-ui-react";
 import AddProductModal from "./addProductModal";
 import ProductTable from "./productTable";
-import { getProductID, getProductsByFilter } from "../../actions/DepositoryActions";
+import {
+  getProductID,
+  getProductsByFilter
+} from "../../actions/DepositoryActions";
 import FilterSegment from "./filterSegment";
 
 class Depository extends React.Component {
@@ -30,9 +33,9 @@ class Depository extends React.Component {
       filterOpen: status
     });
   };
-  getProductsByFilter = (filterParams) => {
-    this.props.getProductsByFilter(filterParams).then((response) => {
-      console.log('response',response.data)
+  getProductsByFilter = filterParams => {
+    this.props.getProductsByFilter(filterParams).then(response => {
+      console.log("response", response.data);
     });
   };
   render() {
@@ -62,7 +65,9 @@ class Depository extends React.Component {
                 icon="filter"
                 labelPosition="right"
               />
-              {this.state.filterOpen ? <FilterSegment submitFilter={this.getProductsByFilter}/> : null}
+              {this.state.filterOpen ? (
+                <FilterSegment submitFilter={this.getProductsByFilter} />
+              ) : null}
             </Segment>
             <ProductTable />
           </div>
