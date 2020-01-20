@@ -32,7 +32,7 @@ class Suppliers extends Component {
         );
       })
       .catch(() => {
-        this.setState({ notFound: true });
+        this.setState({ notFound: true, loading: false });
       });
   }
 
@@ -69,7 +69,7 @@ class Suppliers extends Component {
           </Table.Header>
 
           <Table.Header>
-            {!this.state.loading && (
+            {!this.state.loading && this.state.allSuppliers.length > 0 ? (
               <Table.Row>
                 <Table.HeaderCell style={{ borderLeft: "1px solid #ddd" }}>
                   نام و نام خانوادگی
@@ -79,45 +79,46 @@ class Suppliers extends Component {
                 <Table.HeaderCell>آدرس</Table.HeaderCell>
                 <Table.HeaderCell>عملیات</Table.HeaderCell>
               </Table.Row>
-            )}
+            ) : null}
           </Table.Header>
 
-          <Table.Body>
-            {!this.state.loading && this.state.allSuppliers.length ? (
-              this.state.allSuppliers.map(item => {
+          {!this.state.loading && this.state.allSuppliers.length > 0
+            ? this.state.allSuppliers.map(item => {
                 return (
-                  <Table.Row key={item.pk}>
-                    <Table.Cell style={{ borderLeft: "1px solid #ddd" }}>
-                      {item.full_name}
-                    </Table.Cell>
-                    <Table.Cell>
-                      <span>{item.email}</span>
-                    </Table.Cell>
-                    <Table.Cell className="norm-latin">
-                      <span>{item.phone_number}</span>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <span>{item.address}</span>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Button
-                        color="teal"
-                        onClick={() => {
-                          this.handleClick(item.pk);
-                          history.push(`/suppliers/supplier/${item.pk}/`);
-                        }}
-                      >
-                        <span>مشاهده</span>
-                      </Button>
-                    </Table.Cell>
-                  </Table.Row>
+                  <Table.Body>
+                    <Table.Row key={item.pk}>
+                      <Table.Cell style={{ borderLeft: "1px solid #ddd" }}>
+                        {item.full_name}
+                      </Table.Cell>
+                      <Table.Cell>
+                        <span>{item.email}</span>
+                      </Table.Cell>
+                      <Table.Cell className="norm-latin">
+                        <span>{item.phone_number}</span>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <span>{item.address}</span>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Button
+                          color="teal"
+                          onClick={() => {
+                            this.handleClick(item.pk);
+                            history.push(`/suppliers/supplier/${item.pk}/`);
+                          }}
+                        >
+                          <span>مشاهده</span>
+                        </Button>
+                      </Table.Cell>
+                    </Table.Row>
+                  </Table.Body>
                 );
               })
-            ) : (
-              <LoadingBar />
-            )}
-            {this.state.notFound ? <NotFound /> : null}
-          </Table.Body>
+            : null}
+          {this.state.loading ? <LoadingBar /> : null}
+          {!this.state.loading && !this.state.allSuppliers.length ? (
+            <NotFound />
+          ) : null}
 
           {this.props.allSuppliers && this.props.allSuppliers.count > 25 ? (
             <Table.Footer>
