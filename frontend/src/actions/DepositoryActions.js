@@ -1,4 +1,9 @@
-import { GET_PRODUCT_FIELDS, GET_PRODUCT_LIST, GET_PRODUCT_ID } from "./types";
+import {
+  ADD_BILL,
+  GET_PRODUCT_FIELDS,
+  GET_PRODUCT_LIST,
+  GET_PRODUCT_ID
+} from "./types";
 import { server, putServer } from "../apis/server";
 
 export const getProductsList = (page = 1) => async dispatch => {
