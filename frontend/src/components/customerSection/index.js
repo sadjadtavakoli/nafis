@@ -44,11 +44,11 @@ class Customers extends Component {
   render() {
     return (
       <React.Fragment>
-        <Table celled className="rtl text-center" columns={3}>
+        <Table celled className="rtl text-center" >
           <Table.Header className="text-right">
             <Table.Row>
-              <Table.HeaderCell colSpan="4">
-                <Grid columns={1}>
+              <Table.HeaderCell colSpan="3">
+                <Grid >
                   <Grid.Row className="us-header">
                     <span className="us-p us-users">مشتریان</span>
                     <Search
@@ -64,8 +64,7 @@ class Customers extends Component {
           </Table.Header>
 
           {this.props.usersCustomers &&
-          this.state.customers &&
-          !this.state.loading !== null ? (
+            this.props.usersCustomers.results.length === 0 === null ? (
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell style={{ borderLeft: "1px solid #ddd" }}>

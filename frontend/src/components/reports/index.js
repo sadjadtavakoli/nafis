@@ -488,11 +488,11 @@ class Reports extends React.Component {
       <React.Fragment>
         <Container>
           <Segment stacked className="rtl">
-            <form onSubmit={this.sendDate}>
-              <span className="padded">از تاریخ</span>
-              <Input value={this.state.dateRange.fromDate} readOnly />
+            <form onSubmit={this.sendDate} id="r-form">
+              <span className="padded">از asdfتاریخ</span>
+              <Input value={this.state.dateRange.fromDate} className="r-input" readOnly />
               <span className="padded">تا تاریخ</span>
-              <Input value={this.state.dateRange.toDate} readOnly />
+              <Input value={this.state.dateRange.toDate} className="r-input" readOnly />
               <Icon
                 onClick={() => this.handleCalendarClick(true)}
                 name="calendar alternate outline"

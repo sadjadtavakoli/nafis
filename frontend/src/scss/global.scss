@@ -296,3 +296,11 @@ label {
     text-align: right;
   }
 }
+
+// Bug Fix Reports
+
+#r-form {
+  .r-input {
+    width: 120px !important;
+  }
+}
