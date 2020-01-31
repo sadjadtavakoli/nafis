@@ -167,6 +167,10 @@ class BillsViewSet(NafisBase, ModelViewSet):
         bill_code = Bill.objects.filter(create_date__date=timezone.now().date()).count() + 1
         bill = Bill.objects.create(buyer=buyer, seller=seller, discount=discount, branch=seller.branch,
                                    bill_code=bill_code)
+        if Bill.objects.filter(create_date__date=timezone.now().date(), bill_code=bill_code).count() > 1:
+            bill = Bill.objects.filter(create_date__date=timezone.now().date(), bill_code=bill_code).first()
+            bill.bill_code = bill_code - 1
+            bill.save()
 
         for item in items:
             product_code = item['product']
