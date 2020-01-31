@@ -100,6 +100,7 @@ export const getDailyReport = () => async dispatch => {
     "/bills/daily-report/"
   );
   dispatch({ type: ActionTypes.GET_DAILY_REPORT, payload: response.data });
+  return response;
 };
 
 export const removeBill = billID => (dispatch, _, { api }) => {

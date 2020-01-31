@@ -99,8 +99,8 @@ class ProductIdCreateApiView(NafisBase, CreateAPIView):
     queryset = ProductId.objects.all()
 
     def create(self, request, *args, **kwargs):
-        if not self.queryset.last().is_used:
-            instance = self.queryset.last()
+        if self.queryset.filter(is_used=False).count():
+            instance = self.queryset.filter(is_used=False).first()
         else:
             ProductId.objects.create()
             instance = ProductId.objects.last()
