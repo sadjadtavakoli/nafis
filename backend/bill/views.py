@@ -102,9 +102,9 @@ class BillsViewSet(NafisBase, ModelViewSet):
                                                bill=bill,
                                                type=payment_type)
         elif payment_type == "cheque":
-            amount = self.request.data.get('amount')
-            payment = CustomerPayment.objects.create(create_date=timezone.now(),
-                                                     amount=float(amount), bill=bill, type=payment_type)
+            amount = self.request.data.get('amount', None)
+            if amount is None:
+                raise ValidationError("مقدار تمی‌تواند خالی باشد")
             bank = self.request.data.get('bank')
             number = self.request.data.get('number')
             issue_date = self.request.data.get('issue_date', timezone.now().date())
@@ -113,9 +113,8 @@ class BillsViewSet(NafisBase, ModelViewSet):
                                                    issue_date=issue_date,
                                                    expiry_date=expiry_date,
                                                    amount=int(amount), customer=bill.buyer)
-
-            payment.cheque = cheque
-            payment.save()
+            CustomerPayment.objects.create(create_date=timezone.now(), cheque=cheque,
+                                           amount=float(amount), bill=bill, type=payment_type)
 
         data = BillSerializer(Bill.objects.get(pk=bill.pk)).data
         return Response(data, status=status.HTTP_201_CREATED)
