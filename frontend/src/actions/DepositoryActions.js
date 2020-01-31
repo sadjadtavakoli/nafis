@@ -8,6 +8,14 @@ export const getProductsList = (page = 1) => async dispatch => {
   );
   dispatch({ type: GET_PRODUCT_LIST, payload: response.data });
 };
+export const getProductsByFilter = (params, page = 1) => async dispatch => {
+  const response = await server(
+    localStorage.getItem("token")
+  ).get("/products/filter/", { params });
+  dispatch({ type: GET_PRODUCT_LIST, payload: response.data });
+  return response;
+};
+
 export const getProductsByCode = (code, page = 1) => async dispatch => {
   const response = await server(
     localStorage.getItem("token")
@@ -27,9 +35,9 @@ export const getProductID = () => async dispatch => {
   dispatch({ type: GET_PRODUCT_ID, payload: response.data });
 };
 export const setNewProduct = data => async dispatch => {
-  const response = await server(localStorage.getItem("token")).post(
-    "/products/",
-    data
-  );
+  // const response = await server(localStorage.getItem("token")).post(
+  //   "/products/",
+  //   data
+  // );
   // dispatch({type: ADD_BILL, payload: response.data});
 };

@@ -1,9 +1,5 @@
 import * as ActionTypes from "../actions/types";
-import {
-  updateObject,
-  updateItemInArray,
-  createReducer
-} from "../utils/FunctionalUtils";
+import { updateItemInArray, createReducer } from "../utils/FunctionalUtils";
 
 const INITIAL_STATE = {
   loading: false,

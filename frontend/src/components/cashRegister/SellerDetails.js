@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Label, Header } from "semantic-ui-react";
+import { Form, Header } from "semantic-ui-react";
 import renderField from "./RenderField";
 
 const SellerDetails = props => {

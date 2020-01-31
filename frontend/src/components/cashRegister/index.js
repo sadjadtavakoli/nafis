@@ -29,7 +29,7 @@ const CashRegister = ({
 
   useEffect(() => {
     getAllActiveBills();
-  }, []);
+  });
   return (
     <Container>
       <Segment stacked className="rtl">
