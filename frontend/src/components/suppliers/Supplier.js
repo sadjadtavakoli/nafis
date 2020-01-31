@@ -11,7 +11,7 @@ import { connect } from "react-redux";
 import { getTheSupplier, updateSupplier } from "../../actions/SuppliersActions";
 import { toastr } from "react-redux-toastr";
 
-class Edit extends Component {
+class SupplierEdit extends Component {
   state = {
     pk: null,
     full_name: null,
@@ -97,7 +97,6 @@ class Edit extends Component {
               color={`${this.state[convertedStatus] ? "green" : "teal"}`}
               style={{ marginBottom: "3px", marginRight: "5px" }}
               onClick={() => {
-                this.handleEdit(status);
                 this.state[convertedStatus]
                   ? this.handleSubmit(status)
                   : this.handleEdit(status);
@@ -147,5 +146,5 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, { getTheSupplier, updateSupplier })(
-  Edit
+  SupplierEdit
 );

@@ -8,6 +8,7 @@ import { standardTimeToJalaali } from "../utils/jalaaliUtils";
 import LoadingBar from "../utils/loadingBar";
 import NotFound from "../utils/notFound";
 import "../../scss/bootstrap.scss";
+import { isPermit } from "../mainPage/permission";
 
 class DailyReport extends React.Component {
   state = {
@@ -18,9 +19,10 @@ class DailyReport extends React.Component {
   };
   componentDidMount() {
     this.props.getDailyReport().then(res => {
-      console.log(this.props.dailyReport);
+      console.log(res);
       this.setState({ firstTime: false, dailyReport: this.props.dailyReport });
     });
+    this.setJob();
   }
   bills = () => {
     return (
@@ -49,7 +51,9 @@ class DailyReport extends React.Component {
               <Table.HeaderCell className="text-center">
                 تخفیف کل
               </Table.HeaderCell>
-              <Table.HeaderCell className="text-center">سود</Table.HeaderCell>
+              {isPermit("adminOnly", this.state.job) ? (
+                <Table.HeaderCell className="text-center">سود</Table.HeaderCell>
+              ) : null}
               <Table.HeaderCell className="text-center">
                 تعداد اقلام
               </Table.HeaderCell>
@@ -97,9 +101,11 @@ class DailyReport extends React.Component {
                   <Table.Cell className="text-center norm-latin" collapsing>
                     <span>{priceToPersian(item.total_discount)}</span>
                   </Table.Cell>
-                  <Table.Cell className="text-center norm-latin" collapsing>
-                    <span>{priceToPersian(item.profit)}</span>
-                  </Table.Cell>
+                  {isPermit("adminOnly", this.state.job) ? (
+                    <Table.Cell className="text-center norm-latin" collapsing>
+                      <span>{priceToPersian(item.profit)}</span>
+                    </Table.Cell>
+                  ) : null}
                   <Table.Cell className="text-center norm-latin" collapsing>
                     <span>{item.items_count}</span>
                   </Table.Cell>
@@ -127,6 +133,9 @@ class DailyReport extends React.Component {
         </Table.Body>
       </Table>
     );
+  };
+  setJob = () => {
+    this.setState({ job: localStorage.getItem("type") });
   };
   prefetchModule = () => {
     console.log(
@@ -161,10 +170,12 @@ class DailyReport extends React.Component {
                 <Table.HeaderCell className="text-center">
                   تعداد کل فاکتور ها
                 </Table.HeaderCell>
-                <Table.HeaderCell className="text-center">
-                  {" "}
-                  سود کل
-                </Table.HeaderCell>
+                {isPermit("adminOnly", this.state.job) ? (
+                  <Table.HeaderCell className="text-center">
+                    {" "}
+                    سود کل
+                  </Table.HeaderCell>
+                ) : null}
                 <Table.HeaderCell className="text-center">
                   فاکتورهای مانده‌حساب
                 </Table.HeaderCell>
@@ -213,11 +224,13 @@ class DailyReport extends React.Component {
                     {priceToPersian(this.state.dailyReport.bills_data.length)}
                   </span>
                 </Table.Cell>
-                <Table.Cell className="text-center norm-latin" collapsing>
-                  <span>
-                    {priceToPersian(this.state.dailyReport.total_profit)}
-                  </span>
-                </Table.Cell>
+                {isPermit("adminOnly", this.state.job) ? (
+                  <Table.Cell className="text-center norm-latin" collapsing>
+                    <span>
+                      {priceToPersian(this.state.dailyReport.total_profit)}
+                    </span>
+                  </Table.Cell>
+                ) : null}
                 <Table.Cell className="text-center norm-latin" collapsing>
                   <span>
                     {priceToPersian(
