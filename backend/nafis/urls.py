@@ -23,7 +23,7 @@ from rest_framework import routers
 
 from bill.views import BillsViewSet, BillItemViewSet, CustomerPaymentViewSet, SupplierBillsViewSet, \
     SupplierBillItemViewSet, CustomerChequeViewSet, OurChequeViewSet
-from customer.views import CustomersViewSet
+from customer.views import CustomersViewSet, GetCustomerTypesApiView
 from nafis.views import LoginAPIView
 from product.views import ProductIdCreateApiView, ProductViewSet, ProductFieldsOptionsView
 from supplier.views import SupplierViewSet
@@ -45,6 +45,7 @@ urlpatterns = [
     url(r'^login/', LoginAPIView.as_view(), name='login'),
     url(r'^api/product-id/', ProductIdCreateApiView.as_view(), name='create-product-id'),
     url(r'^api/product-fields/', ProductFieldsOptionsView.as_view(), name='product-fields'),
+    url(r'^api/customer-types/', GetCustomerTypesApiView.as_view(), name='customer-types'),
     path('api/', include(router.urls)),
     url(r'^$', TemplateView.as_view(template_name="customer/index.html"), name='client'),
     url(r'^(?:.*)/?$', TemplateView.as_view(template_name="customer/index.html"))

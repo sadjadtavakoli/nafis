@@ -2,12 +2,13 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.status import HTTP_404_NOT_FOUND
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from bill.permissions import LoginRequired
 from bill.serializers import CustomerChequeSerializer, BillSerializer
-from customer.models import Customer
-from customer.serializers import CustomerSerializer
+from customer.models import Customer, CustomerType
+from customer.serializers import CustomerSerializer, CustomerTypeSerializer
 from nafis.paginations import PaginationClass
 from nafis.views import NafisBase
 
@@ -75,3 +76,8 @@ class CustomersViewSet(NafisBase, ModelViewSet):
             return self.get_paginated_response(serializer.data)
         serializer = BillSerializer(queryset, many=True)
         return Response(serializer.data)
+
+
+class GetCustomerTypesApiView(APIView):
+    def get(self, request, **kwargs):
+        return Response(CustomerTypeSerializer(CustomerType.objects.all(), many=True).data)
