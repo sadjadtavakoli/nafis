@@ -229,7 +229,7 @@ class AddBillModal extends React.Component {
 
         if (this.state.discount.length < 1) {
           this.setState({
-            formValidation: { ...this.state.formValidation, discount: true }
+            discount: 0
           });
           hasError = true;
         }
