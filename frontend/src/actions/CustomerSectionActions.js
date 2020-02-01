@@ -19,7 +19,7 @@ export const getCustomerUsers = (page = 1) => async dispatch => {
   return response;
 };
 
-export const getAllBills = pk => async dispatch => {
+export const getAllBills = (pk, oo) => async dispatch => {
   const response = await server(localStorage.getItem("token")).get(
     `/customers/${pk}/bills/`
   );
@@ -43,11 +43,7 @@ export const getACustomer = pk => async dispatch => {
 };
 
 export const updateCustomer = (pk, data) => async dispatch => {
-  return await putServer(
-    localStorage.getItem("token"),
-    `/customers/${pk}/`,
-    data
-  );
+  return await putServer(pk);
 };
 
 export const getRemainedBills = pk => async dispatch => {
