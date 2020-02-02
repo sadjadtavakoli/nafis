@@ -232,7 +232,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
         bills_with_reminded_status = bills.filter(status="remained").count()
         total_bills = bills.count()
         data = {}
-        data['remained_bill'] = bills.filter(status="remained")
+        data['remained_bill'] = BillSerializer(bills.filter(status="remained"), many=True)
         for bill in bills:
             total_sales += bill.price
             total_final_price += bill.final_price
