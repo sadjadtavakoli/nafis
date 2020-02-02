@@ -298,6 +298,7 @@ class BillItemViewSet(ModelViewSet):
         bill_item_amount = self.get_object().amount
         if bill.seller.username != request.user.username or bill.status != "active":
             raise PermissionDenied
+        super(BillItemViewSet, self).destroy(request, *args, **kwargs)
         bill_item_product.update_stock_amount(-1 * (bill_item_amount + 0.05))
         serializer = BillSerializer(bill)
         headers = self.get_success_headers(serializer.data)
