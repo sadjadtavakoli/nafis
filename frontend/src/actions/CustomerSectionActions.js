@@ -42,7 +42,14 @@ export const getACustomer = pk => async dispatch => {
   dispatch({ type: GET_A_CUSTOMER, payload: response.data });
 };
 
-export const updateCustomer = (pk, data) => async dispatch => {
+export const deleteCustomer = pk => async () => {
+  const response = await server(localStorage.getItem("token")).delete(
+    `/customers/${pk}/`
+  );
+  return response;
+};
+
+export const updateCustomer = pk => async () => {
   return await putServer(pk);
 };
 
