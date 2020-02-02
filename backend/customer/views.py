@@ -85,6 +85,6 @@ class CustomersViewSet(ModelViewSet):
 class GetCustomerFieldsApiView(APIView):
     def get(self, request, **kwargs):
         response = {}
-        response['customer-types'] = CustomerTypeSerializer(CustomerType.objects.all(), many=True).data
+        response['customerTypes'] = CustomerTypeSerializer(CustomerType.objects.all(), many=True).data
         response['cities'] = CitySerializer(City.objects.all(), many=True).data
         return Response(response)
