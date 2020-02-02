@@ -15,6 +15,7 @@ class AddCustomerModal extends Component {
     marriage_date: null,
     points: null,
     class_type_options: [],
+    city_options: [],
     formValidation: {
       first_name: false,
       last_name: false,
@@ -27,7 +28,8 @@ class AddCustomerModal extends Component {
     this.props.getClassTypes().then(() => {
       this.setState(
         {
-          class_type_options: this.props.classAndCity.customerTypes
+          class_type_options: this.props.classAndCity.customerTypes,
+          city_options: this.props.classAndCity.cities
         },
         () => {
           console.log(this.state.class_type_options);
@@ -94,11 +96,14 @@ class AddCustomerModal extends Component {
                 onChange={e => this.inputChange(e, "address")}
                 placeholder="آدرس"
               />
-              <Form.Input
+              <Form.Select
                 className="ltr placeholder-rtl text-right"
                 placeholder="شهر"
                 label="شهر"
-                onChange={e => this.inputChange(e, "city")}
+                search
+                selection
+                fluid
+                options={this.state.city_options}
               />
             </Form.Group>
             <Form.Group unstackable widths={2}>
@@ -154,6 +159,7 @@ class AddCustomerModal extends Component {
 }
 
 const mapStateToProps = state => {
+  console.log(state);
   return {
     classAndCity: state.customers.classTypesAndCity
   };
