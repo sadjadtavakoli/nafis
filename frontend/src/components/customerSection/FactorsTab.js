@@ -15,13 +15,15 @@ class FactorsTab extends Component {
     virgin: true,
     remainedBillsToggle: false
   };
+
   componentDidMount() {
     this.props.getAllBills(this.props.passingPk).then(() => {
       this.setState({
         virgin: false,
-        bills: this.props.allBills
+        bills: this.props.allBills.results
       });
     });
+    this.props.getRemainedBills(this.props.passingPk);
   }
 
   createTable = () => {
@@ -85,32 +87,24 @@ class FactorsTab extends Component {
   };
 
   handleToggleClick = () => {
-    this.setState(
-      {
-        virgin: false,
-        remainedBillsToggle: !this.state.remainedBillsToggle
-      },
-      () => {
-        if (this.state.remainedBillsToggle) {
-          this.props.getRemainedBills(this.props.passingPk).then(() => {
-            this.setState({
-              virgin: false,
-              bills: this.props.remainedBills
-            });
-          });
-          this.setState({
-            bills: this.props.allBills
-          });
-        } else {
-          this.props.getAllBills(this.props.passingPk).then(() => {
-            this.setState({
-              virgin: false,
-              bills: this.props.allBills
-            });
-          });
-        }
-      }
-    );
+    this.setState({ remainedBillsToggle: !this.state.remainedBillsToggle });
+    if (!this.state.remainedBillsToggle) {
+      this.props.getRemainedBills(this.props.passingPk).then(() => {
+        this.setState({
+          virgin: false,
+          bills: this.props.remainedBills
+        });
+      });
+    }
+    if (this.state.remainedBillsToggle) {
+      this.props.getAllBills(this.props.passingPk).then(() => {
+        this.setState({
+          virgin: false,
+          bills: this.props.allBills.results
+        });
+      });
+    }
+    console.log(this.state.remainedBillsToggle);
   };
 
   render() {
@@ -133,6 +127,7 @@ class FactorsTab extends Component {
 }
 
 const mapStateToProps = state => {
+  console.log(state);
   return {
     allBills: state.customers.allBills,
     remainedBills: state.customers.remainedBills

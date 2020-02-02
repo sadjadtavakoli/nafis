@@ -33,7 +33,6 @@ class EditTab extends Component {
   componentDidMount() {
     this.props.getACustomer(this.props.passingPk).then(() => {
       this.setState({ pk: this.props.passingPk });
-      console.log(this.state.pk);
     });
   }
 
