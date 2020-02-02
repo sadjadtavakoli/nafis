@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from bill.models import Bill, BillItem, CustomerPayment, CustomerCheque, OurCheque, SupplierBill, OurPayment, \
-    SupplierBillItem
+    SupplierBillItem, BillCounter
 from bill.permissions import LoginRequired, CloseBillPermission
 from bill.serializers import BillSerializer, CustomerPaymentSerializer, BillItemSerializer, SupplierBillSerializer, \
     SupplierBillItemSerializer, CustomerChequeSerializer, OurChequeSerializer
@@ -163,7 +163,10 @@ class BillsViewSet(NafisBase, ModelViewSet):
         seller = Staff.objects.get(username=self.request.user.username)
         discount = data.get('discount', 0)
         items = data.get('items')
-        bill_code = Bill.objects.filter(create_date__date=timezone.now().date()).count() + 1
+        bill_counter = BillCounter.objects.first()
+        if not Bill.objects.filter(create_date__date=timezone.now().date()).count():
+            bill_counter.reset()
+        bill_code = bill_counter.increase()
         bill = Bill.objects.create(buyer=buyer, seller=seller, discount=discount, branch=seller.branch,
                                    bill_code=bill_code)
 
@@ -237,7 +240,6 @@ class BillsViewSet(NafisBase, ModelViewSet):
             total_sales += bill.price
             total_final_price += bill.final_price
             total_sales_received += bill.paid
-            total_sales_remaining += bill.remaining_payment
             total_profit += bill.profit
             total_sales_cash += bill.cash_paid
             total_sales_card += bill.card_paid
@@ -355,6 +357,7 @@ class CustomerPaymentViewSet(NafisBase, ModelViewSet):
         if self.get_object().type == "cheque":
             cheque = self.get_object().cheque
         response = super(CustomerPaymentViewSet, self).destroy(request, *args, **kwargs)
+        bill.check_status()
         if cheque:
             cheque.delete()
         return response
