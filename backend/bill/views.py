@@ -166,10 +166,6 @@ class BillsViewSet(NafisBase, ModelViewSet):
         bill_code = Bill.objects.filter(create_date__date=timezone.now().date()).count() + 1
         bill = Bill.objects.create(buyer=buyer, seller=seller, discount=discount, branch=seller.branch,
                                    bill_code=bill_code)
-        if Bill.objects.filter(create_date__date=timezone.now().date(), bill_code=bill_code).count() > 1:
-            bill = Bill.objects.filter(create_date__date=timezone.now().date(), bill_code=bill_code).first()
-            bill.bill_code = bill_code - 1
-            bill.save()
 
         for item in items:
             product_code = item['product']
@@ -198,6 +194,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
         total_cheque_paid, total_cash_paid, total_card_paid, total_paid, reminded_payments = 0, 0, 0, 0, 0
         data = {}
         bills = Bill.objects.filter(close_date__date=datetime.today().date(), status__in=["remained", "done"])
+        data['remained_bill'] = bills.filter(status="remained")
         bills_with_reminded_status = bills.filter(status="remained").count()
         total_bills = bills.count()
         for bill in bills:
