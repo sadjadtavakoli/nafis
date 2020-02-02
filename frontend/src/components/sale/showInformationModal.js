@@ -21,6 +21,7 @@ import {
   Label
 } from "semantic-ui-react";
 import NewBillPopup from "./newBillPopup";
+
 const INITIAL_STATE = {
   sumProductTotalPrice: 0,
   data: {},
@@ -30,6 +31,7 @@ const INITIAL_STATE = {
   used_points: "",
   branch: 1,
   discount: 0,
+  editMode: false,
   branchOptions: [{ key: "1", value: "1", flag: "ir", text: "شعبه یک" }],
   isEnableEdit: {
     discount: false,
@@ -37,7 +39,10 @@ const INITIAL_STATE = {
   },
   customerData: {}
 };
+
 class ShowInformationModal extends React.Component {
+  state = INITIAL_STATE;
+
   componentWillReceiveProps() {
     if (!this.state.data.items) {
       this.setState(
@@ -51,7 +56,6 @@ class ShowInformationModal extends React.Component {
       );
     }
   }
-  state = INITIAL_STATE;
 
   toggleAddItemPopup = () => {
     this.setState(prevState => ({ isOpenAddItem: !prevState.isOpenAddItem }));
@@ -60,19 +64,25 @@ class ShowInformationModal extends React.Component {
   deleteItem = index => {
     var r = window.confirm("آیا از حذف این مورد مطمئن هستید؟");
     if (r === true) {
-      
       this.props
         .deleteItem(this.state.data.items[index].pk)
         .then(({ data }) => {
           this.setState({ data }, () => {
             this.sumProductTotalPrice();
           });
-          console.log('successfully done');
+          console.log("successfully done");
         })
         .catch(() => {
           console.log("failed");
         });
     }
+  };
+
+  editItem = index => {
+    this.setState({
+      editMode: true
+    });
+    console.log(index)
   };
 
   itemsRender = (item, index) => {
@@ -82,42 +92,54 @@ class ShowInformationModal extends React.Component {
           <Card.Content>
             <Card.Header className="yekan">
               {item.product.name}
-              <span>
-                <Button
-                  color="red"
-                  onClick={() => this.deleteItem(index)}
-                  className="pointer"
-                  icon
-                  labelPosition="right"
-                  tiny
-                  style={{ marginRight: "10px" }}
-                >
-                  <span>حذف آیتم</span>
-                  <Icon name="trash" />
-                </Button>
-              </span>{" "}
+              <Button
+                icon
+                color="red"
+                onClick={() => this.deleteItem(index)}
+                className="pointer"
+                labelPosition="right"
+                size="mini"
+                style={{ marginRight: "10px" }}
+              >
+                <span>حذف آیتم</span>
+                <Icon name="trash" />
+              </Button>
+              <Button
+                icon
+                color="teal"
+                onClick={() => this.editItem(index)}
+                className="pointer"
+                labelPosition="right"
+                size="mini"
+                style={{ marginRight: "10px" }}
+              >
+                <span>ویرایش</span>
+                <Icon name="edit" />
+              </Button>
             </Card.Header>
-            <Card.Description className="yekan">
-              <Message compact size="mini" color="teal">
-                داده های زیر صرفا جهت خواندن هستن و برای جلوگیری از خطای انسانی
-                قابل ویرایش نمی باشند.
-              </Message>
-            </Card.Description>
+            {this.state.editMode ? null : (
+              <Card.Description className="yekan">
+                <Message compact size="mini" color="teal">
+                  داده های زیر صرفا جهت خواندن هستن و برای جلوگیری از خطای
+                  انسانی قابل ویرایش نمی باشند.
+                </Message>
+              </Card.Description>
+            )}
           </Card.Content>
           <Card.Content extra>
             <Form>
               <Form.Group widths="equal">
                 <Form.Input
                   className="rtl text-right placeholder-rtl"
-                  readOnly
+                  readOnly={this.state.editMode ? false : true}
                   fluid
-                  defaultValue={item.product.name}
+                  defaultValue={this.state.editMode ? item.product.code : item.product.name}
                   label="نام محصول"
                   placeholder=""
                 />
                 <Form.Input
                   className="ltr placeholder-rtl"
-                  readOnly
+                  readOnly={this.state.editMode ? false : true}
                   fluid
                   defaultValue={item.product.code}
                   label="کد محصول"
@@ -125,7 +147,7 @@ class ShowInformationModal extends React.Component {
                 />
                 <Form.Input
                   className="ltr placeholder-rtl"
-                  readOnly
+                  readOnly={this.state.editMode ? false : true}
                   fluid
                   defaultValue={priceToPersian(item.product.selling_price)}
                   label="قیمت واحد"
@@ -133,7 +155,7 @@ class ShowInformationModal extends React.Component {
                 />
                 <Form.Input
                   className="ltr placeholder-rtl"
-                  readOnly
+                  readOnly={this.state.editMode ? false : true}
                   fluid
                   defaultValue={item.amount}
                   label={`مقدار(متر)`}
@@ -141,7 +163,7 @@ class ShowInformationModal extends React.Component {
                 />
                 <Form.Input
                   className="ltr placeholder-rtl"
-                  readOnly
+                  readOnly={this.state.editMode ? false : true}
                   fluid
                   defaultValue={item.discount}
                   label="تخفیف"
@@ -152,7 +174,7 @@ class ShowInformationModal extends React.Component {
                 <Form.Checkbox
                   toggle
                   className="ltr placeholder-rtl"
-                  readOnly
+                  readOnly={this.state.editMode ? false : true}
                   checked={item.end_of_roll}
                   label="ته طاقه؟"
                 />
@@ -160,7 +182,7 @@ class ShowInformationModal extends React.Component {
                   className={`ltr placeholder-rtl ${
                     item.end_of_roll ? "" : "invisible"
                   }`}
-                  readOnly
+                  readOnly={this.state.editMode ? false : true}
                   defaultValue={item.end_of_roll_amount}
                   label="مقدار حساب شده"
                   placeholder="مقدار حساب شده"
