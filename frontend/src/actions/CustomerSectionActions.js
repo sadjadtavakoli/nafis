@@ -5,7 +5,8 @@ import {
   GET_ALL_CHEQUES,
   GET_REMAINED_BILLS,
   GET_REMAINED_CHEQUES,
-  GET_CLASS_TYPES_AND_CITY
+  GET_CLASS_TYPES_AND_CITY,
+  ADD_CUSTOMER
 } from "./types";
 import { server, putServer } from "../apis/server";
 
@@ -76,4 +77,12 @@ export const getClassTypes = () => async dispatch => {
   );
   dispatch({ type: GET_CLASS_TYPES_AND_CITY, payload: response.data });
   return response;
+};
+
+export const setNewCustomer = data => async dispatch => {
+  const response = await server(localStorage.getItem("token")).post(
+    "/customers/",
+    data
+  );
+  dispatch({ type: ADD_CUSTOMER, payload: response.data });
 };
