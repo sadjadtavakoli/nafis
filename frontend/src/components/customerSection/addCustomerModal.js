@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Button, Form, Modal } from "semantic-ui-react";
+import { connect } from "react-redux";
+import { getClassTypes } from "../../actions/classTypesAndCityActions";
 
 class AddCustomerModal extends Component {
   state = {
@@ -12,6 +14,7 @@ class AddCustomerModal extends Component {
     bitrth_date: null,
     marriage_date: null,
     points: null,
+    class_type_options: null,
     formValidation: {
       first_name: false,
       last_name: false,
@@ -24,6 +27,12 @@ class AddCustomerModal extends Component {
       points: false
     }
   };
+
+  componentDidMount() {
+    this.props.getClassTypes().then(() => {
+      console.log(this.props.classTypes);
+    });
+  }
 
   inputChange = (event, inputName) => {
     this.setState({
@@ -117,12 +126,13 @@ class AddCustomerModal extends Component {
                 onChange={e => this.inputChange(e, "points")}
                 placeholder="امتیاز"
               />
-              <Form.Input
+              <Form.Dropdown
                 className="ltr placeholder-rtl"
                 placeholder="نوع"
                 label="نوع"
-                error={this.state.formValidation.class_type}
-                onChange={e => this.inputChange(e, "class_type")}
+                selection
+                defaultValue={"1"}
+                options={this.state.class_type_options}
               />
             </Form.Group>
           </Form>
@@ -145,4 +155,11 @@ class AddCustomerModal extends Component {
   }
 }
 
-export default AddCustomerModal;
+const mapStateToProps = state => {
+  console.log(state);
+  return {
+    classTypes: state.classAndCityReducer.custome-types
+  };
+};
+
+export default connect(mapStateToProps, { getClassTypes })(AddCustomerModal);
