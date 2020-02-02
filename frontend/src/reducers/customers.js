@@ -4,7 +4,8 @@ import {
   GET_A_CUSTOMER,
   GET_ALL_CHEQUES,
   GET_REMAINED_BILLS,
-  GET_REMAINED_CHEQUES
+  GET_REMAINED_CHEQUES,
+  GET_CLASS_TYPES_AND_CITY
 } from "../actions/types";
 
 const INITIAL_VALUES = {};
@@ -23,6 +24,8 @@ export default (state = INITIAL_VALUES, action) => {
       return { ...state, remainedBills: action.payload };
     case GET_REMAINED_CHEQUES:
       return { ...state, remainedCheques: action.payload };
+    case GET_CLASS_TYPES_AND_CITY:
+      return { ...state, classTypesAndCity: action.payload };
     default:
       return state;
   }

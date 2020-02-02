@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Button, Form, Modal } from "semantic-ui-react";
 import { connect } from "react-redux";
-import { getClassTypes } from "../../actions/classTypesAndCityActions";
+import { getClassTypes } from "../../actions/CustomerSectionActions";
 
 class AddCustomerModal extends Component {
   state = {
@@ -14,23 +14,25 @@ class AddCustomerModal extends Component {
     bitrth_date: null,
     marriage_date: null,
     points: null,
-    class_type_options: null,
+    class_type_options: [],
     formValidation: {
       first_name: false,
       last_name: false,
       email: false,
-      phone_number: false,
-      address: false,
-      city: false,
-      bitrth_date: false,
-      marriage_date: false,
-      points: false
+      phone_number: false
     }
   };
 
   componentDidMount() {
     this.props.getClassTypes().then(() => {
-      console.log(this.props.classTypes);
+      this.setState(
+        {
+          class_type_options: this.props.classAndCity.customerTypes
+        },
+        () => {
+          console.log(this.state.class_type_options);
+        }
+      );
     });
   }
 
@@ -89,7 +91,6 @@ class AddCustomerModal extends Component {
               <Form.Input
                 className="ltr placeholder-rtl text-right"
                 label="آدرس"
-                error={this.state.formValidation.address}
                 onChange={e => this.inputChange(e, "address")}
                 placeholder="آدرس"
               />
@@ -97,7 +98,6 @@ class AddCustomerModal extends Component {
                 className="ltr placeholder-rtl text-right"
                 placeholder="شهر"
                 label="شهر"
-                error={this.state.formValidation.city}
                 onChange={e => this.inputChange(e, "city")}
               />
             </Form.Group>
@@ -105,7 +105,6 @@ class AddCustomerModal extends Component {
               <Form.Input
                 className="ltr placeholder-rtl"
                 label="تاریخ تولد"
-                error={this.state.formValidation.bitrth_date}
                 onChange={e => this.inputChange(e, "birth_date")}
                 placeholder="مثل 15/2/1398"
               />
@@ -113,7 +112,6 @@ class AddCustomerModal extends Component {
                 className="ltr placeholder-rtl"
                 placeholder="تاریخ ازدواج"
                 label="تاریخ ازدواج"
-                error={this.state.formValidation.marriage_date}
                 onChange={e => this.inputChange(e, "marriage_date")}
               />
             </Form.Group>
@@ -122,16 +120,16 @@ class AddCustomerModal extends Component {
                 className="rtl placeholder-rtl text-right"
                 type="number"
                 label="امتیاز"
-                error={this.state.formValidation.points}
                 onChange={e => this.inputChange(e, "points")}
                 placeholder="امتیاز"
               />
-              <Form.Dropdown
+              <Form.Select
                 className="ltr placeholder-rtl"
                 placeholder="نوع"
                 label="نوع"
+                search
                 selection
-                defaultValue={"1"}
+                fluid
                 options={this.state.class_type_options}
               />
             </Form.Group>
@@ -156,9 +154,8 @@ class AddCustomerModal extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log(state);
   return {
-    classTypes: state.classAndCityReducer.custome-types
+    classAndCity: state.customers.classTypesAndCity
   };
 };
 
