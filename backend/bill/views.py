@@ -194,7 +194,6 @@ class BillsViewSet(NafisBase, ModelViewSet):
         total_cheque_paid, total_cash_paid, total_card_paid, total_paid, reminded_payments = 0, 0, 0, 0, 0
         data = {}
         bills = Bill.objects.filter(close_date__date=datetime.today().date(), status__in=["remained", "done"])
-        data['remained_bill'] = bills.filter(status="remained")
         bills_with_reminded_status = bills.filter(status="remained").count()
         total_bills = bills.count()
         for bill in bills:
@@ -233,6 +232,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
         bills_with_reminded_status = bills.filter(status="remained").count()
         total_bills = bills.count()
         data = {}
+        data['remained_bill'] = bills.filter(status="remained")
         for bill in bills:
             total_sales += bill.price
             total_final_price += bill.final_price
