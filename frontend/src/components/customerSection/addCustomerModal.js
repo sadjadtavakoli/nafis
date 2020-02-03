@@ -61,7 +61,7 @@ class AddCustomerModal extends Component {
       });
       hasError = true;
     }
-    if (String(this.state.phone_number).length < 1) {
+    if (String(this.state.phone_number).length !== 11) {
       this.setState({
         phone_number_b: true
       });
