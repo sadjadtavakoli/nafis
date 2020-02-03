@@ -83,7 +83,7 @@ class AddCustomerModal extends Component {
       };
       this.props.setNewCustomer(prepareData).then(() => {
         this.props.onClose();
-        toastr.success("ثبت محصول جدید", "محصول جدید با موفقیت ثبت شد");
+        toastr.success("ثبت مشتری جدید", "مشتری جدید با موفقیت ثبت شد");
       });
     }
   };
