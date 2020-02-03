@@ -345,9 +345,6 @@ class AddBillModal extends React.Component {
           </Modal.Content>
 
           <Modal.Actions>
-            <Button color="black" onClick={this.props.onClose}>
-              <span>بستن</span>
-            </Button>
             <Button
               className="yekan"
               positive
@@ -356,6 +353,9 @@ class AddBillModal extends React.Component {
               content="ثبت محصول"
               onClick={this.formSubmitHandler}
             />
+            <Button color="black" onClick={this.props.onClose}>
+              <span>بستن</span>
+            </Button>
           </Modal.Actions>
         </Modal>
       </div>

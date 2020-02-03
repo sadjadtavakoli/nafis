@@ -382,6 +382,14 @@ class AddBillModal extends React.Component {
 
           <Modal.Actions>
             <Button
+              className="yekan"
+              positive
+              icon="checkmark"
+              labelPosition="right"
+              content="ثبت فاکتور"
+              onClick={this.formSubmitHandler}
+            />
+            <Button
               color="black"
               onClick={() => {
                 this.props.onClose();
@@ -392,14 +400,6 @@ class AddBillModal extends React.Component {
             >
               <span>بستن</span>
             </Button>
-            <Button
-              className="yekan"
-              positive
-              icon="checkmark"
-              labelPosition="right"
-              content="ثبت فاکتور"
-              onClick={this.formSubmitHandler}
-            />
           </Modal.Actions>
         </Modal>
       </div>
