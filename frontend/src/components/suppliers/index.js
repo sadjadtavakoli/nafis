@@ -1,7 +1,14 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { getSuppliersAction } from "../../actions/SuppliersActions";
-import { Table, Grid, Search, Button, Pagination } from "semantic-ui-react";
+import {
+  Table,
+  Grid,
+  Search,
+  Button,
+  Pagination,
+  Container
+} from "semantic-ui-react";
 import NotFound from "../utils/notFound";
 import history from "../../history";
 import LoadingBar from "../utils/loadingBar";
@@ -49,7 +56,7 @@ class Suppliers extends Component {
 
   render() {
     return (
-      <div>
+      <Container>
         <Table celled className="rtl text-center" columns={5}>
           <Table.Header className="text-right">
             <Table.Row>
@@ -90,7 +97,7 @@ class Suppliers extends Component {
                       <Table.Cell style={{ borderLeft: "1px solid #ddd" }}>
                         {item.full_name}
                       </Table.Cell>
-                      <Table.Cell>
+                      <Table.Cell className="norm-latin">
                         <span>{item.email}</span>
                       </Table.Cell>
                       <Table.Cell className="norm-latin">
@@ -138,12 +145,13 @@ class Suppliers extends Component {
           ) : null}
         </Table>
         {this.state.viewButtonClick ? <Supplier /> : null}
-      </div>
+      </Container>
     );
   }
 }
 
 const mapStateToProps = state => {
+  console.log(state);
   return {
     allSuppliers: state.suppliers.suppliers
   };
