@@ -5,15 +5,17 @@ from rest_framework.status import HTTP_404_NOT_FOUND
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
+from bill.permissions import LoginRequired
 from bill.serializers import CustomerChequeSerializer, BillSerializer
 from customer.models import Customer, CustomerType, City
 from customer.serializers import CustomerSerializer, CustomerTypeSerializer, CustomerDetailedSerializer, CitySerializer
 from nafis.paginations import PaginationClass
+from nafis.views import NafisBase
 
 
-class CustomersViewSet(ModelViewSet):
+class CustomersViewSet(NafisBase, ModelViewSet):
     serializer_class = CustomerSerializer
-    # permission_classes = (LoginRequired,)
+    permission_classes = (LoginRequired,)
     queryset = Customer.objects.all()
     non_updaters = ["cashier", "salesperson", "accountant", "storekeeper"]
     non_destroyers = ["cashier", "salesperson", "accountant", "storekeeper"]

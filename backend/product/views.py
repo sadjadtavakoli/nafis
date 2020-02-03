@@ -1,6 +1,3 @@
-import ast
-import json
-
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import mixins, status
 from rest_framework.decorators import action
@@ -27,7 +24,7 @@ class ProductViewSet(NafisBase, mixins.CreateModelMixin,
                      mixins.ListModelMixin,
                      GenericViewSet):
     serializer_class = ProductSerializer
-    # permission_classes = (LoginRequired,)
+    permission_classes = (LoginRequired,)
     queryset = Product.objects.all()
     pagination_class = PaginationClass
 
@@ -61,7 +58,7 @@ class ProductViewSet(NafisBase, mixins.CreateModelMixin,
         return data
 
     @action(methods=["GET"], detail=False, url_path="filter")
-    def filter_products(self,request, **kwargs):
+    def filter_products(self, request, **kwargs):
         data = self.get_filter_kwargs()
         bg_colors = data.get('bg_color[]', None)
         design_colors = data.get('design_color[]', None)

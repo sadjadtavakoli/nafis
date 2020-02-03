@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import DO_NOTHING, CASCADE, Sum
 from django.utils import timezone
+
 from customer.models import Customer, CustomerType
 from product.models import round_up, Color, FType, Material, Design
 
@@ -388,3 +389,16 @@ class SpecialProductDiscount(SpecialDiscount):
 
 class SpecialProductsDiscount(SpecialDiscount):
     products = models.ManyToManyField('product.Product', related_name='special_discounts')
+
+
+class BillCounter(models.Model):
+    number = models.IntegerField(blank=False, null=False, default=1)
+
+    def reset(self):
+        self.number = 0
+        self.save()
+
+    def increase(self):
+        self.number += 1
+        self.save()
+        return self.number
