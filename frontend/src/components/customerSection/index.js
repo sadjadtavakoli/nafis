@@ -16,8 +16,7 @@ import {
   Search,
   Grid,
   Button,
-  Segment,
-  Icon
+  Segment
 } from "semantic-ui-react";
 
 class Customers extends Component {
