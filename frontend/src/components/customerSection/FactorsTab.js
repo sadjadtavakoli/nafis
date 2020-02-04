@@ -44,35 +44,37 @@ class FactorsTab extends Component {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {this.state.bills[0].items.map(item => {
-              return (
-                <Table.Row key={item.pk}>
-                  <Table.Cell className="d-table-border">
-                    {item.product.name}
-                  </Table.Cell>
-                  <Table.Cell className="norm-latin">
-                    <span>{item.product.code}</span>
-                  </Table.Cell>
-                  <Table.Cell className="norm-latin">
-                    <span>{digitToComma(item.product.selling_price)}</span>
-                    <span className="yekan"> تومان</span>
-                  </Table.Cell>
-                  <Table.Cell className="norm-latin">
-                    <span>{item.amount}</span>
-                    <span className="yekan"> متر</span>
-                  </Table.Cell>
-                  <Table.Cell className="norm-latin">
-                    <span>{item.discount}</span>
-                  </Table.Cell>
-                  <Table.Cell className="norm-latin">
-                    <span>{digitToComma(item.final_price)}</span>
-                    <span className="yekan"> تومان</span>
-                  </Table.Cell>
-                  <Table.Cell className="norm-latin">
-                    <span>{item.total_discount}</span>
-                  </Table.Cell>
-                </Table.Row>
-              );
+            {this.state.bills.map(billsItems => {
+              return billsItems.items.map(item => {
+                return (
+                  <Table.Row key={item.pk}>
+                    <Table.Cell className="d-table-border">
+                      {item.product.name}
+                    </Table.Cell>
+                    <Table.Cell className="norm-latin">
+                      <span>{item.product.code}</span>
+                    </Table.Cell>
+                    <Table.Cell className="norm-latin">
+                      <span>{digitToComma(item.product.selling_price)}</span>
+                      <span className="yekan"> تومان</span>
+                    </Table.Cell>
+                    <Table.Cell className="norm-latin">
+                      <span>{item.amount}</span>
+                      <span className="yekan"> متر</span>
+                    </Table.Cell>
+                    <Table.Cell className="norm-latin">
+                      <span>{digitToComma(item.final_price)}</span>
+                      <span className="yekan"> تومان</span>
+                    </Table.Cell>
+                    <Table.Cell className="norm-latin">
+                      <span>{item.discount}</span>
+                    </Table.Cell>
+                    <Table.Cell className="norm-latin">
+                      <span>{item.total_discount}</span>
+                    </Table.Cell>
+                  </Table.Row>
+                );
+              });
             })}
           </Table.Body>
         </Table>
@@ -124,7 +126,7 @@ class FactorsTab extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log(state.customers.remainedBills);
+  console.log(state.customers);
   return {
     allBills: state.customers.allBills,
     remainedBills: state.customers.remainedBills

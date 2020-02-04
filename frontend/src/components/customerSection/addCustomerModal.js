@@ -7,24 +7,29 @@ import {
 } from "../../actions/CustomerSectionActions";
 import { toastr } from "react-redux-toastr";
 
+const INITIAL_STATE = {
+  first_name: "",
+  last_name: "",
+  email: "",
+  phone_number: "",
+  address: null,
+  city: null,
+  bitrth_date: null,
+  marriage_date: null,
+  points: null,
+  class_type_options: [],
+  city_options: [],
+  first_name_b: false,
+  last_name_b: false,
+  email_b: false,
+  phone_number_b: false,
+  points_b: false,
+  hasError: false
+};
+
 class AddCustomerModal extends Component {
   state = {
-    first_name: "",
-    last_name: "",
-    email: "",
-    phone_number: "",
-    address: null,
-    city: null,
-    bitrth_date: null,
-    marriage_date: null,
-    points: null,
-    class_type_options: [],
-    city_options: [],
-    first_name_b: false,
-    last_name_b: false,
-    email_b: false,
-    phone_number_b: false,
-    hasError: false
+    INITIAL_STATE
   };
 
   componentDidMount() {
@@ -57,27 +62,33 @@ class AddCustomerModal extends Component {
   handleSubmit = () => {
     let hasError = false;
     let email = this.validateEmail(this.state.email);
-    if (String(this.state.first_name).length < 1) {
+    if (!this.state.first_name) {
       this.setState({
         first_name_b: true
       });
       hasError = true;
     }
-    if (String(this.state.last_name).length < 1) {
+    if (!this.state.last_name) {
       this.setState({
         last_name_b: true
       });
       hasError = true;
     }
-    if (String(this.state.email).length < 1) {
+    if (!this.state.email) {
       this.setState({
         email_b: true
       });
       hasError = true;
     }
-    if (String(this.state.phone_number).length !== 11) {
+    if (Number(this.state.phone_number).length !== 11) {
       this.setState({
         phone_number_b: true
+      });
+      hasError = true;
+    }
+    if (!this.state.points) {
+      this.setState({
+        points_b: true
       });
       hasError = true;
     }
@@ -204,6 +215,8 @@ class AddCustomerModal extends Component {
                 type="number"
                 label="امتیاز"
                 onChange={e => this.inputChange(e, "points")}
+                onSelect={() => this.inputSelect("points_b")}
+                error={this.state.points_b}
                 placeholder="امتیاز"
               />
               <Form.Select
@@ -220,7 +233,13 @@ class AddCustomerModal extends Component {
         </Modal.Content>
 
         <Modal.Actions>
-          <Button color="black" onClick={this.props.onClose}>
+          <Button
+            color="black"
+            onClick={() => {
+              this.props.onClose();
+              this.setState(INITIAL_STATE);
+            }}
+          >
             لغو
           </Button>
           <Button

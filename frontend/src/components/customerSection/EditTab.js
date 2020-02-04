@@ -82,9 +82,7 @@ class EditTab extends Component {
         toastr.success(".عملیات ویرایش با موفقیت انجام شد");
       })
       .catch(() => {
-        toastr.error(
-          ".عملیات ویرایش موفقیت آمیز نبود. لطفا با پشتیبانی سایت در تماس باشید"
-        );
+        toastr.error(".عملیات ویرایش موفقیت آمیز نبود");
       });
     const convertedStatus = this.convertStatus(status);
     this.setState({
@@ -145,7 +143,7 @@ class EditTab extends Component {
           </Form.Group>
           <Form.Group unstackable widths={2}>
             {this.createInput("marriage_date", "تاریخ ازدواج")}
-            {this.createInput("points", "امتیازات")}
+            {this.createInput("points", "امتیاز مشتری")}
           </Form.Group>
         </Form>
       </div>
