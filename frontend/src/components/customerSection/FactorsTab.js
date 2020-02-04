@@ -18,16 +18,21 @@ class FactorsTab extends Component {
 
   componentDidMount() {
     this.props.getAllBills(this.props.passingPk).then(() => {
-      this.setState({
-        virgin: false,
-        bills: this.props.allBills.results
-      });
+      this.setState(
+        {
+          virgin: false,
+          bills: this.props.allBills
+        },
+        () => {
+          console.log("map", this.state.bills.results);
+        }
+      );
     });
     this.props.getRemainedBills(this.props.passingPk);
   }
 
   createTable = () => {
-    if (this.state.bills.length !== 0) {
+    if (this.state.bills.count) {
       return (
         <Table celled className="text-center">
           <Table.Header>
@@ -38,43 +43,49 @@ class FactorsTab extends Component {
               <Table.HeaderCell>کد محصول</Table.HeaderCell>
               <Table.HeaderCell>قیمت واحد</Table.HeaderCell>
               <Table.HeaderCell>مقدار</Table.HeaderCell>
-              <Table.HeaderCell>تخفیف</Table.HeaderCell>
               <Table.HeaderCell>قیمت نهایی فاکتو</Table.HeaderCell>
+              <Table.HeaderCell>تخفیف</Table.HeaderCell>
               <Table.HeaderCell>تخفیف کل</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {this.state.bills.map(billsItems => {
-              return billsItems.items.map(item => {
-                return (
-                  <Table.Row key={item.pk}>
-                    <Table.Cell className="d-table-border">
-                      {item.product.name}
-                    </Table.Cell>
-                    <Table.Cell className="norm-latin">
-                      <span>{item.product.code}</span>
-                    </Table.Cell>
-                    <Table.Cell className="norm-latin">
-                      <span>{digitToComma(item.product.selling_price)}</span>
-                      <span className="yekan"> تومان</span>
-                    </Table.Cell>
-                    <Table.Cell className="norm-latin">
-                      <span>{item.amount}</span>
-                      <span className="yekan"> متر</span>
-                    </Table.Cell>
-                    <Table.Cell className="norm-latin">
-                      <span>{digitToComma(item.final_price)}</span>
-                      <span className="yekan"> تومان</span>
-                    </Table.Cell>
-                    <Table.Cell className="norm-latin">
-                      <span>{item.discount}</span>
-                    </Table.Cell>
-                    <Table.Cell className="norm-latin">
-                      <span>{item.total_discount}</span>
-                    </Table.Cell>
-                  </Table.Row>
-                );
-              });
+            {this.state.bills.results.map(item => {
+              return (
+                <Table.Row key={item.pk}>
+                  {item.items.map(subitem => {
+                    return (
+                      <React.Fragment>
+                        <Table.Cell className="d-table-border">
+                          {subitem.product.name}
+                        </Table.Cell>
+                        <Table.Cell className="norm-latin">
+                          <span>{subitem.product.code}</span>
+                        </Table.Cell>
+                        <Table.Cell className="norm-latin">
+                          <span>
+                            {digitToComma(subitem.product.selling_price)}
+                          </span>
+                          <span className="yekan"> تومان</span>
+                        </Table.Cell>
+                        <Table.Cell className="norm-latin">
+                          <span>{subitem.amount}</span>
+                          <span className="yekan"> متر</span>
+                        </Table.Cell>
+                        <Table.Cell className="norm-latin">
+                          <span>{digitToComma(subitem.final_price)}</span>
+                          <span className="yekan"> تومان</span>
+                        </Table.Cell>
+                      </React.Fragment>
+                    );
+                  })}
+                  <Table.Cell className="norm-latin">
+                    <span>{item.discount}</span>
+                  </Table.Cell>
+                  <Table.Cell className="norm-latin">
+                    <span>{item.total_discount}</span>
+                  </Table.Cell>
+                </Table.Row>
+              );
             })}
           </Table.Body>
         </Table>
@@ -91,7 +102,6 @@ class FactorsTab extends Component {
     if (!this.state.remainedBillsToggle) {
       this.props.getRemainedBills(this.props.passingPk).then(() => {
         this.setState({
-          virgin: false,
           bills: this.props.remainedBills
         });
       });
@@ -99,8 +109,7 @@ class FactorsTab extends Component {
     if (this.state.remainedBillsToggle) {
       this.props.getAllBills(this.props.passingPk).then(() => {
         this.setState({
-          virgin: false,
-          bills: this.props.allBills.results
+          bills: this.props.allBills
         });
       });
     }
@@ -118,15 +127,14 @@ class FactorsTab extends Component {
           <span className="us-fm-span">نمایش فاکتورهای باقی مانده</span>
         </Segment>
         {this.state.virgin ? <LoadingBar /> : null}
-        {!this.state.virgin && !this.state.bills.length ? <NotFound /> : null}
-        {this.state.bills.length ? this.createTable() : null}
+        {!this.state.virgin && !this.state.bills.count ? <NotFound /> : null}
+        {this.state.bills.count ? this.createTable() : null}
       </div>
     );
   }
 }
 
 const mapStateToProps = state => {
-  console.log(state.customers);
   return {
     allBills: state.customers.allBills,
     remainedBills: state.customers.remainedBills
