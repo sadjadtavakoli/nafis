@@ -103,8 +103,8 @@ class FactorsTab extends Component {
           <span className="us-fm-span">نمایش چک های باقی مانده</span>
         </Segment>
         {this.state.virgin ? <LoadingBar /> : null}
-        {!this.state.virgin && !this.state.cheques.length ? <NotFound /> : null}
-        {this.state.cheques.length ? this.createTable() : null}
+        {!this.state.virgin && !this.state.cheques.count ? <NotFound /> : null}
+        {this.state.cheques.count ? this.createTable() : null}
       </div>
     );
   }
