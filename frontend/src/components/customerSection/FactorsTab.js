@@ -40,12 +40,17 @@ class FactorsTab extends Component {
               <Table.HeaderCell className="d-table-border">
                 نام محصول
               </Table.HeaderCell>
-              <Table.HeaderCell>کد محصول</Table.HeaderCell>
+              <Table.HeaderCell>کد</Table.HeaderCell>
               <Table.HeaderCell>قیمت واحد</Table.HeaderCell>
               <Table.HeaderCell>مقدار</Table.HeaderCell>
-              <Table.HeaderCell>قیمت نهایی فاکتو</Table.HeaderCell>
-              <Table.HeaderCell>تخفیف</Table.HeaderCell>
               <Table.HeaderCell>تخفیف کل</Table.HeaderCell>
+              {this.state.remainedBillsToggle ? (
+                <Table.HeaderCell>بهای پرداخت شده</Table.HeaderCell>
+              ) : null}
+              <Table.HeaderCell>قیمت نهایی فاکتو</Table.HeaderCell>
+              {this.state.remainedBillsToggle ? (
+                <Table.HeaderCell>بهای پرداختی مانده</Table.HeaderCell>
+              ) : null}
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -71,19 +76,27 @@ class FactorsTab extends Component {
                           <span>{subitem.amount}</span>
                           <span className="yekan"> متر</span>
                         </Table.Cell>
-                        <Table.Cell className="norm-latin">
-                          <span>{digitToComma(subitem.final_price)}</span>
-                          <span className="yekan"> تومان</span>
-                        </Table.Cell>
                       </React.Fragment>
                     );
                   })}
                   <Table.Cell className="norm-latin">
-                    <span>{item.discount}</span>
-                  </Table.Cell>
-                  <Table.Cell className="norm-latin">
                     <span>{item.total_discount}</span>
                   </Table.Cell>
+                  {this.state.remainedBillsToggle ? (
+                    <Table.Cell>
+                      <span>{digitToComma(item.paid)}</span>
+                      <span className="yekan"> تومان</span>
+                    </Table.Cell>
+                  ) : null}
+                  <Table.Cell className="norm-latin">
+                    <span>{digitToComma(item.final_price)}</span>
+                    <span className="yekan"> تومان</span>
+                  </Table.Cell>
+                  {this.state.remainedBillsToggle ? (
+                    <Table.Cell>
+                      <span>{item.final_price - item.paid}</span>
+                    </Table.Cell>
+                  ) : null}
                 </Table.Row>
               );
             })}
