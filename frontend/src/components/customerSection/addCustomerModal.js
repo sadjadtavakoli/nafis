@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Form, Modal } from "semantic-ui-react";
+import { Button, Form, Modal, Message } from "semantic-ui-react";
 import { connect } from "react-redux";
 import {
   getClassTypes,
@@ -23,7 +23,8 @@ class AddCustomerModal extends Component {
     first_name_b: false,
     last_name_b: false,
     email_b: false,
-    phone_number_b: false
+    phone_number_b: false,
+    hasError: false
   };
 
   componentDidMount() {
@@ -41,8 +42,21 @@ class AddCustomerModal extends Component {
     });
   };
 
+  inputSelect = status => {
+    this.setState({
+      [status]: false,
+      hasError: false
+    });
+  };
+
+  validateEmail = email => {
+    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  };
+
   handleSubmit = () => {
     let hasError = false;
+    let email = this.validateEmail(this.state.email);
     if (String(this.state.first_name).length < 1) {
       this.setState({
         first_name_b: true
@@ -66,6 +80,17 @@ class AddCustomerModal extends Component {
         phone_number_b: true
       });
       hasError = true;
+    }
+    if (!email) {
+      this.setState({
+        email_b: true
+      });
+      hasError = true;
+    }
+    if (hasError) {
+      this.setState({
+        hasError: true
+      });
     }
     if (!hasError) {
       const prepareData = {
@@ -99,12 +124,18 @@ class AddCustomerModal extends Component {
         <Modal.Header>افزودن مشتری جدید</Modal.Header>
 
         <Modal.Content>
+          {this.state.hasError ? (
+            <Message className="rtl text-right" color="red">
+              <p>فیلد های قرمز را تصحیح کنید.</p>
+            </Message>
+          ) : null}
           <Form className="rtl">
             <Form.Group unstackable widths={2}>
               <Form.Input
                 className="ltr placeholder-rtl text-right"
                 label="نام"
                 onChange={e => this.inputChange(e, "first_name")}
+                onSelect={() => this.inputSelect("first_name_b")}
                 placeholder="نام"
                 error={this.state.first_name_b}
               />
@@ -113,6 +144,7 @@ class AddCustomerModal extends Component {
                 placeholder="نام خانوادگی"
                 label="نام خانوادگی"
                 onChange={e => this.inputChange(e, "last_name")}
+                onSelect={() => this.inputSelect("last_name_b")}
                 error={this.state.last_name_b}
               />
             </Form.Group>
@@ -121,6 +153,7 @@ class AddCustomerModal extends Component {
                 className="ltr placeholder-rtl"
                 label="ایمیل"
                 onChange={e => this.inputChange(e, "email")}
+                onSelect={() => this.inputSelect("email_b")}
                 placeholder="آدرس ایمیل"
                 error={this.state.email_b}
               />
@@ -130,6 +163,7 @@ class AddCustomerModal extends Component {
                 label="تلفن"
                 type="number"
                 onChange={e => this.inputChange(e, "phone_number")}
+                onSelect={() => this.inputSelect("phone_number_b")}
                 error={this.state.phone_number_b}
               />
             </Form.Group>

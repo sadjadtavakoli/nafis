@@ -127,6 +127,7 @@ class FactorsTab extends Component {
 }
 
 const mapStateToProps = state => {
+  console.log(state)
   return {
     allCheques: state.customers.allCheques,
     remainedCheques: state.customers.remainedCheques

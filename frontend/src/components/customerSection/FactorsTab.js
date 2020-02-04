@@ -102,7 +102,6 @@ class FactorsTab extends Component {
         });
       });
     }
-    console.log(this.state.remainedBillsToggle);
   };
 
   render() {
@@ -125,7 +124,7 @@ class FactorsTab extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log(state);
+  console.log(state.customers.remainedBills);
   return {
     allBills: state.customers.allBills,
     remainedBills: state.customers.remainedBills
