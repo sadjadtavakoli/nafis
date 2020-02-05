@@ -77,14 +77,9 @@ class AddBillModal extends React.Component {
     );
   };
   selectChange = (e, { name, value }) => {
-    this.setState(
-      {
-        [name]: value
-      },
-      () => {
-        // console.log(this.state);
-      }
-    );
+    this.setState({
+      [name]: value
+    });
   };
   formSubmitHandler = () => {
     this.setState(

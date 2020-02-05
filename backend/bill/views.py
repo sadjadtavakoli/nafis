@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from bill.models import Bill, BillItem, CustomerPayment, CustomerCheque, OurCheque, SupplierBill, OurPayment, \
-    SupplierBillItem
+    SupplierBillItem, BillCounter
 from bill.permissions import LoginRequired, CloseBillPermission
 from bill.serializers import BillSerializer, CustomerPaymentSerializer, BillItemSerializer, SupplierBillSerializer, \
     SupplierBillItemSerializer, CustomerChequeSerializer, OurChequeSerializer
@@ -102,9 +102,9 @@ class BillsViewSet(NafisBase, ModelViewSet):
                                                bill=bill,
                                                type=payment_type)
         elif payment_type == "cheque":
-            amount = self.request.data.get('amount')
-            payment = CustomerPayment.objects.create(create_date=timezone.now(),
-                                                     amount=float(amount), bill=bill, type=payment_type)
+            amount = self.request.data.get('amount', None)
+            if amount is None:
+                raise ValidationError("مقدار تمی‌تواند خالی باشد")
             bank = self.request.data.get('bank')
             number = self.request.data.get('number')
             issue_date = self.request.data.get('issue_date', timezone.now().date())
@@ -113,9 +113,8 @@ class BillsViewSet(NafisBase, ModelViewSet):
                                                    issue_date=issue_date,
                                                    expiry_date=expiry_date,
                                                    amount=int(amount), customer=bill.buyer)
-
-            payment.cheque = cheque
-            payment.save()
+            CustomerPayment.objects.create(create_date=timezone.now(), cheque=cheque,
+                                           amount=float(amount), bill=bill, type=payment_type)
 
         data = BillSerializer(Bill.objects.get(pk=bill.pk)).data
         return Response(data, status=status.HTTP_201_CREATED)
@@ -164,7 +163,10 @@ class BillsViewSet(NafisBase, ModelViewSet):
         seller = Staff.objects.get(username=self.request.user.username)
         discount = data.get('discount', 0)
         items = data.get('items')
-        bill_code = Bill.objects.filter(create_date__date=timezone.now().date()).count() + 1
+        bill_counter = BillCounter.objects.first()
+        if not Bill.objects.filter(create_date__date=timezone.now().date()).count():
+            bill_counter.reset()
+        bill_code = bill_counter.increase()
         bill = Bill.objects.create(buyer=buyer, seller=seller, discount=discount, branch=seller.branch,
                                    bill_code=bill_code)
 
@@ -233,11 +235,11 @@ class BillsViewSet(NafisBase, ModelViewSet):
         bills_with_reminded_status = bills.filter(status="remained").count()
         total_bills = bills.count()
         data = {}
+        print(bills.filter(status="remained"))
         for bill in bills:
             total_sales += bill.price
             total_final_price += bill.final_price
             total_sales_received += bill.paid
-            total_sales_remaining += bill.remaining_payment
             total_profit += bill.profit
             total_sales_cash += bill.cash_paid
             total_sales_card += bill.card_paid
@@ -296,6 +298,7 @@ class BillItemViewSet(ModelViewSet):
         bill_item_amount = self.get_object().amount
         if bill.seller.username != request.user.username or bill.status != "active":
             raise PermissionDenied
+        super(BillItemViewSet, self).destroy(request, *args, **kwargs)
         bill_item_product.update_stock_amount(-1 * (bill_item_amount + 0.05))
         serializer = BillSerializer(bill)
         headers = self.get_success_headers(serializer.data)
@@ -355,6 +358,7 @@ class CustomerPaymentViewSet(NafisBase, ModelViewSet):
         if self.get_object().type == "cheque":
             cheque = self.get_object().cheque
         response = super(CustomerPaymentViewSet, self).destroy(request, *args, **kwargs)
+        bill.check_status()
         if cheque:
             cheque.delete()
         return response

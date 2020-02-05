@@ -29,7 +29,7 @@ class MainPage extends React.Component {
       <div className="main-page__container">
         <div className="main-page__items-container">
           <Segment placeholder>
-            <Header padded={true}>
+            <Header>
               <Card.Group
                 itemsPerRow={this.state.width < 768 ? 16 : 6}
                 className="rtl padded"
@@ -41,7 +41,6 @@ class MainPage extends React.Component {
                     onClick={() => history.push("/sale/")}
                   >
                     <Icon
-                      padded={true}
                       size="huge"
                       className="m-auto w-100"
                       name="money bill alternate"
@@ -56,12 +55,7 @@ class MainPage extends React.Component {
                     className="p-5 pointer tale"
                     onClick={() => history.push("/cashregister/")}
                   >
-                    <Icon
-                      padded={true}
-                      size="huge"
-                      className="m-auto w-100"
-                      name="fax"
-                    />
+                    <Icon size="huge" className="m-auto w-100" name="fax" />
                     <h2 className="text-black yekan text-center">صندوق</h2>
                   </Card>
                 ) : null}
@@ -72,23 +66,48 @@ class MainPage extends React.Component {
                     className="p-5 pointer tale"
                     onClick={() => history.push("/depository/")}
                   >
-                    <Icon
-                      padded={true}
-                      size="huge"
-                      className="m-auto w-100"
-                      name="factory"
-                    />
+                    <Icon size="huge" className="m-auto w-100" name="factory" />
                     <h2 className="text-black yekan text-center">انبارداری</h2>
                   </Card>
                 ) : null}
-                {isPermit('reports',this.state.job) ?
-                  <Card raised className="p-5 pointer tale" onClick={() => history.push('/reports/')}><Icon padded={true} size="huge" className="m-auto w-100" name="chart pie" /><h2 className="text-black yekan text-center">گزارشات</h2></Card> : null}
-                
-                {isPermit('customers',this.state.job) ?
-                  <Card raised className="p-5 pointer tale" onClick={() => history.push('/customers/')}><Icon padded={true} size="huge" className="m-auto w-100" name="users" /><h2 className="text-black yekan text-center">مشتریان</h2></Card> : null}
-                
-                {isPermit('suppliers',this.state.job) ?
-                  <Card raised className="p-5 pointer tale" onClick={()=>history.push('/suppliers/')}><Icon padded={true} size="huge" className="m-auto w-100" name="truck" /><h2 className="text-black yekan text-center">تامین کنندگان</h2></Card> : null}
+                {isPermit("reports", this.state.job) ? (
+                  <Card
+                    raised
+                    className="p-5 pointer tale"
+                    onClick={() => history.push("/reports/")}
+                  >
+                    <Icon
+                      size="huge"
+                      className="m-auto w-100"
+                      name="chart pie"
+                    />
+                    <h2 className="text-black yekan text-center">گزارشات</h2>
+                  </Card>
+                ) : null}
+
+                {isPermit("customers", this.state.job) ? (
+                  <Card
+                    raised
+                    className="p-5 pointer tale"
+                    onClick={() => history.push("/customers/")}
+                  >
+                    <Icon size="huge" className="m-auto w-100" name="users" />
+                    <h2 className="text-black yekan text-center">مشتریان</h2>
+                  </Card>
+                ) : null}
+
+                {isPermit("suppliers", this.state.job) ? (
+                  <Card
+                    raised
+                    className="p-5 pointer tale"
+                    onClick={() => history.push("/suppliers/")}
+                  >
+                    <Icon size="huge" className="m-auto w-100" name="truck" />
+                    <h2 className="text-black yekan text-center">
+                      تامین کنندگان
+                    </h2>
+                  </Card>
+                ) : null}
               </Card.Group>
             </Header>
           </Segment>

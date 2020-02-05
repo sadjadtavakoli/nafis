@@ -38,12 +38,6 @@ const INITIAL_STATE = {
   customerData: {}
 };
 class AddBillModal extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  componentDidMount() {
-    // toastr.success('asdf','sadfsdfdfssdf')
-  }
   state = INITIAL_STATE;
   toggleAddItemPopup = () => {
     this.setState(prevState => ({ isOpenAddItem: !prevState.isOpenAddItem }));
@@ -385,9 +379,7 @@ class AddBillModal extends React.Component {
               color="black"
               onClick={() => {
                 this.props.onClose();
-                this.setState(INITIAL_STATE, () => {
-                  console.log(this.state);
-                });
+                this.setState(INITIAL_STATE);
               }}
             >
               <span>بستن</span>

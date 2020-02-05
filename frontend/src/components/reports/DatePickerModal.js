@@ -25,10 +25,6 @@ class DatePickerModal extends React.Component {
     });
   };
 
-  componentDidMount = () => {
-    console.log(this.state.selectedDayRange.from);
-  };
-
   handleClickSubmit = () => {
     let choosenFrom = this.state.selectedDayRange.from;
     let choosenTo = this.state.selectedDayRange.to;

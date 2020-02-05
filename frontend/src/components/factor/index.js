@@ -91,10 +91,10 @@ class PrintFactor extends React.Component {
             </p>
 
             <p className="col-3 font-weight-bold p-1">
-              <span>شماره نهایی:</span>
+              <span>نام فروشنده:</span>
             </p>
             <p className="col-3 font-weight-bold p-1">
-              <span>--</span>
+              <span>محمد صنیعی</span>
             </p>
 
             <p className="col-3 font-weight-bold p-1">
@@ -115,11 +115,7 @@ class PrintFactor extends React.Component {
             </p>
             <p className="col-3 font-weight-bold p-1">
               <span>
-                {enToFa(
-                  (
-                    this.state.bill.buyer && this.state.bill.buyer.pk
-                  )
-                )}
+                ۰۹۱۲۸۹۰۰۵۳
               </span>
             </p>
 
@@ -127,7 +123,7 @@ class PrintFactor extends React.Component {
               <span>صندوق:</span>
             </p>
             <p className="col-3 font-weight-bold p-1">
-              <span>{enToFa(this.state.bill.seller && this.state.bill.seller.pk)}</span>
+              <span>احمدی</span>
             </p>
           </div>
           <div className="row border-black border-radius-7 mb-1 rtl text-right">
@@ -175,17 +171,7 @@ class PrintFactor extends React.Component {
                 {this.state.bill.buyer_special_discount ? TOMAN : "-"}
               </div>
             </div>
-            <div className="row border-bottom-3">
-              <div className="col-6 font-weight-bold py-2 px-0 h5 text-left">
-                تخفیف فاکتوری:
-              </div>
-              <div className="col font-weight-bold p-2 h5 text-center">
-                {enToFa(priceToPersian(this.state.bill.total_discount))}
-              </div>
-              <div className="col font-weight-bold p-2 h5 text-left">
-                {this.state.bill.total_discount ? TOMAN : "-"}
-              </div>
-            </div>
+            
             <div className="row ">
               <div className="col-6 font-weight-bold py-2 px-0 h5 text-left">
                 مبلغ قابل پرداخت:

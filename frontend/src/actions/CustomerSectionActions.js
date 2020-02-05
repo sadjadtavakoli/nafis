@@ -4,7 +4,9 @@ import {
   GET_A_CUSTOMER,
   GET_ALL_CHEQUES,
   GET_REMAINED_BILLS,
-  GET_REMAINED_CHEQUES
+  GET_REMAINED_CHEQUES,
+  GET_CLASS_TYPES_AND_CITY,
+  ADD_CUSTOMER
 } from "./types";
 import { server, putServer } from "../apis/server";
 
@@ -19,7 +21,7 @@ export const getCustomerUsers = (page = 1) => async dispatch => {
   return response;
 };
 
-export const getAllBills = pk => async dispatch => {
+export const getAllBills = (pk, oo) => async dispatch => {
   const response = await server(localStorage.getItem("token")).get(
     `/customers/${pk}/bills/`
   );
@@ -42,7 +44,14 @@ export const getACustomer = pk => async dispatch => {
   dispatch({ type: GET_A_CUSTOMER, payload: response.data });
 };
 
-export const updateCustomer = (pk, data) => async dispatch => {
+export const deleteCustomer = pk => async () => {
+  const response = await server(localStorage.getItem("token")).delete(
+    `/customers/${pk}/`
+  );
+  return response;
+};
+
+export const updateCustomer = (pk, data) => async () => {
   return await putServer(
     localStorage.getItem("token"),
     `/customers/${pk}/`,
@@ -64,4 +73,20 @@ export const getRemainedCheques = pk => async dispatch => {
   );
   dispatch({ type: GET_REMAINED_CHEQUES, payload: response.data });
   return response;
+};
+
+export const getClassTypes = () => async dispatch => {
+  const response = await server(localStorage.getItem("token")).get(
+    `/customer-fields/`
+  );
+  dispatch({ type: GET_CLASS_TYPES_AND_CITY, payload: response.data });
+  return response;
+};
+
+export const setNewCustomer = data => async dispatch => {
+  const response = await server(localStorage.getItem("token")).post(
+    "/customers/",
+    data
+  );
+  dispatch({ type: ADD_CUSTOMER, payload: response.data });
 };
