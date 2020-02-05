@@ -183,7 +183,7 @@ class AddCustomerModal extends Component {
                 className="ltr placeholder-rtl text-right"
                 label="آدرس"
                 onChange={e => this.inputChange(e, "address")}
-                placeholder="آدرس"
+                placeholder="آدرس محل سکونت"
               />
               <Form.Select
                 className="ltr placeholder-rtl text-right"
@@ -195,12 +195,29 @@ class AddCustomerModal extends Component {
                 options={this.state.city_options}
               />
             </Form.Group>
+                placeholder="آدرس ایمیل"
+              />
+              <Form.Input
+                className="ltr placeholder-rtl"
+                label="تلفن"
+                onChange={e => this.inputChange(e, "phone_number")}
+                placeholder="شماره تلفن"
+              />
+            </Form.Group>
+            <Form.Field>
+              <Form.Input
+                className="rtl placeholder-rtl text-right"
+                label="آدرس"
+                onChange={e => this.inputChange(e, "address")}
+                placeholder="آدرس محل سکونت"
+              />
+            </Form.Field>
             <Form.Group unstackable widths={2}>
               <Form.Input
                 className="ltr placeholder-rtl"
                 label="تاریخ تولد"
                 onChange={e => this.inputChange(e, "birth_date")}
-                placeholder="مثل 15/2/1398"
+                placeholder="تاریخ تولد"
               />
               <Form.Input
                 className="ltr placeholder-rtl"
@@ -221,11 +238,10 @@ class AddCustomerModal extends Component {
               />
               <Form.Select
                 className="ltr placeholder-rtl"
-                placeholder="نوع"
-                label="نوع"
+                placeholder="نوع کلاس"
+                label="نوع کلاس"
                 search
                 selection
-                fluid
                 options={this.state.class_type_options}
               />
             </Form.Group>
@@ -246,7 +262,7 @@ class AddCustomerModal extends Component {
             positive
             icon="checkmark"
             labelPosition="right"
-            content="تایید"
+            content="افزودن"
             onClick={this.handleSubmit}
           />
         </Modal.Actions>
