@@ -1,11 +1,13 @@
 import React, { Component } from "react";
-import { Form, Label, Icon } from "semantic-ui-react";
+import { Form, Button } from "semantic-ui-react";
 import { connect } from "react-redux";
 import {
   getACustomer,
   updateCustomer
 } from "../../actions/CustomerSectionActions";
 import { toastr } from "react-redux-toastr";
+
+const INITIAL_STATE = {};
 
 class EditTab extends Component {
   state = {
@@ -27,7 +29,8 @@ class EditTab extends Component {
     birth_date_b: false,
     marriage_date_b: false,
     points_b: false,
-    class_type_b: false
+    class_type_b: false,
+    anyChange: false
   };
 
   componentDidMount() {
@@ -59,16 +62,10 @@ class EditTab extends Component {
     return status.concat("_b");
   };
 
-  handleEdit = status => {
-    const convertedStatus = this.convertStatus(status);
+  handleChange = (status, e) => {
     this.setState({
-      [convertedStatus]: true
-    });
-  };
-
-  handleEditChange = (status, e) => {
-    this.setState({
-      [status]: e.target.value
+      [status]: e.target.value,
+      anyChange: true
     });
   };
 
@@ -77,7 +74,7 @@ class EditTab extends Component {
       .updateCustomer(this.state.pk, {
         [status]: this.state[status]
       })
-      .then(res => {
+      .then(() => {
         this.setState({ [status]: this.state[status] });
         toastr.success(".عملیات ویرایش با موفقیت انجام شد");
       })
@@ -90,37 +87,31 @@ class EditTab extends Component {
     });
   };
 
+  handleSelect = status => {
+    let convert = this.convertStatus(status);
+    this.setState({
+      [convert]: true
+    });
+  };
+
+  handleBlur = status => {
+    let convert = this.convertStatus(status);
+    this.setState({
+      [convert]: false
+    });
+  };
+
   createInput = (status, title) => {
-    const convertedStatus = this.convertStatus(status);
+    let convert = this.convertStatus(status);
     return (
       <Form.Input
         className={`text-right`}
-        error={!this.state[convertedStatus]}
-        label={
-          <React.Fragment>
-            <span className="us-em-span">{title}</span>
-            <Label
-              className="pointer"
-              size="mini"
-              color={`${this.state[convertedStatus] ? "green" : "teal"}`}
-              style={{ marginBottom: "3px", marginRight: "5px" }}
-              onClick={() => {
-                this.handleEdit(status);
-                this.state[convertedStatus]
-                  ? this.handleSubmit(status)
-                  : this.handleEdit(status);
-              }}
-            >
-              <Icon
-                name={`${this.state[convertedStatus] ? "checkmark" : "edit"}`}
-              />
-              {`${this.state[convertedStatus] ? "اعمال" : "ویرایش"}`}
-            </Label>
-          </React.Fragment>
-        }
-        onChange={e => this.handleEditChange(status, e)}
-        defaultValue={this.state[status]}
-        readOnly={!this.state[convertedStatus]}
+        label={title}
+        onChange={e => this.handleChange(status, e)}
+        onSelect={() => this.handleSelect(status)}
+        onBlur={() => this.handleBlur(status)}
+        defaultValue={this.state[convert] ? null : this.state[status]}
+        placeholder={this.state[convert] ? this.state[status] : null}
       />
     );
   };
@@ -145,6 +136,13 @@ class EditTab extends Component {
             {this.createInput("marriage_date", "تاریخ ازدواج")}
             {this.createInput("points", "امتیاز مشتری")}
           </Form.Group>
+          <Button
+            onClick={this.handleSubmit}
+            disabled={this.state.anyChange ? false : true}
+            color={this.state.anyChange ? "green" : null}
+          >
+            اعمال
+          </Button>
         </Form>
       </div>
     );
