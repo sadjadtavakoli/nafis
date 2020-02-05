@@ -21,6 +21,7 @@ import {
   Label
 } from "semantic-ui-react";
 import NewBillPopup from "./newBillPopup";
+import { toastr } from "react-redux-toastr";
 
 const INITIAL_STATE = {
   sumProductTotalPrice: 0,
@@ -44,6 +45,10 @@ class ShowInformationModal extends React.Component {
   state = INITIAL_STATE;
 
   componentWillReceiveProps() {
+    this.syncStateWithProps();
+  }
+
+  syncStateWithProps() {
     if (!this.state.data.items) {
       this.setState(
         { data: this.props.data, discount: this.props.data.discount },
@@ -55,6 +60,10 @@ class ShowInformationModal extends React.Component {
         }
       );
     }
+  }
+
+  componentDidMount() {
+    this.syncStateWithProps();
   }
 
   toggleAddItemPopup = () => {
@@ -70,10 +79,10 @@ class ShowInformationModal extends React.Component {
           this.setState({ data }, () => {
             this.sumProductTotalPrice();
           });
-          console.log("successfully done");
+          toastr.success("حذف آیتم با موفقیت انجام شد");
         })
         .catch(() => {
-          console.log("failed");
+          toastr.error("خطا در فرایند حذف آیتم");
         });
     }
   };
@@ -82,7 +91,7 @@ class ShowInformationModal extends React.Component {
     this.setState({
       editMode: true
     });
-    console.log(index)
+    console.log(index);
   };
 
   itemsRender = (item, index) => {
@@ -133,7 +142,9 @@ class ShowInformationModal extends React.Component {
                   className="rtl text-right placeholder-rtl"
                   readOnly={this.state.editMode ? false : true}
                   fluid
-                  defaultValue={this.state.editMode ? item.product.code : item.product.name}
+                  defaultValue={
+                    this.state.editMode ? item.product.code : item.product.name
+                  }
                   label="نام محصول"
                   placeholder=""
                 />

@@ -1,4 +1,4 @@
-import { GET_ACTIVE_BILL, ADD_BILL } from "./types";
+import { GET_ACTIVE_BILL, ADD_BILL, REMOVE_ITEM } from "./types";
 import server, { putServer } from "../apis/server";
 
 export const getActiveBill = (page = 1) => async dispatch => {

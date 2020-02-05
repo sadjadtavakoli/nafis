@@ -18,9 +18,10 @@ class BillTable extends React.Component {
     itemData: {},
     isOpenAddItem: NaN,
     activePage: 1,
-    firstTime: true
+    firstTime: true,
+    openingModal: false
   };
-  componentWillReceiveProps(newProps) {
+  componentDidUpdate(newProps) {
     if (
       newProps.newBillData &&
       newProps.newBillData.pk !== this.props.newBillData.pk
@@ -43,7 +44,7 @@ class BillTable extends React.Component {
       });
     });
   };
-  changePage = (event, { activePage }) => {
+  changePage = (_, { activePage }) => {
     this.setState({ activePage }, () => {
       this.getActiveBill(this.state.activePage);
     });
@@ -79,6 +80,7 @@ class BillTable extends React.Component {
       return (
         <div>
           <ShowInformationModal
+            key={this.state.isOpenInformationModal}
             refetch={() => this.getActiveBill(this.state.activePage)}
             data={this.state.itemData}
             open={this.state.isOpenInformationModal}
