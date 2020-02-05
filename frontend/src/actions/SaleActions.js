@@ -27,7 +27,8 @@ export const addNewItem = (pk, data) => async dispatch => {
   return await server(localStorage.getItem("token")).post(`/bill-items/`, data);
 };
 export const deleteItem = pk => async dispatch => {
-  return await server(localStorage.getItem("token")).delete(
+  const response = await server(localStorage.getItem("token")).delete(
     `/bill-items/${pk}/`
   );
+  return response;
 };
