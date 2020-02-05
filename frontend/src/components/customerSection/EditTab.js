@@ -7,8 +7,6 @@ import {
 } from "../../actions/CustomerSectionActions";
 import { toastr } from "react-redux-toastr";
 
-const INITIAL_STATE = {};
-
 class EditTab extends Component {
   state = {
     pk: null,
@@ -30,21 +28,26 @@ class EditTab extends Component {
     marriage_date_b: false,
     points_b: false,
     class_type_b: false,
+    first_name_e: false,
+    last_name_e: false,
+    email_e: false,
+    phone_number_e: false,
+    address_e: false,
+    birth_date_e: false,
+    marriage_date_e: false,
+    points_e: false,
+    class_type_e: false,
     anyChange: false
   };
 
   componentDidMount() {
-    this.props.getACustomer(this.props.passingPk).then(() => {
-      this.setState({ pk: this.props.passingPk });
-    });
+    this.getCustomerInfo();
   }
 
-  componentDidUpdate() {
-    if (
-      this.props.theCustomer &&
-      this.state.phone_number !== this.props.theCustomer.phone_number
-    ) {
+  getCustomerInfo = () => {
+    this.props.getACustomer(this.props.passingPk).then(() => {
       this.setState({
+        pk: this.props.passingPk,
         first_name: this.props.theCustomer.first_name,
         last_name: this.props.theCustomer.last_name,
         email: this.props.theCustomer.email,
@@ -55,11 +58,15 @@ class EditTab extends Component {
         points: this.props.theCustomer.points,
         class_type: this.props.theCustomer.class_type
       });
-    }
-  }
+    });
+  };
 
   convertStatus = status => {
     return status.concat("_b");
+  };
+
+  convertStatusE = status => {
+    return status.concat("_e");
   };
 
   handleChange = (status, e) => {
@@ -69,28 +76,86 @@ class EditTab extends Component {
     });
   };
 
-  handleSubmit = status => {
-    this.props
-      .updateCustomer(this.state.pk, {
-        [status]: this.state[status]
-      })
-      .then(() => {
-        this.setState({ [status]: this.state[status] });
-        toastr.success(".عملیات ویرایش با موفقیت انجام شد");
-      })
-      .catch(() => {
-        toastr.error(".عملیات ویرایش موفقیت آمیز نبود");
+  validateEmail = email => {
+    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+  handleSubmit = () => {
+    let hasError = false;
+    let email = this.validateEmail(this.state.email);
+    if (!this.state.first_name) {
+      this.setState({
+        first_name_e: true
       });
-    const convertedStatus = this.convertStatus(status);
-    this.setState({
-      [convertedStatus]: false
-    });
+      hasError = true;
+    }
+    if (!this.state.last_name) {
+      this.setState({
+        last_name_e: true
+      });
+      hasError = true;
+    }
+    if (!this.state.email) {
+      this.setState({
+        email_e: true
+      });
+      hasError = true;
+    }
+    if (this.state.phone_number.length !== 11) {
+      this.setState({
+        phone_number_e: true
+      });
+      hasError = true;
+    }
+    if (!this.state.points) {
+      this.setState({
+        points_e: true
+      });
+      hasError = true;
+    }
+    if (!email) {
+      this.setState({
+        email_e: true
+      });
+      hasError = true;
+    }
+    if (hasError) {
+      this.setState({
+        hasError: true
+      });
+    }
+    if (!hasError) {
+      let prepareData = {
+        first_name: this.state.first_name,
+        last_name: this.state.last_name,
+        email: this.state.email,
+        phone_number: this.state.phone_number,
+        address: this.state.address,
+        birth_date: this.state.birth_date,
+        marriage_date: this.state.marriage_date,
+        points: this.state.points,
+        class_type: this.state.class_type
+      };
+      this.props
+        .updateCustomer(this.state.pk, prepareData)
+        .then(() => {
+          toastr.success(".عملیات ویرایش با موفقیت انجام شد");
+          this.getCustomerInfo();
+        })
+        .catch(() => {
+          toastr.error(".عملیات ویرایش موفقیت آمیز نبود");
+        });
+    }
   };
 
   handleSelect = status => {
     let convert = this.convertStatus(status);
+    let convertE = this.convertStatusE(status);
     this.setState({
-      [convert]: true
+      [convert]: true,
+      [convertE]: false,
+      hasError: false
     });
   };
 
@@ -103,6 +168,7 @@ class EditTab extends Component {
 
   createInput = (status, title) => {
     let convert = this.convertStatus(status);
+    let convertE = this.convertStatusE(status);
     return (
       <Form.Input
         className={`text-right`}
@@ -112,6 +178,7 @@ class EditTab extends Component {
         onBlur={() => this.handleBlur(status)}
         defaultValue={this.state[convert] ? null : this.state[status]}
         placeholder={this.state[convert] ? this.state[status] : null}
+        error={this.state[convertE]}
       />
     );
   };
@@ -139,7 +206,7 @@ class EditTab extends Component {
           <Button
             onClick={this.handleSubmit}
             disabled={this.state.anyChange ? false : true}
-            color={this.state.anyChange ? "green" : null}
+            color={this.state.hasError ? "red" : "green"}
           >
             اعمال
           </Button>
