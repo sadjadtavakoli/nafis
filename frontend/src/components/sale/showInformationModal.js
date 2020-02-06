@@ -32,7 +32,7 @@ const INITIAL_STATE = {
   used_points: "",
   branch: 1,
   discount: 0,
-  editMode: false,
+  editting: "",
   branchOptions: [{ key: "1", value: "1", flag: "ir", text: "شعبه یک" }],
   isEnableEdit: {
     discount: false,
@@ -89,12 +89,14 @@ class ShowInformationModal extends React.Component {
 
   editItem = index => {
     this.setState({
+      editting: index,
       editMode: true
     });
-    console.log(index);
   };
 
   itemsRender = (item, index) => {
+    console.log("editting", this.state.editting);
+    console.log("index", index);
     return (
       <Card.Group key={index}>
         <Card fluid>
@@ -126,66 +128,60 @@ class ShowInformationModal extends React.Component {
                 <Icon name="edit" />
               </Button>
             </Card.Header>
-            {this.state.editMode ? null : (
+            {this.state.editting !== index ? (
               <Card.Description className="yekan">
                 <Message compact size="mini" color="teal">
-                  داده های زیر صرفا جهت خواندن هستن و برای جلوگیری از خطای
-                  انسانی قابل ویرایش نمی باشند.
+                  جهت ویرایش این قسمت روی دکمه ی ویرایش کلیک کنید.
                 </Message>
               </Card.Description>
-            )}
+            ) : null}
           </Card.Content>
           <Card.Content extra>
             <Form>
               <Form.Group widths="equal">
                 <Form.Input
                   className="rtl text-right placeholder-rtl"
-                  readOnly={this.state.editMode ? false : true}
+                  readOnly={this.state.editting !== index ? true : false}
                   fluid
                   defaultValue={
                     this.state.editMode ? item.product.code : item.product.name
                   }
                   label="نام محصول"
-                  placeholder=""
                 />
                 <Form.Input
                   className="ltr placeholder-rtl"
-                  readOnly={this.state.editMode ? false : true}
+                  readOnly={this.state.editting !== index ? true : false}
                   fluid
                   defaultValue={item.product.code}
                   label="کد محصول"
-                  placeholder=""
                 />
                 <Form.Input
                   className="ltr placeholder-rtl"
-                  readOnly={this.state.editMode ? false : true}
+                  readOnly={this.state.editting !== index ? true : false}
                   fluid
                   defaultValue={priceToPersian(item.product.selling_price)}
                   label="قیمت واحد"
-                  placeholder=""
                 />
                 <Form.Input
                   className="ltr placeholder-rtl"
-                  readOnly={this.state.editMode ? false : true}
+                  readOnly={this.state.editting !== index ? true : false}
                   fluid
                   defaultValue={item.amount}
                   label={`مقدار(متر)`}
-                  placeholder=""
                 />
                 <Form.Input
                   className="ltr placeholder-rtl"
-                  readOnly={this.state.editMode ? false : true}
+                  readOnly={this.state.editting !== index ? true : false}
                   fluid
                   defaultValue={item.discount}
                   label="تخفیف"
-                  placeholder=""
                 />
               </Form.Group>
               <Form.Group widths="3">
                 <Form.Checkbox
                   toggle
                   className="ltr placeholder-rtl"
-                  readOnly={this.state.editMode ? false : true}
+                  readOnly={this.state.editting !== index ? true : false}
                   checked={item.end_of_roll}
                   label="ته طاقه؟"
                 />
@@ -193,10 +189,9 @@ class ShowInformationModal extends React.Component {
                   className={`ltr placeholder-rtl ${
                     item.end_of_roll ? "" : "invisible"
                   }`}
-                  readOnly={this.state.editMode ? false : true}
+                  readOnly={this.state.editting !== index ? true : false}
                   defaultValue={item.end_of_roll_amount}
                   label="مقدار حساب شده"
-                  placeholder="مقدار حساب شده"
                 />
               </Form.Group>
             </Form>
