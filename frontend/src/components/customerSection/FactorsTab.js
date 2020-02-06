@@ -32,9 +32,11 @@ class FactorsTab extends Component {
   }
 
   createTable = () => {
+    let rowSpan = this.state.bills.results[0].items.length;
+    console.log("row span", rowSpan);
     if (this.state.bills.count) {
       return (
-        <Table celled className="text-center">
+        <Table celled structured className="text-center">
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell className="d-table-border">
@@ -55,45 +57,46 @@ class FactorsTab extends Component {
           </Table.Header>
           <Table.Body>
             {this.state.bills.results.map(item => {
+              return item.items.map(subitem => {
+                return (
+                  <Table.Row key={item.pk}>
+                    <Table.Cell className="d-table-border">
+                      {subitem.product.name}
+                    </Table.Cell>
+                    <Table.Cell className="norm-latin">
+                      <span>{subitem.product.code}</span>
+                    </Table.Cell>
+                    <Table.Cell className="norm-latin">
+                      <span>{digitToComma(subitem.product.selling_price)}</span>
+                      <span className="yekan"> تومان</span>
+                    </Table.Cell>
+                    <Table.Cell className="norm-latin">
+                      <span>{subitem.amount}</span>
+                      <span className="yekan"> متر</span>
+                    </Table.Cell>
+                  </Table.Row>
+                );
+              });
+            })}
+
+            {this.state.bills.results.map(item => {
               return (
                 <Table.Row key={item.pk}>
-                  {item.items.map(subitem => {
-                    return (
-                      <React.Fragment>
-                        <Table.Cell className="d-table-border">
-                          {subitem.product.name}
-                        </Table.Cell>
-                        <Table.Cell className="norm-latin">
-                          <span>{subitem.product.code}</span>
-                        </Table.Cell>
-                        <Table.Cell className="norm-latin">
-                          <span>
-                            {digitToComma(subitem.product.selling_price)}
-                          </span>
-                          <span className="yekan"> تومان</span>
-                        </Table.Cell>
-                        <Table.Cell className="norm-latin">
-                          <span>{subitem.amount}</span>
-                          <span className="yekan"> متر</span>
-                        </Table.Cell>
-                      </React.Fragment>
-                    );
-                  })}
-                  <Table.Cell className="norm-latin">
+                  <Table.Cell className="norm-latin" rowSpan="4">
                     <span>{item.total_discount}</span>
                   </Table.Cell>
                   {this.state.remainedBillsToggle ? (
-                    <Table.Cell>
+                    <Table.Cell rowSpan="4">
                       <span>{digitToComma(item.paid)}</span>
                       <span className="yekan"> تومان</span>
                     </Table.Cell>
                   ) : null}
-                  <Table.Cell className="norm-latin">
+                  <Table.Cell className="norm-latin" rowSpan="4">
                     <span>{digitToComma(item.final_price)}</span>
                     <span className="yekan"> تومان</span>
                   </Table.Cell>
                   {this.state.remainedBillsToggle ? (
-                    <Table.Cell>
+                    <Table.Cell rowSpan="4">
                       <span>{item.final_price - item.paid}</span>
                     </Table.Cell>
                   ) : null}
@@ -148,6 +151,7 @@ class FactorsTab extends Component {
 }
 
 const mapStateToProps = state => {
+  console.log(state);
   return {
     allBills: state.customers.allBills,
     remainedBills: state.customers.remainedBills
