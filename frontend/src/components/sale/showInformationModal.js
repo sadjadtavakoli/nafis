@@ -94,49 +94,68 @@ class ShowInformationModal extends React.Component {
     });
   };
 
+  submitChanges = () => {
+    this.setState({
+      editting: "",
+      editMode: false
+    });
+  };
+
+  cancelChanges = () => {
+    this.setState({
+      editting: "",
+      editMode: false
+    });
+  };
+
   itemsRender = (item, index) => {
-    console.log("editting", this.state.editting);
-    console.log("index", index);
     return (
-      <Card.Group key={index}>
+      <Card.Group key={index} id="s-showInfromationModel">
         <Card fluid>
           <Card.Content>
             <Card.Header className="yekan">
               {item.product.name}
-              <Button
-                icon
-                color="red"
-                onClick={() => this.deleteItem(index)}
-                className="pointer"
-                labelPosition="right"
-                size="mini"
-                style={{ marginRight: "10px" }}
-              >
-                <span>حذف آیتم</span>
-                <Icon name="trash" />
-              </Button>
-              <Button
-                icon
-                color="teal"
-                onClick={() => this.editItem(index)}
-                className="pointer"
-                labelPosition="right"
-                size="mini"
-                style={{ marginRight: "10px" }}
-              >
-                <span>ویرایش</span>
-                <Icon name="edit" />
-              </Button>
-            </Card.Header>
-            {this.state.editting !== index ? (
-              <Card.Description className="yekan">
-                <Message compact size="mini" color="teal">
+              {!this.state.editMode ? (
+                <Button
+                  icon
+                  color="red"
+                  onClick={() => this.deleteItem(index)}
+                  className="pointer"
+                  labelPosition="right"
+                  size="mini"
+                  style={{ marginRight: "10px" }}
+                >
+                  <span>حذف آیتم</span>
+                  <Icon name="trash" />
+                </Button>
+              ) : null}
+              {this.state.editMode ? null : (
+                <Button
+                  icon
+                  color="teal"
+                  onClick={() => this.editItem(index)}
+                  className="pointer"
+                  labelPosition="right"
+                  size="mini"
+                  style={{ marginRight: "10px" }}
+                >
+                  <span>ویرایش</span>
+                  <Icon name="edit" />
+                </Button>
+              )}
+              {!this.state.editMode ? (
+                <Message
+                  compact
+                  size="mini"
+                  color="teal"
+                  className="yekan form-message"
+                >
                   جهت ویرایش این قسمت روی دکمه ی ویرایش کلیک کنید.
                 </Message>
-              </Card.Description>
-            ) : null}
+              ) : null}
+            </Card.Header>
           </Card.Content>
-          <Card.Content extra>
+          <Card.Content>
             <Form>
               <Form.Group widths="equal">
                 <Form.Input
@@ -177,7 +196,7 @@ class ShowInformationModal extends React.Component {
                   label="تخفیف"
                 />
               </Form.Group>
-              <Form.Group widths="3">
+              <Form.Group>
                 <Form.Checkbox
                   toggle
                   className="ltr placeholder-rtl"
@@ -194,6 +213,16 @@ class ShowInformationModal extends React.Component {
                   label="مقدار حساب شده"
                 />
               </Form.Group>
+              {this.state.editting !== index ? null : (
+                <React.Fragment>
+                  <Button color="green" onClick={this.submitChanges}>
+                    <span>اعمال</span>
+                  </Button>
+                  <Button color="gray" onClick={this.cancelChanges}>
+                    <span>لغو</span>
+                  </Button>
+                </React.Fragment>
+              )}
             </Form>
           </Card.Content>
         </Card>
