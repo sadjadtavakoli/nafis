@@ -195,23 +195,6 @@ class AddCustomerModal extends Component {
                 options={this.state.city_options}
               />
             </Form.Group>
-                placeholder="آدرس ایمیل"
-              />
-              <Form.Input
-                className="ltr placeholder-rtl"
-                label="تلفن"
-                onChange={e => this.inputChange(e, "phone_number")}
-                placeholder="شماره تلفن"
-              />
-            </Form.Group>
-            <Form.Field>
-              <Form.Input
-                className="rtl placeholder-rtl text-right"
-                label="آدرس"
-                onChange={e => this.inputChange(e, "address")}
-                placeholder="آدرس محل سکونت"
-              />
-            </Form.Field>
             <Form.Group unstackable widths={2}>
               <Form.Input
                 className="ltr placeholder-rtl"
