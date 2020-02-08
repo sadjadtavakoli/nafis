@@ -25,6 +25,12 @@ export const updateBill = (pk, data) => async dispatch => {
 export const addNewItem = (pk, data) => async dispatch => {
   return await server(localStorage.getItem("token")).post(`/bill-items/`, data);
 };
+export const updateBillItem = (pk, data) => async dispatch => {
+  return await server(localStorage.getItem("token")).patch(
+    `/bill-items/`,
+    data
+  );
+};
 export const deleteItem = pk => async dispatch => {
   const response = await server(localStorage.getItem("token")).delete(
     `/bill-items/${pk}/`

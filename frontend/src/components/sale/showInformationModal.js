@@ -5,7 +5,8 @@ import {
   setNewBill,
   deleteItem,
   getCustomerByPhoneNumber,
-  updateBill
+  updateBill,
+  updateBillItem
 } from "../../actions/SaleActions";
 import {
   Button,
@@ -124,7 +125,7 @@ class ShowInformationModal extends React.Component {
     if (noChanges) {
       window.alert("هیچ تغیری اعمال نشده است.");
     } else {
-      this.props.updateBill(this.state.data.pk, prepareData).then(() => {
+      this.props.updateBillItem(this.state.data.pk, prepareData).then(() => {
         this.setState({
           editting: "",
           editMode: false
@@ -611,5 +612,6 @@ export default connect(null, {
   setNewBill,
   deleteItem,
   getCustomerByPhoneNumber,
-  updateBill
+  updateBill,
+  updateBillItem
 })(ShowInformationModal);
