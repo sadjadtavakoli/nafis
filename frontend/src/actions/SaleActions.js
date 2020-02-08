@@ -11,7 +11,6 @@ export const getCustomerByPhoneNumber = phone_number => async dispatch => {
   return await server(localStorage.getItem("token")).get("/customers/phone/", {
     params: { phone_number }
   });
-  // dispatch({ type: GET_ACTIVE_BILL, payload: response.data });
 };
 export const setNewBill = data => async dispatch => {
   const response = await server(localStorage.getItem("token")).post(

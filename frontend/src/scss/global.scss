@@ -130,6 +130,9 @@ div[role="combobox"] {
 .invisible {
   visibility: hidden;
 }
+.hidden {
+  display: none;
+}
 .placeholder-rtl {
   ::placeholder {
     text-align: right !important;
