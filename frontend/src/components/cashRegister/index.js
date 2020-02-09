@@ -46,7 +46,6 @@ const CashRegister = ({
           onClick={() => history.push("/")}
           color="teal"
           icon="home"
-          size="large"
         />
       </Segment>
       <AddBillModal

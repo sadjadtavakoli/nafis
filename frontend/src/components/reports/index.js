@@ -532,7 +532,6 @@ class Reports extends React.Component {
                 onClick={() => history.push("/")}
                 color="teal"
                 icon="home"
-                size="large"
               />
             </form>
           </Segment>

@@ -122,7 +122,6 @@ class Customers extends Component {
               onClick={() => history.push("/")}
               color="teal"
               icon="home"
-              size="large"
             />
           </Segment>
           <Table celled className="rtl text-center" columns={3}>
