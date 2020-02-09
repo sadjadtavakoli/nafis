@@ -5,6 +5,7 @@ import { getActiveBill } from "../../actions/SaleActions";
 import AddBillModal from "./addBillModal";
 import BillTable from "./billTable";
 import ProductTable from "../depository/productTable";
+
 const panes = [
   {
     menuItem: "فاکتورهای فعال",
@@ -23,16 +24,20 @@ const panes = [
     )
   }
 ];
+
 class Sale extends React.Component {
   componentDidMount() {
     this.props.getActiveBill();
   }
+
   state = {
     open: false
   };
+
   closeModal = () => {
     this.setState({ open: false });
   };
+
   render() {
     return (
       <React.Fragment>
@@ -60,22 +65,5 @@ class Sale extends React.Component {
     );
   }
 }
-
-// const mapStateToProps = state => {
-// console.log(state)
-// return {
-//     nextReceipt: state.receipts.nextReceipt,
-//     currentUser: state.auth.currentUser
-//       ? state.auth.currentUser
-//       : localStorage.getItem("user")
-//       ? localStorage.getItem("user")
-//       : "",
-//     type: state.auth.type
-//       ? state.auth.type
-//       : localStorage.getItem("type")
-//       ? localStorage.getItem("type")
-//       : ""
-//   };
-// };
 
 export default connect(null, { getActiveBill })(Sale);
