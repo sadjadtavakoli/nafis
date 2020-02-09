@@ -92,7 +92,8 @@ class BillsViewSet(NafisBase, ModelViewSet):
             card_amount = self.request.data.get('card_amount', 0)
             if cash_amount:
                 payment_type = "cash"
-                CustomerPayment.objects.create(create_date=timezone.now(), amount=float(cash_amount),
+                CustomerPayment.objects.create(create_date=timezone.now(),
+                                               amount=float(cash_amount),
                                                bill=bill,
                                                type=payment_type)
             if card_amount:
@@ -124,7 +125,6 @@ class BillsViewSet(NafisBase, ModelViewSet):
         instance = self.get_object()
         if instance.status == "active":
             instance.check_status()
-            print(timezone.now())
             instance.close_date = timezone.now()
             instance.save()
             send_message = self.request.data.get('send_message', True)
@@ -358,7 +358,6 @@ class CustomerPaymentViewSet(NafisBase, ModelViewSet):
         if self.get_object().type == "cheque":
             cheque = self.get_object().cheque
         response = super(CustomerPaymentViewSet, self).destroy(request, *args, **kwargs)
-        bill.check_status()
         if cheque:
             cheque.delete()
         return response
