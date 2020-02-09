@@ -8,6 +8,7 @@ import {
   getProductsByFilter
 } from "../../actions/DepositoryActions";
 import FilterSegment from "./filterSegment";
+import history from "../../history";
 
 class Depository extends React.Component {
   state = {
@@ -64,6 +65,12 @@ class Depository extends React.Component {
                 content="فیلتر"
                 icon="filter"
                 labelPosition="right"
+              />
+              <Button
+                style={{ float: "left" }}
+                onClick={() => history.push("/")}
+                color="teal"
+                icon="home"
               />
               {this.state.filterOpen ? (
                 <FilterSegment submitFilter={this.getProductsByFilter} />

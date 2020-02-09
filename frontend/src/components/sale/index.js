@@ -1,10 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Button, Tab, Container, Segment } from "semantic-ui-react";
+import { Button, Tab, Container, Segment, Icon } from "semantic-ui-react";
 import { getActiveBill } from "../../actions/SaleActions";
 import AddBillModal from "./addBillModal";
 import BillTable from "./billTable";
 import ProductTable from "../depository/productTable";
+import history from "../../history";
 
 const panes = [
   {
@@ -52,6 +53,12 @@ class Sale extends React.Component {
                 content="افزودن فاکتور"
                 icon="add"
                 labelPosition="right"
+              />
+              <Button
+                style={{ float: "left" }}
+                onClick={() => history.push("/")}
+                color="teal"
+                icon="home"
               />
             </Segment>
             <Tab

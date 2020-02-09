@@ -33,7 +33,20 @@ const CashRegister = ({
   return (
     <Container>
       <Segment stacked className="rtl">
-        <Button className="yekan" onClick={() => history.push('/daily-report/')} color="yellow" content='مشاهده گزارش روزانه' icon='print' labelPosition='right' />
+        <Button
+          className="yekan"
+          onClick={() => history.push("/daily-report/")}
+          color="yellow"
+          content="مشاهده گزارش روزانه"
+          icon="print"
+          labelPosition="right"
+        />
+        <Button
+          style={{ float: "left" }}
+          onClick={() => history.push("/")}
+          color="teal"
+          icon="home"
+        />
       </Segment>
       <AddBillModal
         open={modal}
@@ -46,7 +59,7 @@ const CashRegister = ({
       {loading ? (
         <LoadingBar />
       ) : (
-          <BillLists
+        <BillLists
           refetch={getAllActiveBills}
           title="لیست فاکتور‌های فعال"
           headerTitles={[

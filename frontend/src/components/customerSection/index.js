@@ -117,6 +117,12 @@ class Customers extends Component {
               icon="add"
               labelPosition="right"
             />
+            <Button
+              style={{ float: "left" }}
+              onClick={() => history.push("/")}
+              color="teal"
+              icon="home"
+            />
           </Segment>
           <Table celled className="rtl text-center" columns={3}>
             <Table.Header className="text-right">
