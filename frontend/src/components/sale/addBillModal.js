@@ -20,6 +20,7 @@ import {
   Label
 } from "semantic-ui-react";
 import { toastr } from "react-redux-toastr";
+
 const INITIAL_STATE = {
   sumProductTotalPrice: 0,
   isOpenAddItem: false,
@@ -385,6 +386,14 @@ class AddBillModal extends React.Component {
 
           <Modal.Actions>
             <Button
+              className="yekan"
+              positive
+              icon="checkmark"
+              labelPosition="right"
+              content="ثبت فاکتور"
+              onClick={this.formSubmitHandler}
+            />
+            <Button
               color="black"
               onClick={() => {
                 this.props.onClose();
@@ -393,14 +402,6 @@ class AddBillModal extends React.Component {
             >
               <span>بستن</span>
             </Button>
-            <Button
-              className="yekan"
-              positive
-              icon="checkmark"
-              labelPosition="right"
-              content="ثبت فاکتور"
-              onClick={this.formSubmitHandler}
-            />
           </Modal.Actions>
         </Modal>
       </React.Fragment>

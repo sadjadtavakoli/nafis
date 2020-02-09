@@ -130,6 +130,9 @@ div[role="combobox"] {
 .invisible {
   visibility: hidden;
 }
+.hidden {
+  display: none;
+}
 .placeholder-rtl {
   ::placeholder {
     text-align: right !important;
@@ -301,5 +304,17 @@ label {
   }
   .r-form-span-padding {
     padding: 0 10px;
+  }
+}
+
+// Bug Fix Sale
+
+#s-showInfromationModel {
+  .form-message {
+    margin: 0;
+    margin-right: 20px;
+    padding: 10px;
+    font-weight: 100;
+    font-size: 12px;
   }
 }
