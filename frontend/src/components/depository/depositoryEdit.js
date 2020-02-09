@@ -100,7 +100,6 @@ class DepositoryEdit extends Component {
   };
 
   handleSubmit = () => {
-    let isEmpty = false;
     if (
       !this.state.name ||
       !this.state.stock_amount ||
@@ -112,9 +111,6 @@ class DepositoryEdit extends Component {
       !this.state.f_type ||
       !this.state.design
     ) {
-      isEmpty = true;
-    }
-    if (isEmpty) {
       this.setState({ isEmpty: true });
     } else {
       let prepareData = {
@@ -132,6 +128,7 @@ class DepositoryEdit extends Component {
         .updateProduct(this.state.pk, prepareData)
         .then(() => {
           toastr.success(".عملیات ویرایش موفقیت آمیز بود");
+          this.setState({ changed: false });
         })
         .catch(() => {
           toastr.error(
