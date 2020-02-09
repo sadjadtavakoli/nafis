@@ -7,7 +7,8 @@ import {
   Search,
   Button,
   Pagination,
-  Container
+  Container,
+  Segment
 } from "semantic-ui-react";
 import NotFound from "../utils/notFound";
 import history from "../../history";
@@ -57,6 +58,22 @@ class Suppliers extends Component {
   render() {
     return (
       <Container>
+        <Segment stacked className="rtl">
+          <Button
+            className="yekan"
+            onClick={() => this.setState({ open: true })}
+            color="green"
+            content="افزودن فاکتور"
+            icon="add"
+            labelPosition="right"
+          />
+          <Button
+            icon="home"
+            color="teal"
+            onClick={() => history.push("/")}
+            style={{ float: "left" }}
+          />
+        </Segment>
         <Table celled className="rtl text-center" columns={5}>
           <Table.Header className="text-right">
             <Table.Row>
