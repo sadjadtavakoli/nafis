@@ -80,11 +80,6 @@ class DepositoryEdit extends Component {
     });
   }
 
-  getStatus = status => {
-    console.log(status);
-    return status;
-  };
-
   convertStatus_Options = status => {
     return status.concat("_Options");
   };
@@ -106,8 +101,17 @@ class DepositoryEdit extends Component {
 
   handleSubmit = () => {
     let isEmpty = false;
-    let status = this.getStatus();
-    if (!this.state[status]) {
+    if (
+      !this.state.name ||
+      !this.state.stock_amount ||
+      !this.state.selling_price ||
+      !this.state.buying_price ||
+      !this.state.background_color ||
+      !this.state.design_color ||
+      !this.state.material ||
+      !this.state.f_type ||
+      !this.state.design
+    ) {
       isEmpty = true;
     }
     if (isEmpty) {
@@ -169,7 +173,6 @@ class DepositoryEdit extends Component {
   };
 
   createSelect = (status, title) => {
-    this.getStatus(status);
     return (
       <Form.Select
         style={{ "margin-top": "5px" }}
