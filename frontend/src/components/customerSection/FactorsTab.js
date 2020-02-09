@@ -32,9 +32,11 @@ class FactorsTab extends Component {
   }
 
   createTable = () => {
+    let rowSpan = this.state.bills.results[0].items.length;
+    console.log("row span", rowSpan);
     if (this.state.bills.count) {
       return (
-        <Table celled className="text-center">
+        <Table celled structured className="text-center">
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell className="d-table-border">
@@ -148,6 +150,7 @@ class FactorsTab extends Component {
 }
 
 const mapStateToProps = state => {
+  console.log(state);
   return {
     allBills: state.customers.allBills,
     remainedBills: state.customers.remainedBills
