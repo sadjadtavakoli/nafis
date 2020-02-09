@@ -101,6 +101,7 @@ class Customers extends Component {
 
   render() {
     return (
+<<<<<<< HEAD
       <Container>
         <Segment stacked className="rtl">
           <AddCustomerModal
@@ -139,6 +140,33 @@ class Customers extends Component {
           {this.props.usersCustomers &&
           this.props.usersCustomers.results.length !== 0 ? (
             <Table.Header>
+=======
+      <React.Fragment>
+        <Container>
+          <Segment stacked className="rtl">
+            <AddCustomerModal
+              open={this.state.open}
+              code={this.state.productID}
+              onClose={this.closeModal}
+            />
+            <Button
+              className="yekan"
+              onClick={this.openModal}
+              color="green"
+              content="افزودن مشتری جدید"
+              icon="add"
+              labelPosition="right"
+            />
+            <Button
+              style={{ float: "left" }}
+              onClick={() => history.push("/")}
+              color="teal"
+              icon="home"
+            />
+          </Segment>
+          <Table celled className="rtl text-center" columns={3}>
+            <Table.Header className="text-right">
+>>>>>>> 378ee3b1f0fb4e2aa4840887aa31044499cf0328
               <Table.Row>
                 <Table.HeaderCell style={{ borderLeft: "1px solid #ddd" }}>
                   نام و نام خانوادگی

@@ -22,6 +22,8 @@ import {
 } from "../utils/jalaaliUtils";
 import DatePickerModal from "./DatePickerModal";
 import NotFound from "../utils/notFound";
+import history from "../../history";
+
 const colors = {
   blue: "#2185d0",
   orange: "#f2711c",
@@ -525,6 +527,12 @@ class Reports extends React.Component {
                 <span>نمایش گزارش</span>
                 <Icon name="search" />
               </Button>
+              <Button
+                style={{ float: "left" }}
+                onClick={() => history.push("/")}
+                color="teal"
+                icon="home"
+              />
             </form>
           </Segment>
 
