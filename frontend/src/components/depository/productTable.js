@@ -190,7 +190,7 @@ class ProductTable extends React.Component {
                             color="teal"
                             onClick={() =>
                               history.push(
-                                `depository-edit/${item.code}/${item.pk}/`
+                                `/depository/depository-edit/${item.code}/${item.pk}/`
                               )
                             }
                           >
