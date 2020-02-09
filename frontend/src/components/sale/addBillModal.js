@@ -20,6 +20,7 @@ import {
   Label
 } from "semantic-ui-react";
 import { toastr } from "react-redux-toastr";
+
 const INITIAL_STATE = {
   sumProductTotalPrice: 0,
   isOpenAddItem: false,
@@ -37,11 +38,14 @@ const INITIAL_STATE = {
   branchOptions: [{ key: "1", value: "1", flag: "ir", text: "شعبه یک" }],
   customerData: {}
 };
+
 class AddBillModal extends React.Component {
   state = INITIAL_STATE;
+
   toggleAddItemPopup = () => {
     this.setState(prevState => ({ isOpenAddItem: !prevState.isOpenAddItem }));
   };
+
   deleteItem = id => {
     var r = window.confirm("آیا از حذف این مورد مطمئن هستید؟");
     if (r == true) {
@@ -58,6 +62,7 @@ class AddBillModal extends React.Component {
       });
     }
   };
+
   submitItemPopup = data => {
     let id = this.state.itemsDataSheet.length;
     const itemDOM = (
@@ -161,6 +166,7 @@ class AddBillModal extends React.Component {
     );
     this.toggleAddItemPopup();
   };
+
   getCustomerData(phone_number) {
     if (phone_number.length === 11) {
       this.props.getCustomerByPhoneNumber(phone_number).then(({ data }) => {
@@ -168,6 +174,7 @@ class AddBillModal extends React.Component {
       });
     }
   }
+
   inputChange = (event, inputName) => {
     this.setState(
       {
@@ -184,6 +191,7 @@ class AddBillModal extends React.Component {
       }
     );
   };
+
   sumProductTotalPrice = item => {
     let preSumArray = [];
     let sum = 0;
@@ -202,6 +210,7 @@ class AddBillModal extends React.Component {
     });
     this.setState({ sumProductTotalPrice: sum });
   };
+
   formSubmitHandler = () => {
     this.setState(
       {
@@ -223,7 +232,7 @@ class AddBillModal extends React.Component {
 
         if (this.state.discount.length < 1) {
           this.setState({
-            formValidation: { ...this.state.formValidation, discount: true }
+            discount: 0
           });
           hasError = true;
         }
@@ -249,9 +258,10 @@ class AddBillModal extends React.Component {
       }
     );
   };
+
   render() {
     return (
-      <div>
+      <React.Fragment>
         <Modal
           id="add-bill"
           closeOnDimmerClick={false}
@@ -376,6 +386,14 @@ class AddBillModal extends React.Component {
 
           <Modal.Actions>
             <Button
+              className="yekan"
+              positive
+              icon="checkmark"
+              labelPosition="right"
+              content="ثبت فاکتور"
+              onClick={this.formSubmitHandler}
+            />
+            <Button
               color="black"
               onClick={() => {
                 this.props.onClose();
@@ -384,36 +402,12 @@ class AddBillModal extends React.Component {
             >
               <span>بستن</span>
             </Button>
-            <Button
-              className="yekan"
-              positive
-              icon="checkmark"
-              labelPosition="right"
-              content="ثبت فاکتور"
-              onClick={this.formSubmitHandler}
-            />
           </Modal.Actions>
         </Modal>
-      </div>
+      </React.Fragment>
     );
   }
 }
-
-const mapStateToProps = state => {
-  //   return {
-  //     nextReceipt: state.receipts.nextReceipt,
-  //     currentUser: state.auth.currentUser
-  //       ? state.auth.currentUser
-  //       : localStorage.getItem("user")
-  //       ? localStorage.getItem("user")
-  //       : "",
-  //     type: state.auth.type
-  //       ? state.auth.type
-  //       : localStorage.getItem("type")
-  //       ? localStorage.getItem("type")
-  //       : ""
-  //   };
-};
 
 export default connect(null, { setNewBill, getCustomerByPhoneNumber })(
   AddBillModal

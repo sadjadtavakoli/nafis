@@ -18,64 +18,90 @@ class FactorsTab extends Component {
 
   componentDidMount() {
     this.props.getAllBills(this.props.passingPk).then(() => {
-      this.setState({
-        virgin: false,
-        bills: this.props.allBills.results
-      });
+      this.setState(
+        {
+          virgin: false,
+          bills: this.props.allBills
+        },
+        () => {
+          console.log("map", this.state.bills.results);
+        }
+      );
     });
     this.props.getRemainedBills(this.props.passingPk);
   }
 
   createTable = () => {
-    if (this.state.bills.length !== 0) {
+    let rowSpan = this.state.bills.results[0].items.length;
+    console.log("row span", rowSpan);
+    if (this.state.bills.count) {
       return (
-        <Table celled className="text-center">
+        <Table celled structured className="text-center">
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell className="d-table-border">
                 نام محصول
               </Table.HeaderCell>
-              <Table.HeaderCell>کد محصول</Table.HeaderCell>
+              <Table.HeaderCell>کد</Table.HeaderCell>
               <Table.HeaderCell>قیمت واحد</Table.HeaderCell>
               <Table.HeaderCell>مقدار</Table.HeaderCell>
-              <Table.HeaderCell>تخفیف</Table.HeaderCell>
-              <Table.HeaderCell>قیمت نهایی فاکتو</Table.HeaderCell>
               <Table.HeaderCell>تخفیف کل</Table.HeaderCell>
+              {this.state.remainedBillsToggle ? (
+                <Table.HeaderCell>بهای پرداخت شده</Table.HeaderCell>
+              ) : null}
+              <Table.HeaderCell>قیمت نهایی فاکتو</Table.HeaderCell>
+              {this.state.remainedBillsToggle ? (
+                <Table.HeaderCell>بهای پرداختی مانده</Table.HeaderCell>
+              ) : null}
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            <Table.Row>
-              {this.state.bills[0].items.map(item => {
-                return (
-                  <React.Fragment>
-                    <Table.Cell className="d-table-border">
-                      {item.product.name}
-                    </Table.Cell>
-                    <Table.Cell className="norm-latin">
-                      <span>{item.product.code}</span>
-                    </Table.Cell>
-                    <Table.Cell className="norm-latin">
-                      <span>{digitToComma(item.product.selling_price)}</span>
+            {this.state.bills.results.map(item => {
+              return (
+                <Table.Row key={item.pk}>
+                  {item.items.map(subitem => {
+                    return (
+                      <React.Fragment>
+                        <Table.Cell className="d-table-border">
+                          {subitem.product.name}
+                        </Table.Cell>
+                        <Table.Cell className="norm-latin">
+                          <span>{subitem.product.code}</span>
+                        </Table.Cell>
+                        <Table.Cell className="norm-latin">
+                          <span>
+                            {digitToComma(subitem.product.selling_price)}
+                          </span>
+                          <span className="yekan"> تومان</span>
+                        </Table.Cell>
+                        <Table.Cell className="norm-latin">
+                          <span>{subitem.amount}</span>
+                          <span className="yekan"> متر</span>
+                        </Table.Cell>
+                      </React.Fragment>
+                    );
+                  })}
+                  <Table.Cell className="norm-latin">
+                    <span>{item.total_discount}</span>
+                  </Table.Cell>
+                  {this.state.remainedBillsToggle ? (
+                    <Table.Cell>
+                      <span>{digitToComma(item.paid)}</span>
                       <span className="yekan"> تومان</span>
                     </Table.Cell>
-                    <Table.Cell className="norm-latin">
-                      <span>{item.amount}</span>
-                      <span className="yekan"> متر</span>
+                  ) : null}
+                  <Table.Cell className="norm-latin">
+                    <span>{digitToComma(item.final_price)}</span>
+                    <span className="yekan"> تومان</span>
+                  </Table.Cell>
+                  {this.state.remainedBillsToggle ? (
+                    <Table.Cell>
+                      <span>{item.final_price - item.paid}</span>
                     </Table.Cell>
-                    <Table.Cell className="norm-latin">
-                      <span>{item.discount}</span>
-                    </Table.Cell>
-                    <Table.Cell className="norm-latin">
-                      <span>{digitToComma(item.final_price)}</span>
-                      <span className="yekan"> تومان</span>
-                    </Table.Cell>
-                    <Table.Cell className="norm-latin">
-                      <span>{item.total_discount}</span>
-                    </Table.Cell>
-                  </React.Fragment>
-                );
-              })}
-            </Table.Row>
+                  ) : null}
+                </Table.Row>
+              );
+            })}
           </Table.Body>
         </Table>
       );
@@ -91,7 +117,6 @@ class FactorsTab extends Component {
     if (!this.state.remainedBillsToggle) {
       this.props.getRemainedBills(this.props.passingPk).then(() => {
         this.setState({
-          virgin: false,
           bills: this.props.remainedBills
         });
       });
@@ -99,12 +124,10 @@ class FactorsTab extends Component {
     if (this.state.remainedBillsToggle) {
       this.props.getAllBills(this.props.passingPk).then(() => {
         this.setState({
-          virgin: false,
-          bills: this.props.allBills.results
+          bills: this.props.allBills
         });
       });
     }
-    console.log(this.state.remainedBillsToggle);
   };
 
   render() {
@@ -119,8 +142,8 @@ class FactorsTab extends Component {
           <span className="us-fm-span">نمایش فاکتورهای باقی مانده</span>
         </Segment>
         {this.state.virgin ? <LoadingBar /> : null}
-        {!this.state.virgin && !this.state.bills.length ? <NotFound /> : null}
-        {this.state.bills.length ? this.createTable() : null}
+        {!this.state.virgin && !this.state.bills.count ? <NotFound /> : null}
+        {this.state.bills.count ? this.createTable() : null}
       </div>
     );
   }

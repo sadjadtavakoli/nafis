@@ -35,14 +35,12 @@ const panes = pk => [
 class CustomerPage extends Component {
   render() {
     return (
-      <div className="rtl">
-        <Container>
-          <Tab
-            menu={{ pointing: true }}
-            panes={panes(this.props.match.params.pk)}
-          />
-        </Container>
-      </div>
+      <Container className="rtl">
+        <Tab
+          menu={{ pointing: true }}
+          panes={panes(this.props.match.params.pk)}
+        />
+      </Container>
     );
   }
 }

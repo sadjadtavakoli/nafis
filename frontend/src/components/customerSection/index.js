@@ -16,8 +16,7 @@ import {
   Search,
   Grid,
   Button,
-  Segment,
-  Icon
+  Segment
 } from "semantic-ui-react";
 
 class Customers extends Component {
@@ -65,7 +64,7 @@ class Customers extends Component {
   };
 
   deleteCustomer = pk => {
-    let confirm = window.confirm(`آیا از حذف مشتری  ${pk.name} مطمئن هستید؟`);
+    let confirm = window.confirm(`آیا از حذف این مشتری مطمئن هستید؟`);
     if (confirm === true) {
       this.props
         .deleteCustomer(pk)

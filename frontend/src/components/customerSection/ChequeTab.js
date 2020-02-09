@@ -24,43 +24,28 @@ class FactorsTab extends Component {
         cheques: this.props.allCheques
       });
     });
+    this.props.getRemainedCheques(this.props.passingPk);
   }
 
-  onClose = () => {
-    this.props.onClose();
-  };
-
   handleToggleClick = () => {
-    this.setState(
-      {
-        virgin: false,
-        remainedChequesToggle: !this.state.remainedBillsToggle
-      },
-      () => {
-        if (this.state.remainedChequesToggle) {
-          this.props.getRemainedCheques(this.props.passingPk).then(() => {
-            this.setState({
-              virgin: false,
-              cheques: this.props.remainedCheques
-            });
-          });
-          this.setState({
-            cheques: this.props.allCheques
-          });
-        } else {
-          this.props.getRemainedCheques(this.props.passingPk).then(() => {
-            this.setState({
-              virgin: false,
-              cheques: this.props.allCheques
-            });
-          });
-        }
-      }
-    );
+    this.setState({ remainedChequesToggle: !this.state.remainedChequesToggle });
+    if (this.state.remainedChequesToggle) {
+      this.props.getRemainedCheques(this.props.passingPk).then(() => {
+        this.setState({
+          cheques: this.props.remainedCheques
+        });
+      });
+    } else {
+      this.props.getRemainedCheques(this.props.passingPk).then(() => {
+        this.setState({
+          cheques: this.props.allCheques
+        });
+      });
+    }
   };
 
   createTable = () => {
-    if (this.state.cheques.length !== 0) {
+    if (this.state.cheques.count) {
       return (
         <Table celled className="text-center">
           <Table.Header>
@@ -76,31 +61,30 @@ class FactorsTab extends Component {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            <Table.Row>
-              <Table.Cell className="d-table-border">
-                {this.state.cheques[0].number}
-              </Table.Cell>
-              <Table.Cell>{this.state.cheques[0].bank}</Table.Cell>
-              <Table.Cell className="norm-latin">
-                <span>
-                  {standardTimeToJalaali(this.state.cheques[0].issue_date)}
-                </span>
-              </Table.Cell>
-              <Table.Cell className="norm-latin">
-                <span>
-                  {standardTimeToJalaali(this.state.cheques[0].expiry_date)}
-                </span>
-              </Table.Cell>
-              <Table.Cell className="norm-latin">
-                <span>{digitToComma(this.state.cheques[0].amount)} </span>
-                <span className="yekan">تومان</span>
-              </Table.Cell>
-              <Table.Cell>
-                {this.state.cheques[0].status === "remained"
-                  ? "باقی مانده"
-                  : "بسته شده"}
-              </Table.Cell>
-            </Table.Row>
+            {this.props.getAllCheques &&
+              this.state.cheques.results.map(item => {
+                return (
+                  <Table.Row>
+                    <Table.Cell className="d-table-border">
+                      {item.number}
+                    </Table.Cell>
+                    <Table.Cell>{item.bank}</Table.Cell>
+                    <Table.Cell className="norm-latin">
+                      <span>{standardTimeToJalaali(item.issue_date)}</span>
+                    </Table.Cell>
+                    <Table.Cell className="norm-latin">
+                      <span>{standardTimeToJalaali(item.expiry_date)}</span>
+                    </Table.Cell>
+                    <Table.Cell className="norm-latin">
+                      <span>{digitToComma(item.amount)} </span>
+                      <span className="yekan">تومان</span>
+                    </Table.Cell>
+                    <Table.Cell>
+                      {item.status === "remained" ? "باقی مانده" : "بسته شده"}
+                    </Table.Cell>
+                  </Table.Row>
+                );
+              })}
           </Table.Body>
         </Table>
       );
@@ -119,14 +103,15 @@ class FactorsTab extends Component {
           <span className="us-fm-span">نمایش چک های باقی مانده</span>
         </Segment>
         {this.state.virgin ? <LoadingBar /> : null}
-        {!this.state.virgin && !this.state.cheques.length ? <NotFound /> : null}
-        {this.state.cheques.length ? this.createTable() : null}
+        {!this.state.virgin && !this.state.cheques.count ? <NotFound /> : null}
+        {this.state.cheques.count ? this.createTable() : null}
       </div>
     );
   }
 }
 
 const mapStateToProps = state => {
+  console.log("state", state);
   return {
     allCheques: state.customers.allCheques,
     remainedCheques: state.customers.remainedCheques

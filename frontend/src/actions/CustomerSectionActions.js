@@ -51,8 +51,12 @@ export const deleteCustomer = pk => async () => {
   return response;
 };
 
-export const updateCustomer = pk => async () => {
-  return await putServer(pk);
+export const updateCustomer = (pk, data) => async () => {
+  return await putServer(
+    localStorage.getItem("token"),
+    `/customers/${pk}/`,
+    data
+  );
 };
 
 export const getRemainedBills = pk => async dispatch => {
