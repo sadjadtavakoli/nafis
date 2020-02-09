@@ -60,7 +60,7 @@ class Depository extends React.Component {
               <Button
                 className="yekan"
                 onClick={() => this.openFilter(!this.state.filterOpen)}
-                color={this.state.filterOpen ? "yellow" : "gray"}
+                color={this.state.filterOpen ? "yellow" : "grey"}
                 content="فیلتر"
                 icon="filter"
                 labelPosition="right"
