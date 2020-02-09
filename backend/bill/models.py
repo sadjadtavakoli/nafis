@@ -338,7 +338,7 @@ class Payment(models.Model):
     create_date = models.DateTimeField(blank=True, null=True)
     amount = models.IntegerField()
     type = models.CharField(choices=settings.PAYMENT_TYPES,
-                            max_length=10, default="نقد")
+                            max_length=10, default="cash")
 
 
 class CustomerPayment(Payment):
