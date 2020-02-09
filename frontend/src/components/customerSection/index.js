@@ -102,123 +102,118 @@ class Customers extends Component {
 
   render() {
     return (
-      <React.Fragment>
-        <Container>
-          <Segment stacked className="rtl">
-            <AddCustomerModal
-              open={this.state.open}
-              code={this.state.productID}
-              onClose={this.closeModal}
-            />
-            <Button
-              className="yekan"
-              onClick={this.openModal}
-              color="green"
-              content="افزودن مشتری جدید"
-              icon="add"
-              labelPosition="right"
-            />
-          </Segment>
-          <Table celled className="rtl text-center" columns={3}>
-            <Table.Header className="text-right">
+      <Container>
+        <Segment stacked className="rtl">
+          <AddCustomerModal
+            open={this.state.open}
+            code={this.state.productID}
+            onClose={this.closeModal}
+          />
+          <Button
+            className="yekan"
+            onClick={this.openModal}
+            color="green"
+            content="افزودن مشتری جدید"
+            icon="add"
+            labelPosition="right"
+          />
+        </Segment>
+        <Table celled className="rtl text-center" columns={3}>
+          <Table.Header className="text-right">
+            <Table.Row>
+              <Table.HeaderCell colSpan="3">
+                <Grid>
+                  <Grid.Row className="us-header">
+                    <span className="us-p us-users">مشتریان</span>
+                    <Search
+                      id="us-search"
+                      showNoResults={false}
+                      placeholder="جست و جو..."
+                      className="placeholder-rtl yekan ltr"
+                    />
+                  </Grid.Row>
+                </Grid>
+              </Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+
+          {this.props.usersCustomers &&
+          this.props.usersCustomers.results.length !== 0 ? (
+            <Table.Header>
               <Table.Row>
-                <Table.HeaderCell colSpan="3">
-                  <Grid>
-                    <Grid.Row className="us-header">
-                      <span className="us-p us-users">مشتریان</span>
-                      <Search
-                        id="us-search"
-                        showNoResults={false}
-                        placeholder="جست و جو..."
-                        className="placeholder-rtl yekan ltr"
-                      />
-                    </Grid.Row>
-                  </Grid>
+                <Table.HeaderCell style={{ borderLeft: "1px solid #ddd" }}>
+                  نام و نام خانوادگی
                 </Table.HeaderCell>
+                <Table.HeaderCell>شماره موبایل</Table.HeaderCell>
+                <Table.HeaderCell>عملیات</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
+          ) : null}
 
-            {this.props.usersCustomers &&
-            this.props.usersCustomers.results.length !== 0 ? (
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell style={{ borderLeft: "1px solid #ddd" }}>
-                    نام و نام خانوادگی
-                  </Table.HeaderCell>
-                  <Table.HeaderCell>شماره موبایل</Table.HeaderCell>
-                  <Table.HeaderCell>عملیات</Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
-            ) : null}
-
-            <Table.Body>
-              {this.props.usersCustomers && this.state.customers.length !== 0
-                ? this.state.customers.map(item => {
-                    return (
-                      <Table.Row key={item.pk}>
-                        <Table.Cell style={{ borderLeft: "1px solid #ddd" }}>
-                          <span>{item.first_name}</span>
-                          <span>&nbsp;</span>
-                          <span>{item.last_name}</span>
-                        </Table.Cell>
-                        <Table.Cell className="norm-latin">
-                          <span>{item.phone_number}</span>
-                        </Table.Cell>
-                        <Table.Cell>
+          <Table.Body>
+            {this.props.usersCustomers && this.state.customers.length !== 0
+              ? this.state.customers.map(item => {
+                  return (
+                    <Table.Row key={item.pk}>
+                      <Table.Cell style={{ borderLeft: "1px solid #ddd" }}>
+                        <span>{item.first_name}</span>
+                        <span>&nbsp;</span>
+                        <span>{item.last_name}</span>
+                      </Table.Cell>
+                      <Table.Cell className="norm-latin">
+                        <span>{item.phone_number}</span>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Button
+                          color="teal"
+                          onClick={() => {
+                            this.handleViewClick(item.pk);
+                            history.push(`/customers/customer/${item.pk}/`);
+                          }}
+                        >
+                          <span>ویرایش</span>
+                        </Button>
+                        {isPermit("adminOnly", this.state.job) ? (
                           <Button
-                            color="teal"
+                            color="red"
                             onClick={() => {
-                              this.handleViewClick(item.pk);
-                              history.push(`/customers/customer/${item.pk}/`);
+                              this.deleteCustomer(item.pk);
                             }}
                           >
-                            <span>ویرایش</span>
+                            <span>حذف</span>
                           </Button>
-                          {isPermit("adminOnly", this.state.job) ? (
-                            <Button
-                              color="red"
-                              onClick={() => {
-                                this.deleteCustomer(item.pk);
-                              }}
-                            >
-                              <span>حذف</span>
-                            </Button>
-                          ) : null}
-                        </Table.Cell>
-                      </Table.Row>
-                    );
-                  })
-                : null}
+                        ) : null}
+                      </Table.Cell>
+                    </Table.Row>
+                  );
+                })
+              : null}
 
-              {this.state.loading ? <LoadingBar /> : null}
-              {this.props.usersCustomers &&
-              this.props.usersCustomers.results.length === 0 ? (
-                <NotFound />
-              ) : null}
-            </Table.Body>
-
+            {this.state.loading ? <LoadingBar /> : null}
             {this.props.usersCustomers &&
-            this.props.usersCustomers.count > 25 ? (
-              <Table.Footer>
-                <Table.Row>
-                  <Table.HeaderCell colSpan="3">
-                    <Pagination
-                      className="norm-latin ltr"
-                      defaultActivePage={1}
-                      onPageChange={this.changePage}
-                      firstItem={null}
-                      lastItem={null}
-                      totalPages={Math.ceil(
-                        this.props.usersCustomers.count / 25
-                      )}
-                    />
-                  </Table.HeaderCell>
-                </Table.Row>
-              </Table.Footer>
+            this.props.usersCustomers.results.length === 0 ? (
+              <NotFound />
             ) : null}
-          </Table>
-        </Container>
-      </React.Fragment>
+          </Table.Body>
+
+          {this.props.usersCustomers && this.props.usersCustomers.count > 25 ? (
+            <Table.Footer>
+              <Table.Row>
+                <Table.HeaderCell colSpan="3">
+                  <Pagination
+                    className="norm-latin ltr"
+                    defaultActivePage={1}
+                    onPageChange={this.changePage}
+                    firstItem={null}
+                    lastItem={null}
+                    totalPages={Math.ceil(this.props.usersCustomers.count / 25)}
+                  />
+                </Table.HeaderCell>
+              </Table.Row>
+            </Table.Footer>
+          ) : null}
+        </Table>
+      </Container>
     );
   }
 }

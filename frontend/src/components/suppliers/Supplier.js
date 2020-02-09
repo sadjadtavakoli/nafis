@@ -27,22 +27,13 @@ class SupplierEdit extends Component {
   componentDidMount() {
     this.props.getTheSupplier(this.props.match.params.pk).then(() => {
       this.setState({
-        pk: this.props.match.params.pk
-      });
-    });
-  }
-  componentDidUpdate() {
-    if (
-      this.props.supplier &&
-      this.state.phone_number !== this.props.supplier.phone_number
-    ) {
-      this.setState({
+        pk: this.props.match.params.pk,
         full_name: this.props.supplier.full_name,
         email: this.props.supplier.email,
         phone_number: this.props.supplier.phone_number,
         address: this.props.supplier.address
       });
-    }
+    });
   }
 
   convertStatus = status => {

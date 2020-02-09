@@ -14,9 +14,11 @@ import NotFound from "../utils/notFound";
 import history from "../../history";
 import LoadingBar from "../utils/loadingBar";
 import Supplier from "./Supplier";
+import AddSupplierModal from "./AddSupplierModal";
 
 class Suppliers extends Component {
   state = {
+    open: false,
     totalPageCount: 1,
     activePage: 1,
     allSuppliers: [],
@@ -30,14 +32,10 @@ class Suppliers extends Component {
     this.props
       .getSuppliersAction()
       .then(() => {
-        this.setState(
-          {
-            allSuppliers: this.props.allSuppliers.results
-          },
-          () => {
-            this.setState({ loading: false });
-          }
-        );
+        this.setState({
+          allSuppliers: this.props.allSuppliers.results,
+          loading: false
+        });
       })
       .catch(() => {
         this.setState({ notFound: true, loading: false });
@@ -55,15 +53,20 @@ class Suppliers extends Component {
     });
   };
 
+  onClose = () => {
+    this.setState({ open: false });
+  };
+
   render() {
     return (
       <Container>
+        <AddSupplierModal open={this.state.open} onClose={this.onClose} />
         <Segment stacked className="rtl">
           <Button
             className="yekan"
             onClick={() => this.setState({ open: true })}
             color="green"
-            content="افزودن فاکتور"
+            content="افزودن تامین کننده"
             icon="add"
             labelPosition="right"
           />
@@ -168,7 +171,6 @@ class Suppliers extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log(state);
   return {
     allSuppliers: state.suppliers.suppliers
   };
