@@ -14,7 +14,6 @@ import {
   Pagination,
   Table,
   Search,
-  Grid,
   Button,
   Segment
 } from "semantic-ui-react";
@@ -133,7 +132,6 @@ class Customers extends Component {
               <Table.HeaderCell>عملیات</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
-          ) : null}
           <Table.Body>
             {this.props.usersCustomers && this.state.customers.length !== 0
               ? this.state.customers.map(item => {
