@@ -3,10 +3,12 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Supplier(models.Model):
-    full_name = models.CharField(_('full name'), max_length=60, blank=True)
+    first_name = models.CharField(_('first name'), max_length=30, blank=True, null=True)
+    last_name = models.CharField(_('last name'), max_length=60, blank=True)
     email = models.EmailField(_('email address'), blank=True)
     phone_number = models.CharField(max_length=11, blank=False, null=False)
     address = models.CharField(max_length=200, null=True, blank=True)
+    store = models.CharField(_('store'), max_length=60, blank=True)
 
     @property
     def remained_bills(self):

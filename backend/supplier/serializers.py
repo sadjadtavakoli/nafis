@@ -6,4 +6,4 @@ from supplier.models import Supplier
 class SupplierSerializer(serializers.ModelSerializer):
     class Meta:
         model = Supplier
-        fields = ('pk', 'full_name', 'email', 'phone_number', 'address')
+        fields = ('pk', 'first_name', 'last_name', 'store', 'email', 'phone_number', 'address')
