@@ -134,7 +134,7 @@ class Suppliers extends Component {
                             history.push(`/suppliers/supplier/${item.pk}/`);
                           }}
                         >
-                          <span>مشاهده</span>
+                          <span>مشاهده و ویرایش</span>
                         </Button>
                       </Table.Cell>
                     </Table.Row>
