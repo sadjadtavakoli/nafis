@@ -26,6 +26,7 @@ export const GET_THE_SUPPLIER = "GET_THE_SUPPLIER";
 export const GET_CLASS_TYPES_AND_CITY = "GET_CLASS_TYPES_AND_CITY";
 export const ADD_CUSTOMER = "ADD_CUSTOMER";
 export const REMOVE_ITEM = "REMOVE_ITEM";
+export const ADD_SUPPLIER = "ADD_SUPPLIER";
 
 // kari nadashte bashim
 export const FETCH = types => `FETCH_${types}`;

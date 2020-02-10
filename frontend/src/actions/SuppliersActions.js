@@ -1,4 +1,4 @@
-import { GET_SUPPLIERS, GET_THE_SUPPLIER } from "./types";
+import { GET_SUPPLIERS, GET_THE_SUPPLIER, ADD_SUPPLIER } from "./types";
 import { server, putServer } from "../apis/server";
 
 export const getSuppliersAction = (page = 1) => async dispatch => {
@@ -10,6 +10,14 @@ export const getSuppliersAction = (page = 1) => async dispatch => {
   );
   dispatch({ type: GET_SUPPLIERS, payload: response.data });
   return response;
+};
+
+export const setNewSupplier = data => async dispatch => {
+  const response = await server(localStorage.getItem("token")).post(
+    "/suppliers/",
+    data
+  );
+  dispatch({ type: ADD_SUPPLIER, payload: response.data });
 };
 
 export const getTheSupplier = pk => async dispatch => {

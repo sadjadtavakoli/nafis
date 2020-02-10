@@ -66,7 +66,7 @@ class Suppliers extends Component {
             className="yekan"
             onClick={() => this.setState({ open: true })}
             color="green"
-            content="افزودن تامین کننده"
+            content="افزودن تامین کننده جدید"
             icon="add"
             labelPosition="right"
           />
