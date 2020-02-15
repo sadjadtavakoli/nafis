@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_404_NOT_FOUND
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-
+from django.db.models import Q
 from bill.permissions import LoginRequired
 from bill.serializers import CustomerChequeSerializer, BillSerializer
 from customer.models import Customer, CustomerType, City
@@ -15,7 +15,7 @@ from nafis.views import NafisBase
 
 class CustomersViewSet(NafisBase, ModelViewSet):
     serializer_class = CustomerSerializer
-    permission_classes = (LoginRequired,)
+    # permission_classes = (LoginRequired,)
     queryset = Customer.objects.all()
     non_updaters = ["cashier", "salesperson", "accountant", "storekeeper"]
     non_destroyers = ["cashier", "salesperson", "accountant", "storekeeper"]
@@ -35,6 +35,16 @@ class CustomersViewSet(NafisBase, ModelViewSet):
             return Response(CustomerDetailedSerializer(customer).data)
         except ObjectDoesNotExist:
             return Response({'چنین کاربری یافت نشد.'}, status=HTTP_404_NOT_FOUND)
+
+    @action(methods=['GET'], detail=False, url_path='name')
+    def get_customer_using_name(self, request, **kwargs):
+        name = self.request.query_params.get('name', None)
+        try:
+            customer = Customer.objects.filter(Q(first_name__icontains=name) | Q(last_name__icontains=name))
+            return Response(CustomerDetailedSerializer(customer, many=True).data)
+        except ObjectDoesNotExist:
+            return Response({'چنین کاربری یافت نشد.'}, status=HTTP_404_NOT_FOUND)
+
 
     @action(methods=['GET'], detail=True, url_path="cheques")
     def get_passed_cheques(self, request, **kwargs):
