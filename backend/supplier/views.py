@@ -1,4 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
@@ -17,11 +18,28 @@ from supplier.serializers import SupplierSerializer
 
 class SupplierViewSet(NafisBase, ModelViewSet):
     serializer_class = SupplierSerializer
-    permission_classes = (LoginRequired,)
+    # permission_classes = (LoginRequired,)
     queryset = Supplier.objects.all()
     non_updaters = []
     non_destroyers = []
     pagination_class = PaginationClass
+
+    @action(methods=['get'], detail=False, url_path="search")
+    def get_suppliers(self, request, **kwargs):
+        data = self.request.query_params
+        phone = data.get('phone', None)
+        store = data.get('store', None)
+        name = data.get('name', None)
+        if phone:
+            suppliers = Supplier.objects.filter(Q(phone_number=phone) | Q(mobile_number=phone))
+        elif store:
+            suppliers = Supplier.objects.filter(store__contains=store)
+        elif name:
+            suppliers = Supplier.objects.filter(Q(first_name__contains=name) | Q(last_name__contains=name))
+        else:
+            suppliers = Supplier.objects.all()
+        suppliers = SupplierSerializer(suppliers, many=True)
+        return Response(suppliers.data)
 
     @action(methods=['POST'], detail=True, url_path="add-bill")
     def add_bill(self, request, **kwargs):

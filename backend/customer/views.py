@@ -15,7 +15,7 @@ from nafis.views import NafisBase
 
 class CustomersViewSet(NafisBase, ModelViewSet):
     serializer_class = CustomerSerializer
-    # permission_classes = (LoginRequired,)
+    permission_classes = (LoginRequired,)
     queryset = Customer.objects.all()
     non_updaters = ["cashier", "salesperson", "accountant", "storekeeper"]
     non_destroyers = ["cashier", "salesperson", "accountant", "storekeeper"]
