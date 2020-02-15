@@ -45,7 +45,6 @@ class CustomersViewSet(NafisBase, ModelViewSet):
         except ObjectDoesNotExist:
             return Response({'چنین کاربری یافت نشد.'}, status=HTTP_404_NOT_FOUND)
 
-
     @action(methods=['GET'], detail=True, url_path="cheques")
     def get_passed_cheques(self, request, **kwargs):
         customer = self.get_object()
