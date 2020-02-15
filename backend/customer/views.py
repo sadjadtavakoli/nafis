@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_404_NOT_FOUND
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-
+from django.db.models import Q
 from bill.permissions import LoginRequired
 from bill.serializers import CustomerChequeSerializer, BillSerializer
 from customer.models import Customer, CustomerType, City
@@ -33,6 +33,15 @@ class CustomersViewSet(NafisBase, ModelViewSet):
         try:
             customer = Customer.objects.get(phone_number=phone_number)
             return Response(CustomerDetailedSerializer(customer).data)
+        except ObjectDoesNotExist:
+            return Response({'چنین کاربری یافت نشد.'}, status=HTTP_404_NOT_FOUND)
+
+    @action(methods=['GET'], detail=False, url_path='name')
+    def get_customer_using_name(self, request, **kwargs):
+        name = self.request.query_params.get('name', None)
+        try:
+            customer = Customer.objects.filter(Q(first_name__icontains=name) | Q(last_name__icontains=name))
+            return Response(CustomerDetailedSerializer(customer, many=True).data)
         except ObjectDoesNotExist:
             return Response({'چنین کاربری یافت نشد.'}, status=HTTP_404_NOT_FOUND)
 
