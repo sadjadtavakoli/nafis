@@ -80,7 +80,13 @@ class AddCustomerModal extends Component {
       });
       hasError = true;
     }
-    if (this.state.phone_number.length !== 11) {
+    if (!this.state.phone_number) {
+      this.setState({
+        phone_number_b: true
+      });
+      hasError = true;
+    }
+    if (this.state.phone_number && this.state.phone_number.length !== 11) {
       this.setState({
         phone_number_b: true
       });
