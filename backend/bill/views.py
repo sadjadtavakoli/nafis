@@ -277,8 +277,6 @@ class BillsViewSet(NafisBase, ModelViewSet):
     def chart_data(self, request, **kwargs):
         start_date = self.request.query_params.get('start_date', None)
         end_date = self.request.query_params.get('end_date', None)
-        print(start_date)
-        print(end_date)
         result = dict()
         result['sells_per_design'] = Bill.sells_per_design(start_date, end_date)
         result['sells_per_design_color'] = Bill.sells_per_design_color(start_date, end_date)
@@ -435,27 +433,30 @@ class SupplierBillsViewSet(NafisBase, ModelViewSet):
         data = SupplierBillSerializer(SupplierBill.objects.get(pk=bill.pk)).data
         return Response(data, status=status.HTTP_201_CREATED)
 
-    def create(self, request, *args, **kwargs):
-        data = self.request.data
-        items = data.get('items')
-        supplier = data.get('supplier')
-        currency_price = data.get('currency_price', 1)
-        currency = data.get('currency', 'ریال')
-        bill = SupplierBill.objects.create(supplier=supplier, currency_price=currency_price, currency=currency)
-
-        for item in items:
-            product_code = item['product']
-            try:
-                product = Product.objects.get(code=product_code)
-            except ObjectDoesNotExist:
-                raise ValidationError('محصولی با کد‌ {} وجود ندارد.'.format(product_code))
-            amount = item['amount']
-            raw_price = item.get('price', 0)
-            SupplierBillItem.objects.create(product=product, amount=amount, bill=bill, raw_price=raw_price)
-
-        serializer = self.get_serializer(bill)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    # def create(self, request, *args, **kwargs):
+    #     data = self.request.data
+    #     items = data.get('items')
+    #     supplier = data.get('supplier')
+    #     bill_code = data.get('bill_code')
+    #     currency_price = data.get('currency_price', 1)
+    #     currency = data.get('currency', 'ریال')
+    #
+    #     bill = SupplierBill.objects.create(supplier=supplier, currency_price=currency_price, currency=currency,
+    #                                        bill_code=bill_code)
+    #
+    #     for item in items:
+    #         product_code = item['product']
+    #         try:
+    #             product = Product.objects.get(code=product_code)
+    #         except ObjectDoesNotExist:
+    #             raise ValidationError('محصولی با کد‌ {} وجود ندارد.'.format(product_code))
+    #         amount = item['amount']
+    #         raw_price = item.get('price', 0)
+    #         SupplierBillItem.objects.create(product=product, amount=amount, bill=bill, raw_price=raw_price)
+    #
+    #     serializer = self.get_serializer(bill)
+    #     headers = self.get_success_headers(serializer.data)
+    #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class SupplierBillItemViewSet(NafisBase, ModelViewSet):
