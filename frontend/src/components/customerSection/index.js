@@ -238,7 +238,6 @@ class Customers extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log("state", state.customers);
   return {
     usersCustomers: state.customers.usersCustomers,
     newCustomer: state.customers.newCustomer

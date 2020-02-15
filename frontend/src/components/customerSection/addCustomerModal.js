@@ -145,12 +145,27 @@ class AddCustomerModal extends Component {
             <Message className="rtl text-right" color="red">
               <p>فیلد های قرمز را تصحیح کنید.</p>
             </Message>
-          ) : null}
+          ) : (
+            <Message className="rtl text-right" color="teal">
+              <p>
+                پر کردن فیلد هایی که با علامت{" "}
+                <span style={{ fontWeight: "bold", color: "red" }}>*</span> مشخص
+                شده اند الزامی است.
+              </p>
+            </Message>
+          )}
           <Form className="rtl">
             <Form.Group unstackable widths={2}>
               <Form.Input
                 className="ltr placeholder-rtl text-right"
-                label="نام"
+                label={
+                  <div style={{ marginBottom: "4px", direction: "rtl" }}>
+                    <span style={{ fontWeight: "bold", margin: "0 0 4px" }}>
+                      نام
+                    </span>
+                    <span style={{ color: "red", fontWeight: "bold" }}> *</span>
+                  </div>
+                }
                 onChange={e => this.inputChange(e, "first_name")}
                 onSelect={() => this.inputSelect("first_name_b")}
                 placeholder="نام"
@@ -159,7 +174,14 @@ class AddCustomerModal extends Component {
               <Form.Input
                 className="ltr placeholder-rtl text-right"
                 placeholder="نام خانوادگی"
-                label="نام خانوادگی"
+                label={
+                  <div style={{ marginBottom: "4px", direction: "rtl" }}>
+                    <span style={{ fontWeight: "bold", margin: "0 0 4px" }}>
+                      نام خانوادگی
+                    </span>
+                    <span style={{ color: "red", fontWeight: "bold" }}> *</span>
+                  </div>
+                }
                 onChange={e => this.inputChange(e, "last_name")}
                 onSelect={() => this.inputSelect("last_name_b")}
                 error={this.state.last_name_b}
@@ -168,7 +190,14 @@ class AddCustomerModal extends Component {
             <Form.Group unstackable widths={2}>
               <Form.Input
                 className="ltr placeholder-rtl"
-                label="ایمیل"
+                label={
+                  <div style={{ marginBottom: "4px", direction: "rtl" }}>
+                    <span style={{ fontWeight: "bold", margin: "0 0 4px" }}>
+                      ایمیل
+                    </span>
+                    <span style={{ color: "red", fontWeight: "bold" }}> *</span>
+                  </div>
+                }
                 onChange={e => this.inputChange(e, "email")}
                 onSelect={() => this.inputSelect("email_b")}
                 placeholder="آدرس ایمیل"
@@ -177,7 +206,14 @@ class AddCustomerModal extends Component {
               <Form.Input
                 className="rtl placeholder-rtl text-right"
                 placeholder="شماره تلفن"
-                label="تلفن"
+                label={
+                  <div style={{ marginBottom: "4px", direction: "rtl" }}>
+                    <span style={{ fontWeight: "bold", margin: "0 0 4px" }}>
+                      تلفن
+                    </span>
+                    <span style={{ color: "red", fontWeight: "bold" }}> *</span>
+                  </div>
+                }
                 type="number"
                 onChange={e => this.inputChange(e, "phone_number")}
                 onSelect={() => this.inputSelect("phone_number_b")}
@@ -219,7 +255,14 @@ class AddCustomerModal extends Component {
               <Form.Input
                 className="rtl placeholder-rtl text-right"
                 type="number"
-                label="امتیاز"
+                label={
+                  <div style={{ marginBottom: "4px", direction: "rtl" }}>
+                    <span style={{ fontWeight: "bold", margin: "0 0 4px" }}>
+                      امتیاز
+                    </span>
+                    <span style={{ color: "red", fontWeight: "bold" }}> *</span>
+                  </div>
+                }
                 onChange={e => this.inputChange(e, "points")}
                 onSelect={() => this.inputSelect("points_b")}
                 error={this.state.points_b}
