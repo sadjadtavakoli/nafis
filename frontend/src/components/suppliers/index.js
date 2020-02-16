@@ -1,14 +1,24 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { getSuppliersAction } from "../../actions/SuppliersActions";
-import { Table, Grid, Search, Button, Pagination } from "semantic-ui-react";
+import {
+  Table,
+  Grid,
+  Search,
+  Button,
+  Pagination,
+  Container,
+  Segment
+} from "semantic-ui-react";
 import NotFound from "../utils/notFound";
 import history from "../../history";
 import LoadingBar from "../utils/loadingBar";
 import Supplier from "./Supplier";
+import AddSupplierModal from "./AddSupplierModal";
 
 class Suppliers extends Component {
   state = {
+    open: false,
     totalPageCount: 1,
     activePage: 1,
     allSuppliers: [],
@@ -22,14 +32,10 @@ class Suppliers extends Component {
     this.props
       .getSuppliersAction()
       .then(() => {
-        this.setState(
-          {
-            allSuppliers: this.props.allSuppliers.results
-          },
-          () => {
-            this.setState({ loading: false });
-          }
-        );
+        this.setState({
+          allSuppliers: this.props.allSuppliers.results,
+          loading: false
+        });
       })
       .catch(() => {
         this.setState({ notFound: true, loading: false });
@@ -47,9 +53,30 @@ class Suppliers extends Component {
     });
   };
 
+  onClose = () => {
+    this.setState({ open: false });
+  };
+
   render() {
     return (
-      <div>
+      <Container>
+        <AddSupplierModal open={this.state.open} onClose={this.onClose} />
+        <Segment stacked className="rtl">
+          <Button
+            className="yekan"
+            onClick={() => this.setState({ open: true })}
+            color="green"
+            content="افزودن تامین کننده جدید"
+            icon="add"
+            labelPosition="right"
+          />
+          <Button
+            icon="home"
+            color="teal"
+            onClick={() => history.push("/")}
+            style={{ float: "left" }}
+          />
+        </Segment>
         <Table celled className="rtl text-center" columns={5}>
           <Table.Header className="text-right">
             <Table.Row>
@@ -90,7 +117,7 @@ class Suppliers extends Component {
                       <Table.Cell style={{ borderLeft: "1px solid #ddd" }}>
                         {item.full_name}
                       </Table.Cell>
-                      <Table.Cell>
+                      <Table.Cell className="norm-latin">
                         <span>{item.email}</span>
                       </Table.Cell>
                       <Table.Cell className="norm-latin">
@@ -107,7 +134,7 @@ class Suppliers extends Component {
                             history.push(`/suppliers/supplier/${item.pk}/`);
                           }}
                         >
-                          <span>مشاهده</span>
+                          <span>مشاهده و ویرایش</span>
                         </Button>
                       </Table.Cell>
                     </Table.Row>
@@ -138,7 +165,7 @@ class Suppliers extends Component {
           ) : null}
         </Table>
         {this.state.viewButtonClick ? <Supplier /> : null}
-      </div>
+      </Container>
     );
   }
 }
