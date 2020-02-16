@@ -1,59 +1,55 @@
 import React from "react";
 // import animejs from "animejs";
 import { connect } from "react-redux";
-import {
-  Icon,
-  Menu,
-  Segment,
-  Sidebar,
-  Button
-} from "semantic-ui-react";
+import { Icon, Menu, Segment, Sidebar, Button } from "semantic-ui-react";
 import history from "../../history";
 import { logOut } from "../../actions/LoginActions";
 import { isPermit } from "../mainPage/permission";
 class SideBar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
-  }
-  componentWillReceiveProps() {
-    this.setJob();
-  }
-  componentDidMount() {
-    this.updateWindowDimensions();
-    window.addEventListener("resize", this.updateWindowDimensions);
-    this.setJob();
-  }
-  setJob = () => {
-    this.setState({ job: localStorage.getItem("type") });
-  };
-  componentWillUnmount() {
-    window.removeEventListener("resize", this.updateWindowDimensions);
-  }
-
-  updateWindowDimensions() {
-    this.setState({ height: window.innerHeight });
-  }
   state = {
     visible: false,
     userData: JSON.parse(localStorage.getItem("user")),
     height: 0
   };
 
+  componentDidMount() {
+    this.updateWindowDimensions();
+    window.addEventListener("resize", this.updateWindowDimensions);
+    this.setJob();
+    console.log("user", JSON.parse(localStorage.getItem("user")));
+  }
+
+  componentWillReceiveProps() {
+    this.setJob();
+  }
+
+  setJob = () => {
+    this.setState({ job: localStorage.getItem("type") });
+  };
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateWindowDimensions);
+  }
+
+  updateWindowDimensions = () => {
+    this.setState({ height: window.innerHeight });
+  };
+
   logOut = () => {
     this.props.logOut();
   };
+
   goTo = page => {
     history.push(page);
     this.setState({ visible: false });
   };
+
   setVisible = visible => {
     this.setState({ visible });
   };
+
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
-  componentWillReceiveProps(newProps) {
-    // console.log('new props in sidebar',newProps)
-  }
+
   render() {
     return (
       <div id="sidebar">
@@ -183,7 +179,6 @@ class SideBar extends React.Component {
 }
 
 const mapStateToProps = state => {
-  // console.log(22,state)
   return {
     currentUser: state.auth.currentUser
       ? state.auth.currentUser
@@ -192,9 +187,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  { logOut }
-  //   mapStateToProps,
-  //   { initReceipt,navBarDisplay }
-)(SideBar);
+export default connect(mapStateToProps, { logOut })(SideBar);
