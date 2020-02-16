@@ -106,11 +106,11 @@ class Bill(models.Model):
         return self.items.count()
 
     @staticmethod
-    def sells_per_design_color(start_date, end_date):
+    def sells_per_design_color(start_date, end_date, design_colors, separation):
         result = dict()
         query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
                                         bill__status__in=["done", "remained"], rejected=False)
-        for design_color in set(Color.objects.all().values_list("name", flat=True)):
+        for design_color in set(Color.objects.filter(pk__in=design_colors).values_list("name", flat=True)):
             bill_items = query.filter(product__design_color__name=design_color)
             profit = 0
             price = 0
@@ -123,11 +123,11 @@ class Bill(models.Model):
         return result
 
     @staticmethod
-    def sells_per_bg_color(start_date, end_date):
+    def sells_per_bg_color(start_date, end_date, bg_colors, separation):
         result = dict()
         query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
                                         bill__status__in=["done", "remained"], rejected=False)
-        for bg_color in set(Color.objects.all().values_list("name", flat=True)):
+        for bg_color in set(Color.objects.filter(pk__in=bg_colors).values_list("name", flat=True)):
             bill_items = query.filter(product__background_color__name=bg_color)
             profit = 0
             price = 0
@@ -140,11 +140,11 @@ class Bill(models.Model):
         return result
 
     @staticmethod
-    def sells_per_f_type(start_date, end_date):
+    def sells_per_f_type(start_date, end_date, f_types, separation):
         result = dict()
         query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
                                         bill__status__in=["done", "remained"], rejected=False)
-        for f_type in FType.objects.all():
+        for f_type in FType.objects.filter(pk__in=f_types):
             bill_items = query.filter(product__f_type=f_type)
             profit = 0
             price = 0
@@ -157,11 +157,11 @@ class Bill(models.Model):
         return result
 
     @staticmethod
-    def sells_per_material(start_date, end_date):
+    def sells_per_material(start_date, end_date, materials, separation):
         result = dict()
         query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
                                         bill__status__in=["done", "remained"], rejected=False)
-        for material in Material.objects.all():
+        for material in Material.objects.filter(pk__in=materials):
             bill_items = query.filter(product__material=material)
             profit = 0
             price = 0
@@ -174,11 +174,11 @@ class Bill(models.Model):
         return result
 
     @staticmethod
-    def sells_per_design(start_date, end_date):
+    def sells_per_design(start_date, end_date, designs, separation):
         result = dict()
         query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
                                         bill__status__in=["done", "remained"], rejected=False)
-        for design in Design.objects.all():
+        for design in Design.objects.filter(pk__in=designs):
             bill_items = query.filter(product__design=design)
             profit = 0
             price = 0

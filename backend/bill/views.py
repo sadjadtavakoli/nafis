@@ -273,18 +273,35 @@ class BillsViewSet(NafisBase, ModelViewSet):
         data['bills_with_reminded_status'] = bills_with_reminded_status
         return Response(data)
 
+    def get_filter_kwargs(self):
+        data = self.request.query_params
+        data = {k: (data.getlist(k) if k.endswith('[]') else data.get(k))
+                for k in data}
+        return data
+
     @action(methods=["GET"], detail=False, url_path="charts")
     def chart_data(self, request, **kwargs):
         start_date = self.request.query_params.get('start_date', None)
         end_date = self.request.query_params.get('end_date', None)
+        separation = self.request.query_params.get('separation', None)
+        data = self.get_filter_kwargs()
+        bg_colors = data.get('bg_color[]', None)
+        design_colors = data.get('design_color[]', None)
+        designs = data.get('design[]', None)
+        f_types = data.get('f_type[]', None)
+        materials = data.get('material[]', None)
         result = dict()
-        result['sells_per_design'] = Bill.sells_per_design(start_date, end_date)
-        result['sells_per_design_color'] = Bill.sells_per_design_color(start_date, end_date)
-        result['sells_per_bg_color'] = Bill.sells_per_bg_color(start_date, end_date)
-        result['sells_per_f_type'] = Bill.sells_per_f_type(start_date, end_date)
-        result['sells_per_material'] = Bill.sells_per_material(start_date, end_date)
-        result['sells_per_customer_age'] = Bill.profit_per_customer_age(start_date, end_date)
-        result['sells_per_customer_type'] = Bill.profit_per_customer_type(start_date, end_date)
+
+        if bg_colors is not None and len(bg_colors):
+            result['sells_per_bg_color'] = Bill.sells_per_bg_color(start_date, end_date, bg_colors, separation)
+        if design_colors is not None and len(design_colors):
+            result['sells_per_design_color'] = Bill.sells_per_design_color(start_date, end_date, design_colors, separation)
+        if designs is not None and len(designs):
+            result['sells_per_design'] = Bill.sells_per_design(start_date, end_date, designs, separation)
+        if f_types is not None and len(f_types):
+            result['sells_per_f_type'] = Bill.sells_per_f_type(start_date, end_date, f_types, separation)
+        if materials is not None and len(materials):
+            result['sells_per_material'] = Bill.sells_per_material(start_date, end_date, materials, separation)
         return Response(result)
 
 
@@ -387,7 +404,7 @@ class CustomerPaymentViewSet(NafisBase, ModelViewSet):
 
 class SupplierBillsViewSet(NafisBase, ModelViewSet):
     serializer_class = SupplierBillSerializer
-    # permission_classes = (LoginRequired,)
+    permission_classes = (LoginRequired,)
     queryset = SupplierBill.objects.all().order_by('-pk')
     non_updaters = ['cashier', 'salesperson', 'storekeeper']
     non_destroyers = ['cashier', 'salesperson', 'storekeeper']
