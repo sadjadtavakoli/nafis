@@ -1,14 +1,16 @@
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.status import HTTP_404_NOT_FOUND
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-from django.db.models import Q
+
 from bill.permissions import LoginRequired
 from bill.serializers import CustomerChequeSerializer, BillSerializer
 from customer.models import Customer, CustomerType, City
-from customer.serializers import CustomerSerializer, CustomerTypeSerializer, CustomerDetailedSerializer, CitySerializer
+from customer.serializers import CustomerSerializer, CustomerDetailedSerializer, CustomerTypeDropDownSerializer, \
+    CityDropDownSerializer
 from nafis.paginations import PaginationClass
 from nafis.views import NafisBase
 
@@ -95,7 +97,6 @@ class CustomersViewSet(NafisBase, ModelViewSet):
 
 class GetCustomerFieldsApiView(APIView):
     def get(self, request, **kwargs):
-        response = {}
-        response['customerTypes'] = CustomerTypeSerializer(CustomerType.objects.all(), many=True).data
-        response['cities'] = CitySerializer(City.objects.all(), many=True).data
+        response = {'customerTypes': CustomerTypeDropDownSerializer(CustomerType.objects.all(), many=True).data,
+                    'cities': CityDropDownSerializer(City.objects.all(), many=True).data}
         return Response(response)
