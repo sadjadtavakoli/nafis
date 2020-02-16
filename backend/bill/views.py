@@ -53,13 +53,12 @@ class BillsViewSet(NafisBase, ModelViewSet):
     def close_all(self, request):
         for bill in Bill.objects.filter(status="active"):
             bill.check_status()
-            bill.close_date = timezone.now()
             try:
                 staff = Staff.objects.get(username=request.user.username)
                 bill.closande = staff
+                bill.save()
             except ObjectDoesNotExist:
                 pass
-            bill.save()
             if not (bill.items_special_discount or bill.buyer_special_discount):
                 bill.buyer.points += int(bill.final_price) * int(Point.objects.first().amount) / 100
                 bill.buyer.save()
@@ -70,13 +69,12 @@ class BillsViewSet(NafisBase, ModelViewSet):
         instance = self.get_object()
         if instance.status == "active":
             instance.check_status()
-            instance.close_date = timezone.now()
             try:
                 staff = Staff.objects.get(username=request.user.username)
                 instance.closande = staff
+                instance.save()
             except ObjectDoesNotExist:
                 pass
-            instance.save()
             send_message = self.request.data.get('send_message', True)
             if send_message:
                 try:
