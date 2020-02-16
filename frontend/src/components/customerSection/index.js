@@ -30,18 +30,31 @@ class Customers extends Component {
   };
 
   componentDidMount() {
-    this.props.getCustomerUsers(this.state.activePage).then(() => {
-      this.setState(
-        {
-          customers: this.props.usersCustomers.results
-        },
-        () => {
-          this.setState({ loading: false });
-        }
-      );
-    });
+    this.getCustomers();
     this.setJob();
   }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.newCustomer &&
+      prevProps.newCustomer.pk !== this.props.newCustomer.pk
+    ) {
+      this.getCustomers(this.state.activePage);
+    }
+  }
+
+  getCustomers = () => {
+    this.props.getCustomerUsers(this.state.activePage).then(() => {
+      this.setState({
+        customers: this.props.usersCustomers.results,
+        loading: false
+      });
+    });
+  };
+
+  setJob = () => {
+    this.setState({ job: localStorage.getItem("type") });
+  };
 
   changePage = (_, { activePage }) => {
     this.setState({ activePage: activePage }, () => {
@@ -56,10 +69,6 @@ class Customers extends Component {
         );
       });
     });
-  };
-
-  setJob = () => {
-    this.setState({ job: localStorage.getItem("type") });
   };
 
   deleteCustomer = pk => {
@@ -201,7 +210,10 @@ class Customers extends Component {
 
 const mapStateToProps = state => {
   return {
-    usersCustomers: state.customers.usersCustomers
+    usersCustomers: state.customers.usersCustomers,
+    newCustomer: state.customers.newCustomer
+      ? state.customers.newCustomer.pk
+      : { pk: 0 }
   };
 };
 
