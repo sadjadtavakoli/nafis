@@ -27,6 +27,7 @@ class Bill(models.Model):
             self.status = 'remained'
         else:
             self.status = 'done'
+        self.close_date = timezone.now()
         self.save()
 
     @property
