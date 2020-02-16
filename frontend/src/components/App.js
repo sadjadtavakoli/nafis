@@ -18,7 +18,7 @@ import Customers from "./customerSection";
 import CustomerPage from "./customerSection/CustomerPage";
 import Suppliers from "./suppliers";
 import Supplier from "./suppliers/Supplier";
-import depositoryEdit from "./depository/depositoryEdit";
+import DepositoryEdit from "./depository/depositoryEdit";
 
 const App = ({ token }) => {
   return (
@@ -27,11 +27,11 @@ const App = ({ token }) => {
         <Router history={history}>
           <SideBar>
             <Route path="/" exact component={mainPage} />
-            <Route path="/sale" exact component={Sale} />
-            <Route path="/depository" exact component={Depository} />
-            <Route path="/cashregister" exact component={CashRegister} />
+            <Route path="/sale/" exact component={Sale} />
+            <Route path="/depository/" exact component={Depository} />
+            <Route path="/cashregister/" exact component={CashRegister} />
             <Route
-              path="/factor/:id/:print"
+              path="/factor/:id/:print/"
               exact
               component={PrintableFactor}
             />
@@ -48,7 +48,7 @@ const App = ({ token }) => {
             <Route
               path="/depository/depository-edit/:code/:pk/"
               exact
-              component={depositoryEdit}
+              component={DepositoryEdit}
             />
           </SideBar>
         </Router>
