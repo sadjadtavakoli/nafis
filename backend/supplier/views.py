@@ -18,7 +18,7 @@ from supplier.serializers import SupplierSerializer
 
 class SupplierViewSet(NafisBase, ModelViewSet):
     serializer_class = SupplierSerializer
-    # permission_classes = (LoginRequired,)
+    permission_classes = (LoginRequired,)
     queryset = Supplier.objects.all()
     non_updaters = []
     non_destroyers = []
