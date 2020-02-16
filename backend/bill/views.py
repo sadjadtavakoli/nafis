@@ -124,9 +124,6 @@ class BillsViewSet(NafisBase, ModelViewSet):
         instance = self.get_object()
         if instance.status == "active":
             instance.check_status()
-            print(timezone.now())
-            instance.close_date = timezone.now()
-            instance.save()
             send_message = self.request.data.get('send_message', True)
             if send_message:
                 try:
@@ -358,7 +355,6 @@ class CustomerPaymentViewSet(NafisBase, ModelViewSet):
         if self.get_object().type == "cheque":
             cheque = self.get_object().cheque
         response = super(CustomerPaymentViewSet, self).destroy(request, *args, **kwargs)
-        bill.check_status()
         if cheque:
             cheque.delete()
         return response
