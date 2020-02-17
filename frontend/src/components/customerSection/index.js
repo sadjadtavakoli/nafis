@@ -13,7 +13,6 @@ import {
   Container,
   Pagination,
   Table,
-  Search,
   Button,
   Segment
 } from "semantic-ui-react";

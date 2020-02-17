@@ -251,6 +251,7 @@ class ProductTable extends React.Component {
 }
 
 const mapStateToProps = state => {
+  console.log(state.depository);
   return {
     productsList: state.depository.productsList
   };
