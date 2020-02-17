@@ -6,6 +6,7 @@ import {
   updateCustomer
 } from "../../actions/CustomerSectionActions";
 import { toastr } from "react-redux-toastr";
+import history from "../../history";
 
 class EditTab extends Component {
   state = {
@@ -207,9 +208,16 @@ class EditTab extends Component {
             onClick={this.handleSubmit}
             disabled={this.state.anyChange ? false : true}
             color={this.state.hasError ? "red" : "green"}
-          >
-            اعمال
-          </Button>
+            content="اعمال"
+            className="yekan"
+          />
+          <Button
+            className="yekan"
+            content="بازگشت"
+            onClick={() => {
+              history.push("/customers/");
+            }}
+          />
         </Form>
       </div>
     );
