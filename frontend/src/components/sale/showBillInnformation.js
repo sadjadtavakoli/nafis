@@ -41,15 +41,7 @@ const INITIAL_STATE = {
     used_points: false
   },
   customerData: {},
-  editedData: {
-    name: null,
-    code: null,
-    selling_price: null,
-    amount: null,
-    discount: null,
-    end_of_roll_amount: null,
-    end_of_roll: null
-  },
+  editedData: {},
   notFound: null,
   productData: {}
 };
@@ -259,6 +251,7 @@ class ShowBillInformation extends React.Component {
     }
     this.setState({
       editedData: {
+        ...this.state.editedData,
         [status]: e.target.value
       }
     });
