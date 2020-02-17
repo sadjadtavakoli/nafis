@@ -84,12 +84,18 @@ class DepositoryEdit extends Component {
     return status.concat("_Options");
   };
 
-  handleProductChange = (status, e) => {
-    this.setState({
-      ...this.state,
-      [status]: e.target.value,
-      changed: true
-    });
+  handleProductChange = (_, { name, value }) => {
+    console.log("name", name);
+    console.log("value", value);
+    this.setState(
+      {
+        [name]: value,
+        changed: true
+      },
+      () => {
+        console.log("background color", this.state.background_color);
+      }
+    );
   };
 
   selectChange = (_, { status, value }) => {
@@ -132,7 +138,8 @@ class DepositoryEdit extends Component {
         })
         .catch(() => {
           toastr.error(
-            "عملیات ویرایش موفقیت آمیز نبود. لطفا با تیم پشتیبانی در تماس باشید"
+            "عملیات ویرایش موفقیت آمیز نبود.",
+            " لطفا با تیم پشتیبانی در تماس باشید"
           );
         });
     }
@@ -172,16 +179,15 @@ class DepositoryEdit extends Component {
   createSelect = (status, title) => {
     return (
       <Form.Select
-        style={{ "margin-top": "5px" }}
-        value={this.state[status]}
         fluid
         selection
         search
+        style={{ "margin-top": "5px" }}
+        value={this.state[status]}
+        name={status}
         label={<span className="us-em-span">{title}</span>}
         options={this.props.productFields && this.props.productFields[status]}
-        onChange={e => this.handleProductChange(status, e)}
-        onSelect={() => this.handleSelect(status)}
-        onBlur={() => this.handleBlur(status)}
+        onChange={this.handleProductChange}
       />
     );
   };
