@@ -34,8 +34,6 @@ class BillTable extends React.Component {
     ) {
       this.getActiveBill(this.state.activePage);
     }
-    console.log("newProps", newProps.newBillData);
-    console.log("props", this.props.newBillData);
   }
 
   getActiveBill = (page = 1) => {
@@ -244,7 +242,6 @@ class BillTable extends React.Component {
 }
 
 const mapStateToProps = state => {
-  console.log("state", state.sale);
   return {
     activeBill: state.sale.activeBill,
     newBillData: !state.sale.newBillData ? { pk: 0 } : state.sale.newBillData

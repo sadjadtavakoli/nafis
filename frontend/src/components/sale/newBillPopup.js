@@ -47,7 +47,6 @@ class NewBillPopup extends React.Component {
   };
 
   submitForm = () => {
-    console.log("submitForm", this.props.pk);
     if (
       String(this.state.product).length < 1 ||
       String(this.state.amount).length < 1 ||

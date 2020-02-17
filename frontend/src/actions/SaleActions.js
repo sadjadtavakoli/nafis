@@ -32,7 +32,7 @@ export const addNewItem = (pk, data) => async dispatch => {
 
 export const updateBillItem = (pk, data) => async dispatch => {
   return await server(localStorage.getItem("token")).patch(
-    `/bill-items/`,
+    `/bill-items/${pk}/`,
     data
   );
 };

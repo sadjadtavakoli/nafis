@@ -51,7 +51,7 @@ const INITIAL_STATE = {
     end_of_roll: ""
   },
   notFound: null,
-  disabled: true,
+  disabled: null,
   productData: {}
 };
 
@@ -114,7 +114,7 @@ class ShowInformationModal extends React.Component {
     });
   };
 
-  submitChanges = () => {
+  submitChanges = pk => {
     let prepareData = {
       name: this.state.editedData.name,
       code: this.state.editedData.code,
@@ -124,7 +124,7 @@ class ShowInformationModal extends React.Component {
       end_of_roll_amount: this.state.editedData.end_of_roll_amount,
       end_of_roll: this.state.editedData.end_of_roll
     };
-    this.props.updateBillItem(this.state.data.pk, prepareData).then(() => {
+    this.props.updateBillItem(pk, prepareData).then(() => {
       this.setState({
         editting: "",
         editMode: false
@@ -172,15 +172,10 @@ class ShowInformationModal extends React.Component {
       used_points: Number(this.state.used_points)
     };
     this.props.updateBill(this.state.data.pk, prepareData).then(() => {
-      this.setState(
-        {
-          discount: Number(this.state.discount),
-          used_points: Number(this.state.used_points)
-        },
-        () => {
-          console.log("used points", this.state.used_points);
-        }
-      );
+      this.setState({
+        discount: Number(this.state.discount),
+        used_points: Number(this.state.used_points)
+      });
       this.props.refetch();
     });
     this.setState({
@@ -263,8 +258,7 @@ class ShowInformationModal extends React.Component {
     }
     this.setState({
       editedData: {
-        [status]: e.target.value,
-        disabled: false
+        [status]: e.target.value
       }
     });
   };
@@ -317,6 +311,7 @@ class ShowInformationModal extends React.Component {
   };
 
   itemsRender = (item, index) => {
+    console.log("item", item);
     return (
       <Card.Group key={index} id="s-showInfromationModel">
         <Card fluid>
@@ -427,7 +422,7 @@ class ShowInformationModal extends React.Component {
                 />
                 <Form.Input
                   className="ltr placeholder-rtl"
-                  readOnly={this.state.editting !== index ? true : false}
+                  readOnly
                   fluid
                   defaultValue={priceToPersian(item.product.selling_price)}
                   onChange={e => this.handleChange(e, "selling_price")}
@@ -473,7 +468,7 @@ class ShowInformationModal extends React.Component {
                 <React.Fragment>
                   <Button
                     color="green"
-                    onClick={this.submitChanges}
+                    onClick={() => this.submitChanges(item.pk)}
                     disabled={this.state.disabled}
                   >
                     <span>اعمال</span>
