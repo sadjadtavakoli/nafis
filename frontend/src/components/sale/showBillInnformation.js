@@ -54,7 +54,7 @@ const INITIAL_STATE = {
   productData: {}
 };
 
-class ShowInformationModal extends React.Component {
+class ShowBillInformation extends React.Component {
   state = INITIAL_STATE;
 
   componentDidMount() {
@@ -712,4 +712,4 @@ export default connect(mapStateToProps, {
   updateBill,
   updateBillItem,
   getProductsByCode
-})(ShowInformationModal);
+})(ShowBillInformation);
