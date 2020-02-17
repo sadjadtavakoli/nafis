@@ -24,11 +24,11 @@ class NewBillPopup extends React.Component {
     notFound: NaN,
     productData: {}
   };
+
   changeInput = (event, inputName) => {
     let value = Number(event.target.value);
     this.setState({ [inputName]: value }, () => {
       if (inputName === "product") {
-        console.log(this.state.product);
         this.handleSearchChange(this.state.product);
       }
       if (this.state.amount <= Number(this.state.productData.stock_amount)) {
@@ -38,12 +38,14 @@ class NewBillPopup extends React.Component {
       }
     });
   };
+
   toggleIsEndOfRoll = () => {
     this.setState(prevState => ({
       end_of_roll: !prevState.end_of_roll,
       end_of_roll_amount: ""
     }));
   };
+
   submitForm = () => {
     console.log("submitForm", this.props.pk);
     if (
@@ -77,39 +79,34 @@ class NewBillPopup extends React.Component {
       }
     }
   };
+
   handleSearchChange = value => {
     this.setState({ product: Number(value) }, () => {
-      setTimeout(() => {
-        if (
-          String(this.state.product).length < 1 ||
-          String(this.state.product) === "0"
-        ) {
-          this.setState({ disabled: true, notFound: NaN });
-        } else {
-          this.props
-            .getProductsByCode(this.state.product)
-            .then(() => {
-              this.setState(
-                {
-                  notFound: false,
-                  productData: this.props.productsList
-                },
-                () => {
-                  console.log("this.state.productData", this.state.productData);
-                }
-              );
-            })
-            .catch(() => {
-              this.setState({
-                notFound: true,
-                disabled: true,
-                productData: {}
-              });
+      if (
+        String(this.state.product).length < 1 ||
+        String(this.state.product) === "0"
+      ) {
+        this.setState({ disabled: true, notFound: NaN });
+      } else {
+        this.props
+          .getProductsByCode(this.state.product)
+          .then(() => {
+            this.setState({
+              notFound: false,
+              productData: this.props.productsList
             });
-        }
-      }, 300);
+          })
+          .catch(() => {
+            this.setState({
+              notFound: true,
+              disabled: true,
+              productData: {}
+            });
+          });
+      }
     });
   };
+
   render() {
     return (
       <Card className="rtl" fluid key={0}>
@@ -167,7 +164,6 @@ class NewBillPopup extends React.Component {
                 fluid
                 label="کد محصول"
                 onChange={e => this.changeInput(e, "product")}
-                placeholder=""
               />
               <Form.Input
                 className="ltr placeholder-rtl"
@@ -175,7 +171,6 @@ class NewBillPopup extends React.Component {
                 fluid
                 label="مقدار(متر)"
                 onChange={e => this.changeInput(e, "amount")}
-                placeholder=""
               />
               <Form.Input
                 className="ltr placeholder-rtl"
@@ -183,7 +178,6 @@ class NewBillPopup extends React.Component {
                 fluid
                 label="تخفیف"
                 onChange={e => this.changeInput(e, "discount")}
-                placeholder=""
               />
             </Form.Group>
             <Form.Group widths="equal">

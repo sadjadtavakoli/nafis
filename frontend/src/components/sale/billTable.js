@@ -173,7 +173,7 @@ class BillTable extends React.Component {
                       labelPosition="right"
                       color="yellow"
                     >
-                      <span className="yekan">مشاهده</span>
+                      <span className="yekan">مشاهده و ویرایش</span>
                       <Icon name="info" />
                     </Button>
                   </Table.Cell>

@@ -318,3 +318,7 @@ label {
     font-size: 12px;
   }
 }
+
+.blurring.dimmed.dimmable > .popup:not(.dimmer) {
+  filter: unset !important;
+}
