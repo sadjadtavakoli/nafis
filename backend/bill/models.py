@@ -117,34 +117,38 @@ class Bill(models.Model):
         return dict(amount=amount, profit=profit, price=price)
 
     @staticmethod
+    def separated_query(field, starter_query, result, separation):
+        result[field] = {}
+        result[field] = Bill.sale_calculation(starter_query)
+        if separation == "customerType":
+            for customer_type in CustomerType.objects.all():
+                bill_items = starter_query.filter(bill__buyer__class_type=customer_type)
+                result[field][customer_type.name] = Bill.sale_calculation(bill_items)
+        if separation == "age":
+            yo_55 = timezone.now().year - 55
+            yo_40 = timezone.now().year - 40
+            yo_30 = timezone.now().year - 30
+            yo_20 = timezone.now().year - 20
+            result[field]["55 سال و بیشتر"] = Bill.sale_calculation(
+                starter_query.filter(bill__buyer__birth_date__year__lte=yo_55 + 1))
+            result[field]["40 الی 55"] = Bill.sale_calculation(
+                starter_query.filter(bill__buyer__birth_date__year__range=[yo_55 + 1, yo_40]))
+            result[field]["30 الی 40"] = Bill.sale_calculation(
+                starter_query.filter(bill__buyer__birth_date__year__range=[yo_40 + 1, yo_30]))
+            result[field]["20 الی 30"] = Bill.sale_calculation(
+                starter_query.filter(bill__buyer__birth_date__year__range=[yo_30 + 1, yo_20]))
+            result[field]["کمتر از 20"] = Bill.sale_calculation(
+                starter_query.filter(bill__buyer__birth_date__year__gte=yo_20 + 1))
+        return result
+
+    @staticmethod
     def sells_per_design_color(start_date, end_date, design_colors, separation):
         result = dict()
         query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
                                         bill__status__in=["done", "remained"], rejected=False)
-
         for design_color in set(Color.objects.filter(pk__in=design_colors).values_list("name", flat=True)):
             design_color_query = query.filter(product__design_color__name=design_color)
-            result[design_color] = {}
-            if separation == "customerType":
-                for customer_type in CustomerType.objects.all():
-                    bill_items = design_color_query.filter(bill__buyer__class_type=customer_type)
-                    result[design_color][customer_type.name] = Bill.sale_calculation(bill_items)
-
-            if separation == "age":
-                yo_55 = timezone.now().year - 55
-                yo_40 = timezone.now().year - 40
-                yo_30 = timezone.now().year - 30
-                yo_20 = timezone.now().year - 20
-                result[design_color]["بالای 55 سال"] = Bill.sale_calculation(
-                    design_color_query.filter(bill__buyer__birth_date__year__lte=yo_55 + 1))
-                result[design_color]["40 الی 55"] = Bill.sale_calculation(
-                    design_color_query.filter(bill__buyer__birth_date__year__range=[yo_55 + 1, yo_40]))
-                result[design_color]["30 الی 40"] = Bill.sale_calculation(
-                    design_color_query.filter(bill__buyer__birth_date__year__range=[yo_40 + 1, yo_30]))
-                result[design_color]["20 الی 30"] = Bill.sale_calculation(
-                    design_color_query.filter(bill__buyer__birth_date__year__range=[yo_30 + 1, yo_20]))
-                result[design_color]["کمتر از 20"] = Bill.sale_calculation(
-                    design_color_query.filter(bill__buyer__birth_date__year__gte=yo_20))
+            result = Bill.separated_query(design_color, design_color_query, result, separation)
         return result
 
     @staticmethod
@@ -153,8 +157,8 @@ class Bill(models.Model):
         query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
                                         bill__status__in=["done", "remained"], rejected=False)
         for bg_color in set(Color.objects.filter(pk__in=bg_colors).values_list("name", flat=True)):
-            bill_items = query.filter(product__background_color__name=bg_color)
-            result[bg_color] = Bill.sale_calculation(bill_items)
+            bg_color_query = query.filter(product__background_color__name=bg_color)
+            result = Bill.separated_query(bg_color, bg_color_query, result, separation)
         return result
 
     @staticmethod
@@ -163,8 +167,8 @@ class Bill(models.Model):
         query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
                                         bill__status__in=["done", "remained"], rejected=False)
         for f_type in FType.objects.filter(pk__in=f_types):
-            bill_items = query.filter(product__f_type=f_type)
-            result[f_type.name] = Bill.sale_calculation(bill_items)
+            f_type_query = query.filter(product__f_type=f_type)
+            result = Bill.separated_query(f_type.name, f_type_query, result, separation)
         return result
 
     @staticmethod
@@ -173,8 +177,8 @@ class Bill(models.Model):
         query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
                                         bill__status__in=["done", "remained"], rejected=False)
         for material in Material.objects.filter(pk__in=materials):
-            bill_items = query.filter(product__material=material)
-            result[material.name] = Bill.sale_calculation(bill_items)
+            material_query = query.filter(product__material=material)
+            result = Bill.separated_query(material.name, material_query, result, separation)
         return result
 
     @staticmethod
@@ -183,36 +187,8 @@ class Bill(models.Model):
         query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
                                         bill__status__in=["done", "remained"], rejected=False)
         for design in Design.objects.filter(pk__in=designs):
-            bill_items = query.filter(product__design=design)
-            result[design.name] = Bill.sale_calculation(bill_items)
-        return result
-
-    @staticmethod
-    def profit_per_customer_age(start_date, end_date):
-        result = dict()
-        query = Bill.objects.filter(close_date__date__range=[start_date, end_date],
-                                    status__in=["done", "remained"])
-        for birth_date in set(Customer.objects.all().values_list("birth_date", flat=True)):
-            if birth_date is not None:
-                customers = Customer.objects.filter(birth_date=birth_date)
-                bills = query.filter(buyer__in=customers)
-                profit = 0
-                for bill in bills:
-                    profit += bill.profit
-                result[timezone.now().year - birth_date.year] = dict(profit=profit)
-        return result
-
-    @staticmethod
-    def profit_per_customer_type(start_date, end_date):
-        result = dict()
-        query = Bill.objects.filter(close_date__date__range=[start_date, end_date],
-                                    status__in=["done", "remained"])
-        for customer_type in CustomerType.objects.all():
-            bills = query.filter(buyer__class_type=customer_type)
-            profit = 0
-            for bill in bills:
-                profit += bill.profit
-            result[customer_type.name] = dict(profit=profit)
+            design_query = query.filter(product__design=design)
+            result = Bill.separated_query(design.name, design_query, result, separation)
         return result
 
 

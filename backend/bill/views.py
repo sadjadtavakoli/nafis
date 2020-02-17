@@ -23,7 +23,7 @@ from staff.models import Staff
 
 class BillsViewSet(NafisBase, ModelViewSet):
     serializer_class = BillSerializer
-    permission_classes = (LoginRequired,)
+    # permission_classes = (LoginRequired,)
     queryset = Bill.objects.all().order_by('-pk')
     non_updaters = []
     non_destroyers = ['cashier', 'salesperson', 'storekeeper', 'accountant']
@@ -284,6 +284,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
         start_date = self.request.query_params.get('start_date', None)
         end_date = self.request.query_params.get('end_date', None)
         separation = self.request.query_params.get('separation', None)
+        print(separation)
         data = self.get_filter_kwargs()
         bg_colors = data.get('bg_color[]', None)
         design_colors = data.get('design_color[]', None)
@@ -295,7 +296,8 @@ class BillsViewSet(NafisBase, ModelViewSet):
         if bg_colors is not None and len(bg_colors):
             result['sells_per_bg_color'] = Bill.sells_per_bg_color(start_date, end_date, bg_colors, separation)
         if design_colors is not None and len(design_colors):
-            result['sells_per_design_color'] = Bill.sells_per_design_color(start_date, end_date, design_colors, separation)
+            result['sells_per_design_color'] = Bill.sells_per_design_color(start_date, end_date, design_colors,
+                                                                           separation)
         if designs is not None and len(designs):
             result['sells_per_design'] = Bill.sells_per_design(start_date, end_date, designs, separation)
         if f_types is not None and len(f_types):
