@@ -16,7 +16,6 @@ class SideBar extends React.Component {
     this.updateWindowDimensions();
     window.addEventListener("resize", this.updateWindowDimensions);
     this.setJob();
-    console.log("user", JSON.parse(localStorage.getItem("user")));
   }
 
   componentWillReceiveProps() {

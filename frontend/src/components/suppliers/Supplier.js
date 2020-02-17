@@ -127,6 +127,7 @@ class SupplierEdit extends Component {
               {this.createInput("address", "آدرس")}
             </Form.Group>
             <Button
+              className="yekan"
               content="اعمال"
               color="green"
               onClick={this.handleSubmit}
@@ -135,6 +136,7 @@ class SupplierEdit extends Component {
               }
             />
             <Button
+              className="yekan"
               content="بازگشت"
               onClick={() => {
                 history.push("/suppliers/");

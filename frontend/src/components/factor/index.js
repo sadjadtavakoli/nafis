@@ -2,17 +2,14 @@ import React from "react";
 import { connect } from "react-redux";
 import { getBillREQUEST } from "../../actions/BillActions";
 import logo from "../../assets/logo_printable.png";
-// import "./bootstrap.min.css";
-import {
-  priceToPersian,
-  enToFa,
-  phoneNumberBeautifier
-} from "../utils/numberUtils";
+import { priceToPersian, enToFa } from "../utils/numberUtils";
 import { getTodayJalaali, getNow } from "../utils/jalaaliUtils";
 import { isEmptyObject } from "../../utils/FunctionalUtils";
 import "../../scss/bootstrap.scss";
+
 const TOMAN = "تومان";
 const BORDER_BOTTOM = { borderBottom: "3px solid black" };
+
 class PrintFactor extends React.Component {
   state = {
     receipt: {},
@@ -27,17 +24,14 @@ class PrintFactor extends React.Component {
       !(resivedData.pk === params.id && !isEmptyObject(resivedData))
     )
       this.props.getBillREQUEST(params.id).then(res => {
-        console.log("res", res);
         this.setState({ bill: res, receipt: res.items }, () => {
-          if (params.print === "print") {
-            window.print();
-          }
+          // if (params.print === "print") {
+          //   window.print();
+          // }
+          console.log(this.state.bill);
         });
       });
     else this.setState({ bill: resivedData, receipt: resivedData.items });
-    setTimeout(() => {
-      console.log(this.state.bill);
-    }, 3000);
   }
 
   renderItems = () => {
@@ -76,6 +70,7 @@ class PrintFactor extends React.Component {
       });
     return final;
   };
+
   render() {
     return (
       <div className="bootstrap factor">
@@ -88,12 +83,6 @@ class PrintFactor extends React.Component {
               <div className="col-12 d-flex align-items-center justify-content-center">
                 <img src={logo} height="200" />
               </div>
-              {/* <div className="col-6 d-flex align-items-center justify-content-center">
-              <div className="row norm-latin">
-                <h1 className="col">GALLERY</h1>
-                <h1 className="col">NAFIS</h1>
-              </div>
-            </div> */}
             </div>
             <div className="row border-black border-radius-7 mb-2 rtl text-right p-2">
               <p className="col-3 font-weight-bold p-1">
@@ -205,15 +194,31 @@ class PrintFactor extends React.Component {
                   تخفیف کالایی:
                 </div>
                 <div className="col font-weight-bold p-2 h5 text-center">
+                  {enToFa(priceToPersian(this.state.bill.items_discount))}
+                </div>
+                <div className="col font-weight-bold p-2 h5 text-left">
+                  {this.state.bill.items_discount ? TOMAN : "-"}
+                </div>
+              </div>
+              <div className="row border-bottom-3">
+                <div className="col-6 font-weight-bold py-2 px-0 h5 text-left">
+                  تخفیف کلی:
+                </div>
+                <div className="col font-weight-bold p-2 h5 text-center">
                   {enToFa(
-                    priceToPersian(this.state.bill.buyer_special_discount)
+                    priceToPersian(
+                      this.state.bill.total_discount -
+                        this.state.bill.items_discount
+                    )
                   )}
                 </div>
                 <div className="col font-weight-bold p-2 h5 text-left">
-                  {this.state.bill.buyer_special_discount ? TOMAN : "-"}
+                  {this.state.bill.total_discount -
+                  this.state.bill.items_discount
+                    ? TOMAN
+                    : "-"}
                 </div>
               </div>
-
               <div className="row ">
                 <div className="col-6 font-weight-bold py-2 px-0 h5 text-left">
                   مبلغ قابل پرداخت:

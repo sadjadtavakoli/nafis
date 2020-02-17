@@ -8,22 +8,21 @@ import {
 import { toastr } from "react-redux-toastr";
 
 const INITIAL_STATE = {
-  first_name: "",
-  last_name: "",
-  email: "",
-  phone_number: "",
+  first_name: null,
+  last_name: null,
+  email: null,
+  phone_number: null,
   address: null,
   city: null,
   bitrth_date: null,
   marriage_date: null,
-  points: null,
+  points: 0,
   class_type_options: [],
   city_options: [],
   first_name_b: false,
   last_name_b: false,
-  email_b: false,
   phone_number_b: false,
-  points_b: false,
+  email_b: false,
   hasError: false
 };
 
@@ -38,7 +37,6 @@ class AddCustomerModal extends Component {
         class_type_options: this.props.classAndCity.customerTypes,
         city_options: this.props.classAndCity.cities
       });
-      console.log("classAndTypes", this.props.classAndCity.customerTypes);
     });
   }
 
@@ -88,12 +86,6 @@ class AddCustomerModal extends Component {
       });
       hasError = true;
     }
-    if (!this.state.email) {
-      this.setState({
-        email_b: true
-      });
-      hasError = true;
-    }
     if (!this.state.phone_number) {
       this.setState({
         phone_number_b: true
@@ -106,13 +98,7 @@ class AddCustomerModal extends Component {
       });
       hasError = true;
     }
-    if (!this.state.points) {
-      this.setState({
-        points_b: true
-      });
-      hasError = true;
-    }
-    if (!email) {
+    if (this.state.email && !email) {
       this.setState({
         email_b: true
       });
@@ -210,34 +196,15 @@ class AddCustomerModal extends Component {
             <Form.Group unstackable widths={2}>
               <Form.Input
                 className="ltr placeholder-rtl"
-                label={
-                  <div style={{ marginBottom: "4px", direction: "rtl" }}>
-                    <span style={{ fontWeight: "bold", margin: "0 0 4px" }}>
-                      ایمیل
-                    </span>
-                    <span style={{ color: "red", fontWeight: "bold" }}> *</span>
-                  </div>
-                }
-                onChange={e => this.inputChange(e, "email")}
-                onSelect={() => this.inputSelect("email_b")}
-                placeholder={
-                  this.state.email_b
-                    ? "وارد کردن ایمیل الزامی است"
-                    : "آدرس ایمیل"
-                }
-                error={this.state.email_b}
-              />
-              <Form.Input
-                className="ltr placeholder-rtl"
                 placeholder={
                   this.state.phone_number_b
-                    ? "وارد کردن شماره تلفن الزامی است"
-                    : "شماره تلفن"
+                    ? "وارد کردن شماره موبایل الزامی است"
+                    : "شماره موبایل"
                 }
                 label={
                   <div style={{ marginBottom: "4px", direction: "rtl" }}>
                     <span style={{ fontWeight: "bold", margin: "0 0 4px" }}>
-                      تلفن
+                      شماره موبایل
                     </span>
                     <span style={{ color: "red", fontWeight: "bold" }}> *</span>
                   </div>
@@ -245,6 +212,12 @@ class AddCustomerModal extends Component {
                 onChange={e => this.inputChange(e, "phone_number")}
                 onSelect={() => this.inputSelect("phone_number_b")}
                 error={this.state.phone_number_b}
+              />
+              <Form.Input
+                className="ltr placeholder-rtl"
+                label="ایمیل"
+                placeholder="آدرس ایمیل"
+                onChange={e => this.inputChange(e, "email")}
               />
             </Form.Group>
             <Form.Group unstackable widths={2}>
@@ -282,22 +255,9 @@ class AddCustomerModal extends Component {
               <Form.Input
                 className="rtl placeholder-rtl text-right"
                 type="number"
-                label={
-                  <div style={{ marginBottom: "4px", direction: "rtl" }}>
-                    <span style={{ fontWeight: "bold", margin: "0 0 4px" }}>
-                      امتیاز
-                    </span>
-                    <span style={{ color: "red", fontWeight: "bold" }}> *</span>
-                  </div>
-                }
+                label="امتیاز"
                 onChange={e => this.inputChange(e, "points")}
-                onSelect={() => this.inputSelect("points_b")}
-                error={this.state.points_b}
-                placeholder={
-                  this.state.points_b
-                    ? "وارد کردن امتیاز مشتری الزامی است"
-                    : "امتیاز"
-                }
+                placeholder="امتیاز"
               />
               <Form.Select
                 className="ltr placeholder-rtl"

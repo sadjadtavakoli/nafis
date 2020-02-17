@@ -6,6 +6,7 @@ import {
   updateCustomer
 } from "../../actions/CustomerSectionActions";
 import { toastr } from "react-redux-toastr";
+import history from "../../history";
 
 class EditTab extends Component {
   state = {
@@ -179,6 +180,13 @@ class EditTab extends Component {
         defaultValue={this.state[convert] ? null : this.state[status]}
         placeholder={this.state[convert] ? this.state[status] : null}
         error={this.state[convertE]}
+        readOnly={
+          status === "phone_number" || status === "points"
+            ? localStorage.getItem("type") === "cashier"
+              ? true
+              : false
+            : false
+        }
       />
     );
   };
@@ -207,9 +215,16 @@ class EditTab extends Component {
             onClick={this.handleSubmit}
             disabled={this.state.anyChange ? false : true}
             color={this.state.hasError ? "red" : "green"}
-          >
-            اعمال
-          </Button>
+            content="اعمال"
+            className="yekan"
+          />
+          <Button
+            className="yekan"
+            content="بازگشت"
+            onClick={() => {
+              history.push("/customers/");
+            }}
+          />
         </Form>
       </div>
     );

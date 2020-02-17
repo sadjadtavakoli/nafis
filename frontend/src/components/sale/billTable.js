@@ -4,7 +4,7 @@ import { Table, Pagination, Button, Icon, Popup } from "semantic-ui-react";
 import { getActiveBill } from "../../actions/SaleActions";
 import { digitToComma, phoneNumberBeautifier } from "../utils/numberUtils";
 import { standardTimeToJalaali } from "../utils/jalaaliUtils";
-import ShowInformationModal from "./showInformationModal";
+import ShowBillInformation from "./showBillInnformation";
 import LoadingBar from "../utils/loadingBar";
 import NotFound from "../utils/notFound";
 import NewBillPopup from "./newBillPopup";
@@ -228,7 +228,7 @@ class BillTable extends React.Component {
         </Table>
 
         {this.state.isOpenInformationModal ? (
-          <ShowInformationModal
+          <ShowBillInformation
             key={this.state.isOpenInformationModal}
             refetch={() => this.getActiveBill(this.state.activePage)}
             data={this.state.itemData}

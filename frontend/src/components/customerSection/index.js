@@ -13,7 +13,6 @@ import {
   Container,
   Pagination,
   Table,
-  Search,
   Button,
   Segment
 } from "semantic-ui-react";
@@ -166,7 +165,7 @@ class Customers extends Component {
                         >
                           <span>ویرایش</span>
                         </Button>
-                        {isPermit("adminOnly", this.state.job) ? (
+                        {isPermit("admin", this.state.job) ? (
                           <Button
                             color="red"
                             onClick={() => {

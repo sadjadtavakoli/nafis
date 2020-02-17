@@ -29,6 +29,10 @@ class Suppliers extends Component {
   };
 
   componentDidMount() {
+    this.getSuppliers();
+  }
+
+  getSuppliers = () => {
     this.props
       .getSuppliersAction()
       .then(() => {
@@ -36,11 +40,21 @@ class Suppliers extends Component {
           allSuppliers: this.props.allSuppliers.results,
           loading: false
         });
-        console.log("all", this.props.allSuppliers.results);
       })
       .catch(() => {
         this.setState({ notFound: true, loading: false });
       });
+  };
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.newSupplier &&
+      prevProps.newSupplier.pk !== this.props.newSupplier.pk
+    ) {
+      this.getSuppliers(this.state.activePage);
+    }
+    console.log("prevProps", prevProps.newSupplier);
+    console.log("props", this.props.newSupplier);
   }
 
   handleClick = pk => {
@@ -50,7 +64,6 @@ class Suppliers extends Component {
   changePage = (_, { activePage }) => {
     this.setState({ activePage: activePage }, () => {
       this.props.getSuppliersAction(this.state.activePage);
-      console.log(this.state.activePage);
     });
   };
 
@@ -115,9 +128,6 @@ class Suppliers extends Component {
 
           {!this.state.loading && this.state.allSuppliers.length > 0
             ? this.state.allSuppliers.map(item => {
-                {
-                  console.log(item);
-                }
                 return (
                   <Table.Body>
                     <Table.Row key={item.pk}>
@@ -182,7 +192,10 @@ class Suppliers extends Component {
 
 const mapStateToProps = state => {
   return {
-    allSuppliers: state.suppliers.suppliers
+    allSuppliers: state.suppliers.suppliers,
+    newSupplier: state.suppliers.newSupplier
+      ? state.suppliers.newSupplier.pk
+      : { pk: 0 }
   };
 };
 

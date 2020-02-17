@@ -15,6 +15,7 @@ import {
 import { digitToComma } from "../utils/numberUtils";
 import LoadingBar from "../utils/loadingBar";
 import NotFound from "../utils/notFound";
+
 class ProductTable extends React.Component {
   state = {
     productsList: [],
@@ -161,7 +162,9 @@ class ProductTable extends React.Component {
                       کد محصول
                     </Table.HeaderCell>
                   </React.Fragment>
-                ) : null}
+                ) : (
+                  <NotFound />
+                )}
               </Table.Row>
             </Table.Header>
 
@@ -248,6 +251,7 @@ class ProductTable extends React.Component {
 }
 
 const mapStateToProps = state => {
+  console.log(state.depository);
   return {
     productsList: state.depository.productsList
   };
