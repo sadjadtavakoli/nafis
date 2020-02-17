@@ -56,7 +56,7 @@ class PrintFactor extends React.Component {
               <small className="w-100">
                 <b>{enToFa(item.product.name)}</b>
                 <hr class="m-0" style={BORDER_BOTTOM} />
-                <b>{enToFa(item.product.pk)}</b>
+                <b>{enToFa(item.product.code)}</b>
               </small>
             </p>
             <p className="d-flex align-items-center justify-content-center col text-center font-weight-bold border-left-3 m-0 p-2">
