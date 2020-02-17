@@ -42,16 +42,15 @@ const INITIAL_STATE = {
   },
   customerData: {},
   editedData: {
-    name: "",
-    code: "",
-    selling_price: "",
-    amount: "",
-    discount: "",
-    end_of_roll_amount: "",
-    end_of_roll: ""
+    name: null,
+    code: null,
+    selling_price: null,
+    amount: null,
+    discount: null,
+    end_of_roll_amount: null,
+    end_of_roll: null
   },
   notFound: null,
-  disabled: null,
   productData: {}
 };
 
@@ -115,7 +114,7 @@ class ShowInformationModal extends React.Component {
   };
 
   submitChanges = pk => {
-    let prepareData = {
+    let preparedData = {
       name: this.state.editedData.name,
       code: this.state.editedData.code,
       selling_price: this.state.editedData.selling_price,
@@ -124,26 +123,28 @@ class ShowInformationModal extends React.Component {
       end_of_roll_amount: this.state.editedData.end_of_roll_amount,
       end_of_roll: this.state.editedData.end_of_roll
     };
-    this.props.updateBillItem(pk, prepareData).then(() => {
+    this.props.updateBillItem(pk, preparedData).then(() => {
       this.setState({
         editting: "",
         editMode: false
       });
       this.props.refetch();
+      console.log("sent name", this.state.editedData.name);
+      console.log("sent code", this.state.editedData.code);
     });
   };
 
   cancelChanges = () => {
     this.setState({
-      name: "",
-      code: "",
-      selling_price: "",
-      amount: "",
-      discount: "",
-      end_of_roll_amount: "",
-      end_of_roll: "",
+      name: null,
+      code: null,
+      selling_price: null,
+      amount: null,
+      discount: null,
+      end_of_roll_amount: null,
+      end_of_roll: null,
       editMode: false,
-      editting: ""
+      editting: null
     });
   };
 
@@ -282,7 +283,6 @@ class ShowInformationModal extends React.Component {
           .catch(() => {
             this.setState({
               notFound: true,
-              disabled: true,
               productData: {}
             });
           });
@@ -311,7 +311,6 @@ class ShowInformationModal extends React.Component {
   };
 
   itemsRender = (item, index) => {
-    console.log("item", item);
     return (
       <Card.Group key={index} id="s-showInfromationModel">
         <Card fluid>
@@ -469,7 +468,6 @@ class ShowInformationModal extends React.Component {
                   <Button
                     color="green"
                     onClick={() => this.submitChanges(item.pk)}
-                    disabled={this.state.disabled}
                   >
                     <span>اعمال</span>
                   </Button>
