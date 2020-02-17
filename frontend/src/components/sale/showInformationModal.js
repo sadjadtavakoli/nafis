@@ -297,9 +297,23 @@ class ShowInformationModal extends React.Component {
   };
 
   handleCodeInputClick = e => {
-    this.setState({
-      code: e.target.value
-    });
+    this.setState(
+      {
+        editedData: {
+          code: e.target.value
+        }
+      },
+      () => {
+        if (Number(this.state.editedData.code)) {
+          this.props.getProductsByCode(this.state.editedData.code).then(() => {
+            this.setState({
+              notFound: false,
+              productData: this.props.productsList
+            });
+          });
+        }
+      }
+    );
   };
 
   itemsRender = (item, index) => {
