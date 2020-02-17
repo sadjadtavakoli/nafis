@@ -6,8 +6,10 @@ import { priceToPersian, enToFa } from "../utils/numberUtils";
 import { getTodayJalaali, getNow } from "../utils/jalaaliUtils";
 import { isEmptyObject } from "../../utils/FunctionalUtils";
 import "../../scss/bootstrap.scss";
+
 const TOMAN = "تومان";
 const BORDER_BOTTOM = { borderBottom: "3px solid black" };
+
 class PrintFactor extends React.Component {
   state = {
     receipt: {},
@@ -68,6 +70,7 @@ class PrintFactor extends React.Component {
       });
     return final;
   };
+
   render() {
     return (
       <div className="bootstrap factor">
@@ -191,12 +194,10 @@ class PrintFactor extends React.Component {
                   تخفیف کالایی:
                 </div>
                 <div className="col font-weight-bold p-2 h5 text-center">
-                  {enToFa(
-                    priceToPersian(this.state.bill.buyer_special_discount)
-                  )}
+                  {enToFa(priceToPersian(this.state.bill.items_discount))}
                 </div>
                 <div className="col font-weight-bold p-2 h5 text-left">
-                  {this.state.bill.buyer_special_discount ? TOMAN : "-"}
+                  {this.state.bill.items_discount ? TOMAN : "-"}
                 </div>
               </div>
               <div className="row border-bottom-3">
@@ -205,11 +206,17 @@ class PrintFactor extends React.Component {
                 </div>
                 <div className="col font-weight-bold p-2 h5 text-center">
                   {enToFa(
-                    priceToPersian(this.state.bill.buyer_special_discount)
+                    priceToPersian(
+                      this.state.bill.total_discount -
+                        this.state.bill.items_discount
+                    )
                   )}
                 </div>
                 <div className="col font-weight-bold p-2 h5 text-left">
-                  {this.state.bill.buyer_special_discount ? TOMAN : "-"}
+                  {this.state.bill.total_discount -
+                  this.state.bill.items_discount
+                    ? TOMAN
+                    : "-"}
                 </div>
               </div>
               <div className="row ">
