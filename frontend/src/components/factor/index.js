@@ -104,7 +104,7 @@ class PrintFactor extends React.Component {
               </p>
 
               <p className="col-3 font-weight-bold p-1">
-                <span>نام فروشنده:</span>
+                <span>فروشنده:</span>
               </p>
               <p className="col-3 font-weight-bold">
                 <span>
@@ -143,7 +143,13 @@ class PrintFactor extends React.Component {
                 <span>صندوق:</span>
               </p>
               <p className="col-3 font-weight-bold p-1">
-                <span></span>
+                <span>
+                  {" "}
+                  {this.state.bill.closande &&
+                    this.state.bill.closande.first_name +
+                      " " +
+                      this.state.bill.closande.last_name}
+                </span>
               </p>
             </div>
             <div className="row border-black border-radius-7 mb-1 rtl text-right">
