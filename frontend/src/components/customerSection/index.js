@@ -90,7 +90,9 @@ class Customers extends Component {
           toastr.success("مشتری حذف گردید");
         })
         .catch(() => {
-          toastr.error("خطا در عملیات حذف مشتری");
+          toastr.error(
+            "خطا در عملیات حذف مشتری (مشتریانی که فاکتور و یا چک فعال دارند را نمیتوان حذف کرد)"
+          );
         });
     }
   };

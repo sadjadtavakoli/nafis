@@ -38,6 +38,7 @@ class AddCustomerModal extends Component {
         class_type_options: this.props.classAndCity.customerTypes,
         city_options: this.props.classAndCity.cities
       });
+      console.log("classAndTypes", this.props.classAndCity.customerTypes);
     });
   }
 

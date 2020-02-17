@@ -21,6 +21,7 @@ import {
   Message,
   Label
 } from "semantic-ui-react";
+import { getProductsByCode } from "../../actions/DepositoryActions";
 import NewBillPopup from "./newBillPopup";
 import { toastr } from "react-redux-toastr";
 
@@ -48,7 +49,10 @@ const INITIAL_STATE = {
     discount: "",
     end_of_roll_amount: "",
     end_of_roll: ""
-  }
+  },
+  notFound: null,
+  disabled: true,
+  productData: {}
 };
 
 class ShowInformationModal extends React.Component {
@@ -66,11 +70,21 @@ class ShowInformationModal extends React.Component {
           if (this.state.data.buyer) {
             this.getCustomerData(this.state.data.buyer.phone_number);
             this.sumProductTotalPrice();
+            this.getProductData();
           }
         }
       );
     }
   }
+
+  getProductData = () => {
+    this.props.getProductsByCode(this.state.editedData.code).then(() => {
+      this.setState({
+        notFound: false,
+        productData: this.props.productsList
+      });
+    });
+  };
 
   toggleAddItemPopup = () => {
     this.setState(prevState => ({ isOpenAddItem: !prevState.isOpenAddItem }));
@@ -101,7 +115,6 @@ class ShowInformationModal extends React.Component {
   };
 
   submitChanges = () => {
-    let noChanges = false;
     let prepareData = {
       name: this.state.editedData.name,
       code: this.state.editedData.code,
@@ -111,28 +124,13 @@ class ShowInformationModal extends React.Component {
       end_of_roll_amount: this.state.editedData.end_of_roll_amount,
       end_of_roll: this.state.editedData.end_of_roll
     };
-    if (
-      !this.state.editedData.name ||
-      !this.state.editedData.code ||
-      !this.state.editedData.selling_price ||
-      !this.state.editedData.amount ||
-      !this.state.editedData.discount ||
-      !this.state.editedData.end_of_roll_amount ||
-      !this.state.editedData.end_of_roll
-    ) {
-      noChanges = true;
-    }
-    if (noChanges) {
-      window.alert("هیچ تغیری اعمال نشده است.");
-    } else {
-      this.props.updateBillItem(this.state.data.pk, prepareData).then(() => {
-        this.setState({
-          editting: "",
-          editMode: false
-        });
-        this.props.refetch();
+    this.props.updateBillItem(this.state.data.pk, prepareData).then(() => {
+      this.setState({
+        editting: "",
+        editMode: false
       });
-    }
+      this.props.refetch();
+    });
   };
 
   cancelChanges = () => {
@@ -161,7 +159,9 @@ class ShowInformationModal extends React.Component {
   getCustomerData = phone_number => {
     if (phone_number.length === 11) {
       this.props.getCustomerByPhoneNumber(phone_number).then(({ data }) => {
-        this.setState({ customerData: data });
+        this.setState({
+          customerData: data
+        });
       });
     }
   };
@@ -258,11 +258,62 @@ class ShowInformationModal extends React.Component {
   };
 
   handleChange = (e, status) => {
+    if (status === "code") {
+      this.handleSearchChange(this.state.editedData.code);
+    }
     this.setState({
       editedData: {
-        [status]: e.target.value
+        [status]: e.target.value,
+        disabled: false
       }
     });
+  };
+
+  handleSearchChange = value => {
+    this.setState({ product: Number(value) }, () => {
+      if (
+        String(this.state.editedData.code).length < 1 ||
+        String(this.state.editedData.code) === "0"
+      ) {
+        this.setState({ notFound: NaN });
+      } else {
+        this.props
+          .getProductsByCode(this.state.editedData.code)
+          .then(() => {
+            this.setState({
+              notFound: false,
+              productData: this.props.productsList
+            });
+          })
+          .catch(() => {
+            this.setState({
+              notFound: true,
+              disabled: true,
+              productData: {}
+            });
+          });
+      }
+    });
+  };
+
+  handleCodeInputClick = e => {
+    this.setState(
+      {
+        editedData: {
+          code: e.target.value
+        }
+      },
+      () => {
+        if (Number(this.state.editedData.code)) {
+          this.props.getProductsByCode(this.state.editedData.code).then(() => {
+            this.setState({
+              notFound: false,
+              productData: this.props.productsList
+            });
+          });
+        }
+      }
+    );
   };
 
   itemsRender = (item, index) => {
@@ -323,13 +374,56 @@ class ShowInformationModal extends React.Component {
                   onChange={e => this.handleChange(e, "name")}
                   label="نام محصول"
                 />
-                <Form.Input
-                  className="ltr placeholder-rtl"
-                  readOnly={this.state.editting !== index ? true : false}
-                  fluid
-                  defaultValue={item.product.code}
-                  onChange={e => this.handleChange(e, "code")}
-                  label="کد محصول"
+                <Popup
+                  content={
+                    <React.Fragment>
+                      {this.state.notFound === false ? (
+                        <Label color="teal" className="rtl text-center">
+                          <p>
+                            <span>نام محصول:</span>&nbsp;
+                            <span>{enToFa(this.state.productData.name)}</span>
+                          </p>
+                          <p>
+                            <span>مقدار باقی مانده:</span>&nbsp;
+                            <span>
+                              {enToFa(this.state.productData.stock_amount)}
+                            </span>
+                            &nbsp;
+                            <span>متر</span>
+                          </p>
+                          <p>
+                            <span>قیمت هر متر:</span>&nbsp;
+                            <span>
+                              {enToFa(
+                                priceToPersian(
+                                  this.state.productData.selling_price
+                                )
+                              )}
+                            </span>
+                            <span>&nbsp; تومان</span>
+                          </p>
+                        </Label>
+                      ) : (
+                        <Label color="red">
+                          <Icon name="warning circle" />
+                          <span>محصول مورد نظر یافت نشد</span>
+                        </Label>
+                      )}
+                    </React.Fragment>
+                  }
+                  position="bottom center"
+                  on="click"
+                  trigger={
+                    <Form.Input
+                      className="ltr placeholder-rtl"
+                      readOnly={this.state.editting !== index ? true : false}
+                      fluid
+                      defaultValue={item.product.code}
+                      onChange={e => this.handleChange(e, "code")}
+                      onClick={e => this.handleCodeInputClick(e)}
+                      label="کد محصول"
+                    />
+                  }
                 />
                 <Form.Input
                   className="ltr placeholder-rtl"
@@ -377,7 +471,11 @@ class ShowInformationModal extends React.Component {
               </Form.Group>
               {this.state.editting !== index ? null : (
                 <React.Fragment>
-                  <Button color="green" onClick={this.submitChanges}>
+                  <Button
+                    color="green"
+                    onClick={this.submitChanges}
+                    disabled={this.state.disabled}
+                  >
                     <span>اعمال</span>
                   </Button>
                   <Button color="gray" onClick={this.cancelChanges}>
@@ -608,10 +706,17 @@ class ShowInformationModal extends React.Component {
   }
 }
 
-export default connect(null, {
+const mapStateToProps = state => {
+  return {
+    productsList: state.depository.productsList
+  };
+};
+
+export default connect(mapStateToProps, {
   setNewBill,
   deleteItem,
   getCustomerByPhoneNumber,
   updateBill,
-  updateBillItem
+  updateBillItem,
+  getProductsByCode
 })(ShowInformationModal);
