@@ -42,7 +42,7 @@ class OurPaymentSerializer(serializers.ModelSerializer):
 
 
 class BillItemSerializer(serializers.ModelSerializer):
-    product = ProductSerializer()
+    product = ProductDetailSerializer()
     special_discount = serializers.ReadOnlyField()
     price = serializers.ReadOnlyField()
     final_price = serializers.ReadOnlyField()
@@ -58,6 +58,7 @@ class BillSerializer(serializers.ModelSerializer):
     items = BillItemSerializer(many=True, required=False)
     buyer = CustomerSerializer()
     seller = StaffSerializer()
+    closande = StaffSerializer()
     branch = BranchSerializer(read_only=True)
     payments = CustomerPaymentSerializer(many=True, required=False)
     price = serializers.ReadOnlyField()
@@ -75,7 +76,7 @@ class BillSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Bill
-        fields = ('pk', 'bill_code', 'create_date', 'status', 'close_date', 'buyer', 'seller',
+        fields = ('pk', 'bill_code', 'create_date', 'status', 'close_date', 'buyer', 'seller', 'closande',
                   'discount', 'used_points', 'branch', 'payments', 'items',
                   'bill_image', 'price', 'total_discount', 'buyer_special_discount',
                   'items_discount', 'final_price', 'paid', 'cheque_paid', 'cash_paid', 'card_paid',

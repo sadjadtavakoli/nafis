@@ -49,10 +49,23 @@ class AddCustomerModal extends Component {
   };
 
   inputSelect = status => {
-    this.setState({
-      [status]: false,
-      hasError: false
-    });
+    this.setState(
+      {
+        [status]: false
+      },
+      () => {
+        this.setState({
+          hasError:
+            !this.state.first_name_b &&
+            !this.state.last_name_b &&
+            !this.state.email_b &&
+            !this.state.phone_number_b &&
+            !this.state.points_b
+              ? false
+              : true
+        });
+      }
+    );
   };
 
   validateEmail = email => {
@@ -81,7 +94,13 @@ class AddCustomerModal extends Component {
       });
       hasError = true;
     }
-    if (this.state.phone_number.length !== 11) {
+    if (!this.state.phone_number) {
+      this.setState({
+        phone_number_b: true
+      });
+      hasError = true;
+    }
+    if (this.state.phone_number && this.state.phone_number.length !== 11) {
       this.setState({
         phone_number_b: true
       });
@@ -140,21 +159,49 @@ class AddCustomerModal extends Component {
             <Message className="rtl text-right" color="red">
               <p>فیلد های قرمز را تصحیح کنید.</p>
             </Message>
-          ) : null}
+          ) : (
+            <Message className="rtl text-right" color="teal">
+              <p>
+                پر کردن فیلد هایی که با علامت{" "}
+                <span style={{ fontWeight: "bold", color: "red" }}>*</span> مشخص
+                شده اند الزامی است.
+              </p>
+            </Message>
+          )}
           <Form className="rtl">
             <Form.Group unstackable widths={2}>
               <Form.Input
                 className="ltr placeholder-rtl text-right"
-                label="نام"
+                label={
+                  <div style={{ marginBottom: "4px", direction: "rtl" }}>
+                    <span style={{ fontWeight: "bold", margin: "0 0 4px" }}>
+                      نام
+                    </span>
+                    <span style={{ color: "red", fontWeight: "bold" }}> *</span>
+                  </div>
+                }
                 onChange={e => this.inputChange(e, "first_name")}
                 onSelect={() => this.inputSelect("first_name_b")}
-                placeholder="نام"
+                placeholder={
+                  this.state.first_name_b ? "وارد کردن نام الزامی است" : "نام"
+                }
                 error={this.state.first_name_b}
               />
               <Form.Input
                 className="ltr placeholder-rtl text-right"
-                placeholder="نام خانوادگی"
-                label="نام خانوادگی"
+                placeholder={
+                  this.state.last_name_b
+                    ? "وارد کردن نام خانوادگی الزامی است"
+                    : "نام خانوادگی"
+                }
+                label={
+                  <div style={{ marginBottom: "4px", direction: "rtl" }}>
+                    <span style={{ fontWeight: "bold", margin: "0 0 4px" }}>
+                      نام خانوادگی
+                    </span>
+                    <span style={{ color: "red", fontWeight: "bold" }}> *</span>
+                  </div>
+                }
                 onChange={e => this.inputChange(e, "last_name")}
                 onSelect={() => this.inputSelect("last_name_b")}
                 error={this.state.last_name_b}
@@ -163,17 +210,38 @@ class AddCustomerModal extends Component {
             <Form.Group unstackable widths={2}>
               <Form.Input
                 className="ltr placeholder-rtl"
-                label="ایمیل"
+                label={
+                  <div style={{ marginBottom: "4px", direction: "rtl" }}>
+                    <span style={{ fontWeight: "bold", margin: "0 0 4px" }}>
+                      ایمیل
+                    </span>
+                    <span style={{ color: "red", fontWeight: "bold" }}> *</span>
+                  </div>
+                }
                 onChange={e => this.inputChange(e, "email")}
                 onSelect={() => this.inputSelect("email_b")}
-                placeholder="آدرس ایمیل"
+                placeholder={
+                  this.state.email_b
+                    ? "وارد کردن ایمیل الزامی است"
+                    : "آدرس ایمیل"
+                }
                 error={this.state.email_b}
               />
               <Form.Input
-                className="rtl placeholder-rtl text-right"
-                placeholder="شماره تلفن"
-                label="تلفن"
-                type="number"
+                className="ltr placeholder-rtl"
+                placeholder={
+                  this.state.phone_number_b
+                    ? "وارد کردن شماره تلفن الزامی است"
+                    : "شماره تلفن"
+                }
+                label={
+                  <div style={{ marginBottom: "4px", direction: "rtl" }}>
+                    <span style={{ fontWeight: "bold", margin: "0 0 4px" }}>
+                      تلفن
+                    </span>
+                    <span style={{ color: "red", fontWeight: "bold" }}> *</span>
+                  </div>
+                }
                 onChange={e => this.inputChange(e, "phone_number")}
                 onSelect={() => this.inputSelect("phone_number_b")}
                 error={this.state.phone_number_b}
@@ -214,11 +282,22 @@ class AddCustomerModal extends Component {
               <Form.Input
                 className="rtl placeholder-rtl text-right"
                 type="number"
-                label="امتیاز"
+                label={
+                  <div style={{ marginBottom: "4px", direction: "rtl" }}>
+                    <span style={{ fontWeight: "bold", margin: "0 0 4px" }}>
+                      امتیاز
+                    </span>
+                    <span style={{ color: "red", fontWeight: "bold" }}> *</span>
+                  </div>
+                }
                 onChange={e => this.inputChange(e, "points")}
                 onSelect={() => this.inputSelect("points_b")}
                 error={this.state.points_b}
-                placeholder="امتیاز"
+                placeholder={
+                  this.state.points_b
+                    ? "وارد کردن امتیاز مشتری الزامی است"
+                    : "امتیاز"
+                }
               />
               <Form.Select
                 className="ltr placeholder-rtl"
