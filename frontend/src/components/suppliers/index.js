@@ -36,6 +36,7 @@ class Suppliers extends Component {
           allSuppliers: this.props.allSuppliers.results,
           loading: false
         });
+        console.log("all", this.props.allSuppliers.results);
       })
       .catch(() => {
         this.setState({ notFound: true, loading: false });
@@ -77,7 +78,7 @@ class Suppliers extends Component {
             style={{ float: "left" }}
           />
         </Segment>
-        <Table celled className="rtl text-center" columns={5}>
+        <Table celled className="rtl text-center" columns={6}>
           <Table.Header className="text-right">
             <Table.Row>
               <Table.HeaderCell colSpan="5">
@@ -99,23 +100,32 @@ class Suppliers extends Component {
             {!this.state.loading && this.state.allSuppliers.length > 0 ? (
               <Table.Row>
                 <Table.HeaderCell style={{ borderLeft: "1px solid #ddd" }}>
-                  نام و نام خانوادگی
+                  نام
                 </Table.HeaderCell>
+                <Table.HeaderCell>نام خانوادگی</Table.HeaderCell>
                 <Table.HeaderCell>ایمیل</Table.HeaderCell>
                 <Table.HeaderCell>شماره موبایل</Table.HeaderCell>
                 <Table.HeaderCell>آدرس</Table.HeaderCell>
-                <Table.HeaderCell>عملیات</Table.HeaderCell>
+                <Table.HeaderCell style={{ borderTop: "1px solid #ddd" }}>
+                  عملیات
+                </Table.HeaderCell>
               </Table.Row>
             ) : null}
           </Table.Header>
 
           {!this.state.loading && this.state.allSuppliers.length > 0
             ? this.state.allSuppliers.map(item => {
+                {
+                  console.log(item);
+                }
                 return (
                   <Table.Body>
                     <Table.Row key={item.pk}>
                       <Table.Cell style={{ borderLeft: "1px solid #ddd" }}>
-                        {item.full_name}
+                        {item.first_name}
+                      </Table.Cell>
+                      <Table.Cell>
+                        <span>{item.last_name}</span>
                       </Table.Cell>
                       <Table.Cell className="norm-latin">
                         <span>{item.email}</span>

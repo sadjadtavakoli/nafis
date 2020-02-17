@@ -412,7 +412,7 @@ class ShowInformationModal extends React.Component {
                     </React.Fragment>
                   }
                   position="bottom center"
-                  on="click"
+                  on="focus"
                   trigger={
                     <Form.Input
                       className="ltr placeholder-rtl"
