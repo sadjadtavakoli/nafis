@@ -85,17 +85,17 @@ class DepositoryEdit extends Component {
   };
 
   handleProductChange = (_, { name, value }) => {
-    console.log("name", name);
-    console.log("value", value);
-    this.setState(
-      {
-        [name]: value,
-        changed: true
-      },
-      () => {
-        console.log("background color", this.state.background_color);
-      }
-    );
+    this.setState({
+      [name]: value,
+      changed: true
+    });
+  };
+
+  handleInputChange = (status, e) => {
+    this.setState({
+      [status]: e.target.value,
+      changed: true
+    });
   };
 
   selectChange = (_, { status, value }) => {
@@ -169,7 +169,7 @@ class DepositoryEdit extends Component {
         label={<span className="us-em-span">{title}</span>}
         defaultValue={!this.state.boolean[status] ? this.state[status] : null}
         placeholder={this.state.boolean[status] ? this.state[status] : null}
-        onChange={e => this.handleProductChange(status, e)}
+        onChange={e => this.handleInputChange(status, e)}
         onSelect={() => this.handleSelect(status)}
         onBlur={() => this.handleBlur(status)}
       />
