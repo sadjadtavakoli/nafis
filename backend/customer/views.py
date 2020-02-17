@@ -38,11 +38,12 @@ class CustomersViewSet(NafisBase, ModelViewSet):
         except ObjectDoesNotExist:
             return Response({'چنین کاربری یافت نشد.'}, status=HTTP_404_NOT_FOUND)
 
-    @action(methods=['GET'], detail=False, url_path='name')
-    def get_customer_using_name(self, request, **kwargs):
-        name = self.request.query_params.get('name', None)
+    @action(methods=['GET'], detail=False, url_path='search')
+    def search_customer(self, request, **kwargs):
+        query = self.request.query_params.get('query', None)
         try:
-            customer = Customer.objects.filter(Q(first_name__icontains=name) | Q(last_name__icontains=name))
+            customer = Customer.objects.filter(
+                Q(first_name__contains=query) | Q(last_name__contains=query) | Q(phone_number__contains=query))
             return Response(CustomerDetailedSerializer(customer, many=True).data)
         except ObjectDoesNotExist:
             return Response({'چنین کاربری یافت نشد.'}, status=HTTP_404_NOT_FOUND)
