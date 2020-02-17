@@ -25,10 +25,9 @@ class PrintFactor extends React.Component {
     )
       this.props.getBillREQUEST(params.id).then(res => {
         this.setState({ bill: res, receipt: res.items }, () => {
-          // if (params.print === "print") {
-          //   window.print();
-          // }
-          console.log(this.state.bill);
+          if (params.print === "print") {
+            window.print();
+          }
         });
       });
     else this.setState({ bill: resivedData, receipt: resivedData.items });
@@ -92,10 +91,10 @@ class PrintFactor extends React.Component {
                 <span>{enToFa(this.state.bill.bill_code)}</span>
               </p>
 
-              <p className="col-3 font-weight-bold p-1">
+              <p className="col-3 font-weight-bold p-1 text-left">
                 <span>فروشنده:</span>
               </p>
-              <p className="col-3 font-weight-bold">
+              <p className="col-3 font-weight-bold p-1">
                 <span>
                   {this.state.bill.seller &&
                     this.state.bill.seller.first_name +
@@ -110,8 +109,8 @@ class PrintFactor extends React.Component {
               <p className="col-3 font-weight-bold p-1">
                 <span>{enToFa(getTodayJalaali())}</span>
               </p>
-              <p className="col-3 font-weight-bold p-1">
-                <span>ساعت‌صدور:</span>
+              <p className="col-3 font-weight-bold p-1 text-left">
+                <span>ساعت:</span>
               </p>
               <p className="col-3 font-weight-bold p-1">
                 <span>{enToFa(getNow())}</span>
@@ -128,7 +127,7 @@ class PrintFactor extends React.Component {
                 </span>
               </p>
 
-              <p className="col-3 font-weight-bold p-1">
+              <p className="col-3 font-weight-bold p-1 text-left">
                 <span>صندوق:</span>
               </p>
               <p className="col-3 font-weight-bold p-1">
