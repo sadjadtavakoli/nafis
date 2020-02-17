@@ -180,6 +180,13 @@ class EditTab extends Component {
         defaultValue={this.state[convert] ? null : this.state[status]}
         placeholder={this.state[convert] ? this.state[status] : null}
         error={this.state[convertE]}
+        readOnly={
+          status === "phone_number" || status === "points"
+            ? localStorage.getItem("type") === "cashier"
+              ? true
+              : false
+            : false
+        }
       />
     );
   };

@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { getDailyReport } from "../../actions/BillActions";
 import { Table, Button, Icon } from "semantic-ui-react";
 import { priceToPersian } from "../utils/numberUtils";
-
 import { standardTimeToJalaali } from "../utils/jalaaliUtils";
 import LoadingBar from "../utils/loadingBar";
 import NotFound from "../utils/notFound";
@@ -51,7 +50,7 @@ class DailyReport extends React.Component {
               <Table.HeaderCell className="text-center">
                 تخفیف کل
               </Table.HeaderCell>
-              {isPermit("adminOnly", this.state.job) ? (
+              {isPermit("admin", this.state.job) ? (
                 <Table.HeaderCell className="text-center">سود</Table.HeaderCell>
               ) : null}
               <Table.HeaderCell className="text-center">
@@ -101,7 +100,7 @@ class DailyReport extends React.Component {
                   <Table.Cell className="text-center norm-latin" collapsing>
                     <span>{priceToPersian(item.total_discount)}</span>
                   </Table.Cell>
-                  {isPermit("adminOnly", this.state.job) ? (
+                  {isPermit("admin", this.state.job) ? (
                     <Table.Cell className="text-center norm-latin" collapsing>
                       <span>{priceToPersian(item.profit)}</span>
                     </Table.Cell>
@@ -170,7 +169,7 @@ class DailyReport extends React.Component {
                 <Table.HeaderCell className="text-center">
                   تعداد کل فاکتور ها
                 </Table.HeaderCell>
-                {isPermit("adminOnly", this.state.job) ? (
+                {isPermit("admin", this.state.job) ? (
                   <Table.HeaderCell className="text-center">
                     {" "}
                     سود کل
@@ -224,7 +223,7 @@ class DailyReport extends React.Component {
                     {priceToPersian(this.state.dailyReport.bills_data.length)}
                   </span>
                 </Table.Cell>
-                {isPermit("adminOnly", this.state.job) ? (
+                {isPermit("admin", this.state.job) ? (
                   <Table.Cell className="text-center norm-latin" collapsing>
                     <span>
                       {priceToPersian(this.state.dailyReport.total_profit)}
