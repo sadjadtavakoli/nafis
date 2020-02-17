@@ -6,11 +6,13 @@ import { toastr } from "react-redux-toastr";
 
 class Add extends Component {
   state = {
-    full_name: "",
+    first_name: "",
+    last_name: "",
     email: "",
     phone_number: "",
     address: "",
-    full_name_b: false,
+    first_name_b: false,
+    last_name_b: false,
     email_b: false,
     phone_number_b: false,
     address_b: false
@@ -29,9 +31,15 @@ class Add extends Component {
 
   handleSubmit = () => {
     let hasError = false;
-    if (String(this.state.full_name).length < 1) {
+    if (String(this.state.first_name).length < 1) {
       this.setState({
-        full_name_b: true
+        first_name_b: true
+      });
+      hasError = true;
+    }
+    if (String(this.state.last_name).length < 1) {
+      this.setState({
+        last_name_b: true
       });
       hasError = true;
     }
@@ -55,7 +63,8 @@ class Add extends Component {
     }
     if (!hasError) {
       let prepareData = {
-        full_name: this.state.full_name,
+        first_name: this.state.first_name,
+        last_name: this.state.last_name,
         email: this.state.email,
         phone_number: this.state.phone_number,
         address: this.state.address
@@ -72,7 +81,8 @@ class Add extends Component {
 
   handleClose = () => {
     this.setState({
-      full_name_b: false,
+      first_name_b: false,
+      last_name_b: false,
       email_b: false,
       phone_number_b: false,
       address_b: false
@@ -112,11 +122,14 @@ class Add extends Component {
         <Modal.Content>
           <Form className="rtl">
             <Form.Group unstackable widths={2}>
-              {this.createInput("نام", "full_name")}
-              {this.createInput("ایمیل", "email")}
+              {this.createInput("نام", "first_name")}
+              {this.createInput("نام خانوادگی", "last_name")}
             </Form.Group>
             <Form.Group unstackable widths={2}>
+              {this.createInput("ایمیل", "email")}
               {this.createInput("شماره تلفن", "phone_number")}
+            </Form.Group>
+            <Form.Group unstackable widths={2}>
               {this.createInput("آدرس", "address")}
             </Form.Group>
           </Form>
