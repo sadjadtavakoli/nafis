@@ -49,7 +49,7 @@ class FactorsTab extends Component {
               {this.state.remainedBillsToggle ? (
                 <Table.HeaderCell>بهای پرداخت شده</Table.HeaderCell>
               ) : null}
-              <Table.HeaderCell>قیمت نهایی فاکتو</Table.HeaderCell>
+              <Table.HeaderCell>قیمت نهایی فاکتور</Table.HeaderCell>
               {this.state.remainedBillsToggle ? (
                 <Table.HeaderCell>بهای پرداختی مانده</Table.HeaderCell>
               ) : null}
