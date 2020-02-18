@@ -142,50 +142,40 @@ class Bill(models.Model):
         return result
 
     @staticmethod
-    def sells_per_design_color(start_date, end_date, design_colors, separation):
+    def sells_per_design_color(query, design_colors, separation):
         result = dict()
-        query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
-                                        bill__status__in=["done", "remained"], rejected=False)
         for design_color in set(Color.objects.filter(pk__in=design_colors).values_list("name", flat=True)):
             design_color_query = query.filter(product__design_color__name=design_color)
             result = Bill.separated_query(design_color, design_color_query, result, separation)
         return result
 
     @staticmethod
-    def sells_per_bg_color(start_date, end_date, bg_colors, separation):
+    def sells_per_bg_color(query, bg_colors, separation):
         result = dict()
-        query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
-                                        bill__status__in=["done", "remained"], rejected=False)
         for bg_color in set(Color.objects.filter(pk__in=bg_colors).values_list("name", flat=True)):
             bg_color_query = query.filter(product__background_color__name=bg_color)
             result = Bill.separated_query(bg_color, bg_color_query, result, separation)
         return result
 
     @staticmethod
-    def sells_per_f_type(start_date, end_date, f_types, separation):
+    def sells_per_f_type(query, f_types, separation):
         result = dict()
-        query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
-                                        bill__status__in=["done", "remained"], rejected=False)
         for f_type in FType.objects.filter(pk__in=f_types):
             f_type_query = query.filter(product__f_type=f_type)
             result = Bill.separated_query(f_type.name, f_type_query, result, separation)
         return result
 
     @staticmethod
-    def sells_per_material(start_date, end_date, materials, separation):
+    def sells_per_material(query, materials, separation):
         result = dict()
-        query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
-                                        bill__status__in=["done", "remained"], rejected=False)
         for material in Material.objects.filter(pk__in=materials):
             material_query = query.filter(product__material=material)
             result = Bill.separated_query(material.name, material_query, result, separation)
         return result
 
     @staticmethod
-    def sells_per_design(start_date, end_date, designs, separation):
+    def sells_per_design(query, designs, separation):
         result = dict()
-        query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
-                                        bill__status__in=["done", "remained"], rejected=False)
         for design in Design.objects.filter(pk__in=designs):
             design_query = query.filter(product__design=design)
             result = Bill.separated_query(design.name, design_query, result, separation)

@@ -284,7 +284,6 @@ class BillsViewSet(NafisBase, ModelViewSet):
         start_date = self.request.query_params.get('start_date', None)
         end_date = self.request.query_params.get('end_date', None)
         separation = self.request.query_params.get('separation', None)
-        print(separation)
         data = self.get_filter_kwargs()
         bg_colors = data.get('bg_color[]', None)
         design_colors = data.get('design_color[]', None)
@@ -292,18 +291,18 @@ class BillsViewSet(NafisBase, ModelViewSet):
         f_types = data.get('f_type[]', None)
         materials = data.get('material[]', None)
         result = dict()
-
+        query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
+                                        bill__status__in=["done", "remained"], rejected=False)
         if bg_colors is not None and len(bg_colors):
-            result['sells_per_bg_color'] = Bill.sells_per_bg_color(start_date, end_date, bg_colors, separation)
+            result['sells_per_bg_color'] = Bill.sells_per_bg_color(query, bg_colors, separation)
         if design_colors is not None and len(design_colors):
-            result['sells_per_design_color'] = Bill.sells_per_design_color(start_date, end_date, design_colors,
-                                                                           separation)
+            result['sells_per_design_color'] = Bill.sells_per_design_color(query, design_colors, separation)
         if designs is not None and len(designs):
-            result['sells_per_design'] = Bill.sells_per_design(start_date, end_date, designs, separation)
+            result['sells_per_design'] = Bill.sells_per_design(query, designs, separation)
         if f_types is not None and len(f_types):
-            result['sells_per_f_type'] = Bill.sells_per_f_type(start_date, end_date, f_types, separation)
+            result['sells_per_f_type'] = Bill.sells_per_f_type(query, f_types, separation)
         if materials is not None and len(materials):
-            result['sells_per_material'] = Bill.sells_per_material(start_date, end_date, materials, separation)
+            result['sells_per_material'] = Bill.sells_per_material(query, materials, separation)
         return Response(result)
 
 
