@@ -117,27 +117,34 @@ class Bill(models.Model):
         return dict(amount=amount, profit=profit, price=price)
 
     @staticmethod
-    def separated_query(field, starter_query, result, separation):
-        result[field] = {}
-        result[field] = Bill.sale_calculation(starter_query)
+    def separated_query(starter_query, separation):
+        result = dict()
         if separation == "customerType":
             for customer_type in CustomerType.objects.all():
                 bill_items = starter_query.filter(bill__buyer__class_type=customer_type)
-                result[field][customer_type.name] = Bill.sale_calculation(bill_items)
+                result[customer_type.name] = Bill.sale_calculation(bill_items)
+        if separation == "bg_color":
+            for bg_color in set(Color.objects.all().values_list("name", flat=True)):
+                bill_items = starter_query.filter(product__background_color__name=bg_color)
+                result[bg_color] = Bill.sale_calculation(bill_items)
+        if separation == "design_color":
+            for design_color in set(Color.objects.all().values_list("name", flat=True)):
+                bill_items = starter_query.filter(product__design_color__name=design_color)
+                result[design_color] = Bill.sale_calculation(bill_items)
         if separation == "age":
             yo_55 = timezone.now().year - 55
             yo_40 = timezone.now().year - 40
             yo_30 = timezone.now().year - 30
             yo_20 = timezone.now().year - 20
-            result[field]["55 سال و بیشتر"] = Bill.sale_calculation(
+            result["55 سال و بیشتر"] = Bill.sale_calculation(
                 starter_query.filter(bill__buyer__birth_date__year__lte=yo_55 + 1))
-            result[field]["40 الی 55"] = Bill.sale_calculation(
+            result["40 الی 55"] = Bill.sale_calculation(
                 starter_query.filter(bill__buyer__birth_date__year__range=[yo_55 + 1, yo_40]))
-            result[field]["30 الی 40"] = Bill.sale_calculation(
+            result["30 الی 40"] = Bill.sale_calculation(
                 starter_query.filter(bill__buyer__birth_date__year__range=[yo_40 + 1, yo_30]))
-            result[field]["20 الی 30"] = Bill.sale_calculation(
+            result["20 الی 30"] = Bill.sale_calculation(
                 starter_query.filter(bill__buyer__birth_date__year__range=[yo_30 + 1, yo_20]))
-            result[field]["کمتر از 20"] = Bill.sale_calculation(
+            result["کمتر از 20"] = Bill.sale_calculation(
                 starter_query.filter(bill__buyer__birth_date__year__gte=yo_20 + 1))
         return result
 
@@ -146,7 +153,8 @@ class Bill(models.Model):
         result = dict()
         for design_color in set(Color.objects.filter(pk__in=design_colors).values_list("name", flat=True)):
             design_color_query = query.filter(product__design_color__name=design_color)
-            result = Bill.separated_query(design_color, design_color_query, result, separation)
+            result[design_color] = Bill.sale_calculation(design_color_query)
+            result[design_color].update(Bill.separated_query(design_color_query, separation))
         return result
 
     @staticmethod
@@ -154,7 +162,8 @@ class Bill(models.Model):
         result = dict()
         for bg_color in set(Color.objects.filter(pk__in=bg_colors).values_list("name", flat=True)):
             bg_color_query = query.filter(product__background_color__name=bg_color)
-            result = Bill.separated_query(bg_color, bg_color_query, result, separation)
+            result[bg_color] = Bill.sale_calculation(bg_color_query)
+            result[bg_color].update(Bill.separated_query(bg_color_query, separation))
         return result
 
     @staticmethod
@@ -162,7 +171,8 @@ class Bill(models.Model):
         result = dict()
         for f_type in FType.objects.filter(pk__in=f_types):
             f_type_query = query.filter(product__f_type=f_type)
-            result = Bill.separated_query(f_type.name, f_type_query, result, separation)
+            result[f_type.name] = Bill.sale_calculation(f_type_query)
+            result[f_type.name].update(Bill.separated_query(f_type_query, separation))
         return result
 
     @staticmethod
@@ -170,7 +180,8 @@ class Bill(models.Model):
         result = dict()
         for material in Material.objects.filter(pk__in=materials):
             material_query = query.filter(product__material=material)
-            result = Bill.separated_query(material.name, material_query, result, separation)
+            result[material.name] = Bill.sale_calculation(material_query)
+            result[material.name].update(Bill.separated_query(material_query, separation))
         return result
 
     @staticmethod
@@ -178,7 +189,49 @@ class Bill(models.Model):
         result = dict()
         for design in Design.objects.filter(pk__in=designs):
             design_query = query.filter(product__design=design)
-            result = Bill.separated_query(design.name, design_query, result, separation)
+            result[design.name] = Bill.sale_calculation(design_query)
+            result[design.name].update(Bill.separated_query(design_query, separation))
+        return result
+
+    @staticmethod
+    def sells_per_all_f_type(query):
+        result = dict()
+        for f_type in FType.objects.all():
+            f_type_query = query.filter(product__f_type=f_type)
+            result[f_type.name] = dict()
+            result[f_type.name] = Bill.sale_calculation(f_type_query)
+            if result[f_type.name]['amount'] is not None and int(result[f_type.name]['amount']) > 0:
+                result[f_type.name]['age'] = Bill.separated_query(f_type_query, "age")
+                result[f_type.name]['customerType'] = Bill.separated_query(f_type_query, "customerType")
+                result[f_type.name]['bg_color'] = Bill.separated_query(f_type_query, "bg_color")
+                result[f_type.name]['design_color'] = Bill.separated_query(f_type_query, "design_color")
+        return result
+
+    @staticmethod
+    def sells_per_all_material(query):
+        result = dict()
+        for material in Material.objects.all():
+            material_query = query.filter(product__material=material)
+            result[material.name] = dict()
+            result[material.name] = Bill.sale_calculation(material_query)
+            if result[material.name]['amount'] is not None and int(result[material.name]['amount']) > 0:
+                result[material.name]['age'] = Bill.separated_query(material_query, "age")
+                result[material.name]['customerType'] = Bill.separated_query(material_query, "customerType")
+                result[material.name]['bg_color'] = Bill.separated_query(material_query, "bg_color")
+                result[material.name]['design_color'] = Bill.separated_query(material_query, "design_color")
+        return result
+
+    @staticmethod
+    def sells_per_all_design(query):
+        result = dict()
+        for design in Design.objects.all():
+            design_query = query.filter(product__design=design)
+            result[design.name] = Bill.sale_calculation(design_query)
+            if result[design.name]['amount'] is not None and int(result[design.name]['amount']) > 0:
+                result[design.name]['age'] = Bill.separated_query(design_query, "age")
+                result[design.name]['customerType'] = Bill.separated_query(design_query, "customerType")
+                result[design.name]['bg_color'] = Bill.separated_query(design_query, "bg_color")
+                result[design.name]['design_color'] = Bill.separated_query(design_query, "design_color")
         return result
 
 

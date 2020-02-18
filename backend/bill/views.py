@@ -247,7 +247,6 @@ class BillsViewSet(NafisBase, ModelViewSet):
         bills_with_reminded_status = bills.filter(status="remained").count()
         total_bills = bills.count()
         data = {}
-        print(bills.filter(status="remained"))
         for bill in bills:
             total_sales += bill.price
             total_final_price += bill.final_price
@@ -279,8 +278,8 @@ class BillsViewSet(NafisBase, ModelViewSet):
                 for k in data}
         return data
 
-    @action(methods=["GET"], detail=False, url_path="charts")
-    def chart_data(self, request, **kwargs):
+    @action(methods=["GET"], detail=False, url_path="bar-charts")
+    def bar_chart_data(self, request, **kwargs):
         start_date = self.request.query_params.get('start_date', None)
         end_date = self.request.query_params.get('end_date', None)
         separation = self.request.query_params.get('separation', None)
@@ -303,6 +302,28 @@ class BillsViewSet(NafisBase, ModelViewSet):
             result['sells_per_f_type'] = Bill.sells_per_f_type(query, f_types, separation)
         if materials is not None and len(materials):
             result['sells_per_material'] = Bill.sells_per_material(query, materials, separation)
+        return Response(result)
+
+    @action(methods=["GET"], detail=False, url_path="pie-charts")
+    def pie_chart_data(self, request, **kwargs):
+        start_date = self.request.query_params.get('start_date', None)
+        end_date = self.request.query_params.get('end_date', None)
+        data = self.get_filter_kwargs()
+        bg_colors = data.get('bg_color[]', None)
+        design_colors = data.get('design_color[]', None)
+        designs = data.get('design[]', None)
+        f_types = data.get('f_type[]', None)
+        materials = data.get('material[]', None)
+        result = dict()
+        query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
+                                        bill__status__in=["done", "remained"], rejected=False)
+
+        # if designs is not None and len(designs):
+        result['sells_per_design'] = Bill.sells_per_all_design(query)
+        # if f_types is not None and len(f_types):
+        result['sells_per_f_type'] = Bill.sells_per_all_f_type(query)
+        # if materials is not None and len(materials):
+        result['sells_per_material'] = Bill.sells_per_all_material(query)
         return Response(result)
 
 
