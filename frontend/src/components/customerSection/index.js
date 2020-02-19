@@ -14,7 +14,9 @@ import {
   Pagination,
   Table,
   Button,
-  Segment
+  Segment,
+  Search,
+  Grid
 } from "semantic-ui-react";
 
 class Customers extends Component {
@@ -108,6 +110,19 @@ class Customers extends Component {
     this.setState({ open: false });
   };
 
+  searchBar = () => {
+    return (
+      <Search
+        input={{ icon: "search", iconPosition: "left" }}
+        loading={this.state.searchLoading}
+        showNoResults={false}
+        placeholder="کد محصول را وارد نمایید"
+        className="placeholder-rtl yekan ltr"
+        onSearchChange={this.handleSearchChange}
+      />
+    );
+  };
+
   render() {
     return (
       <Container>
@@ -134,6 +149,24 @@ class Customers extends Component {
         </Segment>
         <Table celled className="rtl text-center" columns={3}>
           <Table.Header className="text-right">
+            <Table.HeaderCell colSpan="3">
+              <Grid>
+                <Grid.Column width={5}>
+                  <span
+                    style={{
+                      fontSize: "20px",
+                      lineHeight: "35px",
+                      textAlign: "center"
+                    }}
+                  >
+                    لیست مشتریان موجود
+                  </span>
+                </Grid.Column>
+                <Grid.Column>
+                  <span>{this.searchBar()}</span>
+                </Grid.Column>
+              </Grid>
+            </Table.HeaderCell>
             <Table.Row>
               <Table.HeaderCell style={{ borderLeft: "1px solid #ddd" }}>
                 نام و نام خانوادگی
