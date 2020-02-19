@@ -28,7 +28,7 @@ class PrintFactor extends React.Component {
       this.props.getBillREQUEST(params.id).then(res => {
         this.setState({ bill: res, receipt: res.items }, () => {
           if (params.print === "print") {
-            // window.print();
+            window.print();
           }
         });
       });
