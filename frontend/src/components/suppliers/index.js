@@ -94,7 +94,7 @@ class Suppliers extends Component {
         <Table celled className="rtl text-center" columns={6}>
           <Table.Header className="text-right">
             <Table.Row>
-              <Table.HeaderCell colSpan="5">
+              <Table.HeaderCell colSpan="6">
                 <Grid columns={1}>
                   <Grid.Row>
                     <h2 className="yekan s-h2-padding">تامین کنندگان</h2>
@@ -119,9 +119,7 @@ class Suppliers extends Component {
                 <Table.HeaderCell>ایمیل</Table.HeaderCell>
                 <Table.HeaderCell>شماره موبایل</Table.HeaderCell>
                 <Table.HeaderCell>آدرس</Table.HeaderCell>
-                <Table.HeaderCell style={{ borderTop: "1px solid #ddd" }}>
-                  عملیات
-                </Table.HeaderCell>
+                <Table.HeaderCell>عملیات</Table.HeaderCell>
               </Table.Row>
             ) : null}
           </Table.Header>
@@ -170,7 +168,7 @@ class Suppliers extends Component {
           {this.props.allSuppliers && this.props.allSuppliers.count > 25 ? (
             <Table.Footer>
               <Table.Row>
-                <Table.HeaderCell colSpan="5">
+                <Table.HeaderCell colSpan="6">
                   <Pagination
                     className="norm-latin ltr"
                     defaultActivePage={1}

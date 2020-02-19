@@ -45,8 +45,8 @@ class Customers extends Component {
     ) {
       this.getCustomers(this.state.activePage);
     }
-    console.log("customers", this.props.usersCustomers);
-    console.log("search input", this.state.value);
+    // console.log("customers", this.props.usersCustomers);
+    // console.log("search input", this.state.value);
   }
 
   getCustomers = () => {
@@ -116,31 +116,32 @@ class Customers extends Component {
   };
 
   handleSearchChange = (_, { value }) => {
-    this.setState({ searchLoading: true, value });
+    this.setState({ notFound: false, searchLoading: true, value }, () => {
+      setTimeout(() => {
+        if (this.state.value.length < 1) {
+          this.getCustomers(this.state.activePage);
+        } else {
+          this.props
+            .getCustomerBySearch(this.state.value)
+            .then(res => {
+              console.log("response ast", res.data.length);
 
-    setTimeout(() => {
-      if (this.state.value.length < 1) {
-        this.getCustomers(this.state.activePage);
-        console.log("done if");
-      } else {
-        this.props
-          .getCustomerBySearch(this.state.value)
-          .then(() => {
-            this.setState({
-              notFound: false,
-              customers: this.props.usersCustomers,
-              totalPageCount: 1
+              this.setState({
+                notFound: res.data.length === 0,
+                customers: this.props.usersCustomers,
+                totalPageCount: 1
+              });
+            })
+            .catch(() => {
+              this.setState({ notFound: true });
             });
-          })
-          .catch(() => {
-            this.setState({ notFound: true });
-          });
-        console.log("done else");
-      }
-      this.setState({
-        searchLoading: false
-      });
-    }, 300);
+          // console.log("done else");
+        }
+        this.setState({
+          searchLoading: false
+        });
+      }, 300);
+    });
   };
 
   searchBar = () => {
@@ -200,13 +201,15 @@ class Customers extends Component {
                 </Grid.Column>
               </Grid>
             </Table.HeaderCell>
-            <Table.Row className="text-center">
-              <Table.HeaderCell style={{ borderLeft: "1px solid #ddd" }}>
-                نام و نام خانوادگی
-              </Table.HeaderCell>
-              <Table.HeaderCell>شماره موبایل</Table.HeaderCell>
-              <Table.HeaderCell>عملیات</Table.HeaderCell>
-            </Table.Row>
+            {this.state.customers && this.state.customers.length > 0 ? (
+              <Table.Row className="text-center">
+                <Table.HeaderCell style={{ borderLeft: "1px solid #ddd" }}>
+                  نام و نام خانوادگی
+                </Table.HeaderCell>
+                <Table.HeaderCell>شماره موبایل</Table.HeaderCell>
+                <Table.HeaderCell>عملیات</Table.HeaderCell>
+              </Table.Row>
+            ) : null}
           </Table.Header>
           <Table.Body>
             {this.state.customers && this.state.customers.length > 0
@@ -248,11 +251,13 @@ class Customers extends Component {
               : null}
 
             {this.state.loading ? <LoadingBar /> : null}
-            {this.props.usersCustomers &&
+
+            {this.state.notFound ? <NotFound /> : null}
+            {/* {this.props.usersCustomers &&
             this.props.usersCustomers.results &&
             this.props.usersCustomers.results.length === 0 ? (
               <NotFound />
-            ) : null}
+            ) : null} */}
           </Table.Body>
           {this.props.usersCustomers && this.props.usersCustomers.count > 25 ? (
             <Table.Footer>
