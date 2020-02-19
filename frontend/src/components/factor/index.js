@@ -2,6 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 import { getBillREQUEST } from "../../actions/BillActions";
 import logo from "../../assets/logo_printable.png";
+import telegramLogo from "../../assets/telegram-logo.png";
+import instagramLogo from "../../assets/instagram-logo.png";
 import { priceToPersian, enToFa } from "../utils/numberUtils";
 import { getTodayJalaali, getNow } from "../utils/jalaaliUtils";
 import { isEmptyObject } from "../../utils/FunctionalUtils";
@@ -26,7 +28,7 @@ class PrintFactor extends React.Component {
       this.props.getBillREQUEST(params.id).then(res => {
         this.setState({ bill: res, receipt: res.items }, () => {
           if (params.print === "print") {
-            window.print();
+            // window.print();
           }
         });
       });
@@ -229,6 +231,47 @@ class PrintFactor extends React.Component {
                   {this.state.bill.final_price ? TOMAN : "-"}
                 </div>
               </div>
+            </div>
+            <div className=" font-weight-bold p-2 row-not-flex border-black border-radius-7 mb-1 rtl text-right">
+              <p>
+                <span>آدرس: </span>
+                <span>
+                  تهران، میدان ونک، خیابان گاندی جنوبی، پلاک ۸۱، پارچه نفیس
+                </span>
+                <span>
+                  <br />
+                </span>
+                <span>تلفن: </span>
+                <span>۸۸۷۷۱۱۸۶</span>
+                <span>-</span>
+                <span>۰۲۱</span>
+              </p>
+              <div className="row">
+                <div className="col col-8 text-left ltr d-flex align-items-center norm-latin h4">
+                  <b>@NafisFabricStore</b>
+                </div>
+                <div className="col col-2 p-0 text-left">
+                  <img src={instagramLogo} height="28" />
+                </div>
+                <div className="col col-2 p-0 text-right">
+                  <img src={telegramLogo} height="30" />
+                </div>
+              </div>
+            </div>
+            <div className=" p-2 row-not-flex border-black border-radius-7 mb-1 rtl text-right">
+              <p className="text-center font-weight-bold">
+                از خرید و اعتمادتان به ما بسیار سپاس گذاریم
+              </p>
+              <p className="text-center">
+                <span>اجناس برش خورده در کمال احترام </span>
+                <span>
+                  <b>پس گرفته</b>
+                </span>
+                <span> و </span>
+                <span>
+                  <b> تعویض نمی‌شوند</b>
+                </span>
+              </p>
             </div>
           </div>
         </div>
