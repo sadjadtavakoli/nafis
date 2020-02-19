@@ -21,11 +21,11 @@ export const getCustomerUsers = (page = 1) => async dispatch => {
   return response;
 };
 
-export const getCustomerBySearch = value => async dispatch => {
+export const getCustomerBySearch = query => async dispatch => {
   const response = await server(localStorage.getItem("token")).get(
     "/customers/search/",
     {
-      params: { value }
+      params: { query }
     }
   );
   dispatch({ type: GET_USERS_CUSTOMERS, payload: response.data });
