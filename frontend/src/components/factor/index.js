@@ -203,7 +203,7 @@ class PrintFactor extends React.Component {
               </div>
               <div className="row border-bottom-3">
                 <div className="col-6 font-weight-bold py-2 px-0 h5 text-left">
-                  تخفیف کلی:
+                  تخفیف فاکتوری:
                 </div>
                 <div className="col font-weight-bold p-2 h5 text-center">
                   {enToFa(

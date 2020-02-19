@@ -76,7 +76,7 @@ class Depository extends React.Component {
                 <FilterSegment submitFilter={this.getProductsByFilter} />
               ) : null}
             </Segment>
-            <ProductTable />
+            <ProductTable edit={true} />
           </div>
         </Container>
       </React.Fragment>

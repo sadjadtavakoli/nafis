@@ -149,6 +149,23 @@ class BillsViewSet(NafisBase, ModelViewSet):
         data = BillSerializer(Bill.objects.get(pk=bill.pk)).data
         return Response(data, status=status.HTTP_201_CREATED)
 
+    @action(methods=['post'], detail=True, url_path='done', permission_classes=(CloseBillPermission,))
+    def close_bill(self, request, **kwargs):
+        instance = self.get_object()
+        if instance.status == "active":
+            instance.check_status()
+            send_message = self.request.data.get('send_message', True)
+            if send_message:
+                try:
+                    sms = SendSMS()
+                    sms.group_sms(create_message(instance), [instance.buyer.phone_number], instance.buyer.phone_number)
+                except:
+                    pass
+            if not (instance.items_special_discount or instance.buyer_special_discount):
+                instance.buyer.points += int(instance.final_price) * int(Point.objects.first().amount) / 100
+                instance.buyer.save()
+        return Response({'status': instance.status})
+
     def update(self, request, *args, **kwargs):
         if self.request.data.get('used_points', None):
             points = self.request.data.get('used_points')
