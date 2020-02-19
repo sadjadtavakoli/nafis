@@ -20,7 +20,7 @@ const panes = [
     menuItem: "موجودی محصولات",
     render: () => (
       <Tab.Pane attached={false}>
-        <ProductTable searchBar={true} />
+        <ProductTable edit={false} />
       </Tab.Pane>
     )
   }

@@ -96,7 +96,6 @@ class ProductTable extends React.Component {
   searchBar = () => {
     return (
       <Search
-        hidden={this.props.searchBar ? "" : "invisible"}
         input={{ icon: "search", iconPosition: "left" }}
         loading={this.state.searchLoading}
         showNoResults={false}
@@ -114,7 +113,10 @@ class ProductTable extends React.Component {
           <Table celled striped>
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell colSpan="10" className="rtl text-right">
+                <Table.HeaderCell
+                  colSpan={this.props.edit ? "10" : "9"}
+                  className="rtl text-right"
+                >
                   <Grid>
                     <Grid.Column
                       width={this.state.width < 768 ? 16 : 3}
@@ -141,9 +143,11 @@ class ProductTable extends React.Component {
                 </Table.HeaderCell>
               </Table.Row>
               <Table.Row>
-                <Table.HeaderCell className="text-center">
-                  عملیات
-                </Table.HeaderCell>
+                {this.props.edit ? (
+                  <Table.HeaderCell className="text-center">
+                    عملیات
+                  </Table.HeaderCell>
+                ) : null}
                 <Table.HeaderCell className="text-center">
                   رنگ پس زمینه
                 </Table.HeaderCell>
@@ -176,18 +180,20 @@ class ProductTable extends React.Component {
               {this.state.productsList.map((item, index) => {
                 return (
                   <Table.Row key={index}>
-                    <Table.Cell className="text-center">
-                      <Button
-                        color="teal"
-                        onClick={() =>
-                          history.push(
-                            `/depository/depository-edit/${item.code}/${item.pk}/`
-                          )
-                        }
-                      >
-                        <span>ویرایش</span>
-                      </Button>
-                    </Table.Cell>
+                    {this.props.edit ? (
+                      <Table.Cell className="text-center">
+                        <Button
+                          color="teal"
+                          onClick={() =>
+                            history.push(
+                              `/depository/depository-edit/${item.code}/${item.pk}/`
+                            )
+                          }
+                        >
+                          <span>ویرایش</span>
+                        </Button>
+                      </Table.Cell>
+                    ) : null}
                     <Table.Cell className="norm-latin text-center">
                       <span className="yekan">
                         {item.background_color && item.background_color.name}
