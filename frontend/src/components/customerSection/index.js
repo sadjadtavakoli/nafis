@@ -128,7 +128,7 @@ class Customers extends Component {
           .then(() => {
             this.setState({
               notFound: false,
-              customers: [this.props.usersCustomers],
+              customers: this.props.usersCustomers,
               totalPageCount: 1
             });
           })
@@ -209,7 +209,7 @@ class Customers extends Component {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {this.props.usersCustomers && this.state.customers.length !== 0
+            {this.state.customers && this.state.customers.length > 0
               ? this.state.customers.map(item => {
                   return (
                     <Table.Row key={item.pk}>
@@ -249,6 +249,7 @@ class Customers extends Component {
 
             {this.state.loading ? <LoadingBar /> : null}
             {this.props.usersCustomers &&
+            this.props.usersCustomers.results &&
             this.props.usersCustomers.results.length === 0 ? (
               <NotFound />
             ) : null}

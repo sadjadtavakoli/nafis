@@ -8,11 +8,13 @@ import history from "../../history";
 class SupplierEdit extends Component {
   state = {
     pk: null,
-    full_name: null,
+    first_name: null,
+    last_name: null,
     email: null,
     phone_number: null,
     address: null,
-    full_name_b: false,
+    first_name_b: false,
+    last_name_b: false,
     email_b: false,
     phone_number_b: false,
     address_b: false,
@@ -24,7 +26,8 @@ class SupplierEdit extends Component {
     this.props.getTheSupplier(this.props.match.params.pk).then(() => {
       this.setState({
         pk: this.props.match.params.pk,
-        full_name: this.props.supplier.full_name,
+        first_name: this.props.supplier.first_name,
+        last_name: this.props.supplier.last_name,
         email: this.props.supplier.email,
         phone_number: this.props.supplier.phone_number,
         address: this.props.supplier.address
@@ -51,9 +54,15 @@ class SupplierEdit extends Component {
   };
 
   handleSubmit = () => {
-    if (!this.state.full_name) {
+    if (!this.state.first_name) {
       this.setState({
-        full_name_b: true,
+        first_name_b_b: true,
+        hasErrors: true
+      });
+    }
+    if (!this.state.last_name) {
+      this.setState({
+        last_name_b_b: true,
         hasErrors: true
       });
     }
@@ -77,7 +86,8 @@ class SupplierEdit extends Component {
     }
     if (!this.state.hasErrors) {
       let prepareData = {
-        full_name: this.state.full_name,
+        first_name: this.state.first_name,
+        last_name: this.state.last_name,
         email: this.state.email,
         phone_number: this.state.phone_number,
         address: this.state.address
@@ -115,14 +125,16 @@ class SupplierEdit extends Component {
       <Container className="rtl text-right">
         <Segment>
           <Header as="h3" block style={{ wordSpacing: "3px" }}>
-            نمایش و ویرایش اطلاعات تامین کننده {this.state.full_name}
+            نمایش و ویرایش اطلاعات تامین کننده {this.state.first_name}{" "}
+            {this.state.last_name}
           </Header>
           <Form>
             <Form.Group unstackable widths={2}>
-              {this.createInput("full_name", "نام تامین کننده")}
-              {this.createInput("email", "ایمیل")}
+              {this.createInput("first_name", "نام")}
+              {this.createInput("last_name", "نام خانوادگی")}
             </Form.Group>
-            <Form.Group unstackable widths={2}>
+            <Form.Group unstackable widths={3}>
+              {this.createInput("email", "ایمیل")}
               {this.createInput("phone_number", "شماره تلفن")}
               {this.createInput("address", "آدرس")}
             </Form.Group>
