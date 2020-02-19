@@ -21,6 +21,17 @@ export const getCustomerUsers = (page = 1) => async dispatch => {
   return response;
 };
 
+export const getCustomerBySearch = query => async dispatch => {
+  const response = await server(localStorage.getItem("token")).get(
+    "/customers/search/",
+    {
+      params: { query }
+    }
+  );
+  dispatch({ type: GET_USERS_CUSTOMERS, payload: response.data });
+  return response;
+};
+
 export const getAllBills = (pk, oo) => async dispatch => {
   const response = await server(localStorage.getItem("token")).get(
     `/customers/${pk}/bills/`

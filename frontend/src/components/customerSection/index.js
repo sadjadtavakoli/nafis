@@ -1,9 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getCustomerUsers } from "../../actions/CustomerSectionActions";
 import history from "../../history";
 import { isPermit } from "../mainPage/permission";
-import { deleteCustomer } from "../../actions/CustomerSectionActions";
+import {
+  deleteCustomer,
+  getCustomerBySearch,
+  getCustomerUsers
+} from "../../actions/CustomerSectionActions";
 import { toastr } from "react-redux-toastr";
 import LoadingBar from "../utils/loadingBar";
 import NotFound from "../utils/notFound";
@@ -14,7 +17,9 @@ import {
   Pagination,
   Table,
   Button,
-  Segment
+  Segment,
+  Search,
+  Grid
 } from "semantic-ui-react";
 
 class Customers extends Component {
@@ -40,6 +45,8 @@ class Customers extends Component {
     ) {
       this.getCustomers(this.state.activePage);
     }
+    console.log("customers", this.props.usersCustomers);
+    console.log("search input", this.state.value);
   }
 
   getCustomers = () => {
@@ -108,6 +115,47 @@ class Customers extends Component {
     this.setState({ open: false });
   };
 
+  handleSearchChange = (_, { value }) => {
+    this.setState({ searchLoading: true, value });
+
+    setTimeout(() => {
+      if (this.state.value.length < 1) {
+        this.getCustomers(this.state.activePage);
+        console.log("done if");
+      } else {
+        this.props
+          .getCustomerBySearch(this.state.value)
+          .then(() => {
+            this.setState({
+              notFound: false,
+              customers: [this.props.usersCustomers],
+              totalPageCount: 1
+            });
+          })
+          .catch(() => {
+            this.setState({ notFound: true });
+          });
+        console.log("done else");
+      }
+      this.setState({
+        searchLoading: false
+      });
+    }, 300);
+  };
+
+  searchBar = () => {
+    return (
+      <Search
+        input={{ icon: "search", iconPosition: "left" }}
+        loading={this.state.searchLoading}
+        showNoResults={false}
+        placeholder="کد محصول را وارد نمایید"
+        className="placeholder-rtl yekan ltr"
+        onSearchChange={this.handleSearchChange}
+      />
+    );
+  };
+
   render() {
     return (
       <Container>
@@ -134,7 +182,25 @@ class Customers extends Component {
         </Segment>
         <Table celled className="rtl text-center" columns={3}>
           <Table.Header className="text-right">
-            <Table.Row>
+            <Table.HeaderCell colSpan="3">
+              <Grid>
+                <Grid.Column width={5}>
+                  <span
+                    style={{
+                      fontSize: "20px",
+                      lineHeight: "35px",
+                      textAlign: "center"
+                    }}
+                  >
+                    لیست مشتریان موجود
+                  </span>
+                </Grid.Column>
+                <Grid.Column>
+                  <span>{this.searchBar()}</span>
+                </Grid.Column>
+              </Grid>
+            </Table.HeaderCell>
+            <Table.Row className="text-center">
               <Table.HeaderCell style={{ borderLeft: "1px solid #ddd" }}>
                 نام و نام خانوادگی
               </Table.HeaderCell>
@@ -214,10 +280,13 @@ const mapStateToProps = state => {
     usersCustomers: state.customers.usersCustomers,
     newCustomer: state.customers.newCustomer
       ? state.customers.newCustomer.pk
-      : { pk: 0 }
+      : { pk: 0 },
+    searchedCustomer: state.customers.searchedCustomer
   };
 };
 
-export default connect(mapStateToProps, { getCustomerUsers, deleteCustomer })(
-  Customers
-);
+export default connect(mapStateToProps, {
+  getCustomerUsers,
+  deleteCustomer,
+  getCustomerBySearch
+})(Customers);

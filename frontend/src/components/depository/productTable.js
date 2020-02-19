@@ -67,7 +67,7 @@ class ProductTable extends React.Component {
     this.getProductsList(activePage);
   };
 
-  handleSearchChange = (e, { value }) => {
+  handleSearchChange = (_, { value }) => {
     this.setState({ searchLoading: true, value });
 
     setTimeout(() => {
@@ -96,7 +96,6 @@ class ProductTable extends React.Component {
   searchBar = () => {
     return (
       <Search
-        hidden={this.props.searchBar ? "" : "invisible"}
         input={{ icon: "search", iconPosition: "left" }}
         loading={this.state.searchLoading}
         showNoResults={false}
