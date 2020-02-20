@@ -14,6 +14,7 @@ export const getProductsList = (page = 1) => async dispatch => {
   dispatch({ type: GET_PRODUCT_LIST, payload: response.data });
   return response;
 };
+
 export const getProductsByFilter = params => async dispatch => {
   const response = await server(
     localStorage.getItem("token")
