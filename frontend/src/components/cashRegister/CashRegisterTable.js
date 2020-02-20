@@ -15,6 +15,10 @@ class CashRegisterTable extends React.Component {
   };
 
   componentDidMount() {
+    this.getActiveBills();
+  }
+
+  getActiveBills = () => {
     this.props.getActiveBills().then(() => {
       this.setState({
         fetch: true
@@ -26,7 +30,7 @@ class CashRegisterTable extends React.Component {
       }
       console.log(this.props.activeBills);
     });
-  }
+  };
 
   render() {
     return (
@@ -93,6 +97,7 @@ class CashRegisterTable extends React.Component {
                             .deleteBill(bill.pk)
                             .then(() => {
                               toastr.success("حذف فاکتور با موفقیت انجام شد");
+                              this.props.getActiveBills();
                             })
                             .catch(() => {
                               toastr.error("عملیات حذف ناموفق بود");
