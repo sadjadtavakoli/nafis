@@ -7,6 +7,7 @@ import { standardTimeToJalaali } from "../utils/jalaaliUtils";
 import NotFound from "../utils/notFound";
 import LoadingBar from "../utils/loadingBar";
 import { toastr } from "react-redux-toastr";
+import history from "../../history";
 
 class CashRegisterTable extends React.Component {
   state = {
@@ -29,6 +30,12 @@ class CashRegisterTable extends React.Component {
         });
       }
       console.log(this.props.activeBills);
+    });
+  };
+
+  closeModal = () => {
+    this.setState({
+      open: true
     });
   };
 
@@ -73,7 +80,8 @@ class CashRegisterTable extends React.Component {
                     <Table.Cell
                       style={{ fontFamily: "arial", fontWeight: "bold" }}
                     >
-                      {digitToComma(bill.final_price)}&nbsp;تومان
+                      {digitToComma(bill.final_price)}&nbsp;
+                      <span className="yekan">تومان</span>
                     </Table.Cell>
                     <Table.Cell style={{ fontFamily: "arial" }}>
                       {standardTimeToJalaali(bill.create_date)}
@@ -85,6 +93,9 @@ class CashRegisterTable extends React.Component {
                         color="yellow"
                         content="مشاهده"
                         className="yekan"
+                        onClick={() => {
+                          history.push(`/cashregister/${bill.pk}`);
+                        }}
                       />
                       <Button
                         icon="delete"
@@ -96,7 +107,10 @@ class CashRegisterTable extends React.Component {
                           this.props
                             .deleteBill(bill.pk)
                             .then(() => {
-                              toastr.success("حذف فاکتور با موفقیت انجام شد");
+                              toastr.success(
+                                "حذف فاکتور با موفقیت انجام شد",
+                                "فاکتور با موفقیت حذف گردید"
+                              );
                               this.props.getActiveBills();
                             })
                             .catch(() => {

@@ -194,11 +194,15 @@ label {
   }
 }
 
-// REPORT STYLE SHEET \\
-
 .table-border-left {
   border-left: 1px solid #ddd !important;
 }
+
+.table-border-left-none {
+  border-left: none !important;
+}
+
+// REPORT STYLE SHEET \\
 
 .grid-padding {
   padding: 20px !important;

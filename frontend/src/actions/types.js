@@ -1,5 +1,6 @@
 export const LOGIN = "LOGIN";
 export const GET_ACTIVE_BILL = "GET_ACTIVE_BILL";
+export const GET_ONE_BILL = "GET_ONE_BILL";
 export const ADD_BILL = "ADD_BILL";
 export const GET_PRODUCT_FIELDS = "GET_PRODUCT_FIELDS";
 export const GET_PRODUCT_LIST = "GET_PRODUCT_LIST";
