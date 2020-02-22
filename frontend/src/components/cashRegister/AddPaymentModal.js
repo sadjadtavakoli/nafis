@@ -1,7 +1,9 @@
 import React from "react";
-import { Card, Dropdown, Button, Input, Modal } from "semantic-ui-react";
+import { Dropdown, Button, Input, Modal } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { addPaymentToBill } from "../../actions/CashRegisterActions";
+import { getTodayJalaali } from "../utils/jalaaliUtils";
+import { toastr } from "react-redux-toastr";
 
 class AddPaymentModal extends React.Component {
   state = {
@@ -17,24 +19,36 @@ class AddPaymentModal extends React.Component {
         value: "card"
       }
     ],
-    kind: null,
     data: {}
   };
 
-  setStateKind = (_, { value }) => {
-    this.setState({ kind: value });
+  setStateType = (_, { value }) => {
+    this.setState({ type: value });
   };
 
-  handleInputChange = e => {
+  handleInputChange = (e, status) => {
     this.setState({
       data: {
         ...this.state.data,
-        paidPrice: e.target.value
+        [status]: e.target.value
       }
     });
   };
 
   handleSubmit = () => {
+    const prepareData = {
+      create_date: getTodayJalaali(),
+      amount: this.state.card_amount + this.state.cash_amount,
+      type: this.state.type
+    };
+    this.props
+      .addPaymentToBill(this.props.pk, prepareData)
+      .then(() => {
+        toastr.success("عملیات با موفقیت انجام شد");
+      })
+      .catch(() => {
+        toastr.error("خطا در فرایند عملیات");
+      });
     this.props.onClose();
   };
 
@@ -58,7 +72,12 @@ class AddPaymentModal extends React.Component {
         <Modal.Content>
           <h5 className="yekan">
             انتخاب نوع پرداخت&nbsp;
-            <span style={{ fontWeight: "bold", color: "red" }}>*</span>
+            <span
+              style={{ fontWeight: "bold", color: "red" }}
+              onChange={this.handleTypeChange}
+            >
+              *
+            </span>
           </h5>
           <Dropdown
             placeholder="انتخاب نوع پرداخت"
@@ -66,9 +85,9 @@ class AddPaymentModal extends React.Component {
             fluid
             selection
             options={this.state.paymentOptions}
-            onChange={this.setStateKind}
+            onChange={this.setStateType}
           />
-          {this.state.kind === "cheque" && (
+          {this.state.type === "cheque" && (
             <React.Fragment>
               <h5 className="yekan">
                 مبلغ پرداختی&nbsp;
@@ -119,7 +138,7 @@ class AddPaymentModal extends React.Component {
               />
             </React.Fragment>
           )}
-          {this.state.kind === "card" && (
+          {this.state.type === "card" && (
             <React.Fragment>
               <h5 className="yekan">
                 مبلغ پرداختی کارتی&nbsp;
@@ -131,11 +150,19 @@ class AddPaymentModal extends React.Component {
                 type="number"
                 defaultValue={this.props.price}
                 onChange={e => {
-                  this.handleInputChange(e);
+                  this.handleInputChange(e, "card_amount");
                 }}
               />
               <h5 className="yekan">مبلغ پرداختی نقدی</h5>
-              <Input fluid className="ltr" type="number" defaultValue="0" />
+              <Input
+                fluid
+                className="ltr"
+                type="number"
+                defaultValue="0"
+                onChange={e => {
+                  this.handleInputChange(e, "cash_amount");
+                }}
+              />
             </React.Fragment>
           )}
         </Modal.Content>
@@ -155,4 +182,6 @@ class AddPaymentModal extends React.Component {
   }
 }
 
-export default connect(null, { addPaymentToBill })(AddPaymentModal);
+export default connect(null, { addPaymentToBill, getTodayJalaali })(
+  AddPaymentModal
+);

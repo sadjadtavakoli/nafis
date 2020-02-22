@@ -5,17 +5,17 @@ import {
   Grid,
   Table,
   Button,
-  Card,
   Checkbox
 } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { getOneBill } from "../../actions/CashRegisterActions";
 import LoadingBar from "../utils/loadingBar";
 import AddPaymentModal from "./AddPaymentModal";
-import { digitToComma, enToFa } from "../utils/numberUtils";
+import { digitToComma } from "../utils/numberUtils";
 import history from "../../history";
 import EditCustomerModal from "./EditCustomerModal";
-import { standardTimeToJalaali, getTodayJalaali } from "../utils/jalaaliUtils";
+import { standardTimeToJalaali } from "../utils/jalaaliUtils";
+import logo from "../../assets/logo_printable.png";
 
 class ViewBillModal extends React.Component {
   state = {
@@ -33,7 +33,7 @@ class ViewBillModal extends React.Component {
     this.props.getOneBill(this.props.match.params.pk).then(() => {
       this.setState({
         fetch: true,
-        anyPays: this.props.theBill.payments.length
+        anyPays: this.props.theBill.payments.length ? true : false
       });
       console.log("bill", this.props.theBill);
     });
@@ -129,27 +129,8 @@ class ViewBillModal extends React.Component {
                   </Table>
                 </Segment.Group>
               </Grid.Column>
-              <Grid.Column floated="left" width={2}>
-                <Segment.Group horizontal>
-                  <Card>
-                    <Card.Content
-                      className="text-center"
-                      style={{ height: "100px" }}
-                    >
-                      <span
-                        style={{
-                          margin: "0",
-                          position: "absolute",
-                          top: "50%",
-                          left: "50%",
-                          transform: "translate(-50%, -50%)"
-                        }}
-                      >
-                        لوگو
-                      </span>
-                    </Card.Content>
-                  </Card>
-                </Segment.Group>
+              <Grid.Column floated="left" width={2} style={{ paddingRight: 0 }}>
+                <img src={logo} className="nafis-logo" />
               </Grid.Column>
             </Grid>
             <Table celled className="rtl text-center">
@@ -236,6 +217,7 @@ class ViewBillModal extends React.Component {
                 </Table.Row>
               </Table.Body>
             </Table>
+            <hr color="#ddd" />
             {this.state.anyPays && (
               <Table celled className="rtl text-center">
                 <Table.Header>
@@ -261,8 +243,11 @@ class ViewBillModal extends React.Component {
                   {bill.payments.map(payment => {
                     return (
                       <Table.Row>
-                        <Table.Cell className="table-border-left yekan">
-                          {enToFa(standardTimeToJalaali(payment.create_date))}
+                        <Table.Cell
+                          className="table-border-left"
+                          id="norm-latin"
+                        >
+                          {standardTimeToJalaali(payment.create_date)}
                         </Table.Cell>
                         <Table.Cell id="norm-latin">
                           {digitToComma(payment.amount)}
@@ -310,6 +295,7 @@ class ViewBillModal extends React.Component {
                 open={this.state.openAddPayment}
                 onClose={this.toggleAddPaymentModal}
                 price={bill.final_price}
+                pk={bill.pk}
               />
             )}
             {this.state.openEditCustomer && (

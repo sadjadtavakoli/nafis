@@ -18,8 +18,7 @@ class EditTab extends Component {
     address: null,
     birth_date: null,
     marriage_date: null,
-    points: null,
-    class_type: null,
+    points: 0,
     first_name_b: false,
     last_name_b: false,
     email_b: false,
@@ -28,7 +27,6 @@ class EditTab extends Component {
     birth_date_b: false,
     marriage_date_b: false,
     points_b: false,
-    class_type_b: false,
     first_name_e: false,
     last_name_e: false,
     email_e: false,
@@ -37,7 +35,6 @@ class EditTab extends Component {
     birth_date_e: false,
     marriage_date_e: false,
     points_e: false,
-    class_type_e: false,
     anyChange: false
   };
 
@@ -56,8 +53,7 @@ class EditTab extends Component {
         address: this.props.theCustomer.address,
         birth_date: this.props.theCustomer.birth_date,
         marriage_date: this.props.theCustomer.marriage_date,
-        points: this.props.theCustomer.points,
-        class_type: this.props.theCustomer.class_type
+        points: this.props.theCustomer.points
       });
     });
   };
@@ -135,8 +131,7 @@ class EditTab extends Component {
         address: this.state.address,
         birth_date: this.state.birth_date,
         marriage_date: this.state.marriage_date,
-        points: this.state.points,
-        class_type: this.state.class_type
+        points: this.state.points
       };
       this.props
         .updateCustomer(this.state.pk, prepareData)
