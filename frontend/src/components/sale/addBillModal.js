@@ -189,7 +189,7 @@ class AddBillModal extends React.Component {
     );
   };
 
-  sumProductTotalPrice = item => {
+  sumProductTotalPrice = () => {
     let preSumArray = [];
     let sum = 0;
     if (this.state.itemsDataSheet)

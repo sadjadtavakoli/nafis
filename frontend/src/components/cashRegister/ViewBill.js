@@ -5,15 +5,19 @@ import {
   Grid,
   Table,
   Button,
-  Card
+  Card,
+  Popup
 } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { getOneBill } from "../../actions/CashRegisterActions";
 import LoadingBar from "../utils/loadingBar";
+import AddPaymentPopup from "./AddPaymentPopup";
+import { digitToComma } from "../utils/numberUtils";
 
 class ViewBillModal extends React.Component {
   state = {
-    fetch: false
+    fetch: false,
+    isOpenAddPayment: false
   };
 
   componentDidMount() {
@@ -23,13 +27,19 @@ class ViewBillModal extends React.Component {
     });
   }
 
+  toggleAddPaymentPopup = () => {
+    this.setState(prevState => ({
+      isOpenAddPayment: !prevState.isOpenAddPayment
+    }));
+  };
+
   render() {
     const bill = this.props.theBill;
     return (
       <Container>
         <Segment.Group className="rtl" style={{ padding: "10px" }}>
           <Grid>
-            <Grid.Column floated="right" width={13}>
+            <Grid.Column floated="right" width={14}>
               <Segment.Group horizontal>
                 <Table className="text-right">
                   {this.state.fetch ? (
@@ -101,10 +111,25 @@ class ViewBillModal extends React.Component {
                 </Table>
               </Segment.Group>
             </Grid.Column>
-            <Grid.Column floated="left" width={3}>
+            <Grid.Column floated="left" width={2}>
               <Segment.Group horizontal>
                 <Card>
-                  <Card.Content description={"لوگو"} className="text-center" />
+                  <Card.Content
+                    className="text-center"
+                    style={{ height: "100px" }}
+                  >
+                    <span
+                      style={{
+                        margin: "0",
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)"
+                      }}
+                    >
+                      لوگو
+                    </span>
+                  </Card.Content>
                 </Card>
               </Segment.Group>
             </Grid.Column>
@@ -133,14 +158,27 @@ class ViewBillModal extends React.Component {
                 bill.items.map(item => {
                   return (
                     <Table.Row>
-                      <Table.Cell className="table-border-left"></Table.Cell>
+                      <Table.Cell
+                        className="table-border-left"
+                        id="norm-latin"
+                      ></Table.Cell>
                       <Table.Cell>{item.product.name}</Table.Cell>
-                      <Table.Cell>{item.product.code}</Table.Cell>
-                      <Table.Cell>{item.amount}</Table.Cell>
-                      <Table.Cell></Table.Cell>
-                      <Table.Cell>{item.discount}</Table.Cell>
-                      <Table.Cell>{item.price}</Table.Cell>
-                      <Table.Cell>{item.final_price}</Table.Cell>
+                      <Table.Cell id="norm-latin">
+                        {item.product.code}
+                      </Table.Cell>
+                      <Table.Cell id="norm-latin">{item.amount}</Table.Cell>
+                      <Table.Cell id="norm-latin">
+                        {digitToComma(item.product.selling_price)}
+                      </Table.Cell>
+                      <Table.Cell id="norm-latin">
+                        {digitToComma(item.discount)}
+                      </Table.Cell>
+                      <Table.Cell id="norm-latin">
+                        {digitToComma(item.price)}
+                      </Table.Cell>
+                      <Table.Cell id="norm-latin">
+                        {digitToComma(item.final_price)}
+                      </Table.Cell>
                       <Table.Cell className="table-border-left-none"></Table.Cell>
                     </Table.Row>
                   );
@@ -163,19 +201,51 @@ class ViewBillModal extends React.Component {
             <Table.Body>
               {this.state.fetch && (
                 <Table.Row>
-                  <Table.Cell className="table-border-left">
-                    {bill.final_price}
+                  <Table.Cell className="table-border-left" id="norm-latin">
+                    {digitToComma(bill.final_price)}
                   </Table.Cell>
-                  <Table.Cell>{bill.total_discount}</Table.Cell>
-                  <Table.Cell>{bill.items_discount}</Table.Cell>
-                  <Table.Cell className="table-border-left-none">
-                    {bill.remaining_payment}
+                  <Table.Cell id="norm-latin">
+                    {digitToComma(bill.total_discount)}
+                  </Table.Cell>
+                  <Table.Cell id="norm-latin">
+                    {digitToComma(bill.items_discount)}
+                  </Table.Cell>
+                  <Table.Cell
+                    className="table-border-left-none"
+                    id="norm-latin"
+                  >
+                    {digitToComma(bill.remaining_payment)}
                   </Table.Cell>
                 </Table.Row>
               )}
             </Table.Body>
           </Table>
-          <tr />
+          <hr color="#ddd" />
+          <div className="text-center padded">
+            <Popup
+              content={
+                <AddPaymentPopup
+                  onClose={this.toggleAddPaymentPopup}
+                  onSubmit={this.submitPaymentPopup}
+                />
+              }
+              open={this.state.isOpenAddPayment}
+              className="no-filter"
+              position="bottom center"
+              wide="very"
+              trigger={
+                <Button
+                  circular
+                  onClick={() => {
+                    this.toggleAddPaymentPopup(this.state.isOpenAddPayment);
+                  }}
+                  color="green"
+                  size="huge"
+                  icon="add"
+                />
+              }
+            />
+          </div>
         </Segment.Group>
       </Container>
     );

@@ -19,7 +19,7 @@ import CustomerPage from "./customerSection/CustomerPage";
 import Suppliers from "./suppliers";
 import Supplier from "./suppliers/Supplier";
 import DepositoryEdit from "./depository/depositoryEdit";
-import ViewBillModal from "./cashRegister/ViewBillModal";
+import ViewBill from "./cashRegister/ViewBill";
 
 const App = ({ token }) => {
   return (
@@ -51,7 +51,7 @@ const App = ({ token }) => {
               exact
               component={DepositoryEdit}
             />
-            <Route path="/cashregister/:pk" exact component={ViewBillModal} />
+            <Route path="/cashregister/:pk" exact component={ViewBill} />
           </SideBar>
         </Router>
       ) : (
