@@ -31,7 +31,6 @@ const INITIAL_STATE = {
   isOpenAddItem: false,
   formValidation: {},
   phone_number: "",
-  used_points: "",
   branch: 1,
   discount: 0,
   editting: "",
@@ -179,18 +178,23 @@ class ShowBillInformation extends React.Component {
   };
 
   applyEdit = inputName => {
+    let hasErrors = false;
     this.setState({
       isEnableEdit: {
         ...this.state.isEnableEdit,
         [inputName]: false
       }
     });
-    if (inputName === "used_points") {
-      if (this.state.used_points > this.state.customerData.points) {
-        alert("مقدار امتیاز وارد شده بیش تر از امتیاز مشتری است");
+    if (inputName === "discount") {
+      if (
+        this.state.discount >
+        this.state.sumProductTotalPrice - this.state.discount
+      ) {
+        alert("مقدار تخفیف وارد شده بیش تر از قیمت نهایی فاکتور است");
         this.setState({
-          data: { ...this.state.data, used_points: this.props.data.used_points }
+          data: { ...this.state.data, discount: this.props.data.discount }
         });
+        hasErrors = true;
       } else {
         this.props
           .updateBill(this.state.data.pk, {
@@ -201,7 +205,8 @@ class ShowBillInformation extends React.Component {
             this.props.refetch();
           });
       }
-    } else if (inputName === "discount") {
+    }
+    if (inputName === "discount" && hasErrors === false) {
       this.props
         .updateBill(this.state.data.pk, {
           discount: Number(this.state.discount)
@@ -553,20 +558,6 @@ class ShowBillInformation extends React.Component {
                   onChange={e => this.inputChange(e, "phone_number")}
                   placeholder="شماره تلفن همراه"
                 />
-                <Form.Input
-                  className="ltr placeholder-rtl"
-                  readOnly={!this.state.isEnableEdit.used_points}
-                  error={!this.state.isEnableEdit.used_points}
-                  defaultValue={this.state.data.used_points}
-                  label={() =>
-                    this.labelRender("امتیاز استفاده شده", "used_points")
-                  }
-                  type="number"
-                  onChange={e => this.inputChange(e, "used_points")}
-                  placeholder="امتیاز استفاده شده"
-                />
-              </Form.Group>
-              <Form.Group widths={2}>
                 <Form.Dropdown
                   className="ltr placeholder-rtl text-right"
                   readOnly
@@ -576,19 +567,18 @@ class ShowBillInformation extends React.Component {
                   label={"شعبه"}
                   options={this.state.branchOptions}
                 />
+              </Form.Group>
+              <Form.Group widths={2}>
                 <Form.Input
                   className="ltr placeholder-rtl"
                   readOnly={!this.state.isEnableEdit.discount}
-                  error={!this.state.isEnableEdit.discount}
                   defaultValue={this.state.data.discount}
                   label={() => this.labelRender("تخفیف کلی", "discount")}
                   type="number"
                   onChange={e => this.inputChange(e, "discount")}
                   placeholder="مقدار تخفیف"
+                  max={this.state.sumProductTotalPrice - this.state.discount}
                 />
-              </Form.Group>
-              <Form.Group widths={2}>
-                <Form.Input className="invisible" hidden={true} />
                 <Form.Input
                   className="rtl placeholder-rtl text-right"
                   readOnly={true}
@@ -601,6 +591,7 @@ class ShowBillInformation extends React.Component {
                   type="text"
                 />
               </Form.Group>
+              <Form.Group widths={2}></Form.Group>
               {this.state.data.items &&
               this.state.data.items.length > 0 ? null : (
                 <Message
