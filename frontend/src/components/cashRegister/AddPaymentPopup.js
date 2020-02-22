@@ -11,15 +11,29 @@ class AddPaymentPopup extends React.Component {
       },
       {
         key: "cash",
-        text: "نفد و کارت",
+        text: "نقد و کارت",
         value: "cash"
       }
     ],
-    kind: null
+    kind: null,
+    paidPrice: this.props.price
   };
 
   setStateKind = (_, { value }) => {
     this.setState({ kind: value });
+  };
+
+  handleInputChange = e => {
+    this.setState({
+      paidPrice: e.target.value
+    });
+  };
+
+  handleSubmit = () => {
+    if (this.state.kind === "cheque") {
+      this.props.onSubmit(this.state.paidPrice, "چک");
+    } else this.props.onSubmit(this.state.paidPrice, "نقد و کارت");
+    this.props.onClose();
   };
 
   render() {
@@ -57,9 +71,8 @@ class AddPaymentPopup extends React.Component {
               <Input
                 type="number"
                 fluid
-                className="ltr yekan"
+                className="ltr"
                 defaultValue={this.props.price}
-                placeholder="مبلغ پرداختی"
               />
               <h5 className="yekan">
                 شماره چک&nbsp;
@@ -80,6 +93,43 @@ class AddPaymentPopup extends React.Component {
                 className="rtl placeholder-rtl text-right yekan"
                 placeholder="بانک"
               />
+              <h5 className="yekan">
+                تاریخ صدور&nbsp;
+                <span style={{ fontWeight: "bold", color: "red" }}>*</span>
+              </h5>
+              <Input
+                fluid
+                className="rtl placeholder-rtl text-right yekan"
+                placeholder="نمونه:‌ 1398/1/10"
+              />
+              <h5 className="yekan">
+                تاریخ اعتبار&nbsp;
+                <span style={{ fontWeight: "bold", color: "red" }}>*</span>
+              </h5>
+              <Input
+                fluid
+                className="rtl placeholder-rtl text-right yekan"
+                placeholder="نمونه:‌ 1398/1/10"
+              />
+            </React.Fragment>
+          )}
+          {this.state.kind === "cash" && (
+            <React.Fragment>
+              <h5 className="yekan">
+                مبلغ پرداختی کارتی&nbsp;
+                <span style={{ fontWeight: "bold", color: "red" }}>*</span>
+              </h5>
+              <Input
+                fluid
+                className="ltr"
+                type="number"
+                defaultValue={this.props.price}
+                onChange={e => {
+                  this.handleInputChange(e);
+                }}
+              />
+              <h5 className="yekan">مبلغ پرداختی نقدی</h5>
+              <Input fluid className="ltr" type="number" defaultValue="0" />
             </React.Fragment>
           )}
         </Card.Content>
@@ -89,7 +139,7 @@ class AddPaymentPopup extends React.Component {
               بستن
             </Button>
             <Button.Or text="یا" className="yekan" />
-            <Button className="yekan" positive>
+            <Button className="yekan" positive onClick={this.handleSubmit}>
               افزودن
             </Button>
           </Button.Group>

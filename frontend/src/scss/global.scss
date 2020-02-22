@@ -269,11 +269,6 @@ label {
 
 // SUPPLIERS
 
-.error input {
-  background-color: #f3f4f5 !important;
-  color: rgb(100, 100, 100) !important;
-  border-color: #aaaaaa !important;
-}
 .s-h2-padding {
   padding: 0 1em;
 }
@@ -329,4 +324,16 @@ label {
 
 .blurring.dimmed.dimmable > .popup:not(.dimmer) {
   filter: unset !important;
+}
+
+#customer {
+  font-family: yekan;
+  text-align: right;
+  direction: rtl;
+}
+
+#customer-latin {
+  font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
+  text-align: left;
+  direction: ltr;
 }
