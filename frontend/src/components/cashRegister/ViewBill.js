@@ -14,11 +14,13 @@ import { getOneBill } from "../../actions/CashRegisterActions";
 import LoadingBar from "../utils/loadingBar";
 import AddPaymentPopup from "./AddPaymentPopup";
 import { digitToComma } from "../utils/numberUtils";
+import history from "../../history";
 
 class ViewBillModal extends React.Component {
   state = {
     fetch: false,
-    isOpenAddPayment: false
+    isOpenAddPayment: false,
+    counter: 1
   };
 
   componentDidMount() {
@@ -156,13 +158,12 @@ class ViewBillModal extends React.Component {
 
             <Table.Body>
               {this.state.fetch &&
-                bill.items.map(item => {
+                bill.items.map((item, index) => {
                   return (
                     <Table.Row>
-                      <Table.Cell
-                        className="table-border-left"
-                        id="norm-latin"
-                      ></Table.Cell>
+                      <Table.Cell className="table-border-left" id="norm-latin">
+                        {index + 1}
+                      </Table.Cell>
                       <Table.Cell>{item.product.name}</Table.Cell>
                       <Table.Cell id="norm-latin">
                         {item.product.code}
@@ -182,7 +183,6 @@ class ViewBillModal extends React.Component {
                       </Table.Cell>
                       <Table.Cell className="table-border-left-none">
                         <Checkbox toggle readOnly checked={item.end_of_roll} />
-                        {console.log(item.product)}
                       </Table.Cell>
                     </Table.Row>
                   );
@@ -231,6 +231,7 @@ class ViewBillModal extends React.Component {
                 <AddPaymentPopup
                   onClose={this.toggleAddPaymentPopup}
                   onSubmit={this.submitPaymentPopup}
+                  price={this.state.fetch && bill.final_price}
                 />
               }
               open={this.state.isOpenAddPayment}
@@ -248,6 +249,14 @@ class ViewBillModal extends React.Component {
                   icon="add"
                 />
               }
+            />
+            <Button
+              circular
+              onClick={() => {
+                history.push("/cashregister/");
+              }}
+              size="huge"
+              icon="step backward"
             />
           </div>
         </Segment.Group>

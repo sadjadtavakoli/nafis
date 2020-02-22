@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Dropdown, Button } from "semantic-ui-react";
+import { Card, Dropdown, Button, Input } from "semantic-ui-react";
 
 class AddPaymentPopup extends React.Component {
   state = {
@@ -14,7 +14,12 @@ class AddPaymentPopup extends React.Component {
         text: "نفد و کارت",
         value: "cash"
       }
-    ]
+    ],
+    kind: null
+  };
+
+  setStateKind = (_, { value }) => {
+    this.setState({ kind: value });
   };
 
   render() {
@@ -41,7 +46,42 @@ class AddPaymentPopup extends React.Component {
             fluid
             selection
             options={this.state.paymentOptions}
+            onChange={this.setStateKind}
           />
+          {this.state.kind === "cheque" && (
+            <React.Fragment>
+              <h5 className="yekan">
+                مبلغ پرداختی&nbsp;
+                <span style={{ fontWeight: "bold", color: "red" }}>*</span>
+              </h5>
+              <Input
+                type="number"
+                fluid
+                className="ltr yekan"
+                defaultValue={this.props.price}
+                placeholder="مبلغ پرداختی"
+              />
+              <h5 className="yekan">
+                شماره چک&nbsp;
+                <span style={{ fontWeight: "bold", color: "red" }}>*</span>
+              </h5>
+              <Input
+                type="number"
+                fluid
+                className="rtl placeholder-rtl"
+                placeholder="شماره چک"
+              />
+              <h5 className="yekan">
+                بانک&nbsp;
+                <span style={{ fontWeight: "bold", color: "red" }}>*</span>
+              </h5>
+              <Input
+                fluid
+                className="rtl placeholder-rtl text-right yekan"
+                placeholder="بانک"
+              />
+            </React.Fragment>
+          )}
         </Card.Content>
         <Card.Content className="ltr text-center">
           <Button.Group>
