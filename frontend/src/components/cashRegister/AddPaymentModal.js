@@ -1,7 +1,9 @@
 import React from "react";
-import { Card, Dropdown, Button, Input } from "semantic-ui-react";
+import { Card, Dropdown, Button, Input, Modal } from "semantic-ui-react";
+import { connect } from "react-redux";
+import { addPaymentToBill } from "../../actions/CashRegisterActions";
 
-class AddPaymentPopup extends React.Component {
+class AddPaymentModal extends React.Component {
   state = {
     paymentOptions: [
       {
@@ -10,13 +12,13 @@ class AddPaymentPopup extends React.Component {
         value: "cheque"
       },
       {
-        key: "cash",
+        key: "card",
         text: "نقد و کارت",
-        value: "cash"
+        value: "card"
       }
     ],
     kind: null,
-    paidPrice: this.props.price
+    data: {}
   };
 
   setStateKind = (_, { value }) => {
@@ -25,31 +27,35 @@ class AddPaymentPopup extends React.Component {
 
   handleInputChange = e => {
     this.setState({
-      paidPrice: e.target.value
+      data: {
+        ...this.state.data,
+        paidPrice: e.target.value
+      }
     });
   };
 
   handleSubmit = () => {
-    if (this.state.kind === "cheque") {
-      this.props.onSubmit(this.state.paidPrice, "چک");
-    } else this.props.onSubmit(this.state.paidPrice, "نقد و کارت");
     this.props.onClose();
   };
 
   render() {
     return (
-      <Card className="rtl" key={0}>
-        <Card.Content>
-          <Card.Header className="d-flex">
-            <h3
-              className="yekan d-flex"
-              style={{ alignItems: "center", marginBottom: 0 }}
-            >
-              افزودن پرداخت جدید
-            </h3>
-          </Card.Header>
-        </Card.Content>
-        <Card.Content>
+      <Modal
+        dimmer="blurring"
+        open={this.props.open}
+        onClose={this.props.onClose}
+        className="rtl text-right"
+        size="tiny"
+      >
+        <Modal.Header className="d-flex">
+          <h3
+            className="yekan d-flex"
+            style={{ alignItems: "center", marginBottom: 0 }}
+          >
+            افزودن پرداخت جدید
+          </h3>
+        </Modal.Header>
+        <Modal.Content>
           <h5 className="yekan">
             انتخاب نوع پرداخت&nbsp;
             <span style={{ fontWeight: "bold", color: "red" }}>*</span>
@@ -113,7 +119,7 @@ class AddPaymentPopup extends React.Component {
               />
             </React.Fragment>
           )}
-          {this.state.kind === "cash" && (
+          {this.state.kind === "card" && (
             <React.Fragment>
               <h5 className="yekan">
                 مبلغ پرداختی کارتی&nbsp;
@@ -132,8 +138,8 @@ class AddPaymentPopup extends React.Component {
               <Input fluid className="ltr" type="number" defaultValue="0" />
             </React.Fragment>
           )}
-        </Card.Content>
-        <Card.Content className="ltr text-center">
+        </Modal.Content>
+        <Modal.Actions className="ltr text-center">
           <Button.Group>
             <Button className="yekan" onClick={this.props.onClose}>
               بستن
@@ -143,10 +149,10 @@ class AddPaymentPopup extends React.Component {
               افزودن
             </Button>
           </Button.Group>
-        </Card.Content>
-      </Card>
+        </Modal.Actions>
+      </Modal>
     );
   }
 }
 
-export default AddPaymentPopup;
+export default connect(null, { addPaymentToBill })(AddPaymentModal);

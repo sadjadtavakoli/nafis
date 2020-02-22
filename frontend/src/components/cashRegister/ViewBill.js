@@ -6,26 +6,23 @@ import {
   Table,
   Button,
   Card,
-  Popup,
   Checkbox
 } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { getOneBill } from "../../actions/CashRegisterActions";
 import LoadingBar from "../utils/loadingBar";
-import AddPaymentPopup from "./AddPaymentPopup";
+import AddPaymentModal from "./AddPaymentModal";
 import { digitToComma, enToFa } from "../utils/numberUtils";
 import history from "../../history";
-import EditCustomerPopup from "./EditCustomerPopup";
-import { getTodayJalaali } from "../utils/jalaaliUtils";
+import EditCustomerModal from "./EditCustomerModal";
+import { standardTimeToJalaali, getTodayJalaali } from "../utils/jalaaliUtils";
 
 class ViewBillModal extends React.Component {
   state = {
     fetch: false,
-    isOpenAddPayment: false,
-    isOpenEditCustomer: false,
-    anyPays: false,
-    paidPrice: null,
-    paymentType: null
+    openAddPayment: false,
+    openEditCustomer: false,
+    anyPays: false
   };
 
   componentDidMount() {
@@ -34,27 +31,23 @@ class ViewBillModal extends React.Component {
 
   getBill = () => {
     this.props.getOneBill(this.props.match.params.pk).then(() => {
-      this.setState({ fetch: true });
+      this.setState({
+        fetch: true,
+        anyPays: this.props.theBill.payments.length
+      });
+      console.log("bill", this.props.theBill);
     });
   };
 
-  toggleAddPaymentPopup = () => {
-    this.setState(prevState => ({
-      isOpenAddPayment: !prevState.isOpenAddPayment
-    }));
-  };
-
-  toggleEditCustomerPopup = () => {
-    this.setState(prevState => ({
-      isOpenEditCustomer: !prevState.isOpenEditCustomer
-    }));
-  };
-
-  submitPaymentPopup = (price, paymentType) => {
+  toggleAddPaymentModal = () => {
     this.setState({
-      paidPrice: price,
-      paymentType: paymentType,
-      anyPays: true
+      openAddPayment: !this.state.openAddPayment
+    });
+  };
+
+  toggleEditCustomerModal = () => {
+    this.setState({
+      openEditCustomer: !this.state.openEditCustomer
     });
   };
 
@@ -103,33 +96,16 @@ class ViewBillModal extends React.Component {
                             {bill.buyer.first_name}&nbsp;
                             {bill.buyer.last_name}
                           </span>
-                          <Popup
-                            content={
-                              <EditCustomerPopup
-                                onClose={this.toggleEditCustomerPopup}
-                                onSubmit={this.submitPaymentPopup}
-                                pk={bill.buyer.pk}
-                                madeChange={this.getBill}
-                              />
-                            }
-                            open={this.state.isOpenEditCustomer}
-                            position="bottom center"
-                            wide="very"
-                            trigger={
-                              <Button
-                                circular
-                                className="yekan"
-                                color="teal"
-                                onClick={() => {
-                                  this.toggleEditCustomerPopup(
-                                    this.state.isOpenEditCustomer
-                                  );
-                                }}
-                              >
-                                ویرایش
-                              </Button>
-                            }
-                          />
+                          <Button
+                            circular
+                            className="yekan"
+                            color="teal"
+                            onClick={() => {
+                              this.toggleEditCustomerModal();
+                            }}
+                          >
+                            ویرایش
+                          </Button>
                         </Table.Cell>
                         <Table.Cell>
                           <span style={{ fontWeight: "bold" }}>امتیاز:</span>
@@ -275,24 +251,31 @@ class ViewBillModal extends React.Component {
                       تاریخ ایجاد
                     </Table.HeaderCell>
                     <Table.HeaderCell>مبلغ پرداختی</Table.HeaderCell>
-                    <Table.HeaderCell>نوع پرداخت</Table.HeaderCell>
+                    <Table.HeaderCell className="table-border-left-none">
+                      نوع پرداخت
+                    </Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
 
                 <Table.Body>
-                  <Table.Row>
-                    <Table.Cell className="table-border-left yekan">
-                      {enToFa(getTodayJalaali())}
-                    </Table.Cell>
-                    <Table.Cell id="norm-latin">
-                      {this.state.paidPrice}
-                    </Table.Cell>
-                    <Table.Cell>{this.state.paymentType}</Table.Cell>
-                  </Table.Row>
+                  {bill.payments.map(payment => {
+                    return (
+                      <Table.Row>
+                        <Table.Cell className="table-border-left yekan">
+                          {enToFa(standardTimeToJalaali(payment.create_date))}
+                        </Table.Cell>
+                        <Table.Cell id="norm-latin">
+                          {digitToComma(payment.amount)}
+                        </Table.Cell>
+                        <Table.Cell className="table-border-left-none">
+                          {payment.type === "card" ? "نقد و کارت" : "چک"}
+                        </Table.Cell>
+                      </Table.Row>
+                    );
+                  })}
                 </Table.Body>
               </Table>
             )}
-            <hr color="#ddd" />
             <div className="text-center padded">
               <Button
                 circular
@@ -304,29 +287,14 @@ class ViewBillModal extends React.Component {
                 icon="check"
                 disabled
               />
-              <Popup
-                content={
-                  <AddPaymentPopup
-                    onClose={this.toggleAddPaymentPopup}
-                    onSubmit={this.submitPaymentPopup}
-                    price={bill.final_price}
-                  />
-                }
-                open={this.state.isOpenAddPayment}
-                className="no-filter"
-                position="bottom center"
-                wide="very"
-                trigger={
-                  <Button
-                    circular
-                    onClick={() => {
-                      this.toggleAddPaymentPopup(this.state.isOpenAddPayment);
-                    }}
-                    color="teal"
-                    size="huge"
-                    icon="add"
-                  />
-                }
+              <Button
+                circular
+                onClick={() => {
+                  this.toggleAddPaymentModal();
+                }}
+                color="teal"
+                size="huge"
+                icon="add"
               />
               <Button
                 circular
@@ -337,6 +305,21 @@ class ViewBillModal extends React.Component {
                 icon="step backward"
               />
             </div>
+            {this.state.openAddPayment && (
+              <AddPaymentModal
+                open={this.state.openAddPayment}
+                onClose={this.toggleAddPaymentModal}
+                price={bill.final_price}
+              />
+            )}
+            {this.state.openEditCustomer && (
+              <EditCustomerModal
+                open={this.state.openEditCustomer}
+                onClose={this.toggleEditCustomerModal}
+                pk={bill.buyer.pk}
+                madeChange={this.getBill}
+              />
+            )}
           </Segment.Group>
         ) : (
           <LoadingBar />

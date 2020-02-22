@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Button, Input } from "semantic-ui-react";
+import { Modal, Button, Input } from "semantic-ui-react";
 import {
   getACustomer,
   updateCustomer
@@ -19,7 +19,6 @@ class EditCustomerPopup extends React.Component {
     birth_date: null,
     marriage_date: null,
     points: null,
-    class_type: null,
     first_name_b: false,
     last_name_b: false,
     email_b: false,
@@ -28,7 +27,6 @@ class EditCustomerPopup extends React.Component {
     birth_date_b: false,
     marriage_date_b: false,
     points_b: false,
-    class_type_b: false,
     first_name_e: false,
     last_name_e: false,
     email_e: false,
@@ -37,7 +35,6 @@ class EditCustomerPopup extends React.Component {
     birth_date_e: false,
     marriage_date_e: false,
     points_e: false,
-    class_type_e: false,
     anyChange: false
   };
 
@@ -56,8 +53,7 @@ class EditCustomerPopup extends React.Component {
         address: this.props.theCustomer.address,
         birth_date: this.props.theCustomer.birth_date,
         marriage_date: this.props.theCustomer.marriage_date,
-        points: this.props.theCustomer.points,
-        class_type: this.props.theCustomer.class_type
+        points: this.props.theCustomer.points
       });
     });
   };
@@ -135,8 +131,7 @@ class EditCustomerPopup extends React.Component {
         address: this.state.address,
         birth_date: this.state.birth_date,
         marriage_date: this.state.marriage_date,
-        points: this.state.points,
-        class_type: this.state.class_type
+        points: this.state.points
       };
       this.props
         .updateCustomer(this.props.pk, prepareData)
@@ -213,18 +208,21 @@ class EditCustomerPopup extends React.Component {
 
   render() {
     return (
-      <Card className="rtl" key={0}>
-        <Card.Content>
-          <Card.Header className="d-flex">
-            <h3
-              className="yekan d-flex"
-              style={{ alignItems: "center", marginBottom: 0 }}
-            >
-              ویرایش مشتری
-            </h3>
-          </Card.Header>
-        </Card.Content>
-        <Card.Content>
+      <Modal
+        open={this.props.open}
+        onClose={this.props.onClose}
+        size="tiny"
+        className="rtl text-right"
+      >
+        <Modal.Header>
+          <h3
+            className="yekan d-flex"
+            style={{ alignItems: "center", marginBottom: 0 }}
+          >
+            ویرایش مشتری
+          </h3>
+        </Modal.Header>
+        <Modal.Content>
           <h5 className="yekan">نام</h5>
           {this.createInput("first_name")}
           <h5 className="yekan">نام خانوادگی</h5>
@@ -241,8 +239,8 @@ class EditCustomerPopup extends React.Component {
           {this.createInput("marriage_date")}
           <h5 className="yekan">امتیاز مشتری</h5>
           {this.createInput("points")}
-        </Card.Content>
-        <Card.Content className="ltr text-center">
+        </Modal.Content>
+        <Modal.Actions className="ltr text-center">
           <Button.Group>
             <Button className="yekan" onClick={this.props.onClose}>
               بستن
@@ -252,8 +250,8 @@ class EditCustomerPopup extends React.Component {
               ویرایش
             </Button>
           </Button.Group>
-        </Card.Content>
-      </Card>
+        </Modal.Actions>
+      </Modal>
     );
   }
 }
