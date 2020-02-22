@@ -45,10 +45,7 @@ class AddPaymentPopup extends React.Component {
         </Card.Content>
         <Card.Content className="ltr text-center">
           <Button.Group>
-            <Button
-              className="yekan"
-              onClick={this.props.toggleAddPaymentPopup}
-            >
+            <Button className="yekan" onClick={this.props.onClose}>
               بستن
             </Button>
             <Button.Or text="یا" className="yekan" />

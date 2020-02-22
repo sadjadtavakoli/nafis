@@ -6,7 +6,8 @@ import {
   Table,
   Button,
   Card,
-  Popup
+  Popup,
+  Checkbox
 } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { getOneBill } from "../../actions/CashRegisterActions";
@@ -134,7 +135,7 @@ class ViewBillModal extends React.Component {
               </Segment.Group>
             </Grid.Column>
           </Grid>
-          <Table celled className="rtl text-right">
+          <Table celled className="rtl text-center">
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell className="table-border-left">
@@ -179,13 +180,16 @@ class ViewBillModal extends React.Component {
                       <Table.Cell id="norm-latin">
                         {digitToComma(item.final_price)}
                       </Table.Cell>
-                      <Table.Cell className="table-border-left-none"></Table.Cell>
+                      <Table.Cell className="table-border-left-none">
+                        <Checkbox toggle readOnly checked={item.end_of_roll} />
+                        {console.log(item.product)}
+                      </Table.Cell>
                     </Table.Row>
                   );
                 })}
             </Table.Body>
           </Table>
-          <Table celled className="rtl text-right" columns="4">
+          <Table celled className="rtl text-center" columns="4">
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell className="table-border-left">

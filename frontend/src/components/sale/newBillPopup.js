@@ -201,7 +201,7 @@ class NewBillPopup extends React.Component {
             <div className="text-center">
               <Button.Group className="ltr">
                 <Button className="yekan" onClick={this.props.onClose}>
-                  بستن&nbsp;&nbsp;&nbsp;
+                  بستن
                 </Button>
                 <Button.Or text="یا" />
                 <Button
