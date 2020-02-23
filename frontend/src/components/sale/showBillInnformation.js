@@ -36,8 +36,7 @@ const INITIAL_STATE = {
   editting: "",
   branchOptions: [{ key: "1", value: "1", flag: "ir", text: "شعبه یک" }],
   isEnableEdit: {
-    discount: false,
-    used_points: false
+    discount: false
   },
   customerData: {},
   editedData: {},
@@ -160,13 +159,11 @@ class ShowBillInformation extends React.Component {
 
   edit = inputName => {
     let prepareData = {
-      discount: Number(this.state.discount),
-      used_points: Number(this.state.used_points)
+      discount: Number(this.state.discount)
     };
     this.props.updateBill(this.state.data.pk, prepareData).then(() => {
       this.setState({
-        discount: Number(this.state.discount),
-        used_points: Number(this.state.used_points)
+        discount: Number(this.state.discount)
       });
       this.props.refetch();
     });
@@ -178,7 +175,6 @@ class ShowBillInformation extends React.Component {
   };
 
   applyEdit = inputName => {
-    let hasErrors = false;
     this.setState({
       isEnableEdit: {
         ...this.state.isEnableEdit,
@@ -194,27 +190,16 @@ class ShowBillInformation extends React.Component {
         this.setState({
           data: { ...this.state.data, discount: this.props.data.discount }
         });
-        hasErrors = true;
       } else {
         this.props
           .updateBill(this.state.data.pk, {
-            used_points: Number(this.state.used_points)
+            discount: Number(this.state.discount)
           })
           .then(() => {
-            this.setState({ used_points: Number(this.state.used_points) });
+            this.setState({ discount: Number(this.state.discount) });
             this.props.refetch();
           });
       }
-    }
-    if (inputName === "discount" && hasErrors === false) {
-      this.props
-        .updateBill(this.state.data.pk, {
-          discount: Number(this.state.discount)
-        })
-        .then(() => {
-          this.setState({ discount: Number(this.state.discount) });
-          this.props.refetch();
-        });
     }
   };
 
