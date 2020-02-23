@@ -68,10 +68,8 @@ class NewBillPopup extends React.Component {
       if (this.props.pk) {
         this.props.addNewItem(this.props.pk, prepareData).then(res => {
           this.props.refetch(res);
-          setTimeout(() => {
-            toastr.success("ثبت آیتم جدید", "ثبت آیتم جدید با موفقیت انجام شد");
-            this.props.onClose();
-          }, 500);
+          toastr.success("ثبت آیتم جدید", "ثبت آیتم جدید با موفقیت انجام شد");
+          this.props.onClose();
         });
       } else {
         this.props.onSubmit(prepareData);

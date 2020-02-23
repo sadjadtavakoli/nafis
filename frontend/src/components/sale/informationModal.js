@@ -2,7 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import { enToFa, priceToPersian, digitToComma } from "../utils/numberUtils";
 import {
-  setNewBill,
   deleteItem,
   getCustomerByPhoneNumber,
   updateBill,
@@ -42,16 +41,72 @@ class InformationModal extends React.Component {
   };
 
   componentDidMount() {
-    console.log("props", this.props.data);
-    console.log("total discount", this.props.data.total_discount);
+    console.log(this.props.data);
     this.sumProductTotalPrice();
     this.initializeDiscount();
   }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.data !== this.props.data) {
+      this.sumProductTotalPrice();
+    }
+  }
+
+  sumProductTotalPrice = () => {
+    let preSumArray = [];
+    let sum = 0;
+    if (this.props.data.items)
+      preSumArray = this.props.data.items.map(item => {
+        return Number(item.final_price);
+      });
+    preSumArray.forEach(item => {
+      sum += item;
+    });
+    this.setState({ sumProductTotalPrice: sum });
+  };
 
   initializeDiscount = () => {
     this.setState({
       discount: this.props.data.total_discount
     });
+  };
+
+  switchToEditMode = () => {
+    this.setState({
+      labelEdit: true,
+      discount_s: true
+    });
+  };
+
+  handleDiscountChange = e => {
+    this.setState({
+      discount: e.target.value
+    });
+  };
+
+  applyEdit = () => {
+    if (
+      this.state.discount >
+      this.state.sumProductTotalPrice - this.state.discount
+    ) {
+      alert("مقدار تخفیف وارد شده بیش تر از قیمت نهایی فاکتور است");
+      this.setState({
+        discount: this.props.data.discount
+      });
+    } else {
+      this.props
+        .updateBill(this.props.data.pk, {
+          discount: Number(this.state.discount)
+        })
+        .then(() => {
+          this.setState({
+            discount: Number(this.state.discount),
+            labelEdit: false,
+            discount_s: false
+          });
+          this.props.refetch();
+        });
+    }
   };
 
   toggleAddItemPopup = () => {
@@ -84,9 +139,7 @@ class InformationModal extends React.Component {
 
   submitChanges = pk => {
     let preparedData = {
-      name: this.state.editedData.name,
       code: this.state.editedData.code,
-      selling_price: this.state.editedData.selling_price,
       amount: this.state.editedData.amount,
       discount: this.state.editedData.discount,
       end_of_roll_amount: this.state.editedData.end_of_roll_amount,
@@ -98,8 +151,7 @@ class InformationModal extends React.Component {
         editMode: false
       });
       this.props.refetch();
-      console.log("sent name", this.state.editedData.name);
-      console.log("sent code", this.state.editedData.code);
+      console.log("submited props", this.props.data);
     });
   };
 
@@ -111,49 +163,6 @@ class InformationModal extends React.Component {
     this.props.refetch();
   };
 
-  handleDiscountChange = e => {
-    this.setState(
-      {
-        discount: e.target.value
-      },
-      () => {
-        console.log(this.state.discount);
-      }
-    );
-  };
-
-  switchToEditMode = () => {
-    this.setState({
-      labelEdit: true,
-      discount_s: true
-    });
-  };
-
-  applyEdit = () => {
-    if (
-      this.state.discount >
-      this.state.sumProductTotalPrice - this.state.discount
-    ) {
-      alert("مقدار تخفیف وارد شده بیش تر از قیمت نهایی فاکتور است");
-      this.setState({
-        discount: this.props.data.discount
-      });
-    } else {
-      this.props
-        .updateBill(this.props.data.pk, {
-          discount: Number(this.state.discount)
-        })
-        .then(() => {
-          this.setState({
-            discount: Number(this.state.discount),
-            labelEdit: false,
-            discount_s: false
-          });
-          this.props.refetch();
-        });
-    }
-  };
-
   submitItemPopup = () => {
     this.sumProductTotalPrice();
     this.toggleAddItemPopup();
@@ -163,19 +172,6 @@ class InformationModal extends React.Component {
     this.setState({ ...this.state, data: response.data }, () => {
       this.sumProductTotalPrice();
     });
-  };
-
-  sumProductTotalPrice = () => {
-    let preSumArray = [];
-    let sum = 0;
-    if (this.props.data.items)
-      preSumArray = this.props.data.items.map(item => {
-        return Number(item.final_price);
-      });
-    preSumArray.forEach(item => {
-      sum += item;
-    });
-    this.setState({ sumProductTotalPrice: sum });
   };
 
   handleChange = (e, status) => {
@@ -242,58 +238,56 @@ class InformationModal extends React.Component {
         <Card fluid>
           <Card.Content>
             <Card.Header className="yekan">
-              {item.product.name}
+              <React.Fragment>
+                <span>
+                  {this.state.notFound === false
+                    ? this.state.productData.name
+                    : item.product.name}
+                </span>
+                &nbsp;-&nbsp;
+                <span>قیمت واحد</span>
+                &nbsp;
+                <span id="norm-latin">
+                  {this.state.notFound === false
+                    ? priceToPersian(this.state.productData.selling_price)
+                    : priceToPersian(item.product.selling_price)}
+                </span>
+                &nbsp;
+                <span>تومان</span>
+              </React.Fragment>
               {!this.state.editMode ? (
-                <Button
-                  icon
-                  color="red"
-                  onClick={() => this.deleteItem(index)}
-                  className="pointer"
-                  labelPosition="right"
-                  size="mini"
-                  style={{ marginRight: "10px" }}
-                >
-                  <span>حذف آیتم</span>
-                  <Icon name="trash" />
-                </Button>
-              ) : null}
-              {this.state.editMode ? null : (
-                <Button
-                  icon
-                  color="teal"
-                  onClick={() => this.editItem(index)}
-                  className="pointer"
-                  labelPosition="right"
-                  size="mini"
-                  style={{ marginRight: "10px" }}
-                >
-                  <span>ویرایش</span>
-                  <Icon name="edit" />
-                </Button>
-              )}
-              {!this.state.editMode ? (
-                <Message
-                  compact
-                  size="mini"
-                  color="teal"
-                  className="yekan form-message"
-                >
-                  جهت ویرایش این قسمت روی دکمه ی ویرایش کلیک کنید.
-                </Message>
+                <React.Fragment>
+                  <Button
+                    icon
+                    color="red"
+                    onClick={() => this.deleteItem(index)}
+                    className="pointer"
+                    labelPosition="right"
+                    size="mini"
+                    style={{ marginRight: "10px" }}
+                  >
+                    <span>حذف آیتم</span>
+                    <Icon name="trash" />
+                  </Button>
+                  <Button
+                    icon
+                    color="teal"
+                    onClick={() => this.editItem(index)}
+                    className="pointer"
+                    labelPosition="right"
+                    size="mini"
+                    style={{ marginRight: "10px" }}
+                  >
+                    <span>ویرایش</span>
+                    <Icon name="edit" />
+                  </Button>
+                </React.Fragment>
               ) : null}
             </Card.Header>
           </Card.Content>
           <Card.Content>
             <Form>
               <Form.Group widths="equal">
-                <Form.Input
-                  className="rtl text-right placeholder-rtl"
-                  readOnly={this.state.editting !== index ? true : false}
-                  fluid
-                  defaultValue={item.product.name}
-                  onChange={e => this.handleChange(e, "name")}
-                  label="نام محصول"
-                />
                 <Popup
                   content={
                     <React.Fragment>
@@ -301,7 +295,7 @@ class InformationModal extends React.Component {
                         <Label color="teal" className="rtl text-center">
                           <p>
                             <span>نام محصول:</span>&nbsp;
-                            <span>{enToFa(this.state.productData.name)}</span>
+                            <span>{this.state.productData.name}</span>
                           </p>
                           <p>
                             <span>مقدار باقی مانده:</span>&nbsp;
@@ -320,7 +314,8 @@ class InformationModal extends React.Component {
                                 )
                               )}
                             </span>
-                            <span>&nbsp; تومان</span>
+                            &nbsp;
+                            <span>تومان</span>
                           </p>
                         </Label>
                       ) : (
@@ -335,23 +330,16 @@ class InformationModal extends React.Component {
                   on="focus"
                   trigger={
                     <Form.Input
-                      className="ltr placeholder-rtl"
-                      readOnly={this.state.editting !== index ? true : false}
                       fluid
+                      readOnly={this.state.editting !== index ? true : false}
+                      type="number"
+                      className="rtl placeholder-rtl text-right"
                       defaultValue={item.product.code}
                       onChange={e => this.handleChange(e, "code")}
                       onClick={e => this.handleCodeInputClick(e)}
                       label="کد محصول"
                     />
                   }
-                />
-                <Form.Input
-                  className="ltr placeholder-rtl"
-                  readOnly
-                  fluid
-                  defaultValue={priceToPersian(item.product.selling_price)}
-                  onChange={e => this.handleChange(e, "selling_price")}
-                  label="قیمت واحد"
                 />
                 <Form.Input
                   className="ltr placeholder-rtl"
@@ -511,7 +499,6 @@ class InformationModal extends React.Component {
                         this.state.sumProductTotalPrice - this.state.discount
                       )
                     )} تومان`}
-                    type="text"
                   />
                 </Form.Group>
                 {!this.props.data.items.length && (
@@ -610,7 +597,6 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, {
-  setNewBill,
   deleteItem,
   getCustomerByPhoneNumber,
   updateBill,

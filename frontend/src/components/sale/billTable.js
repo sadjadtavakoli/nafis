@@ -229,7 +229,6 @@ class BillTable extends React.Component {
 
         {this.state.isOpenInformationModal ? (
           <InformationModal
-            key={this.state.isOpenInformationModal}
             refetch={() => this.getActiveBill(this.state.activePage)}
             data={this.state.itemData}
             open={this.state.isOpenInformationModal}
@@ -242,10 +241,13 @@ class BillTable extends React.Component {
 }
 
 const mapStateToProps = state => {
+  console.log(state);
   return {
     activeBill: state.sale.activeBill,
     newBillData: !state.sale.newBillData ? { pk: 0 } : state.sale.newBillData
   };
 };
 
-export default connect(mapStateToProps, { getActiveBill })(BillTable);
+export default connect(mapStateToProps, {
+  getActiveBill
+})(BillTable);

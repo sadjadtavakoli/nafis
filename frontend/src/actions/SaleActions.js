@@ -1,4 +1,4 @@
-import { GET_ACTIVE_BILL, ADD_BILL } from "./types";
+import { GET_ACTIVE_BILL, ADD_BILL, UPDATE_BILL_ITEM } from "./types";
 import server, { putServer } from "../apis/server";
 
 export const getActiveBill = (page = 1) => async dispatch => {
@@ -31,10 +31,12 @@ export const addNewItem = (pk, data) => async dispatch => {
 };
 
 export const updateBillItem = (pk, data) => async dispatch => {
-  return await server(localStorage.getItem("token")).patch(
+  const response = await server(localStorage.getItem("token")).patch(
     `/bill-items/${pk}/`,
     data
   );
+  dispatch({ type: "UPDATE_BILL_ITEM", payload: response.data });
+  return response;
 };
 
 export const deleteItem = pk => async dispatch => {

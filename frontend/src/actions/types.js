@@ -28,6 +28,7 @@ export const GET_CLASS_TYPES_AND_CITY = "GET_CLASS_TYPES_AND_CITY";
 export const ADD_CUSTOMER = "ADD_CUSTOMER";
 export const REMOVE_ITEM = "REMOVE_ITEM";
 export const ADD_SUPPLIER = "ADD_SUPPLIER";
+export const UPDATE_BILL_ITEM = "UPDATE_BILL_ITEM";
 
 // kari nadashte bashim
 export const FETCH = types => `FETCH_${types}`;
