@@ -3,7 +3,8 @@ import { Form, Button } from "semantic-ui-react";
 import { connect } from "react-redux";
 import {
   getACustomer,
-  updateCustomer
+  updateCustomer,
+  getClassTypes
 } from "../../actions/CustomerSectionActions";
 import { toastr } from "react-redux-toastr";
 import history from "../../history";
@@ -16,25 +17,33 @@ class EditTab extends Component {
     email: null,
     phone_number: null,
     address: null,
+    city: null,
     birth_date: null,
     marriage_date: null,
     points: 0,
+    class_type: null,
     first_name_b: false,
     last_name_b: false,
     email_b: false,
     phone_number_b: false,
     address_b: false,
+    city_b: false,
     birth_date_b: false,
     marriage_date_b: false,
     points_b: false,
+    class_type_b: false,
     first_name_e: false,
     last_name_e: false,
     email_e: false,
     phone_number_e: false,
     address_e: false,
+    city_e: false,
     birth_date_e: false,
     marriage_date_e: false,
     points_e: false,
+    class_type_e: false,
+    city_options: [],
+    class_options: [],
     anyChange: false
   };
 
@@ -53,8 +62,20 @@ class EditTab extends Component {
         address: this.props.theCustomer.address,
         birth_date: this.props.theCustomer.birth_date,
         marriage_date: this.props.theCustomer.marriage_date,
-        points: this.props.theCustomer.points
+        points: this.props.theCustomer.points,
+        city: this.props.theCustomer.city && this.props.theCustomer.city.pk,
+        class_type:
+          this.props.theCustomer.class_type &&
+          this.props.theCustomer.class_type.pk
       });
+      console.log(this.props.theCustomer);
+    });
+    this.props.getClassTypes().then(() => {
+      this.setState({
+        city_options: this.props.cityAndClass.cities,
+        class_tpye_options: this.props.cityAndClass.customerTypes
+      });
+      console.log(this.props.cityAndClass);
     });
   };
 
@@ -64,6 +85,10 @@ class EditTab extends Component {
 
   convertStatusE = status => {
     return status.concat("_e");
+  };
+
+  convertSelect = status => {
+    return status.replace("_options", "");
   };
 
   handleChange = (status, e) => {
@@ -129,9 +154,11 @@ class EditTab extends Component {
         email: this.state.email,
         phone_number: this.state.phone_number,
         address: this.state.address,
+        city: this.state.city,
         birth_date: this.state.birth_date,
         marriage_date: this.state.marriage_date,
-        points: this.state.points
+        points: this.state.points,
+        class_type: this.state.class_type
       };
       this.props
         .updateCustomer(this.state.pk, prepareData)
@@ -186,6 +213,23 @@ class EditTab extends Component {
     );
   };
 
+  createSelect = (status, title) => {
+    let convertSelect = this.convertSelect(status);
+    console.log({ convertSelect }, this.state[convertSelect]);
+    return (
+      <Form.Select
+        search
+        selection
+        fluid
+        className="text-right"
+        label={title}
+        placeholder={title}
+        options={this.state[status]}
+        defaultValue={this.state[convertSelect]}
+      />
+    );
+  };
+
   render() {
     return (
       <div className="rtl text-right">
@@ -200,11 +244,15 @@ class EditTab extends Component {
           </Form.Group>
           <Form.Group unstackable widths={2}>
             {this.createInput("address", "آدرس")}
-            {this.createInput("birth_date", "تاریخ تولد")}
+            {this.createSelect("city_options", "شهر")}
           </Form.Group>
           <Form.Group unstackable widths={2}>
+            {this.createInput("birth_date", "تاریخ تولد")}
             {this.createInput("marriage_date", "تاریخ ازدواج")}
+          </Form.Group>
+          <Form.Group unstackable widths={2}>
             {this.createInput("points", "امتیاز مشتری")}
+            {this.createSelect("class_type_options", "کلاس")}
           </Form.Group>
           <Button
             onClick={this.handleSubmit}
@@ -228,10 +276,13 @@ class EditTab extends Component {
 
 const mapStateToProps = state => {
   return {
-    theCustomer: state.customers.theCustomer
+    theCustomer: state.customers.theCustomer,
+    cityAndClass: state.customers.classTypesAndCity
   };
 };
 
-export default connect(mapStateToProps, { getACustomer, updateCustomer })(
-  EditTab
-);
+export default connect(mapStateToProps, {
+  getACustomer,
+  updateCustomer,
+  getClassTypes
+})(EditTab);
