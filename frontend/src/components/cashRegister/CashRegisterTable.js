@@ -90,7 +90,7 @@ class CashRegisterTable extends React.Component {
                       <Button
                         icon="info"
                         labelPosition="right"
-                        color="yellow"
+                        color="teal"
                         content="مشاهده"
                         className="yekan"
                         onClick={() => {

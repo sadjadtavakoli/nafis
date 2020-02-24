@@ -172,7 +172,7 @@ class BillTable extends React.Component {
                       onClick={() => this.openInformationModal(item)}
                       icon
                       labelPosition="right"
-                      color="yellow"
+                      color="teal"
                     >
                       <span className="yekan">مشاهده و ویرایش</span>
                       <Icon name="info" />

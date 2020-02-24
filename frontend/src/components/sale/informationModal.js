@@ -25,6 +25,7 @@ import { getProductsByCode } from "../../actions/DepositoryActions";
 import NewBillPopup from "./newBillPopup";
 import { toastr } from "react-redux-toastr";
 import LoadingBar from "../utils/loadingBar";
+import ItemsRender from "./renderItem";
 
 class InformationModal extends React.Component {
   state = {
@@ -47,7 +48,7 @@ class InformationModal extends React.Component {
   getOneBill = () => {
     this.props.getOneBill(this.props.pk).then(() => {
       this.sumProductTotalPrice();
-      this.initializeDiscount();
+      this.initialize();
     });
   };
 
@@ -63,7 +64,7 @@ class InformationModal extends React.Component {
     this.setState({ sumProductTotalPrice: sum });
   };
 
-  initializeDiscount = () => {
+  initialize = () => {
     this.setState({
       discount: this.props.data.total_discount - this.props.data.items_discount
     });
@@ -135,15 +136,19 @@ class InformationModal extends React.Component {
     });
   };
 
-  submitChanges = pk => {
+  submitChanges = (pk, end_of_roll) => {
     let preparedData = {
       code: this.state.editedData.code,
       amount: this.state.editedData.amount,
       discount: this.state.editedData.discount,
-      end_of_roll: this.state.end_of_roll,
+      end_of_roll: end_of_roll,
       end_of_roll_amount: this.state.editedData.end_of_roll_amount
     };
-    console.log("submit", preparedData.end_of_roll);
+    if (this.state.end_of_roll) {
+      if (!preparedData.end_of_roll_amount) {
+        window.alert("مقدار حساب شده صحیح نیست");
+      }
+    }
     this.props.updateBillItem(pk, preparedData).then(() => {
       this.setState({
         editting: "",
@@ -177,14 +182,9 @@ class InformationModal extends React.Component {
       this.handleSearchChange(this.state.editedData.code);
     }
     if (status === "end_of_roll") {
-      this.setState(
-        {
-          end_of_roll: true
-        },
-        () => {
-          console.log("changed", this.state.end_of_roll);
-        }
-      );
+      this.setState({
+        end_of_roll: true
+      });
     }
     this.setState({
       editedData: {
@@ -237,177 +237,6 @@ class InformationModal extends React.Component {
           });
         }
       }
-    );
-  };
-
-  itemsRender = (item, index) => {
-    return (
-      <Card.Group key={index} id="s-showInfromationModel">
-        <Card fluid>
-          <Card.Content>
-            <Card.Header className="yekan">
-              <React.Fragment>
-                <span>
-                  {this.state.notFound === false
-                    ? this.state.productData.name
-                    : item.product.name}
-                </span>
-                &nbsp;-&nbsp;
-                <span>قیمت واحد</span>
-                &nbsp;
-                <span id="norm-latin">
-                  {this.state.notFound === false
-                    ? priceToPersian(this.state.productData.selling_price)
-                    : priceToPersian(item.product.selling_price)}
-                </span>
-                &nbsp;
-                <span>تومان</span>
-              </React.Fragment>
-              {!this.state.editMode ? (
-                <React.Fragment>
-                  {this.state.width < 425 ? (
-                    <React.Fragment>
-                      <br />
-                      <br />
-                    </React.Fragment>
-                  ) : null}
-                  <Button
-                    icon
-                    color="red"
-                    onClick={() => this.deleteItem(index)}
-                    className="pointer"
-                    labelPosition="right"
-                    size="mini"
-                    style={{ marginRight: "10px" }}
-                  >
-                    <span>حذف آیتم</span>
-                    <Icon name="trash" />
-                  </Button>
-                  <Button
-                    icon
-                    color="teal"
-                    onClick={() => this.editItem(index)}
-                    className="pointer"
-                    labelPosition="right"
-                    size="mini"
-                    style={{ marginRight: "10px" }}
-                  >
-                    <span>ویرایش</span>
-                    <Icon name="edit" />
-                  </Button>
-                </React.Fragment>
-              ) : null}
-            </Card.Header>
-          </Card.Content>
-          <Card.Content>
-            <Form>
-              <Form.Group widths="equal" unstackable>
-                <Popup
-                  content={
-                    <React.Fragment>
-                      {this.state.notFound === false ? (
-                        <Label color="teal" className="rtl text-center">
-                          <p>
-                            <span>نام محصول:</span>&nbsp;
-                            <span>{this.state.productData.name}</span>
-                          </p>
-                          <p>
-                            <span>مقدار باقی مانده:</span>&nbsp;
-                            <span>
-                              {enToFa(this.state.productData.stock_amount)}
-                            </span>
-                            &nbsp;
-                            <span>متر</span>
-                          </p>
-                          <p>
-                            <span>قیمت هر متر:</span>&nbsp;
-                            <span>
-                              {enToFa(
-                                priceToPersian(
-                                  this.state.productData.selling_price
-                                )
-                              )}
-                            </span>
-                            &nbsp;
-                            <span>تومان</span>
-                          </p>
-                        </Label>
-                      ) : (
-                        <Label color="red">
-                          <Icon name="warning circle" />
-                          <span>محصول مورد نظر یافت نشد</span>
-                        </Label>
-                      )}
-                    </React.Fragment>
-                  }
-                  position="bottom center"
-                  on="focus"
-                  trigger={
-                    <Form.Input
-                      fluid
-                      readOnly={this.state.editting !== index ? true : false}
-                      type="number"
-                      className="rtl placeholder-rtl text-right"
-                      defaultValue={item.product.code}
-                      onChange={e => this.handleChange(e, "code")}
-                      onClick={e => this.handleCodeInputClick(e)}
-                      label="کد محصول"
-                    />
-                  }
-                />
-                <Form.Input
-                  className="ltr placeholder-rtl"
-                  readOnly={this.state.editting !== index ? true : false}
-                  fluid
-                  defaultValue={item.amount}
-                  onChange={e => this.handleChange(e, "amount")}
-                  label={`مقدار(متر)`}
-                />
-                <Form.Input
-                  className="ltr placeholder-rtl"
-                  readOnly={this.state.editting !== index ? true : false}
-                  fluid
-                  defaultValue={item.discount}
-                  onChange={e => this.handleChange(e, "discount")}
-                  label="تخفیف"
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Input
-                  className={`ltr placeholder-rtl ${
-                    item.end_of_roll ? "" : "hidden"
-                  }`}
-                  readOnly={this.state.editting !== index ? true : false}
-                  defaultValue={item.end_of_roll_amount}
-                  onChange={e => this.handleChange(e, "end_of_roll_amount")}
-                  label="مقدار حساب شده"
-                />
-                <Form.Checkbox
-                  toggle
-                  className="ltr placeholder-rtl"
-                  readOnly={this.state.editting !== index ? true : false}
-                  DefaultChecked={item.end_of_roll ? true : null}
-                  onChange={e => this.handleChange(e, "end_of_roll")}
-                  label="ته طاقه؟"
-                />
-              </Form.Group>
-              {this.state.editting !== index ? null : (
-                <React.Fragment>
-                  <Button
-                    color="green"
-                    onClick={() => this.submitChanges(item.pk)}
-                  >
-                    <span>اعمال</span>
-                  </Button>
-                  <Button color="gray" onClick={this.cancelChanges}>
-                    <span>لغو</span>
-                  </Button>
-                </React.Fragment>
-              )}
-            </Form>
-          </Card.Content>
-        </Card>
-      </Card.Group>
     );
   };
 
@@ -583,9 +412,23 @@ class InformationModal extends React.Component {
                     </Label>
                   </Header>
                   <Divider clearing />
-                  {this.props.data.items.map((item, index) => {
-                    return this.itemsRender(item, index);
-                  })}
+                  {this.props.data.items.map((item, index) => (
+                    <ItemsRender
+                      item={item}
+                      index={index}
+                      editting={this.state.editting}
+                      productData={this.state.productData}
+                      notFound={this.state.notFound}
+                      editMode={this.state.editMode}
+                      width={this.state.width}
+                      handleChange={this.handleChange}
+                      handleCodeInputClick={this.handleCodeInputClick}
+                      cancelChanges={this.cancelChanges}
+                      deleteItem={this.deleteItem}
+                      editItem={this.editItem}
+                      submitChanges={this.submitChanges}
+                    />
+                  ))}
                 </Segment>
               </Form>
             </Modal.Content>

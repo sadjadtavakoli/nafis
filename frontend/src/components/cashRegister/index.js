@@ -11,7 +11,7 @@ class Cashregister extends React.Component {
           <Button
             className="yellow"
             onClick={() => history.push("/daily-report/")}
-            color="yellow"
+            color="teal"
             content="مشاهده گزارش روزانه"
             icon="print"
             labelPosition="right"
