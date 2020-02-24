@@ -38,7 +38,8 @@ class InformationModal extends React.Component {
     discount: null,
     discount_s: false,
     editting: "",
-    editedData: {}
+    editedData: {},
+    width: window.innerWidth
   };
 
   componentDidMount() {
@@ -49,9 +50,9 @@ class InformationModal extends React.Component {
     this.props.getOneBill(this.props.pk).then(() => {
       this.sumProductTotalPrice();
       this.initializeDiscount();
-      console.log(this.props.data);
     });
   };
+
   sumProductTotalPrice = () => {
     let preSumArray = [];
     let sum = 0;
@@ -70,11 +71,7 @@ class InformationModal extends React.Component {
         discount:
           this.props.data.total_discount - this.props.data.items_discount
       },
-      () => {
-        console.log("total discount", this.props.data.total_discount);
-        console.log("items discount", this.props.data.items_discount);
-        console.log("state discount", this.state.discount);
-      }
+      () => {}
     );
   };
 
@@ -264,6 +261,12 @@ class InformationModal extends React.Component {
               </React.Fragment>
               {!this.state.editMode ? (
                 <React.Fragment>
+                  {this.state.width < 425 ? (
+                    <React.Fragment>
+                      <br />
+                      <br />
+                    </React.Fragment>
+                  ) : null}
                   <Button
                     icon
                     color="red"
@@ -294,7 +297,7 @@ class InformationModal extends React.Component {
           </Card.Content>
           <Card.Content>
             <Form>
-              <Form.Group widths="equal">
+              <Form.Group widths="equal" unstackable>
                 <Popup
                   content={
                     <React.Fragment>
@@ -467,9 +470,9 @@ class InformationModal extends React.Component {
             <Modal.Header className="yekan">فاکتور</Modal.Header>
             <Modal.Content scrolling>
               <Form>
-                <Form.Group unstackable widths={4}>
+                <Form.Group unstackable widths={this.state.width < 425 ? 1 : 4}>
                   <Form.Input
-                    className="ltr placeholder-rtl"
+                    className={`ltr placeholder-rtl`}
                     readOnly
                     defaultValue={this.props.data.buyer.phone_number}
                     label="شماره تلفن همراه"
@@ -477,7 +480,7 @@ class InformationModal extends React.Component {
                     placeholder="شماره تلفن همراه"
                   />
                   <Form.Dropdown
-                    className="ltr placeholder-rtl text-right"
+                    className={`ltr placeholder-rtl text-right`}
                     readOnly
                     defaultValue={"1"}
                     placeholder="شعبه"
@@ -548,6 +551,9 @@ class InformationModal extends React.Component {
                         color="green"
                         size="huge"
                         icon="add"
+                        style={
+                          this.state.width < 425 ? { marginTop: "10px" } : null
+                        }
                       />
                     }
                   />

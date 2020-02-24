@@ -343,3 +343,22 @@ label {
   height: 128px;
   padding-right: 0;
 }
+
+.sale-mobile {
+  #add-bill
+    > div.scrolling.content
+    > form
+    > div.unstackable.one.fields
+    > div.field.ltr.placeholder-rtl.text-right
+    > label {
+    margin: 100px;
+  }
+  #add-bill
+    > div.scrolling.content
+    > form
+    > div.unstackable.one.fields
+    > div.field.ltr.placeholder-rtl.text-right
+    > label {
+    margin-top: 10px;
+  }
+}
