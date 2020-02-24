@@ -1,116 +1,32 @@
 import React, { Component } from "react";
-import { Segment, Checkbox, Table } from "semantic-ui-react";
+import { Segment, Checkbox, Table, Button } from "semantic-ui-react";
 import { connect } from "react-redux";
 import {
   getAllBills,
   getRemainedBills
 } from "../../actions/CustomerSectionActions";
+import { deleteBill } from "../../actions/CashRegisterActions";
 import NotFound from "../utils/notFound";
 import LoadingBar from "../utils/loadingBar";
 import { digitToComma } from "../utils/numberUtils";
+import { standardTimeToJalaali, convertToJalaali } from "../utils/jalaaliUtils";
+import history from "../../history";
+import { toastr } from "react-redux-toastr";
 
 class FactorsTab extends Component {
   state = {
-    bills: [],
-    virgin: true,
+    fetch: false,
     remainedBillsToggle: false
   };
 
   componentDidMount() {
     this.props.getAllBills(this.props.passingPk).then(() => {
-      this.setState(
-        {
-          virgin: false,
-          bills: this.props.allBills
-        },
-        () => {
-          console.log("map", this.state.bills.results);
-        }
-      );
+      this.setState({
+        fetch: true
+      });
     });
     this.props.getRemainedBills(this.props.passingPk);
   }
-
-  createTable = () => {
-    let rowSpan = this.state.bills.results[0].items.length;
-    console.log("row span", rowSpan);
-    if (this.state.bills.count) {
-      return (
-        <Table celled structured className="text-center">
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell className="d-table-border">
-                نام محصول
-              </Table.HeaderCell>
-              <Table.HeaderCell>کد</Table.HeaderCell>
-              <Table.HeaderCell>قیمت واحد</Table.HeaderCell>
-              <Table.HeaderCell>مقدار</Table.HeaderCell>
-              <Table.HeaderCell>تخفیف کل</Table.HeaderCell>
-              {this.state.remainedBillsToggle ? (
-                <Table.HeaderCell>بهای پرداخت شده</Table.HeaderCell>
-              ) : null}
-              <Table.HeaderCell>قیمت نهایی فاکتور</Table.HeaderCell>
-              {this.state.remainedBillsToggle ? (
-                <Table.HeaderCell>بهای پرداختی مانده</Table.HeaderCell>
-              ) : null}
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {this.state.bills.results.map(item => {
-              return (
-                <Table.Row key={item.pk}>
-                  {item.items.map(subitem => {
-                    return (
-                      <React.Fragment>
-                        <Table.Cell className="d-table-border">
-                          {subitem.product.name}
-                        </Table.Cell>
-                        <Table.Cell className="norm-latin">
-                          <span>{subitem.product.code}</span>
-                        </Table.Cell>
-                        <Table.Cell className="norm-latin">
-                          <span>
-                            {digitToComma(subitem.product.selling_price)}
-                          </span>
-                          <span className="yekan"> تومان</span>
-                        </Table.Cell>
-                        <Table.Cell className="norm-latin">
-                          <span>{subitem.amount}</span>
-                          <span className="yekan"> متر</span>
-                        </Table.Cell>
-                      </React.Fragment>
-                    );
-                  })}
-                  <Table.Cell className="norm-latin">
-                    <span>{item.total_discount}</span>
-                  </Table.Cell>
-                  {this.state.remainedBillsToggle ? (
-                    <Table.Cell>
-                      <span>{digitToComma(item.paid)}</span>
-                      <span className="yekan"> تومان</span>
-                    </Table.Cell>
-                  ) : null}
-                  <Table.Cell className="norm-latin">
-                    <span>{digitToComma(item.final_price)}</span>
-                    <span className="yekan"> تومان</span>
-                  </Table.Cell>
-                  {this.state.remainedBillsToggle ? (
-                    <Table.Cell>
-                      <span>{item.final_price - item.paid}</span>
-                    </Table.Cell>
-                  ) : null}
-                </Table.Row>
-              );
-            })}
-          </Table.Body>
-        </Table>
-      );
-    }
-  };
-
-  onClose = () => {
-    this.props.onClose();
-  };
 
   handleToggleClick = () => {
     this.setState({ remainedBillsToggle: !this.state.remainedBillsToggle });
@@ -130,9 +46,167 @@ class FactorsTab extends Component {
     }
   };
 
+  deleteBill = pk => {
+    this.props
+      .deleteBill(pk)
+      .then(() => {
+        toastr.success("فاکتور با موفقیت حذف شد");
+      })
+      .catch(() => {
+        toastr.error(
+          "خطا در عملیات حذف فاکتور",
+          "نمی‌توانید فاکتوری را که پرداخت دارد حذف کنید، ابتدا پرداخت‌ها را حذف نموده سپس نسبت به حذف فاکتور اقدام نمایید"
+        );
+      });
+  };
+
+  createTable = () => {
+    let bills = this.props.allBills;
+    console.log("results", bills.results);
+    return (
+      <Table celled structured className="text-center">
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell colSpan="20">
+              <h3 className="yekan text-right">
+                {this.state.remainedBillsToggle
+                  ? "فاکتور های باقی مانده"
+                  : "فاکتور ها"}
+              </h3>
+            </Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell className="d-table-border">ردیف</Table.HeaderCell>
+            <Table.HeaderCell>شماره همراه</Table.HeaderCell>
+            <Table.HeaderCell>تاریخ بسته شدن</Table.HeaderCell>
+            <Table.HeaderCell>تعداد اقلام</Table.HeaderCell>
+            <Table.HeaderCell>نام فروشنده</Table.HeaderCell>
+            <Table.HeaderCell>نام صندوق دار</Table.HeaderCell>
+            <Table.HeaderCell>قیمت بدون تخفیف</Table.HeaderCell>
+            <Table.HeaderCell>تخفیف</Table.HeaderCell>
+            <Table.HeaderCell>قیمت کل</Table.HeaderCell>
+            {this.state.remainedBillsToggle ? (
+              <Table.HeaderCell>بهای پرداخت شده</Table.HeaderCell>
+            ) : null}
+            {this.state.remainedBillsToggle ? (
+              <Table.HeaderCell>بهای پرداختی مانده</Table.HeaderCell>
+            ) : null}
+            <Table.HeaderCell>حالت فاکتور</Table.HeaderCell>
+            <Table.HeaderCell>عملیات</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {bills.results.map((bill, index) => {
+            return (
+              <Table.Row key={bill.pk}>
+                <Table.Cell className="d-table-border" id="norm-latin">
+                  {index + 1}
+                </Table.Cell>
+                <Table.Cell className="norm-latin">
+                  <span>{bill.buyer.phone_number}</span>
+                </Table.Cell>
+                <Table.Cell className="norm-latin">
+                  {bill.close_date ? (
+                    <span>
+                      {standardTimeToJalaali(convertToJalaali(bill.close_date))}
+                    </span>
+                  ) : (
+                    <span className="yekan">ندارد</span>
+                  )}
+                </Table.Cell>
+                <Table.Cell id="norm-latinr">{bill.items.length}</Table.Cell>
+                <Table.Cell className="yekan">
+                  <span>
+                    {bill.seller.first_name}&nbsp;{bill.seller.last_name}
+                  </span>
+                </Table.Cell>
+                <Table.Cell className="yekan">
+                  <span>
+                    {bill.closande ? (
+                      <span>
+                        {bill.closande.first_name}&nbsp;
+                        {bill.closande.last_name}
+                      </span>
+                    ) : (
+                      "موجود نمی باشد"
+                    )}
+                  </span>
+                </Table.Cell>
+                <Table.Cell className="norm-latin">
+                  <span>{digitToComma(bill.price)}</span>&nbsp;
+                  <span className="yekan">تومان</span>
+                </Table.Cell>
+                <Table.Cell className="norm-latin">
+                  <span>{digitToComma(bill.discount)}</span>&nbsp;
+                  <span className="yekan">تومان</span>
+                </Table.Cell>
+                <Table.Cell className="norm-latin">
+                  <span>{digitToComma(bill.final_price)}</span>
+                  <span className="yekan"> تومان</span>
+                </Table.Cell>
+                {this.state.remainedBillsToggle ? (
+                  <Table.Cell className="norm-latin">
+                    <span>{digitToComma(bill.paid)}</span>
+                    <span className="yekan"> تومان</span>
+                  </Table.Cell>
+                ) : null}
+                {this.state.remainedBillsToggle ? (
+                  <Table.Cell className="norm-latin">
+                    <span>{bill.final_price - bill.paid}</span>
+                  </Table.Cell>
+                ) : null}
+                <Table.Cell className="yekan">
+                  <span>{bill.status === "done" ? "تسویه" : null}</span>
+                  <span>{bill.status === "active" ? "باز" : null}</span>
+                  <span>{bill.status === "remained" ? "مانده" : null}</span>
+                </Table.Cell>
+                <Table.Cell className="yekan" fluid>
+                  <Button
+                    className="yekan"
+                    color="teal"
+                    size="mini"
+                    onClick={() => {
+                      history.push(`/cashregister/${bill.pk}`);
+                    }}
+                  >
+                    مشاهده
+                  </Button>
+                  <br />
+                  <Button
+                    className="yekan"
+                    color="red"
+                    style={{ marginTop: "3px" }}
+                    size="mini"
+                    onClick={() => this.deleteBill(bill.pk)}
+                  >
+                    حذف کل فاکتور
+                  </Button>
+                  <br />
+                  <Button
+                    className="yekan"
+                    color="teal"
+                    style={{ marginTop: "3px" }}
+                    size="mini"
+                    onClick={() => {
+                      history.push(`/factor/${bill.pk}/print`);
+                    }}
+                  >
+                    چاپ فاکتور
+                  </Button>
+                </Table.Cell>
+              </Table.Row>
+            );
+          })}
+        </Table.Body>
+      </Table>
+    );
+  };
+
   render() {
     return (
-      <div className="rtl text-center">
+      <React.Fragment>
         <Segment stacked className="text-right us-fm-segment">
           <Checkbox
             toggle
@@ -141,22 +215,22 @@ class FactorsTab extends Component {
           />
           <span className="us-fm-span">نمایش فاکتورهای باقی مانده</span>
         </Segment>
-        {this.state.virgin ? <LoadingBar /> : null}
-        {!this.state.virgin && !this.state.bills.count ? <NotFound /> : null}
-        {this.state.bills.count ? this.createTable() : null}
-      </div>
+        {this.state.fetch ? this.createTable() : <LoadingBar />}
+        {this.state.fetch && !this.props.allBills.count ? <NotFound /> : null}
+      </React.Fragment>
     );
   }
 }
 
 const mapStateToProps = state => {
-  console.log(state);
   return {
     allBills: state.customers.allBills,
     remainedBills: state.customers.remainedBills
   };
 };
 
-export default connect(mapStateToProps, { getAllBills, getRemainedBills })(
-  FactorsTab
-);
+export default connect(mapStateToProps, {
+  getAllBills,
+  getRemainedBills,
+  deleteBill
+})(FactorsTab);

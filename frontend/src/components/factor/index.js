@@ -263,14 +263,7 @@ class PrintFactor extends React.Component {
                 از خرید و اعتمادتان به ما بسیار سپاس گذاریم
               </p>
               <p className="text-center">
-                <span>اجناس برش خورده در کمال احترام </span>
-                <span>
-                  <b>پس گرفته</b>
-                </span>
-                <span> و </span>
-                <span>
-                  <b> تعویض نمی‌شوند</b>
-                </span>
+                <span>از پس گرفتن و یا تعویض پارچه‌های برش خورده معذوریم</span>
               </p>
             </div>
           </div>

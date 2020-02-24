@@ -39,3 +39,10 @@ export const deletePayment = paymentID => async () => {
   );
   return response;
 };
+
+export const doneTheBill = (billID, sendSms) => async () => {
+  const response = await server(
+    localStorage.getItem("token")
+  ).post(`/bills/${billID}/done/`, { send_message: sendSms });
+  return response;
+};

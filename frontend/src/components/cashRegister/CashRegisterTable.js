@@ -24,12 +24,6 @@ class CashRegisterTable extends React.Component {
       this.setState({
         fetch: true
       });
-      if (!this.props.activeBills.length) {
-        this.setState({
-          noResult: true
-        });
-      }
-      console.log(this.props.activeBills);
     });
   };
 
@@ -41,96 +35,100 @@ class CashRegisterTable extends React.Component {
 
   render() {
     return (
-      <Table celled className="rtl text-center">
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell colSpan="5" className="text-right">
-              لیست فاکتورهای فعال
-            </Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-
-        {this.state.fetch ? (
-          <React.Fragment>
+      <React.Fragment>
+        {this.state.fetch && this.props.activeBills.length ? (
+          <Table celled className="rtl text-center">
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell className="table-border-left">
-                  موبایل خریدار
+                <Table.HeaderCell colSpan="5" className="text-right">
+                  لیست فاکتورهای فعال
                 </Table.HeaderCell>
-                <Table.HeaderCell>اسم فروشنده</Table.HeaderCell>
-                <Table.HeaderCell>مبلغ نهایی فاکتور</Table.HeaderCell>
-                <Table.HeaderCell>تاریخ فاکتور</Table.HeaderCell>
-                <Table.HeaderCell>عملیات فاکتور</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
 
-            <Table.Body>
-              {this.props.activeBills.map(bill => {
-                return (
-                  <Table.Row>
-                    <Table.Cell
-                      className="table-border-left"
-                      style={{ fontFamily: "arial" }}
-                    >
-                      {bill.buyer.phone_number}
-                    </Table.Cell>
-                    <Table.Cell>
-                      {bill.seller.first_name} {bill.seller.last_name}
-                    </Table.Cell>
-                    <Table.Cell
-                      style={{ fontFamily: "arial", fontWeight: "bold" }}
-                    >
-                      {digitToComma(bill.final_price)}&nbsp;
-                      <span className="yekan">تومان</span>
-                    </Table.Cell>
-                    <Table.Cell style={{ fontFamily: "arial" }}>
-                      {standardTimeToJalaali(
-                        convertToJalaali(bill.create_date)
-                      )}
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Button
-                        icon="info"
-                        labelPosition="right"
-                        color="teal"
-                        content="مشاهده"
-                        className="yekan"
-                        onClick={() => {
-                          history.push(`/cashregister/${bill.pk}`);
-                        }}
-                      />
-                      <Button
-                        icon="delete"
-                        labelPosition="right"
-                        color="red"
-                        content="حذف"
-                        className="yekan"
-                        onClick={() => {
-                          this.props
-                            .deleteBill(bill.pk)
-                            .then(() => {
-                              toastr.success(
-                                "حذف فاکتور با موفقیت انجام شد",
-                                "فاکتور با موفقیت حذف گردید"
-                              );
-                              this.props.getActiveBills();
-                            })
-                            .catch(() => {
-                              toastr.error("عملیات حذف ناموفق بود");
-                            });
-                        }}
-                      />
-                    </Table.Cell>
-                  </Table.Row>
-                );
-              })}
-            </Table.Body>
-          </React.Fragment>
-        ) : (
-          <LoadingBar />
-        )}
-        {this.state.noResult && <NotFound />}
-      </Table>
+            <React.Fragment>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell className="table-border-left">
+                    موبایل خریدار
+                  </Table.HeaderCell>
+                  <Table.HeaderCell>اسم فروشنده</Table.HeaderCell>
+                  <Table.HeaderCell>مبلغ نهایی فاکتور</Table.HeaderCell>
+                  <Table.HeaderCell>تاریخ فاکتور</Table.HeaderCell>
+                  <Table.HeaderCell>عملیات فاکتور</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+
+              <Table.Body>
+                {this.props.activeBills.map(bill => {
+                  return (
+                    <Table.Row>
+                      <Table.Cell
+                        className="table-border-left"
+                        style={{ fontFamily: "arial" }}
+                      >
+                        {bill.buyer.phone_number}
+                      </Table.Cell>
+                      <Table.Cell>
+                        {bill.seller.first_name} {bill.seller.last_name}
+                      </Table.Cell>
+                      <Table.Cell
+                        style={{ fontFamily: "arial", fontWeight: "bold" }}
+                      >
+                        {digitToComma(bill.final_price)}&nbsp;
+                        <span className="yekan">تومان</span>
+                      </Table.Cell>
+                      <Table.Cell style={{ fontFamily: "arial" }}>
+                        {standardTimeToJalaali(
+                          convertToJalaali(bill.create_date)
+                        )}
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Button
+                          icon="info"
+                          labelPosition="right"
+                          color="teal"
+                          content="مشاهده"
+                          className="yekan"
+                          onClick={() => {
+                            history.push(`/cashregister/${bill.pk}`);
+                          }}
+                        />
+                        <Button
+                          icon="delete"
+                          labelPosition="right"
+                          color="redلیست فاکتورهای ف"
+                          content="حذف"
+                          className="yekan"
+                          LoadingBar
+                          onClick={() => {
+                            this.props
+                              .deleteBill(bill.pk)
+                              .then(() => {
+                                toastr.success(
+                                  "حذف فاکتور با موفقیت انجام شد",
+                                  "فاکتور با موفقیت حذف گردید"
+                                );
+                                this.props.getActiveBills();
+                              })
+                              .catch(() => {
+                                toastr.error("عملیات حذف ناموفق بود");
+                              });
+                          }}
+                        />
+                      </Table.Cell>
+                    </Table.Row>
+                  );
+                })}
+              </Table.Body>
+            </React.Fragment>
+          </Table>
+        ) : null}
+        {!this.state.fetch ? <LoadingBar /> : null}
+        {this.state.fetch && !this.props.activeBills.length ? (
+          <NotFound />
+        ) : null}
+      </React.Fragment>
     );
   }
 }

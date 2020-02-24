@@ -5,25 +5,32 @@ import {
   Grid,
   Table,
   Button,
-  Checkbox
+  Checkbox,
+  Modal,
+  Header
 } from "semantic-ui-react";
 import { connect } from "react-redux";
-import { getOneBill, deletePayment } from "../../actions/CashRegisterActions";
+import {
+  getOneBill,
+  deletePayment,
+  doneTheBill
+} from "../../actions/CashRegisterActions";
 import LoadingBar from "../utils/loadingBar";
 import AddPaymentModal from "./AddPaymentModal";
 import { digitToComma } from "../utils/numberUtils";
-import history from "../../history";
 import EditCustomerModal from "./EditCustomerModal";
 import { standardTimeToJalaali } from "../utils/jalaaliUtils";
 import logo from "../../assets/logo_printable.png";
 import { toastr } from "react-redux-toastr";
+import history from "../../history";
 
 class ViewBillModal extends React.Component {
   state = {
     fetch: false,
     openAddPayment: false,
     openEditCustomer: false,
-    anyPays: false
+    anyPays: false,
+    open: false
   };
 
   componentDidMount() {
@@ -36,7 +43,6 @@ class ViewBillModal extends React.Component {
         fetch: true,
         anyPays: this.props.theBill.payments.length ? true : false
       });
-      console.log("the bill", this.props.theBill.payments.length);
     });
   };
 
@@ -65,6 +71,14 @@ class ViewBillModal extends React.Component {
           toastr.error("خطا در حذف پرداختی");
         });
     }
+  };
+
+  closeModal = () => this.setState({ open: false });
+
+  handleSubmit = pk => {
+    this.props.doneTheBill(pk).then(() => {
+      history.push(`/factor/${pk}/print`);
+    });
   };
 
   render() {
@@ -291,14 +305,13 @@ class ViewBillModal extends React.Component {
               <Button
                 circular
                 onClick={() => {
-                  history.push("/cashregister/");
+                  this.setState({ open: true });
                 }}
                 size="huge"
                 color="green"
                 icon="check"
                 disabled={!bill.payments.length}
               />
-              {console.log("bill", bill.payments.length)}
               <Button
                 circular
                 onClick={() => {
@@ -310,13 +323,44 @@ class ViewBillModal extends React.Component {
               />
               <Button
                 circular
-                onClick={() => {
-                  history.push("/cashregister/");
-                }}
+                onClick={() => window.history.back()}
                 size="huge"
                 icon="step backward"
               />
             </div>
+
+            <Modal
+              dimmer={"blurring"}
+              open={this.state.open}
+              onClose={this.closeModal}
+            >
+              <Modal.Header className="yekan text-right">
+                بستن فاکتور
+              </Modal.Header>
+              <Modal.Content>
+                <Header className="yekan text-right">
+                  آیا از بستن این فاکتور اطمینان دارید؟
+                </Header>
+              </Modal.Content>
+              <Modal.Actions>
+                <Button
+                  color="black"
+                  onClick={this.closeModal}
+                  className="yekan"
+                >
+                  انصراف
+                </Button>
+                <Button
+                  positive
+                  icon="checkmark"
+                  labelPosition="right"
+                  content="بستن فاکتور"
+                  onClick={() => this.handleSubmit(bill.pk)}
+                  className="yekan"
+                />
+              </Modal.Actions>
+            </Modal>
+
             {this.state.openAddPayment && (
               <AddPaymentModal
                 open={this.state.openAddPayment}
@@ -350,6 +394,8 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, { getOneBill, deletePayment })(
-  ViewBillModal
-);
+export default connect(mapStateToProps, {
+  getOneBill,
+  deletePayment,
+  doneTheBill
+})(ViewBillModal);

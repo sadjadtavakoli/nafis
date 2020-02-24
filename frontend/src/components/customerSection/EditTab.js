@@ -68,14 +68,12 @@ class EditTab extends Component {
           this.props.theCustomer.class_type &&
           this.props.theCustomer.class_type.pk
       });
-      console.log(this.props.theCustomer);
     });
     this.props.getClassTypes().then(() => {
       this.setState({
         city_options: this.props.cityAndClass.cities,
         class_tpye_options: this.props.cityAndClass.customerTypes
       });
-      console.log(this.props.cityAndClass);
     });
   };
 
@@ -205,7 +203,6 @@ class EditTab extends Component {
 
   createSelect = (status, title) => {
     let convertSelect = this.convertSelect(status);
-    console.log({ convertSelect }, this.state[convertSelect]);
     return (
       <Form.Select
         search

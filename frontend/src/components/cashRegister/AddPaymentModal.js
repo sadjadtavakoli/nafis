@@ -34,11 +34,14 @@ class AddPaymentModal extends React.Component {
   };
 
   handleSubmit = () => {
+    let card_amount =
+      Number(this.state.card_amount) + Number(this.state.cash_amount);
     const prepareData = {
       create_date: getTodayJalaali(),
-      card_amount: this.state.card_amount + this.state.cash_amount,
+      card_amount,
       type: this.state.type
     };
+    console.log("sent card amount", prepareData.card_amount);
     this.props
       .addPaymentToBill(this.props.pk, prepareData)
       .then(() => {
