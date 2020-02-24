@@ -20,7 +20,8 @@ class BillTable extends React.Component {
     isOpenAddItem: NaN,
     activePage: 1,
     firstTime: true,
-    openingModal: false
+    openingModal: false,
+    pk: null
   };
 
   componentDidMount() {
@@ -61,7 +62,7 @@ class BillTable extends React.Component {
 
   openInformationModal = itemData => {
     this.setState({ itemData }, () => {
-      this.setState({ isOpenInformationModal: true });
+      this.setState({ isOpenInformationModal: true, pk: itemData.pk });
     });
   };
 
@@ -230,9 +231,9 @@ class BillTable extends React.Component {
         {this.state.isOpenInformationModal ? (
           <InformationModal
             refetch={() => this.getActiveBill(this.state.activePage)}
-            data={this.state.itemData}
             open={this.state.isOpenInformationModal}
             onClose={this.closeInformationModal}
+            pk={this.state.pk}
           />
         ) : null}
       </React.Fragment>
@@ -241,7 +242,6 @@ class BillTable extends React.Component {
 }
 
 const mapStateToProps = state => {
-  console.log(state);
   return {
     activeBill: state.sale.activeBill,
     newBillData: !state.sale.newBillData ? { pk: 0 } : state.sale.newBillData

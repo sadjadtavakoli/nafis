@@ -7,6 +7,7 @@ import {
   updateBill,
   updateBillItem
 } from "../../actions/SaleActions";
+import { getOneBill } from "../../actions/CashRegisterActions";
 import {
   Button,
   Modal,
@@ -41,24 +42,22 @@ class InformationModal extends React.Component {
   };
 
   componentDidMount() {
-    console.log(this.props.data);
-    this.sumProductTotalPrice();
-    this.initializeDiscount();
+    this.getOneBill();
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.data !== this.props.data) {
+  getOneBill = () => {
+    this.props.getOneBill(this.props.pk).then(() => {
       this.sumProductTotalPrice();
-    }
-  }
-
+      this.initializeDiscount();
+      console.log(this.props.data);
+    });
+  };
   sumProductTotalPrice = () => {
     let preSumArray = [];
     let sum = 0;
-    if (this.props.data.items)
-      preSumArray = this.props.data.items.map(item => {
-        return Number(item.final_price);
-      });
+    if (this.props.data && this.props.data.items.length)
+      preSumArray = this.props.data.items.map(item => Number(item.final_price));
+
     preSumArray.forEach(item => {
       sum += item;
     });
@@ -66,9 +65,17 @@ class InformationModal extends React.Component {
   };
 
   initializeDiscount = () => {
-    this.setState({
-      discount: this.props.data.total_discount
-    });
+    this.setState(
+      {
+        discount:
+          this.props.data.total_discount - this.props.data.items_discount
+      },
+      () => {
+        console.log("total discount", this.props.data.total_discount);
+        console.log("items discount", this.props.data.items_discount);
+        console.log("state discount", this.state.discount);
+      }
+    );
   };
 
   switchToEditMode = () => {
@@ -80,7 +87,7 @@ class InformationModal extends React.Component {
 
   handleDiscountChange = e => {
     this.setState({
-      discount: e.target.value
+      discount: Number(e.target.value)
     });
   };
 
@@ -151,7 +158,7 @@ class InformationModal extends React.Component {
         editMode: false
       });
       this.props.refetch();
-      console.log("submited props", this.props.data);
+      this.getOneBill();
     });
   };
 
@@ -487,7 +494,10 @@ class InformationModal extends React.Component {
                     label={() => this.labelRender()}
                     type="number"
                     onChange={e => this.handleDiscountChange(e)}
-                    placeholder={this.props.data.total_discount}
+                    placeholder={
+                      this.props.data.total_discount -
+                      this.props.data.items_discount
+                    }
                     max={this.state.sumProductTotalPrice - this.state.discount}
                   />
                   <Form.Input
@@ -592,7 +602,8 @@ class InformationModal extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    productsList: state.depository.productsList
+    productsList: state.depository.productsList,
+    data: state.sale.theBill
   };
 };
 
@@ -601,5 +612,6 @@ export default connect(mapStateToProps, {
   getCustomerByPhoneNumber,
   updateBill,
   updateBillItem,
-  getProductsByCode
+  getProductsByCode,
+  getOneBill
 })(InformationModal);
