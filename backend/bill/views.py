@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError, PermissionDenied
 from rest_framework.response import Response
+from rest_framework.status import HTTP_404_NOT_FOUND
 from rest_framework.viewsets import ModelViewSet
 
 from bill.models import Bill, BillItem, CustomerPayment, CustomerCheque, OurCheque, SupplierBill, OurPayment, \
@@ -149,23 +150,6 @@ class BillsViewSet(NafisBase, ModelViewSet):
         data = BillSerializer(Bill.objects.get(pk=bill.pk)).data
         return Response(data, status=status.HTTP_201_CREATED)
 
-    @action(methods=['post'], detail=True, url_path='done', permission_classes=(CloseBillPermission,))
-    def close_bill(self, request, **kwargs):
-        instance = self.get_object()
-        if instance.status == "active":
-            instance.check_status()
-            send_message = self.request.data.get('send_message', True)
-            if send_message:
-                try:
-                    sms = SendSMS()
-                    sms.group_sms(create_message(instance), [instance.buyer.phone_number], instance.buyer.phone_number)
-                except:
-                    pass
-            if not (instance.items_special_discount or instance.buyer_special_discount):
-                instance.buyer.points += int(instance.final_price) * int(Point.objects.first().amount) / 100
-                instance.buyer.save()
-        return Response({'status': instance.status})
-
     def update(self, request, *args, **kwargs):
         if self.request.data.get('used_points', None):
             points = self.request.data.get('used_points')
@@ -303,7 +287,7 @@ class BillsViewSet(NafisBase, ModelViewSet):
         return Response(result)
 
 
-class BillItemViewSet(ModelViewSet):
+class BillItemViewSet(NafisBase, ModelViewSet):
     serializer_class = BillItemSerializer
     permission_classes = (LoginRequired,)
     queryset = BillItem.objects.all()
@@ -333,6 +317,32 @@ class BillItemViewSet(ModelViewSet):
         bill = self.get_object().bill
         if bill.seller.username != request.user.username or bill.status != "active":
             raise PermissionDenied
+        old_amount = self.get_object().amount
+        data = self.request.data
+        product = data.get('product', None)
+        amount = data.get('amount', None)
+        if product is None or int(product) == self.get_object().product.code:
+            bill_item_product = self.get_object().product
+            if amount and float(amount) != old_amount:
+                stock_amount = bill_item_product.stock_amount + old_amount
+                if float(stock_amount) < float(amount):
+                    raise ValidationError("مقدار کافی از این پارچه موجود نمی‌باشد")
+                bill_item_product.update_stock_amount(-1 * (old_amount - float(amount)))
+        else:
+            try:
+                product_item = Product.objects.get(code=product)
+                instance = self.get_object()
+                if amount is None:
+                    amount = old_amount
+                if float(amount) > float(product_item.stock_amount):
+                    raise ValidationError("مقدار کافی از این پارچه موجود نمی‌باشد")
+                bill_item_product = self.get_object().product
+                bill_item_product.update_stock_amount(-1 * (self.get_object().amount + 0.05))
+                product_item.update_stock_amount(float(amount) + 0.05)
+                instance.product = product_item
+                instance.save()
+            except ObjectDoesNotExist:
+                Response({'چنین محصولی یافت نشد.'}, status=HTTP_404_NOT_FOUND)
         super(BillItemViewSet, self).update(request, *args, **kwargs)
         serializer = BillSerializer(bill)
         headers = self.get_success_headers(serializer.data)
