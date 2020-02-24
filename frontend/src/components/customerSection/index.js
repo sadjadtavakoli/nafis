@@ -45,8 +45,6 @@ class Customers extends Component {
     ) {
       this.getCustomers(this.state.activePage);
     }
-    // console.log("customers", this.props.usersCustomers);
-    // console.log("search input", this.state.value);
   }
 
   getCustomers = () => {
@@ -135,7 +133,6 @@ class Customers extends Component {
             .catch(() => {
               this.setState({ notFound: true });
             });
-          // console.log("done else");
         }
         this.setState({
           searchLoading: false
@@ -232,7 +229,7 @@ class Customers extends Component {
                             history.push(`/customers/customer/${item.pk}/`);
                           }}
                         >
-                          <span>ویرایش</span>
+                          <span>پروفایل و پرداختی های مشتری</span>
                         </Button>
                         {isPermit("admin", this.state.job) ? (
                           <Button

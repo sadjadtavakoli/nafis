@@ -33,8 +33,6 @@ class InformationModal extends React.Component {
     isOpenAddItem: false,
     labelEdit: false,
     notFound: null,
-    formValidation: {},
-    phone_number: "",
     discount: null,
     discount_s: false,
     editting: "",
@@ -66,13 +64,9 @@ class InformationModal extends React.Component {
   };
 
   initializeDiscount = () => {
-    this.setState(
-      {
-        discount:
-          this.props.data.total_discount - this.props.data.items_discount
-      },
-      () => {}
-    );
+    this.setState({
+      discount: this.props.data.total_discount - this.props.data.items_discount
+    });
   };
 
   switchToEditMode = () => {
@@ -146,15 +140,15 @@ class InformationModal extends React.Component {
       code: this.state.editedData.code,
       amount: this.state.editedData.amount,
       discount: this.state.editedData.discount,
-      end_of_roll_amount: this.state.editedData.end_of_roll_amount,
-      end_of_roll: this.state.editedData.end_of_roll
+      end_of_roll: this.state.end_of_roll,
+      end_of_roll_amount: this.state.editedData.end_of_roll_amount
     };
+    console.log("submit", preparedData.end_of_roll);
     this.props.updateBillItem(pk, preparedData).then(() => {
       this.setState({
         editting: "",
         editMode: false
       });
-      this.props.refetch();
       this.getOneBill();
     });
   };
@@ -181,6 +175,16 @@ class InformationModal extends React.Component {
   handleChange = (e, status) => {
     if (status === "code") {
       this.handleSearchChange(this.state.editedData.code);
+    }
+    if (status === "end_of_roll") {
+      this.setState(
+        {
+          end_of_roll: true
+        },
+        () => {
+          console.log("changed", this.state.end_of_roll);
+        }
+      );
     }
     this.setState({
       editedData: {
@@ -382,7 +386,7 @@ class InformationModal extends React.Component {
                   toggle
                   className="ltr placeholder-rtl"
                   readOnly={this.state.editting !== index ? true : false}
-                  checked={item.end_of_roll}
+                  DefaultChecked={item.end_of_roll ? true : null}
                   onChange={e => this.handleChange(e, "end_of_roll")}
                   label="ته طاقه؟"
                 />
