@@ -83,6 +83,7 @@ class Suppliers extends Component {
             content="افزودن تامین کننده جدید"
             icon="add"
             labelPosition="right"
+            style={{ fontSize: "13.8px" }}
           />
           <Button
             icon="home"

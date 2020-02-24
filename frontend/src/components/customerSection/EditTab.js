@@ -118,29 +118,19 @@ class EditTab extends Component {
       });
       hasError = true;
     }
-    if (!this.state.email) {
-      this.setState({
-        email_e: true
-      });
-      hasError = true;
-    }
     if (this.state.phone_number.length !== 11) {
       this.setState({
         phone_number_e: true
       });
       hasError = true;
     }
-    if (!this.state.points) {
-      this.setState({
-        points_e: true
-      });
-      hasError = true;
-    }
-    if (!email) {
-      this.setState({
-        email_e: true
-      });
-      hasError = true;
+    if (this.state.email) {
+      if (!email) {
+        this.setState({
+          email_e: true
+        });
+        hasError = true;
+      }
     }
     if (hasError) {
       this.setState({

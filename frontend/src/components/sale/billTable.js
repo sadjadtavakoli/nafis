@@ -97,13 +97,7 @@ class BillTable extends React.Component {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell colSpan={colSpan} className="rtl text-right">
-                <span>لیست فاکتور های فعال</span>
-                <Button
-                  icon
-                  onClick={() => this.getActiveBill(this.state.activePage)}
-                >
-                  <Icon name="repeat" />
-                </Button>
+                <h3 className="yekan">لیست فاکتور های فعال</h3>
               </Table.HeaderCell>
             </Table.Row>
             <Table.Row>

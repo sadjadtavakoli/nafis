@@ -106,6 +106,7 @@ class ProductTable extends React.Component {
         placeholder="کد محصول را وارد نمایید"
         className="placeholder-rtl yekan ltr"
         onSearchChange={this.handleSearchChange}
+        style={{ marginRight: "10px" }}
       />
     );
   };
@@ -121,27 +122,12 @@ class ProductTable extends React.Component {
                 className="rtl text-right"
               >
                 <Grid>
-                  <Grid.Column
-                    width={this.state.width < 768 ? 16 : 3}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      paddingLeft: 0
-                    }}
-                  >
-                    <span>لیست محصولات موجود</span>
-                    <Button
-                      icon
-                      onClick={() =>
-                        this.getProductsList(this.state.activePage)
-                      }
-                    >
-                      <Icon name="repeat" />
-                    </Button>
-                  </Grid.Column>
-                  <Grid.Column width={this.state.width < 768 ? 16 : 6}>
+                  <Grid.Row>
+                    <h3 className="yekan" style={{ margin: "0 20px 0 0" }}>
+                      لیست محصولات موجود
+                    </h3>
                     {this.searchBar()}
-                  </Grid.Column>
+                  </Grid.Row>
                 </Grid>
               </Table.HeaderCell>
             </Table.Row>

@@ -1,13 +1,21 @@
 import React from "react";
 import { connect } from "react-redux";
 import { getDailyReport } from "../../actions/BillActions";
-import { Table, Button, Icon } from "semantic-ui-react";
+import {
+  Table,
+  Button,
+  Icon,
+  Container,
+  Segment,
+  Header
+} from "semantic-ui-react";
 import { priceToPersian } from "../utils/numberUtils";
 import { standardTimeToJalaali } from "../utils/jalaaliUtils";
 import LoadingBar from "../utils/loadingBar";
 import NotFound from "../utils/notFound";
 import "../../scss/bootstrap.scss";
 import { isPermit } from "../mainPage/permission";
+import HomeButton from "../HomeButton";
 
 class DailyReport extends React.Component {
   state = {
@@ -16,6 +24,7 @@ class DailyReport extends React.Component {
     dailyReport: {},
     firstTime: true
   };
+
   componentDidMount() {
     this.props.getDailyReport().then(res => {
       console.log(res);
@@ -23,6 +32,7 @@ class DailyReport extends React.Component {
     });
     this.setJob();
   }
+
   bills = () => {
     return (
       <Table celled striped>
@@ -133,9 +143,11 @@ class DailyReport extends React.Component {
       </Table>
     );
   };
+
   setJob = () => {
     this.setState({ job: localStorage.getItem("type") });
   };
+
   prefetchModule = () => {
     console.log(
       "conditional",
@@ -151,6 +163,7 @@ class DailyReport extends React.Component {
       return null;
     }
   };
+
   dailyReport = () => {
     return (
       <Table celled striped>
@@ -291,12 +304,19 @@ class DailyReport extends React.Component {
       </Table>
     );
   };
+
   render() {
     return (
-      <React.Fragment>
+      <Container>
+        <Segment stacked className="rtl">
+          <Header as="h2" className="yekan" style={{ display: "inline" }}>
+            گزارش های روزانه
+          </Header>
+          <HomeButton />
+        </Segment>
         {this.dailyReport()}
         {this.bills()}
-      </React.Fragment>
+      </Container>
     );
   }
 }

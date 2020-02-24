@@ -32,3 +32,10 @@ export const addPaymentToBill = (billID, data) => async dispatch => {
   dispatch({ type: ADD_PAYMENT_TO_BILL, payload: response.data });
   return response;
 };
+
+export const deletePayment = paymentID => async () => {
+  const response = await server(localStorage.getItem("token")).delete(
+    `/payments/${paymentID}/`
+  );
+  return response;
+};

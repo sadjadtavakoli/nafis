@@ -8,7 +8,7 @@ import {
   Checkbox
 } from "semantic-ui-react";
 import { connect } from "react-redux";
-import { getOneBill } from "../../actions/CashRegisterActions";
+import { getOneBill, deletePayment } from "../../actions/CashRegisterActions";
 import LoadingBar from "../utils/loadingBar";
 import AddPaymentModal from "./AddPaymentModal";
 import { digitToComma } from "../utils/numberUtils";
@@ -16,6 +16,7 @@ import history from "../../history";
 import EditCustomerModal from "./EditCustomerModal";
 import { standardTimeToJalaali } from "../utils/jalaaliUtils";
 import logo from "../../assets/logo_printable.png";
+import { toastr } from "react-redux-toastr";
 
 class ViewBillModal extends React.Component {
   state = {
@@ -35,7 +36,7 @@ class ViewBillModal extends React.Component {
         fetch: true,
         anyPays: this.props.theBill.payments.length ? true : false
       });
-      console.log("bill", this.props.theBill);
+      console.log("the bill", this.props.theBill.payments.length);
     });
   };
 
@@ -49,6 +50,21 @@ class ViewBillModal extends React.Component {
     this.setState({
       openEditCustomer: !this.state.openEditCustomer
     });
+  };
+
+  deletePayment = pk => {
+    let confirm = window.confirm("آیا از حذف این پرداخت مطمئن هستید؟");
+    if (confirm) {
+      this.props
+        .deletePayment(pk)
+        .then(() => {
+          this.getBill();
+          toastr.success("پرداخت با موفقیت حذف شد");
+        })
+        .catch(() => {
+          toastr.error("خطا در حذف پرداختی");
+        });
+    }
   };
 
   render() {
@@ -218,11 +234,12 @@ class ViewBillModal extends React.Component {
               </Table.Body>
             </Table>
             <hr color="#ddd" />
+
             {this.state.anyPays && (
               <Table celled className="rtl text-center">
                 <Table.Header>
                   <Table.Row>
-                    <Table.HeaderCell colSpan="3" className="text-right">
+                    <Table.HeaderCell colSpan="4" className="text-right">
                       پرداخت ها
                     </Table.HeaderCell>
                   </Table.Row>
@@ -233,12 +250,12 @@ class ViewBillModal extends React.Component {
                       تاریخ ایجاد
                     </Table.HeaderCell>
                     <Table.HeaderCell>مبلغ پرداختی</Table.HeaderCell>
+                    <Table.HeaderCell>نوع پرداخت</Table.HeaderCell>
                     <Table.HeaderCell className="table-border-left-none">
-                      نوع پرداخت
+                      عملیات
                     </Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
-
                 <Table.Body>
                   {bill.payments.map(payment => {
                     return (
@@ -252,8 +269,17 @@ class ViewBillModal extends React.Component {
                         <Table.Cell id="norm-latin">
                           {digitToComma(payment.amount)}
                         </Table.Cell>
-                        <Table.Cell className="table-border-left-none">
+                        <Table.Cell>
                           {payment.type === "card" ? "نقد و کارت" : "چک"}
+                        </Table.Cell>
+                        <Table.Cell className="table-border-left-none">
+                          <Button
+                            color="red"
+                            className="yekan"
+                            onClick={() => this.deletePayment(payment.pk)}
+                          >
+                            حذف
+                          </Button>
                         </Table.Cell>
                       </Table.Row>
                     );
@@ -270,8 +296,9 @@ class ViewBillModal extends React.Component {
                 size="huge"
                 color="green"
                 icon="check"
-                disabled
+                disabled={!bill.payments.length}
               />
+              {console.log("bill", bill.payments.length)}
               <Button
                 circular
                 onClick={() => {
@@ -296,6 +323,7 @@ class ViewBillModal extends React.Component {
                 onClose={this.toggleAddPaymentModal}
                 price={bill.final_price}
                 pk={bill.pk}
+                refetch={this.getBill}
               />
             )}
             {this.state.openEditCustomer && (
@@ -316,9 +344,12 @@ class ViewBillModal extends React.Component {
 }
 
 const mapStateToProps = state => {
+  console.log("state sale", state.sale);
   return {
     theBill: state.cash.theBill
   };
 };
 
-export default connect(mapStateToProps, { getOneBill })(ViewBillModal);
+export default connect(mapStateToProps, { getOneBill, deletePayment })(
+  ViewBillModal
+);

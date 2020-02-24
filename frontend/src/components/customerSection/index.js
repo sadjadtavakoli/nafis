@@ -11,6 +11,7 @@ import { toastr } from "react-redux-toastr";
 import LoadingBar from "../utils/loadingBar";
 import NotFound from "../utils/notFound";
 import AddCustomerModal from "./addCustomerModal";
+import HomeButton from "../HomeButton";
 
 import {
   Container,
@@ -30,7 +31,8 @@ class Customers extends Component {
     pk: null,
     loading: true,
     open: false,
-    productID: NaN
+    productID: NaN,
+    width: window.innerWidth
   };
 
   componentDidMount() {
@@ -171,31 +173,14 @@ class Customers extends Component {
             icon="add"
             labelPosition="right"
           />
-          <Button
-            style={{ float: "left" }}
-            onClick={() => history.push("/")}
-            color="teal"
-            icon="home"
-          />
+          <HomeButton />
         </Segment>
         <Table celled className="rtl text-center" columns={3}>
           <Table.Header className="text-right">
             <Table.HeaderCell colSpan="3">
-              <Grid>
-                <Grid.Column width={5}>
-                  <span
-                    style={{
-                      fontSize: "20px",
-                      lineHeight: "35px",
-                      textAlign: "center"
-                    }}
-                  >
-                    لیست مشتریان موجود
-                  </span>
-                </Grid.Column>
-                <Grid.Column>
-                  <span>{this.searchBar()}</span>
-                </Grid.Column>
+              <Grid columns={1} style={{ margin: "0.25em 0" }}>
+                <h2 className="yekan">لیست مشتریان موجود</h2>
+                {this.searchBar()}
               </Grid>
             </Table.HeaderCell>
             {this.state.customers && this.state.customers.length > 0 ? (

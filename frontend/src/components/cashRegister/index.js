@@ -2,6 +2,7 @@ import React from "react";
 import { Container, Segment, Button } from "semantic-ui-react";
 import history from "../../history";
 import CashregisterTable from "./CashRegisterTable";
+import HomeButton from "../HomeButton";
 
 class Cashregister extends React.Component {
   render() {
@@ -20,12 +21,7 @@ class Cashregister extends React.Component {
               history.push("/daily-report/");
             }}
           />
-          <Button
-            style={{ float: "left" }}
-            onClick={() => history.push("/")}
-            color="teal"
-            icon="home"
-          />
+          <HomeButton />
         </Segment>
 
         <CashregisterTable />

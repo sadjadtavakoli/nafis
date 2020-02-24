@@ -3,7 +3,7 @@ import { Table, Button } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { getActiveBills, deleteBill } from "../../actions/CashRegisterActions";
 import { digitToComma } from "../utils/numberUtils";
-import { standardTimeToJalaali } from "../utils/jalaaliUtils";
+import { standardTimeToJalaali, convertToJalaali } from "../utils/jalaaliUtils";
 import NotFound from "../utils/notFound";
 import LoadingBar from "../utils/loadingBar";
 import { toastr } from "react-redux-toastr";
@@ -84,7 +84,9 @@ class CashRegisterTable extends React.Component {
                       <span className="yekan">تومان</span>
                     </Table.Cell>
                     <Table.Cell style={{ fontFamily: "arial" }}>
-                      {standardTimeToJalaali(bill.create_date)}
+                      {standardTimeToJalaali(
+                        convertToJalaali(bill.create_date)
+                      )}
                     </Table.Cell>
                     <Table.Cell>
                       <Button

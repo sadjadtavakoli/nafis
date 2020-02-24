@@ -16,10 +16,11 @@ class AddPaymentModal extends React.Component {
       {
         key: "card",
         text: "نقد و کارت",
-        value: "card"
+        value: "cash_card"
       }
     ],
-    data: {}
+    card_amount: this.props.price,
+    cash_amount: 0
   };
 
   setStateType = (_, { value }) => {
@@ -28,23 +29,21 @@ class AddPaymentModal extends React.Component {
 
   handleInputChange = (e, status) => {
     this.setState({
-      data: {
-        ...this.state.data,
-        [status]: e.target.value
-      }
+      [status]: e.target.value
     });
   };
 
   handleSubmit = () => {
     const prepareData = {
       create_date: getTodayJalaali(),
-      amount: this.state.card_amount + this.state.cash_amount,
+      card_amount: this.state.card_amount + this.state.cash_amount,
       type: this.state.type
     };
     this.props
       .addPaymentToBill(this.props.pk, prepareData)
       .then(() => {
         toastr.success("عملیات با موفقیت انجام شد");
+        this.props.refetch();
       })
       .catch(() => {
         toastr.error("خطا در فرایند عملیات");
@@ -138,7 +137,7 @@ class AddPaymentModal extends React.Component {
               />
             </React.Fragment>
           )}
-          {this.state.type === "card" && (
+          {this.state.type === "cash_card" && (
             <React.Fragment>
               <h5 className="yekan">
                 مبلغ پرداختی کارتی&nbsp;
