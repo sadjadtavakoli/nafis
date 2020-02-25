@@ -3,12 +3,13 @@ import { connect } from "react-redux";
 import { Table, Pagination, Button, Icon, Popup } from "semantic-ui-react";
 import { getActiveBill } from "../../actions/SaleActions";
 import { digitToComma, phoneNumberBeautifier } from "../utils/numberUtils";
-import { standardTimeToJalaali } from "../utils/jalaaliUtils";
-import InformationModal from "./informationModal";
+import { standardTimeToJalaali, convertToJalaali } from "../utils/jalaaliUtils";
+import InformationModal from "./informationPage";
 import LoadingBar from "../utils/loadingBar";
 import NotFound from "../utils/notFound";
 import TableLabel from "../utils/tableLabelGenerator";
 import NewBillPopup from "./newBillPopup";
+import history from "../../history";
 
 const colSpan = 7;
 
@@ -171,7 +172,9 @@ class BillTable extends React.Component {
                     />
 
                     <Button
-                      onClick={() => this.openInformationModal(item)}
+                      onClick={() => {
+                        history.push(`/information/${item.pk}`);
+                      }}
                       icon
                       className="m-1 yekan"
                       labelPosition="right"
@@ -187,7 +190,11 @@ class BillTable extends React.Component {
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center">
                     <TableLabel>5</TableLabel>
-                    <span>{standardTimeToJalaali(item.create_date)}</span>
+                    <span>
+                      {standardTimeToJalaali(
+                        convertToJalaali(item.create_date)
+                      )}
+                    </span>
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center rtl">
                     <TableLabel>4</TableLabel>
