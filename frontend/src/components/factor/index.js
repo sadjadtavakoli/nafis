@@ -64,7 +64,7 @@ class PrintFactor extends React.Component {
               {enToFa(priceToPersian(item.discount))}
             </p>
             <p className="d-flex align-items-center justify-content-center col text-center font-weight-bold m-0 p-2">
-              {enToFa(priceToPersian(parseInt(item.price)))}
+              {enToFa(priceToPersian(parseInt(item.final_price)))}
             </p>
           </div>
         );
