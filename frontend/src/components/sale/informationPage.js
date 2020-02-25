@@ -121,6 +121,7 @@ class InformationPage extends React.Component {
             this.sumProductTotalPrice();
           });
           toastr.success("حذف آیتم با موفقیت انجام شد");
+          this.getOneBill();
         })
         .catch(() => {
           toastr.error("خطا در فرایند حذف آیتم");
@@ -386,7 +387,9 @@ class InformationPage extends React.Component {
                       size="huge"
                       icon="add"
                       style={
-                        this.state.width < 425 ? { marginTop: "10px" } : null
+                        this.state.width < 425
+                          ? { marginTop: "10px" }
+                          : { marginBottom: "10px" }
                       }
                     />
                   }
@@ -395,6 +398,7 @@ class InformationPage extends React.Component {
               <Segment
                 hidden={!this.props.data.items.length}
                 style={{ paddingTop: 0 }}
+                style={{ marginTop: "10px" }}
               >
                 <Header as="h3" floated="right">
                   <span>اقلام فاکتور</span>
@@ -442,7 +446,6 @@ class InformationPage extends React.Component {
 }
 
 const mapStateToProps = state => {
-  console.log(state.sale.theBill);
   return {
     productsList: state.depository.productsList,
     data: state.sale.theBill
