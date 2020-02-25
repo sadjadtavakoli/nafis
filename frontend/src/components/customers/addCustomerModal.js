@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import {
   getClassTypes,
   setNewCustomer
-} from "../../actions/CustomerSectionActions";
+} from "../../actions/CustomersActions";
 import { toastr } from "react-redux-toastr";
 
 const INITIAL_STATE = {

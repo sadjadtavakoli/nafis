@@ -464,14 +464,7 @@ class Reports extends React.Component {
     });
     this.props.getChartsReport(1, getTodayGregorian(), getTodayGregorian());
     this.props.getIntervalReports(1, getTodayGregorian(), getTodayGregorian());
-    if (
-      typeof window.orientation !== "undefined" ||
-      navigator.userAgent.indexOf("IEMobile") !== -1
-    ) {
-      console.log("mobile");
-    } else {
-      console.log("desktop");
-    }
+    
   }
 
   componentDidUpdate() {

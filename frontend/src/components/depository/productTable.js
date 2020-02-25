@@ -1,13 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import {
-  Table,
-  Pagination,
-  Grid,
-  Search,
-  Button,
-  Icon
-} from "semantic-ui-react";
+import { Table, Pagination, Grid, Search, Button } from "semantic-ui-react";
 import {
   getProductsList,
   getProductsByCode
@@ -32,10 +25,6 @@ class ProductTable extends React.Component {
     this.getProductsList();
     this.updateWindowDimensions();
     window.addEventListener("resize", this.updateWindowDimensions);
-  }
-
-  componentDidUpdate() {
-    console.log("searchLoading", this.state.searchLoading);
   }
 
   componentWillReceiveProps(newProps) {

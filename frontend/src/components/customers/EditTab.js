@@ -5,7 +5,7 @@ import {
   getACustomer,
   updateCustomer,
   getClassTypes
-} from "../../actions/CustomerSectionActions";
+} from "../../actions/CustomersActions";
 import { toastr } from "react-redux-toastr";
 import history from "../../history";
 

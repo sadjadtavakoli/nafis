@@ -33,6 +33,24 @@ class CashRegisterTable extends React.Component {
     });
   };
 
+  handleDelete = pk => {
+    let confirm = window.confirm("آیا از حذف این فاکتور مطمئن هستید؟");
+    if (confirm) {
+      this.props
+        .deleteBill(pk)
+        .then(() => {
+          toastr.success(
+            "حذف فاکتور با موفقیت انجام شد",
+            "فاکتور با موفقیت حذف گردید"
+          );
+          this.props.getActiveBills();
+        })
+        .catch(() => {
+          toastr.error("عملیات حذف ناموفق بود");
+        });
+    }
+  };
+
   render() {
     return (
       <React.Fragment>
@@ -111,23 +129,12 @@ class CashRegisterTable extends React.Component {
                         <Button
                           icon="delete"
                           labelPosition="right"
-                          color="redلیست فاکتورهای ف"
+                          color="red"
                           content="حذف"
                           className="yekan"
                           LoadingBar
                           onClick={() => {
-                            this.props
-                              .deleteBill(bill.pk)
-                              .then(() => {
-                                toastr.success(
-                                  "حذف فاکتور با موفقیت انجام شد",
-                                  "فاکتور با موفقیت حذف گردید"
-                                );
-                                this.props.getActiveBills();
-                              })
-                              .catch(() => {
-                                toastr.error("عملیات حذف ناموفق بود");
-                              });
+                            this.handleDelete(bill.pk);
                           }}
                         />
                       </Table.Cell>

@@ -7,7 +7,9 @@ import {
   Button,
   Checkbox,
   Modal,
-  Header
+  Header,
+  Input,
+  Label
 } from "semantic-ui-react";
 import { connect } from "react-redux";
 import {
@@ -24,6 +26,7 @@ import { standardTimeToJalaali } from "../utils/jalaaliUtils";
 import logo from "../../assets/logo_printable.png";
 import { toastr } from "react-redux-toastr";
 import history from "../../history";
+import { updateBill } from "../../actions/SaleActions";
 
 class ViewBillModal extends React.Component {
   state = {
@@ -31,7 +34,9 @@ class ViewBillModal extends React.Component {
     openAddPayment: false,
     openEditCustomer: false,
     anyPays: false,
-    open: false
+    open: false,
+    editPoints: false,
+    points: 0
   };
 
   componentDidMount() {
@@ -42,7 +47,8 @@ class ViewBillModal extends React.Component {
     this.props.getOneBill(this.props.match.params.pk).then(() => {
       this.setState({
         fetch: true,
-        anyPays: this.props.theBill.payments.length ? true : false
+        anyPays: this.props.theBill.payments.length ? true : false,
+        points: this.props.theBill.buyer.points
       });
     });
   };
@@ -80,6 +86,28 @@ class ViewBillModal extends React.Component {
     this.props.doneTheBill(pk).then(() => {
       history.push(`/factor/${pk}/print`);
     });
+  };
+
+  handlePointsChange = e => {
+    this.setState({
+      points: e.target.value
+    });
+  };
+
+  handleEditClick = () => {
+    this.setState({
+      editPoints: true
+    });
+  };
+
+  handleEditSubmit = pk => {
+    this.props
+      .updateBill(pk, { used_points: Number(this.state.points) })
+      .then(() => {
+        this.setState({
+          editPoints: false
+        });
+      });
   };
 
   render() {
@@ -257,7 +285,7 @@ class ViewBillModal extends React.Component {
                 })}
               </Table.Body>
             </Table>
-            <Table celled className="rtl text-center" columns="4">
+            <Table celled className="rtl text-center" columns="5">
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell className="table-border-left">
@@ -272,8 +300,24 @@ class ViewBillModal extends React.Component {
                     <TableLabel>3</TableLabel>
                     تخفیف روی کل فاکتور
                   </Table.HeaderCell>
-                  <Table.HeaderCell className="table-border-left-none">
+                  <Table.HeaderCell>
                     <TableLabel>4</TableLabel>
+                    <span>امتیاز</span>
+                    <Label
+                      color={this.state.editPoints ? "green" : "teal"}
+                      style={{ marginRight: "5px" }}
+                      className="pointer"
+                      onClick={
+                        !this.state.editPoints
+                          ? this.handleEditClick
+                          : () => this.handleEditSubmit(bill.pk)
+                      }
+                    >
+                      {this.state.editPoints ? "اعمال" : "ویرایش"}
+                    </Label>
+                  </Table.HeaderCell>
+                  <Table.HeaderCell className="table-border-left-none">
+                    <TableLabel>5</TableLabel>
                     مبلغ قابل پرداخت
                   </Table.HeaderCell>
                 </Table.Row>
@@ -292,12 +336,24 @@ class ViewBillModal extends React.Component {
                     <TableLabel>3</TableLabel>
                     {digitToComma(bill.items_discount)}
                   </Table.Cell>
+                  <Table.Cell id="norm-latin">
+                    <TableLabel>4</TableLabel>
+                    <Input
+                      value={this.state.points}
+                      onChange={e => this.handlePointsChange(e)}
+                      readOnly={this.state.editPoints ? false : true}
+                      type="number"
+                      className="ltr"
+                    />
+                  </Table.Cell>
                   <Table.Cell
                     className="table-border-left-none"
                     id="norm-latin"
                   >
-                    <TableLabel>4</TableLabel>
-                    {digitToComma(bill.remaining_payment)}
+                    <TableLabel>5</TableLabel>
+                    {digitToComma(
+                      Number(bill.remaining_payment) - Number(this.state.points)
+                    )}
                   </Table.Cell>
                 </Table.Row>
               </Table.Body>
@@ -454,7 +510,6 @@ class ViewBillModal extends React.Component {
 }
 
 const mapStateToProps = state => {
-  console.log("state sale", state.sale);
   return {
     theBill: state.cash.theBill
   };
@@ -463,5 +518,6 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps, {
   getOneBill,
   deletePayment,
-  doneTheBill
+  doneTheBill,
+  updateBill
 })(ViewBillModal);

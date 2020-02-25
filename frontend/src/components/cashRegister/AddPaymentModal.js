@@ -41,7 +41,6 @@ class AddPaymentModal extends React.Component {
       card_amount,
       type: this.state.type
     };
-    console.log("sent card amount", prepareData.card_amount);
     this.props
       .addPaymentToBill(this.props.pk, prepareData)
       .then(() => {

@@ -39,8 +39,6 @@ export default createReducer(INITIAL_STATE, {
       const willRemovePayment = bill.payments.find(
         paymentItem => paymentItem.pk === action.payload.paymentID
       );
-      console.log("willRemove", willRemovePayment);
-      console.log("bill: ", bill);
       return {
         ...bill,
         paid: Number(bill.paid) + Number(willRemovePayment.amount),

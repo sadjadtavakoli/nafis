@@ -3,7 +3,7 @@ import { Modal, Button, Input } from "semantic-ui-react";
 import {
   getACustomer,
   updateCustomer
-} from "../../actions/CustomerSectionActions";
+} from "../../actions/CustomersActions";
 import { connect } from "react-redux";
 import { toastr } from "react-redux-toastr";
 import { convertToJalaali } from "../utils/jalaaliUtils";

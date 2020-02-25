@@ -27,7 +27,6 @@ class DailyReport extends React.Component {
 
   componentDidMount() {
     this.props.getDailyReport().then(res => {
-      console.log(res);
       this.setState({ firstTime: false, dailyReport: this.props.dailyReport });
     });
     this.setJob();
@@ -173,12 +172,6 @@ class DailyReport extends React.Component {
   };
 
   prefetchModule = () => {
-    console.log(
-      "conditional",
-      this.state.firstTime,
-      !this.state.dailyReport.total_price && !this.state.firstTime
-    );
-
     if (this.state.firstTime) {
       return <LoadingBar />;
     } else if (!this.state.dailyReport.total_price && !this.state.firstTime) {
@@ -340,6 +333,12 @@ class DailyReport extends React.Component {
           <Header as="h2" className="yekan" style={{ display: "inline" }}>
             گزارش های روزانه
           </Header>
+          <Button
+            circular
+            icon="arrow left"
+            style={{ float: "left" }}
+            onClick={() => window.history.back()}
+          />
         </Segment>
         {this.dailyReport()}
         {this.bills()}

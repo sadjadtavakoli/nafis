@@ -311,14 +311,10 @@ function convertToJalaali(date) {
   return date;
 }
 function standardTimeToJalaali(__date) {
-  // console.log('date',1,__date)
   let date = new Date(__date);
-  // console.log('date',2,date)
   let day = date.getDate();
   let month = date.getMonth() + 1;
   let year = date.getFullYear();
-  // console.log('date',3,year,month,day)
   let jDate = convertToJalaali(year + "/" + month + "/" + day);
-  // console.log('date',4,jDate)
   return jDate;
 }
