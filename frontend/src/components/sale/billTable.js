@@ -48,6 +48,7 @@ class BillTable extends React.Component {
           ? Math.ceil(this.props.activeBill.count / 25)
           : 0
       });
+      console.log("active bill", this.props.activeBill);
     });
   };
 
