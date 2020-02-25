@@ -294,7 +294,7 @@ class ViewBillModal extends React.Component {
                   </Table.HeaderCell>
                   <Table.HeaderCell>
                     <TableLabel>2</TableLabel>
-                    مچموع تخفیف کالایی
+                    مجموع تخفیف کالایی
                   </Table.HeaderCell>
                   <Table.HeaderCell>
                     <TableLabel>3</TableLabel>
