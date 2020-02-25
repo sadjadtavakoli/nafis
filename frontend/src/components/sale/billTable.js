@@ -199,11 +199,7 @@ class BillTable extends React.Component {
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center">
                     <TableLabel>5</TableLabel>
-                    <span>
-                      {standardTimeToJalaali(
-                        convertToJalaali(item.create_date)
-                      )}
-                    </span>
+                    <span>{standardTimeToJalaali(item.create_date)}</span>
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center rtl">
                     <TableLabel>4</TableLabel>

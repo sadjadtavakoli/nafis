@@ -116,9 +116,7 @@ class CashRegisterTable extends React.Component {
                       </Table.Cell>
                       <Table.Cell style={{ fontFamily: "arial" }}>
                         <TableLabel>4</TableLabel>
-                        {standardTimeToJalaali(
-                          convertToJalaali(bill.create_date)
-                        )}
+                        {standardTimeToJalaali(bill.create_date)}
                       </Table.Cell>
                       <Table.Cell>
                         <Button

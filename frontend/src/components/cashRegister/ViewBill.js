@@ -17,6 +17,7 @@ import {
   deletePayment,
   doneTheBill
 } from "../../actions/CashRegisterActions";
+import { getClassTypes } from "../../actions/CustomersActions";
 import LoadingBar from "../utils/loadingBar";
 import TableLabel from "../utils/tableLabelGenerator";
 import AddPaymentModal from "./AddPaymentModal";
@@ -30,14 +31,17 @@ import { updateBill } from "../../actions/SaleActions";
 
 class ViewBillModal extends React.Component {
   state = {
+    userData: JSON.parse(localStorage.getItem("user")),
+    class_type: "",
     fetch: false,
     openAddPayment: false,
     openEditCustomer: false,
     anyPays: false,
     open: false,
     editPoints: false,
-    points: 0,
-    toggle: false
+    // points: 0,
+    toggle: false,
+    used_points: 0
   };
 
   componentDidMount() {
@@ -46,10 +50,20 @@ class ViewBillModal extends React.Component {
 
   getBill = () => {
     this.props.getOneBill(this.props.match.params.pk).then(() => {
-      this.setState({
-        fetch: true,
-        anyPays: this.props.theBill.payments.length ? true : false,
-        points: this.props.theBill.buyer.points
+      this.props.getClassTypes().then(res => {
+        let customerTypes = res.data.customerTypes;
+        customerTypes.map(classTypeItem => {
+          if (classTypeItem.value == this.props.theBill.buyer.class_type) {
+            this.setState({ class_type: classTypeItem.text });
+          }
+        });
+        console.log(this.props.theBill);
+        this.setState({
+          fetch: true,
+          anyPays: this.props.theBill.payments.length ? true : false,
+          // points: this.props.theBill.buyer.points,
+          used_points: this.props.theBill.used_points
+        });
       });
     });
   };
@@ -97,7 +111,7 @@ class ViewBillModal extends React.Component {
 
   handlePointsChange = e => {
     this.setState({
-      points: e.target.value
+      used_points: e.target.value
     });
   };
 
@@ -109,11 +123,20 @@ class ViewBillModal extends React.Component {
 
   handleEditSubmit = pk => {
     this.props
-      .updateBill(pk, { used_points: Number(this.state.points) })
+      .updateBill(pk, { used_points: Number(this.state.used_points) })
       .then(() => {
-        this.setState({
-          editPoints: false
-        });
+        this.setState(
+          {
+            editPoints: false
+          },
+          () => {
+            this.getBill();
+            toastr.success("امتیاز با موفقیت اعمال شد");
+          }
+        );
+      })
+      .catch((e, r) => {
+        toastr.error("امتیاز استفاده شده بیشتر از حد مجاز است");
       });
   };
 
@@ -154,8 +177,9 @@ class ViewBillModal extends React.Component {
                           <span style={{ fontWeight: "bold" }}>صندوق دار:</span>
                           &nbsp;
                           <span>
-                            {window.localStorage.user.first_name}&nbsp;
-                            {window.localStorage.user.last_name}
+                            {this.state.userData.first_name +
+                              " " +
+                              this.state.userData.last_name}
                           </span>
                         </Table.Cell>
                       </Table.Row>
@@ -192,9 +216,9 @@ class ViewBillModal extends React.Component {
                           <span id="norm-latin">{bill.buyer.phone_number}</span>
                         </Table.Cell>
                         <Table.Cell>
-                          <span style={{ fontWeight: "bold" }}>نوع:</span>
+                          <span style={{ fontWeight: "bold" }}>نوع مشتری:</span>
                           &nbsp;
-                          <span>{bill.buyer.class_type}</span>
+                          <span>{this.state.class_type}</span>
                         </Table.Cell>
                       </Table.Row>
                     </Table.Body>
@@ -326,7 +350,7 @@ class ViewBillModal extends React.Component {
               <Grid.Row>
                 <Grid.Column className={"norm-latin text-right"} width={13}>
                   <Input
-                    value={this.state.points}
+                    value={this.state.used_points}
                     onChange={e => this.handlePointsChange(e)}
                     readOnly={this.state.editPoints ? false : true}
                     type="number"
@@ -353,7 +377,8 @@ class ViewBillModal extends React.Component {
                 <Grid.Column className={"norm-latin text-right"} width={13}>
                   <span>
                     {digitToComma(
-                      Number(bill.remaining_payment) - Number(this.state.points)
+                      Number(bill.remaining_payment) -
+                        Number(this.state.used_points)
                     )}
                   </span>
                 </Grid.Column>
@@ -449,7 +474,8 @@ class ViewBillModal extends React.Component {
                 size="huge"
                 icon="add"
                 disabled={
-                  Number(bill.remaining_payment) - Number(this.state.points) ===
+                  Number(bill.remaining_payment) -
+                    Number(this.state.used_points) ===
                   0
                     ? true
                     : false
@@ -515,7 +541,8 @@ class ViewBillModal extends React.Component {
                 open={this.state.openAddPayment}
                 onClose={this.toggleAddPaymentModal}
                 price={
-                  Number(bill.remaining_payment) - Number(this.state.points)
+                  Number(bill.remaining_payment) -
+                  Number(this.state.used_points)
                 }
                 pk={bill.pk}
                 refetch={this.getBill}
@@ -549,5 +576,6 @@ export default connect(mapStateToProps, {
   getOneBill,
   deletePayment,
   doneTheBill,
-  updateBill
+  updateBill,
+  getClassTypes
 })(ViewBillModal);
