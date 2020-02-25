@@ -103,7 +103,9 @@ class CashRegisterTable extends React.Component {
                       </Table.Cell>
                       <Table.Cell>
                         <TableLabel>2</TableLabel>
-                        {bill.seller.first_name} {bill.seller.last_name}
+                        {bill.seller.first_name}
+                        &nbsp;
+                        {bill.seller.last_name}
                       </Table.Cell>
                       <Table.Cell
                         style={{ fontFamily: "arial", fontWeight: "bold" }}
