@@ -260,7 +260,7 @@ class PrintFactor extends React.Component {
             </div>
             <div className=" p-2 row-not-flex border-black border-radius-7 mb-1 rtl text-right">
               <p className="text-center font-weight-bold">
-                از خرید و اعتمادتان به ما بسیار سپاس گذاریم
+                از خرید و اعتمادتان به ما بسیار سپاس گزاریم
               </p>
               <p className="text-center">
                 <span>از پس گرفتن و یا تعویض پارچه‌های برش خورده معذوریم</span>

@@ -153,6 +153,9 @@ class EditTab extends Component {
         .then(() => {
           toastr.success(".عملیات ویرایش با موفقیت انجام شد");
           this.getCustomerInfo();
+          if (this.props.onClose != undefined) {
+            this.props.onClose();
+          }
         })
         .catch(() => {
           toastr.error(".عملیات ویرایش موفقیت آمیز نبود");
@@ -250,9 +253,13 @@ class EditTab extends Component {
           />
           <Button
             className="yekan"
-            content="بازگشت"
+            content={this.props.onClose ? "بستن" : "بازگشت"}
             onClick={() => {
-              history.push("/customers/");
+              if (this.props.onClose != undefined) {
+                this.props.onClose();
+              } else {
+                history.push("/customers/");
+              }
             }}
           />
         </Form>
