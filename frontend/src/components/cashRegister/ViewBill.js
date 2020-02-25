@@ -36,7 +36,8 @@ class ViewBillModal extends React.Component {
     anyPays: false,
     open: false,
     editPoints: false,
-    points: 0
+    points: 0,
+    toggle: false
   };
 
   componentDidMount() {
@@ -83,7 +84,8 @@ class ViewBillModal extends React.Component {
   closeModal = () => this.setState({ open: false });
 
   handleSubmit = pk => {
-    this.props.doneTheBill(pk).then(() => {
+    let sms = this.state.toggle;
+    this.props.doneTheBill(pk, sms).then(() => {
       history.push(`/factor/${pk}/print`);
     });
   };
@@ -108,6 +110,12 @@ class ViewBillModal extends React.Component {
           editPoints: false
         });
       });
+  };
+
+  handleToggleChange = () => {
+    this.setState({
+      toggle: !this.state.toggle
+    });
   };
 
   render() {
@@ -453,10 +461,25 @@ class ViewBillModal extends React.Component {
               <Modal.Header className="yekan text-right">
                 بستن فاکتور
               </Modal.Header>
-              <Modal.Content>
+              <Modal.Content className="rtl text-right">
                 <Header className="yekan text-right">
                   آیا از بستن این فاکتور اطمینان دارید؟
                 </Header>
+                <div style={{ display: "inline-flex" }}>
+                  <span className="rtl text-right" style={{ fontSize: "17px" }}>
+                    ارسال
+                  </span>
+                  &nbsp;
+                  <span id="norm-latin" style={{ fontSize: "17px" }}>
+                    sms
+                  </span>
+                  &nbsp; &nbsp; &nbsp;
+                  <Checkbox
+                    className="text-right rtl"
+                    toggle
+                    onChange={this.handleToggleChange}
+                  />
+                </div>
               </Modal.Content>
               <Modal.Actions>
                 <Button
