@@ -61,9 +61,14 @@ class ViewBillModal extends React.Component {
   };
 
   toggleEditCustomerModal = () => {
-    this.setState({
-      openEditCustomer: !this.state.openEditCustomer
-    });
+    this.setState(
+      {
+        openEditCustomer: !this.state.openEditCustomer
+      },
+      () => {
+        this.getBill();
+      }
+    );
   };
 
   deletePayment = pk => {
@@ -398,9 +403,8 @@ class ViewBillModal extends React.Component {
                           id="norm-latin"
                         >
                           <TableLabel>1</TableLabel>
-                          {standardTimeToJalaali(
-                            convertToJalaali(payment.create_date)
-                          )}
+                          {payment.create_date}
+                          {standardTimeToJalaali(payment.create_date)}
                         </Table.Cell>
                         <Table.Cell id="norm-latin">
                           <TableLabel>2</TableLabel>
@@ -414,10 +418,11 @@ class ViewBillModal extends React.Component {
                           <Button
                             color="red"
                             className="yekan"
+                            icon="trash"
+                            labelPosition="right"
+                            content={"حذف"}
                             onClick={() => this.deletePayment(payment.pk)}
-                          >
-                            حذف
-                          </Button>
+                          />
                         </Table.Cell>
                       </Table.Row>
                     );

@@ -283,7 +283,7 @@ function getNow() {
 function getTodayJalaali() {
   let date = new Date();
   date =
-    date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
+    date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
   return convertToJalaali(date);
 }
 function getTodayGregorian() {
@@ -294,6 +294,7 @@ function getTodayGregorian() {
 }
 function convertToJalaali(date) {
   if (!date) return "";
+  date = date.replace(/\//g, "-");
   let parts = date.split("-");
   if (parts.length > 1) {
     parts = toJalaali(
