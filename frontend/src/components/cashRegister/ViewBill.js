@@ -181,7 +181,7 @@ class ViewBillModal extends React.Component {
                         <Table.Cell>
                           <span style={{ fontWeight: "bold" }}>نوع:</span>
                           &nbsp;
-                          <span>{bill.items[0].product.f_type.name}</span>
+                          <span>{bill.buyer.class_type}</span>
                         </Table.Cell>
                       </Table.Row>
                     </Table.Body>
