@@ -138,51 +138,53 @@ class FactorsTab extends Component {
               شماره فاکتور
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <TableLabel>2</TableLabel>
+              <TableLabel>3</TableLabel>
               شماره همراه
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <TableLabel>3</TableLabel>
+              <TableLabel>4</TableLabel>
               تاریخ بسته شدن
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <TableLabel>4</TableLabel>
+              <TableLabel>5</TableLabel>
               تعداد اقلام
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <TableLabel>5</TableLabel>
+              <TableLabel>6</TableLabel>
               نام فروشنده
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <TableLabel>6</TableLabel>
+              <TableLabel>7</TableLabel>
               نام صندوق دار
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <TableLabel>7</TableLabel>
+              <TableLabel>8</TableLabel>
               قیمت بدون تخفیف
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <TableLabel>8</TableLabel>
+              <TableLabel>9</TableLabel>
               تخفیف
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <TableLabel>9</TableLabel>
+              <TableLabel>10</TableLabel>
               قیمت کل
             </Table.HeaderCell>
             {this.state.remainedBillsToggle ? (
               <Table.HeaderCell>
-                <TableLabel>10</TableLabel>
+                <TableLabel>11</TableLabel>
                 بهای پرداخت شده
               </Table.HeaderCell>
             ) : null}
             {this.state.remainedBillsToggle ? (
               <Table.HeaderCell>
-                <TableLabel>11</TableLabel>
+                <TableLabel>12</TableLabel>
                 بهای پرداختی مانده
               </Table.HeaderCell>
             ) : null}
             <Table.HeaderCell>
-              <TableLabel>12</TableLabel>
+              <TableLabel>
+                {this.state.remainedBillsToggle ? "13" : "11"}
+              </TableLabel>
               حالت فاکتور
             </Table.HeaderCell>
             <Table.HeaderCell>عملیات</Table.HeaderCell>
@@ -266,13 +268,14 @@ class FactorsTab extends Component {
                   </Table.Cell>
                 ) : null}
                 <Table.Cell className="yekan">
-                  <TableLabel>13</TableLabel>
+                  <TableLabel>
+                    {this.state.remainedBillsToggle ? "13" : "11"}
+                  </TableLabel>
                   <span>{bill.status === "done" ? "تسویه" : null}</span>
                   <span>{bill.status === "active" ? "باز" : null}</span>
                   <span>{bill.status === "remained" ? "مانده" : null}</span>
                 </Table.Cell>
                 <Table.Cell className="yekan">
-                  <TableLabel>14</TableLabel>
                   <Button
                     className="yekan"
                     color="teal"
