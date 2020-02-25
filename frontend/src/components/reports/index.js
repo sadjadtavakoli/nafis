@@ -528,12 +528,6 @@ class Reports extends React.Component {
                 <span>نمایش گزارش</span>
                 <Icon name="search" />
               </Button>
-              <Button
-                style={{ float: "left" }}
-                onClick={() => history.push("/")}
-                color="teal"
-                icon="home"
-              />
             </form>
           </Segment>
 

@@ -12,7 +12,6 @@ import LoadingBar from "../utils/loadingBar";
 import TableLabel from "../utils/tableLabelGenerator";
 import NotFound from "../utils/notFound";
 import AddCustomerModal from "./addCustomerModal";
-import HomeButton from "../HomeButton";
 
 import {
   Container,
@@ -174,7 +173,6 @@ class Customers extends Component {
             icon="add"
             labelPosition="right"
           />
-          <HomeButton />
         </Segment>
         <Table celled className="rtl text-center" columns={3}>
           <Table.Header className="text-right">

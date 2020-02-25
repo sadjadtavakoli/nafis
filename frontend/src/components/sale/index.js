@@ -54,12 +54,6 @@ class Sale extends React.Component {
                 icon="add"
                 labelPosition="right"
               />
-              <Button
-                style={{ float: "left" }}
-                onClick={() => history.push("/")}
-                color="teal"
-                icon="home"
-              />
             </Segment>
             <Tab
               renderActiveOnly={true}

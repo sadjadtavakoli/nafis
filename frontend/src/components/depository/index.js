@@ -66,12 +66,6 @@ class Depository extends React.Component {
                 icon="filter"
                 labelPosition="right"
               />
-              <Button
-                style={{ float: "left" }}
-                onClick={() => history.push("/")}
-                color="teal"
-                icon="home"
-              />
               {this.state.filterOpen ? (
                 <FilterSegment submitFilter={this.getProductsByFilter} />
               ) : null}

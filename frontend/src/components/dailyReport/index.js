@@ -16,7 +16,6 @@ import TableLabel from "../utils/tableLabelGenerator";
 import NotFound from "../utils/notFound";
 import "../../scss/bootstrap.scss";
 import { isPermit } from "../mainPage/permission";
-import HomeButton from "../HomeButton";
 
 class DailyReport extends React.Component {
   state = {
@@ -341,7 +340,6 @@ class DailyReport extends React.Component {
           <Header as="h2" className="yekan" style={{ display: "inline" }}>
             گزارش های روزانه
           </Header>
-          <HomeButton />
         </Segment>
         {this.dailyReport()}
         {this.bills()}

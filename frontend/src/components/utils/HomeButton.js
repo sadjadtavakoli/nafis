@@ -1,5 +1,5 @@
 import React from "react";
-import history from "../history";
+import history from "../../history";
 import { Button } from "semantic-ui-react";
 
 let HomeButton = () => {

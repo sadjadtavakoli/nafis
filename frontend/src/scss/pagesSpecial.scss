@@ -5,6 +5,11 @@
   justify-content: center;
 }
 #sidebar {
+  .header {
+    a {
+      color: #00b5ad;
+    }
+  }
   .ui.segment {
     margin-top: 0px !important;
   }

@@ -86,12 +86,6 @@ class Suppliers extends Component {
             labelPosition="right"
             style={{ fontSize: "13.8px" }}
           />
-          <Button
-            icon="home"
-            color="teal"
-            onClick={() => history.push("/")}
-            style={{ float: "left" }}
-          />
         </Segment>
         <Table celled className="rtl text-center" columns={6}>
           <Table.Header className="text-right">
