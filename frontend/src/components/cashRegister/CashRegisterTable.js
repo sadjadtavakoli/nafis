@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Button } from "semantic-ui-react";
+import { Icon, Table, Button } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { getActiveBills, deleteBill } from "../../actions/CashRegisterActions";
 import { digitToComma } from "../utils/numberUtils";
@@ -60,6 +60,9 @@ class CashRegisterTable extends React.Component {
               <Table.Row>
                 <Table.HeaderCell colSpan="5" className="text-right">
                   لیست فاکتورهای فعال
+                  <Button icon onClick={this.getActiveBills}>
+                    <Icon name="repeat" />
+                  </Button>
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Header>
