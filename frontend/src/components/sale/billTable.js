@@ -7,6 +7,7 @@ import { standardTimeToJalaali } from "../utils/jalaaliUtils";
 import InformationModal from "./informationModal";
 import LoadingBar from "../utils/loadingBar";
 import NotFound from "../utils/notFound";
+import TableLabel from "../utils/tableLabelGenerator";
 import NewBillPopup from "./newBillPopup";
 
 const colSpan = 7;
@@ -105,21 +106,27 @@ class BillTable extends React.Component {
                 عملیات
               </Table.HeaderCell>
               <Table.HeaderCell className="text-center">
+                <TableLabel>6</TableLabel>
                 تعداد پرداختی ها
               </Table.HeaderCell>
               <Table.HeaderCell className="text-center">
+                <TableLabel>5</TableLabel>
                 تاریخ ثبت
               </Table.HeaderCell>
               <Table.HeaderCell className="text-center">
+                <TableLabel>4</TableLabel>
                 مبلغ کل
               </Table.HeaderCell>
               <Table.HeaderCell className="text-center">
+                <TableLabel>3</TableLabel>
                 مبلغ نهایی
               </Table.HeaderCell>
               <Table.HeaderCell className="text-center">
+                <TableLabel>2</TableLabel>
                 تخفیف کل
               </Table.HeaderCell>
               <Table.HeaderCell className="text-center">
+                <TableLabel>1</TableLabel>
                 شماره تلفن خریدار
               </Table.HeaderCell>
             </Table.Row>
@@ -148,6 +155,7 @@ class BillTable extends React.Component {
                       wide="very"
                       trigger={
                         <Button
+                          className="m-1"
                           onClick={() => this.toggleAddItemPopup(index)}
                           icon
                           labelPosition="right"
@@ -165,6 +173,7 @@ class BillTable extends React.Component {
                     <Button
                       onClick={() => this.openInformationModal(item)}
                       icon
+                      className="m-1"
                       labelPosition="right"
                       color="teal"
                     >
@@ -173,23 +182,28 @@ class BillTable extends React.Component {
                     </Button>
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center rtl">
+                    <TableLabel>6</TableLabel>
                     <span>{item.payments.length}</span>&nbsp;
                     <span className="yekan">پرداختی</span>
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center">
+                    <TableLabel>5</TableLabel>
                     <span>{standardTimeToJalaali(item.create_date)}</span>
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center rtl">
+                    <TableLabel>4</TableLabel>
                     <span>{digitToComma(item.price)}</span>&nbsp;
                     <span className="yekan">تومان</span>
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center rtl">
+                    <TableLabel>3</TableLabel>
                     <b>
                       <span>{digitToComma(item.final_price)}</span>&nbsp;
                       <span className="yekan">تومان</span>
                     </b>
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center rtl">
+                    <TableLabel>2</TableLabel>
                     {item.total_discount ? (
                       <React.Fragment>
                         <span>{digitToComma(item.total_discount)}</span>
@@ -200,6 +214,7 @@ class BillTable extends React.Component {
                     )}{" "}
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center">
+                    <TableLabel>1</TableLabel>
                     <span>
                       {phoneNumberBeautifier(item.buyer.phone_number)}
                     </span>

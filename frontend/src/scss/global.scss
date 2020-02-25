@@ -53,6 +53,14 @@
   @media (max-width: 768px) {
     display: block !important;
   }
+  &.d-flex {
+    @media (min-width: 768px) {
+      display: none !important;
+    }
+    @media (max-width: 768px) {
+      display: inline-flex !important;
+    }
+  }
 }
 .only-desktop {
   @media (min-width: 768px) {
@@ -129,6 +137,9 @@ div[role="combobox"] {
 }
 .m-0 {
   margin: 0 !important;
+}
+.m-1 {
+  margin: 0.25em !important;
 }
 .invisible {
   visibility: hidden;

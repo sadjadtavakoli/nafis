@@ -13,6 +13,7 @@ import {
 import NotFound from "../utils/notFound";
 import history from "../../history";
 import LoadingBar from "../utils/loadingBar";
+import TableLabel from "../utils/tableLabelGenerator";
 import Supplier from "./Supplier";
 import AddSupplierModal from "./AddSupplierModal";
 
@@ -114,12 +115,25 @@ class Suppliers extends Component {
             {!this.state.loading && this.state.allSuppliers.length > 0 ? (
               <Table.Row>
                 <Table.HeaderCell style={{ borderLeft: "1px solid #ddd" }}>
+                  <TableLabel>1</TableLabel>
                   نام
                 </Table.HeaderCell>
-                <Table.HeaderCell>نام خانوادگی</Table.HeaderCell>
-                <Table.HeaderCell>ایمیل</Table.HeaderCell>
-                <Table.HeaderCell>شماره موبایل</Table.HeaderCell>
-                <Table.HeaderCell>آدرس</Table.HeaderCell>
+                <Table.HeaderCell>
+                  <TableLabel>2</TableLabel>
+                  نام خانوادگی
+                </Table.HeaderCell>
+                <Table.HeaderCell>
+                  <TableLabel>3</TableLabel>
+                  ایمیل
+                </Table.HeaderCell>
+                <Table.HeaderCell>
+                  <TableLabel>4</TableLabel>
+                  شماره موبایل
+                </Table.HeaderCell>
+                <Table.HeaderCell>
+                  <TableLabel>5</TableLabel>
+                  آدرس
+                </Table.HeaderCell>
                 <Table.HeaderCell>عملیات</Table.HeaderCell>
               </Table.Row>
             ) : null}
@@ -131,18 +145,23 @@ class Suppliers extends Component {
                   <Table.Body>
                     <Table.Row key={item.pk}>
                       <Table.Cell style={{ borderLeft: "1px solid #ddd" }}>
+                        <TableLabel>1</TableLabel>
                         {item.first_name}
                       </Table.Cell>
                       <Table.Cell>
+                        <TableLabel>2</TableLabel>
                         <span>{item.last_name}</span>
                       </Table.Cell>
                       <Table.Cell className="norm-latin">
+                        <TableLabel>3</TableLabel>
                         <span>{item.email}</span>
                       </Table.Cell>
                       <Table.Cell className="norm-latin">
+                        <TableLabel>4</TableLabel>
                         <span>{item.phone_number}</span>
                       </Table.Cell>
                       <Table.Cell>
+                        <TableLabel>5</TableLabel>
                         <span>{item.address}</span>
                       </Table.Cell>
                       <Table.Cell>

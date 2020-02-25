@@ -9,6 +9,7 @@ import {
 } from "../../actions/CustomerSectionActions";
 import { toastr } from "react-redux-toastr";
 import LoadingBar from "../utils/loadingBar";
+import TableLabel from "../utils/tableLabelGenerator";
 import NotFound from "../utils/notFound";
 import AddCustomerModal from "./addCustomerModal";
 import HomeButton from "../HomeButton";
@@ -186,9 +187,12 @@ class Customers extends Component {
             {this.state.customers && this.state.customers.length > 0 ? (
               <Table.Row className="text-center">
                 <Table.HeaderCell style={{ borderLeft: "1px solid #ddd" }}>
+                  <TableLabel>1</TableLabel>
                   نام و نام خانوادگی
                 </Table.HeaderCell>
-                <Table.HeaderCell>شماره موبایل</Table.HeaderCell>
+                <Table.HeaderCell>
+                  <TableLabel>2</TableLabel>شماره موبایل
+                </Table.HeaderCell>
                 <Table.HeaderCell>عملیات</Table.HeaderCell>
               </Table.Row>
             ) : null}
@@ -199,15 +203,19 @@ class Customers extends Component {
                   return (
                     <Table.Row key={item.pk}>
                       <Table.Cell style={{ borderLeft: "1px solid #ddd" }}>
+                        <TableLabel>1</TableLabel>
                         <span>{item.first_name}</span>
                         <span>&nbsp;</span>
                         <span>{item.last_name}</span>
                       </Table.Cell>
                       <Table.Cell className="norm-latin">
+                        <TableLabel>2</TableLabel>
+
                         <span>{item.phone_number}</span>
                       </Table.Cell>
                       <Table.Cell>
                         <Button
+                          className="m-1"
                           color="teal"
                           onClick={() => {
                             this.handleViewClick(item.pk);
@@ -218,6 +226,7 @@ class Customers extends Component {
                         </Button>
                         {isPermit("admin", this.state.job) ? (
                           <Button
+                            className="m-1"
                             color="red"
                             onClick={() => {
                               this.deleteCustomer(item.pk);

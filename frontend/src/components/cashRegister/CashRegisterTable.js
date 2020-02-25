@@ -8,7 +8,7 @@ import NotFound from "../utils/notFound";
 import LoadingBar from "../utils/loadingBar";
 import { toastr } from "react-redux-toastr";
 import history from "../../history";
-
+import TableLabel from "../utils/tableLabelGenerator";
 class CashRegisterTable extends React.Component {
   state = {
     fetch: false,
@@ -50,11 +50,21 @@ class CashRegisterTable extends React.Component {
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell className="table-border-left">
+                    <TableLabel>1</TableLabel>
                     موبایل خریدار
                   </Table.HeaderCell>
-                  <Table.HeaderCell>اسم فروشنده</Table.HeaderCell>
-                  <Table.HeaderCell>مبلغ نهایی فاکتور</Table.HeaderCell>
-                  <Table.HeaderCell>تاریخ فاکتور</Table.HeaderCell>
+                  <Table.HeaderCell>
+                    <TableLabel>2</TableLabel>
+                    اسم فروشنده
+                  </Table.HeaderCell>
+                  <Table.HeaderCell>
+                    <TableLabel>3</TableLabel>
+                    مبلغ نهایی فاکتور
+                  </Table.HeaderCell>
+                  <Table.HeaderCell>
+                    <TableLabel>4</TableLabel>
+                    تاریخ فاکتور
+                  </Table.HeaderCell>
                   <Table.HeaderCell>عملیات فاکتور</Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
@@ -67,18 +77,22 @@ class CashRegisterTable extends React.Component {
                         className="table-border-left"
                         style={{ fontFamily: "arial" }}
                       >
+                        <TableLabel>1</TableLabel>
                         {bill.buyer.phone_number}
                       </Table.Cell>
                       <Table.Cell>
+                        <TableLabel>2</TableLabel>
                         {bill.seller.first_name} {bill.seller.last_name}
                       </Table.Cell>
                       <Table.Cell
                         style={{ fontFamily: "arial", fontWeight: "bold" }}
                       >
+                        <TableLabel>3</TableLabel>
                         {digitToComma(bill.final_price)}&nbsp;
                         <span className="yekan">تومان</span>
                       </Table.Cell>
                       <Table.Cell style={{ fontFamily: "arial" }}>
+                        <TableLabel>4</TableLabel>
                         {standardTimeToJalaali(
                           convertToJalaali(bill.create_date)
                         )}

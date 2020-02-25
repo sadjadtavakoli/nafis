@@ -12,6 +12,7 @@ import {
 import { priceToPersian } from "../utils/numberUtils";
 import { standardTimeToJalaali } from "../utils/jalaaliUtils";
 import LoadingBar from "../utils/loadingBar";
+import TableLabel from "../utils/tableLabelGenerator";
 import NotFound from "../utils/notFound";
 import "../../scss/bootstrap.scss";
 import { isPermit } from "../mainPage/permission";
@@ -52,31 +53,45 @@ class DailyReport extends React.Component {
                 عملیات
               </Table.HeaderCell>
               <Table.HeaderCell className="text-center">
+                <TableLabel>10</TableLabel>
                 قیمت کل
               </Table.HeaderCell>
               <Table.HeaderCell className="text-center">
+                <TableLabel>9</TableLabel>
                 قیمت خام بدون تخفیف
               </Table.HeaderCell>
               <Table.HeaderCell className="text-center">
+                <TableLabel>8</TableLabel>
                 تخفیف کل
               </Table.HeaderCell>
               {isPermit("admin", this.state.job) ? (
-                <Table.HeaderCell className="text-center">سود</Table.HeaderCell>
+                <Table.HeaderCell className="text-center">
+                  <TableLabel>7</TableLabel>
+                  سود
+                </Table.HeaderCell>
               ) : null}
               <Table.HeaderCell className="text-center">
+                <TableLabel>6</TableLabel>
                 تعداد اقلام
               </Table.HeaderCell>
               <Table.HeaderCell className="text-center">
+                <TableLabel>5</TableLabel>
                 تاریخ بسته شدن
               </Table.HeaderCell>
               <Table.HeaderCell className="text-center">
+                <TableLabel>4</TableLabel>
                 شماره تلفن خریدار
               </Table.HeaderCell>
-              <Table.HeaderCell className="text-center">شعبه</Table.HeaderCell>
               <Table.HeaderCell className="text-center">
+                <TableLabel>3</TableLabel>
+                شعبه
+              </Table.HeaderCell>
+              <Table.HeaderCell className="text-center">
+                <TableLabel>2</TableLabel>
                 نام فروشنده
               </Table.HeaderCell>
               <Table.HeaderCell className="text-center">
+                <TableLabel>1</TableLabel>
                 شماره فاکتور
               </Table.HeaderCell>
             </Table.Row>
@@ -102,35 +117,45 @@ class DailyReport extends React.Component {
                     </Button>
                   </Table.Cell>
                   <Table.Cell className="text-center norm-latin" collapsing>
+                    <TableLabel>10</TableLabel>
                     <span>{priceToPersian(item.final_price)}</span>
                   </Table.Cell>
                   <Table.Cell className="text-center norm-latin" collapsing>
+                    <TableLabel>9</TableLabel>
                     <span>{priceToPersian(item.price)}</span>
                   </Table.Cell>
                   <Table.Cell className="text-center norm-latin" collapsing>
+                    <TableLabel>8</TableLabel>
                     <span>{priceToPersian(item.total_discount)}</span>
                   </Table.Cell>
                   {isPermit("admin", this.state.job) ? (
                     <Table.Cell className="text-center norm-latin" collapsing>
+                      <TableLabel>7</TableLabel>
                       <span>{priceToPersian(item.profit)}</span>
                     </Table.Cell>
                   ) : null}
                   <Table.Cell className="text-center norm-latin" collapsing>
+                    <TableLabel>6</TableLabel>
                     <span>{item.items_count}</span>
                   </Table.Cell>
                   <Table.Cell className="text-center norm-latin" collapsing>
+                    <TableLabel>5</TableLabel>
                     <span>{standardTimeToJalaali(item.close_date)}</span>
                   </Table.Cell>
                   <Table.Cell className="text-center norm-latin" collapsing>
+                    <TableLabel>4</TableLabel>
                     <span>{item.buyer.phone_number}</span>
                   </Table.Cell>
                   <Table.Cell className="text-center norm-latin" collapsing>
+                    <TableLabel>3</TableLabel>
                     <span>{item.branch && item.branch.name}</span>
                   </Table.Cell>
                   <Table.Cell className="text-center norm-latin" collapsing>
+                    <TableLabel>2</TableLabel>
                     <span>{item.seller.username}</span>
                   </Table.Cell>
                   <Table.Cell className="text-center norm-latin" collapsing>
+                    <TableLabel>1</TableLabel>
                     <span>{item.bill_code}</span>
                   </Table.Cell>
                 </Table.Row>
@@ -180,70 +205,65 @@ class DailyReport extends React.Component {
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell className="text-center">
+                  <TableLabel>12</TableLabel>
                   تعداد کل فاکتور ها
                 </Table.HeaderCell>
                 {isPermit("admin", this.state.job) ? (
                   <Table.HeaderCell className="text-center">
-                    {" "}
-                    سود کل
+                    <TableLabel>11</TableLabel> سود کل
                   </Table.HeaderCell>
                 ) : null}
                 <Table.HeaderCell className="text-center">
+                  <TableLabel>10</TableLabel>
                   فاکتورهای مانده‌حساب
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  {" "}
-                  مانده‌ حساب
+                  <TableLabel>9</TableLabel> مانده‌ حساب
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  {" "}
-                  کل پرداخت
+                  <TableLabel>8</TableLabel> کل پرداخت
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  {" "}
-                  پرداخت‌های کارت
+                  <TableLabel>7</TableLabel> پرداخت‌های کارت
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  {" "}
-                  پرداخت‌های نقد
+                  <TableLabel>6</TableLabel> پرداخت‌های نقد
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  {" "}
-                  پرداخت‌های چک
+                  <TableLabel>5</TableLabel> پرداخت‌های چک
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  {" "}
-                  کل تخفیف داده‌شده
+                  <TableLabel>4</TableLabel> کل تخفیف داده‌شده
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  {" "}
-                  مبلغ خالص فروش
+                  <TableLabel>3</TableLabel> مبلغ خالص فروش
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  {" "}
-                  مبلغ خام فروش
+                  <TableLabel>2</TableLabel> مبلغ خام فروش
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  {" "}
-                  تعداد اقلام
+                  <TableLabel>1</TableLabel> تعداد اقلام
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
               <Table.Row>
                 <Table.Cell className="text-center norm-latin" collapsing>
+                  <TableLabel>12</TableLabel>
                   <span>
                     {priceToPersian(this.state.dailyReport.bills_data.length)}
                   </span>
                 </Table.Cell>
                 {isPermit("admin", this.state.job) ? (
                   <Table.Cell className="text-center norm-latin" collapsing>
+                    <TableLabel>11</TableLabel>
                     <span>
                       {priceToPersian(this.state.dailyReport.total_profit)}
                     </span>
                   </Table.Cell>
                 ) : null}
                 <Table.Cell className="text-center norm-latin" collapsing>
+                  <TableLabel>10</TableLabel>
                   <span>
                     {priceToPersian(
                       this.state.dailyReport.bills_with_reminded_status
@@ -251,6 +271,7 @@ class DailyReport extends React.Component {
                   </span>
                 </Table.Cell>
                 <Table.Cell className="text-center norm-latin" collapsing>
+                  <TableLabel>9</TableLabel>
                   <span>
                     {priceToPersian(
                       this.state.dailyReport.total_reminded_payments
@@ -258,41 +279,49 @@ class DailyReport extends React.Component {
                   </span>
                 </Table.Cell>
                 <Table.Cell className="text-center norm-latin" collapsing>
+                  <TableLabel>8</TableLabel>
                   <span>
                     {priceToPersian(this.state.dailyReport.total_paid)}
                   </span>
                 </Table.Cell>
                 <Table.Cell className="text-center norm-latin" collapsing>
+                  <TableLabel>7</TableLabel>
                   <span>
                     {priceToPersian(this.state.dailyReport.total_card_paid)}
                   </span>
                 </Table.Cell>
                 <Table.Cell className="text-center norm-latin" collapsing>
+                  <TableLabel>6</TableLabel>
                   <span>
                     {priceToPersian(this.state.dailyReport.total_cash_paid)}
                   </span>
                 </Table.Cell>
                 <Table.Cell className="text-center norm-latin" collapsing>
+                  <TableLabel>5</TableLabel>
                   <span>
                     {priceToPersian(this.state.dailyReport.total_cheque_paid)}
                   </span>
                 </Table.Cell>
                 <Table.Cell className="text-center norm-latin" collapsing>
+                  <TableLabel>44</TableLabel>
                   <span>
                     {priceToPersian(this.state.dailyReport.total_discount)}
                   </span>
                 </Table.Cell>
                 <Table.Cell className="text-center norm-latin" collapsing>
+                  <TableLabel>3</TableLabel>
                   <span>
                     {priceToPersian(this.state.dailyReport.total_final_price)}
                   </span>
                 </Table.Cell>
                 <Table.Cell className="text-center norm-latin" collapsing>
+                  <TableLabel>2</TableLabel>
                   <span>
                     {priceToPersian(this.state.dailyReport.total_price)}
                   </span>
                 </Table.Cell>
                 <Table.Cell className="text-center norm-latin" collapsing>
+                  <TableLabel>1</TableLabel>
                   <span>
                     {priceToPersian(this.state.dailyReport.total_items)}
                   </span>
