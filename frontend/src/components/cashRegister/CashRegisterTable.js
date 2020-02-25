@@ -1,31 +1,26 @@
 import React from "react";
-import { Icon, Table, Button } from "semantic-ui-react";
+import { Icon, Table, Button, Pagination } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { getActiveBills, deleteBill } from "../../actions/CashRegisterActions";
 import { digitToComma } from "../utils/numberUtils";
-import { standardTimeToJalaali, convertToJalaali } from "../utils/jalaaliUtils";
+import { standardTimeToJalaali } from "../utils/jalaaliUtils";
 import NotFound from "../utils/notFound";
 import LoadingBar from "../utils/loadingBar";
 import { toastr } from "react-redux-toastr";
 import history from "../../history";
 import TableLabel from "../utils/tableLabelGenerator";
+const colSpan = 5;
+
 class CashRegisterTable extends React.Component {
   state = {
     fetch: false,
-    noResult: false
+    totalPageCount: 1,
+    activePage: 1
   };
 
   componentDidMount() {
     this.getActiveBills();
   }
-
-  getActiveBills = () => {
-    this.props.getActiveBills().then(() => {
-      this.setState({
-        fetch: true
-      });
-    });
-  };
 
   closeModal = () => {
     this.setState({
@@ -39,18 +34,40 @@ class CashRegisterTable extends React.Component {
       this.props
         .deleteBill(pk)
         .then(() => {
+          this.setState({ fetch: false });
           toastr.success(
             "حذف فاکتور با موفقیت انجام شد",
             "فاکتور با موفقیت حذف گردید"
           );
-          this.props.getActiveBills();
+          this.getActiveBills(this.state.activePage);
         })
         .catch(() => {
           toastr.error("عملیات حذف ناموفق بود");
         });
     }
   };
-
+  getActiveBills = (page = 1) => {
+    this.props.getActiveBills(page).then(res => {
+      console.log(res);
+      this.setState({
+        fetch: true,
+        totalPageCount: this.props.activeBills
+          ? Math.ceil(res.data.count / 25)
+          : 0
+      });
+    });
+  };
+  changePage = (_, { activePage }) => {
+    this.setState(
+      {
+        activePage,
+        fetch: false
+      },
+      () => {
+        this.getActiveBills(this.state.activePage);
+      }
+    );
+  };
   render() {
     return (
       <React.Fragment>
@@ -58,7 +75,7 @@ class CashRegisterTable extends React.Component {
           <Table celled className="rtl text-center">
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell colSpan="5" className="text-right">
+                <Table.HeaderCell colSpan={colSpan} className="text-right">
                   لیست فاکتورهای فعال
                   <Button icon onClick={this.getActiveBills}>
                     <Icon name="repeat" />
@@ -145,6 +162,23 @@ class CashRegisterTable extends React.Component {
                   );
                 })}
               </Table.Body>
+              <Table.Footer
+                fullWidth
+                className={"ltr"}
+                hidden={this.state.totalPageCount < 2}
+              >
+                <Table.Row>
+                  <Table.HeaderCell colSpan={colSpan} className="norm-latin">
+                    <Pagination
+                      className="norm-latin"
+                      activePage={this.state.activePage}
+                      defaultActivePage={1}
+                      onPageChange={this.changePage}
+                      totalPages={this.state.totalPageCount}
+                    />
+                  </Table.HeaderCell>
+                </Table.Row>
+              </Table.Footer>
             </React.Fragment>
           </Table>
         ) : null}

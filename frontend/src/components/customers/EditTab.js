@@ -243,22 +243,26 @@ class EditTab extends Component {
             {this.createInput("first_name", "نام")}
             {this.createInput("last_name", "نام خانوداگی")}
           </Form.Group>
+          {!this.props.fromCashregister ? (
+            <Form.Group unstackable widths={2}>
+              {this.createInput("email", "ایمیل")}
+              {this.createInput("address", "آدرس")}
+            </Form.Group>
+          ) : null}
           <Form.Group unstackable widths={2}>
-            {this.createInput("email", "ایمیل")}
             {this.createInput("phone_number", "شماره تلفن")}
-          </Form.Group>
-          <Form.Group unstackable widths={2}>
-            {this.createInput("address", "آدرس")}
             {this.createSelect("city_options", "شهر")}
           </Form.Group>
           <Form.Group unstackable widths={2}>
             {this.createInput("birth_date", "تاریخ تولد")}
             {this.createInput("marriage_date", "تاریخ ازدواج")}
           </Form.Group>
-          <Form.Group unstackable widths={2}>
-            {this.createInput("points", "امتیاز مشتری")}
-            {this.createSelect("class_type_options", "کلاس")}
-          </Form.Group>
+          {!this.props.fromCashregister ? (
+            <Form.Group unstackable widths={2}>
+              {this.createInput("points", "امتیاز مشتری")}
+              {this.createSelect("class_type_options", "کلاس")}
+            </Form.Group>
+          ) : null}
           <Button
             onClick={this.handleSubmit}
             disabled={this.state.anyChange ? false : true}
@@ -268,7 +272,7 @@ class EditTab extends Component {
           />
           <Button
             className="yekan"
-            content={this.props.onClose ? "بستن" : "بازگشت"}
+            content={this.props.fromCashregister ? "بستن" : "بازگشت"}
             onClick={() => {
               if (this.props.onClose != undefined) {
                 this.props.onClose();

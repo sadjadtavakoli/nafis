@@ -193,15 +193,16 @@ class ViewBillModal extends React.Component {
                             {bill.buyer.last_name}
                           </span>
                           <Button
-                            circular
+                            size="mini"
                             className="yekan"
                             color="teal"
+                            labelPosition="right"
+                            icon="edit"
+                            content="ویرایش مشتری"
                             onClick={() => {
                               this.toggleEditCustomerModal();
                             }}
-                          >
-                            ویرایش
-                          </Button>
+                          />
                         </Table.Cell>
                         <Table.Cell>
                           <span style={{ fontWeight: "bold" }}>امتیاز:</span>

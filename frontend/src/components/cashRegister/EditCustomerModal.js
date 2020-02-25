@@ -24,7 +24,11 @@ class EditCustomerPopup extends React.Component {
           </h3>
         </Modal.Header>
         <Modal.Content>
-          <EditTab passingPk={this.props.pk} onClose={this.props.onClose} />
+          <EditTab
+            fromCashregister={true}
+            passingPk={this.props.pk}
+            onClose={this.props.onClose}
+          />
         </Modal.Content>
       </Modal>
     );
