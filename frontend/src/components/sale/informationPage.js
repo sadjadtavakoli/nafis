@@ -10,16 +10,15 @@ import {
 import { getOneBill } from "../../actions/CashRegisterActions";
 import {
   Button,
-  Modal,
   Divider,
   Header,
   Segment,
   Form,
-  Card,
   Popup,
   Icon,
   Message,
-  Label
+  Label,
+  Container
 } from "semantic-ui-react";
 import { getProductsByCode } from "../../actions/DepositoryActions";
 import NewBillPopup from "./newBillPopup";
@@ -27,7 +26,7 @@ import { toastr } from "react-redux-toastr";
 import LoadingBar from "../utils/loadingBar";
 import ItemsRender from "./renderItem";
 
-class InformationModal extends React.Component {
+class InformationPage extends React.Component {
   state = {
     branchOptions: [{ key: "1", value: "1", flag: "ir", text: "شعبه یک" }],
     sumProductTotalPrice: 0,
@@ -43,10 +42,11 @@ class InformationModal extends React.Component {
 
   componentDidMount() {
     this.getOneBill();
+    console.log(this.props.match.params);
   }
 
   getOneBill = () => {
-    this.props.getOneBill(this.props.pk).then(() => {
+    this.props.getOneBill(this.props.match.params.pk).then(() => {
       this.sumProductTotalPrice();
       this.initialize();
     });
@@ -290,170 +290,161 @@ class InformationModal extends React.Component {
 
   render() {
     return (
-      <Modal
-        id="add-bill"
-        closeOnDimmerClick={false}
-        dimmer="blurring"
-        className="text-right rtl yekan"
-        open={this.props.open}
-        onClose={this.props.onClose}
-      >
+      <Container>
+        <Segment stacked className="rtl">
+          <Header as="h3" className="yekan">
+            مشاهده و ویرایش فاکتور
+          </Header>
+          <Button
+            circular
+            onClick={() => window.history.back()}
+            size="huge"
+            icon="arrow left"
+            style={{ float: "left" }}
+          />
+        </Segment>
         {this.props.data ? (
-          <React.Fragment>
-            <Modal.Header className="yekan">فاکتور</Modal.Header>
-            <Modal.Content scrolling>
-              <Form>
-                <Form.Group unstackable widths={this.state.width < 425 ? 1 : 4}>
-                  <Form.Input
-                    className={`ltr placeholder-rtl`}
-                    readOnly
-                    defaultValue={this.props.data.buyer.phone_number}
-                    label="شماره تلفن همراه"
-                    type="number"
-                    placeholder="شماره تلفن همراه"
-                  />
-                  <Form.Dropdown
-                    className={`ltr placeholder-rtl text-right`}
-                    readOnly
-                    defaultValue={"1"}
-                    placeholder="شعبه"
-                    selection
-                    label={"شعبه"}
-                    options={this.state.branchOptions}
-                  />
-                  <Form.Input
-                    className="ltr"
-                    readOnly={!this.state.labelEdit}
-                    defaultValue={
-                      this.state.discount_s ? "" : this.state.discount
-                    }
-                    label={() => this.labelRender()}
-                    type="number"
-                    onChange={e => this.handleDiscountChange(e)}
-                    placeholder={
-                      this.props.data.total_discount -
-                      this.props.data.items_discount
-                    }
-                    max={this.state.sumProductTotalPrice - this.state.discount}
-                  />
-                  <Form.Input
-                    readOnly
-                    className="rtl placeholder-rtl text-right"
-                    label="قیمت نهایی فاکتور"
-                    value={`${digitToComma(
-                      Math.round(
-                        this.state.sumProductTotalPrice - this.state.discount
-                      )
-                    )} تومان`}
-                  />
-                </Form.Group>
-                {!this.props.data.items.length && (
-                  <Message
-                    icon="inbox"
-                    color="red"
-                    header="قلمی در این فاکتور موجود نمی باشد"
-                    content={
-                      <span>
-                        در راستای جلوگیری از خطای انسانی در فرآیند ثبت و ویرایش،
-                        جهت افزودن آیتم،توصیه میشود در صفحه‌ی قبلی بروی{" "}
-                        <b>افزودن آیتم جدید</b> کلیک نمایید
-                      </span>
-                    }
-                  />
-                )}
-                <div className="text-center">
-                  <Popup
-                    content={
-                      <NewBillPopup
-                        onClose={this.toggleAddItemPopup}
-                        phoneNumber={this.props.data.buyer.phone_number}
-                        refetch={this.refetchModalData}
-                        pk={this.props.data.pk}
-                        onSubmit={this.submitItemPopup}
-                      />
-                    }
-                    open={this.state.isOpenAddItem}
-                    position="center"
-                    wide="very"
-                    trigger={
-                      <Button
-                        circular
-                        onClick={() => {
-                          this.toggleAddItemPopup(this.state.isOpenAddItem);
-                        }}
-                        color="green"
-                        size="huge"
-                        icon="add"
-                        style={
-                          this.state.width < 425 ? { marginTop: "10px" } : null
-                        }
-                      />
-                    }
-                  />
-                </div>
-                <Segment
-                  hidden={!this.props.data.items.length}
-                  style={{ paddingTop: 0 }}
-                >
-                  <Header as="h3" floated="right">
-                    <span>اقلام فاکتور</span>
-                    &nbsp;
-                    <Label
-                      className="norm-latin"
-                      style={{ margin: "13px 5px 0 0" }}
-                    >
-                      <span className="yekan">مبلغ کل اقلام:&nbsp;</span>
-                      <span>
-                        {digitToComma(
-                          Math.round(this.state.sumProductTotalPrice)
-                        )}
-                      </span>
-                      <span className="yekan">&nbsp;تومان</span>
-                    </Label>
-                  </Header>
-                  <Divider clearing />
-                  {this.props.data.items.map((item, index) => (
-                    <ItemsRender
-                      item={item}
-                      index={index}
-                      editting={this.state.editting}
-                      productData={this.state.productData}
-                      notFound={this.state.notFound}
-                      editMode={this.state.editMode}
-                      width={this.state.width}
-                      handleChange={this.handleChange}
-                      handleCodeInputClick={this.handleCodeInputClick}
-                      cancelChanges={this.cancelChanges}
-                      deleteItem={this.deleteItem}
-                      editItem={this.editItem}
-                      submitChanges={this.submitChanges}
+          <Segment className="rtl text-right">
+            <Form>
+              <Form.Group unstackable widths={this.state.width < 425 ? 1 : 4}>
+                <Form.Input
+                  className={`ltr placeholder-rtl`}
+                  readOnly
+                  defaultValue={this.props.data.buyer.phone_number}
+                  label="شماره تلفن همراه"
+                  type="number"
+                  placeholder="شماره تلفن همراه"
+                />
+                <Form.Dropdown
+                  className={`ltr placeholder-rtl text-right`}
+                  readOnly
+                  defaultValue={"1"}
+                  placeholder="شعبه"
+                  selection
+                  label={"شعبه"}
+                  options={this.state.branchOptions}
+                />
+                <Form.Input
+                  className="ltr"
+                  readOnly={!this.state.labelEdit}
+                  defaultValue={
+                    this.state.discount_s ? "" : this.state.discount
+                  }
+                  label={() => this.labelRender()}
+                  type="number"
+                  onChange={e => this.handleDiscountChange(e)}
+                  placeholder={
+                    this.props.data.total_discount -
+                    this.props.data.items_discount
+                  }
+                  max={this.state.sumProductTotalPrice - this.state.discount}
+                />
+                <Form.Input
+                  readOnly
+                  className="rtl placeholder-rtl text-right"
+                  label="قیمت نهایی فاکتور"
+                  value={`${digitToComma(
+                    Math.round(
+                      this.state.sumProductTotalPrice - this.state.discount
+                    )
+                  )} تومان`}
+                />
+              </Form.Group>
+              {!this.props.data.items.length && (
+                <Message
+                  icon="inbox"
+                  color="red"
+                  header="قلمی در این فاکتور موجود نمی باشد"
+                  content={
+                    <span>
+                      در راستای جلوگیری از خطای انسانی در فرآیند ثبت و ویرایش،
+                      جهت افزودن آیتم،توصیه میشود در صفحه‌ی قبلی بروی{" "}
+                      <b>افزودن آیتم جدید</b> کلیک نمایید
+                    </span>
+                  }
+                />
+              )}
+              <div className="text-center">
+                <Popup
+                  content={
+                    <NewBillPopup
+                      onClose={this.toggleAddItemPopup}
+                      phoneNumber={this.props.data.buyer.phone_number}
+                      pk={this.props.data.pk}
+                      onSubmit={this.submitItemPopup}
+                      getOneBill={this.getOneBill}
                     />
-                  ))}
-                </Segment>
-              </Form>
-            </Modal.Content>
-
-            <Modal.Actions>
-              <Button
-                color="black"
-                onClick={() => {
-                  this.props.onClose();
-                }}
-                disabled={this.state.editMode ? true : false}
+                  }
+                  open={this.state.isOpenAddItem}
+                  position="center"
+                  wide="very"
+                  trigger={
+                    <Button
+                      circular
+                      onClick={() => {
+                        this.toggleAddItemPopup(this.state.isOpenAddItem);
+                      }}
+                      color="green"
+                      size="huge"
+                      icon="add"
+                      style={
+                        this.state.width < 425 ? { marginTop: "10px" } : null
+                      }
+                    />
+                  }
+                />
+              </div>
+              <Segment
+                hidden={!this.props.data.items.length}
+                style={{ paddingTop: 0 }}
               >
-                <span>بستن</span>
-              </Button>
-            </Modal.Actions>
-          </React.Fragment>
+                <Header as="h3" floated="right">
+                  <span>اقلام فاکتور</span>
+                  &nbsp;
+                  <Label
+                    className="norm-latin"
+                    style={{ margin: "13px 5px 0 0" }}
+                  >
+                    <span className="yekan">مبلغ کل اقلام:&nbsp;</span>
+                    <span>
+                      {digitToComma(
+                        Math.round(this.state.sumProductTotalPrice)
+                      )}
+                    </span>
+                    <span className="yekan">&nbsp;تومان</span>
+                  </Label>
+                </Header>
+                <Divider clearing />
+                {this.props.data.items.map((item, index) => (
+                  <ItemsRender
+                    item={item}
+                    index={index}
+                    editting={this.state.editting}
+                    productData={this.state.productData}
+                    notFound={this.state.notFound}
+                    editMode={this.state.editMode}
+                    width={this.state.width}
+                    handleChange={this.handleChange}
+                    handleCodeInputClick={this.handleCodeInputClick}
+                    cancelChanges={this.cancelChanges}
+                    deleteItem={this.deleteItem}
+                    editItem={this.editItem}
+                    submitChanges={this.submitChanges}
+                  />
+                ))}
+              </Segment>
+            </Form>
+          </Segment>
         ) : (
           <LoadingBar />
         )}
-      </Modal>
+      </Container>
     );
   }
 }
 
 const mapStateToProps = state => {
+  console.log(state.sale.theBill);
   return {
     productsList: state.depository.productsList,
     data: state.sale.theBill
@@ -467,4 +458,4 @@ export default connect(mapStateToProps, {
   updateBillItem,
   getProductsByCode,
   getOneBill
-})(InformationModal);
+})(InformationPage);

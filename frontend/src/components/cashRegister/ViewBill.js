@@ -22,7 +22,7 @@ import TableLabel from "../utils/tableLabelGenerator";
 import AddPaymentModal from "./AddPaymentModal";
 import { digitToComma } from "../utils/numberUtils";
 import EditCustomerModal from "./EditCustomerModal";
-import { standardTimeToJalaali } from "../utils/jalaaliUtils";
+import { standardTimeToJalaali, convertToJalaali } from "../utils/jalaaliUtils";
 import logo from "../../assets/logo_printable.png";
 import { toastr } from "react-redux-toastr";
 import history from "../../history";
@@ -398,7 +398,9 @@ class ViewBillModal extends React.Component {
                           id="norm-latin"
                         >
                           <TableLabel>1</TableLabel>
-                          {standardTimeToJalaali(payment.create_date)}
+                          {standardTimeToJalaali(
+                            convertToJalaali(payment.create_date)
+                          )}
                         </Table.Cell>
                         <Table.Cell id="norm-latin">
                           <TableLabel>2</TableLabel>

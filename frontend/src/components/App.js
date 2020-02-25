@@ -20,6 +20,7 @@ import Suppliers from "./suppliers";
 import Supplier from "./suppliers/Supplier";
 import DepositoryEdit from "./depository/depositoryEdit";
 import ViewBill from "./cashRegister/ViewBill";
+import InformationPage from "./sale/informationPage";
 
 const App = ({ token }) => {
   return (
@@ -52,6 +53,7 @@ const App = ({ token }) => {
               component={DepositoryEdit}
             />
             <Route path="/cashregister/:pk" exact component={ViewBill} />
+            <Route path="/information/:pk" exact component={InformationPage} />
           </SideBar>
         </Router>
       ) : (
