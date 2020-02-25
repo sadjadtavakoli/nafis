@@ -403,7 +403,6 @@ class ViewBillModal extends React.Component {
                           id="norm-latin"
                         >
                           <TableLabel>1</TableLabel>
-                          {payment.create_date}
                           {standardTimeToJalaali(payment.create_date)}
                         </Table.Cell>
                         <Table.Cell id="norm-latin">

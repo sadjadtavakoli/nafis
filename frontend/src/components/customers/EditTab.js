@@ -53,6 +53,7 @@ class EditTab extends Component {
 
   getCustomerInfo = () => {
     this.props.getACustomer(this.props.passingPk).then(() => {
+      console.log(this.props.theCustomer.city);
       this.setState({
         pk: this.props.passingPk,
         first_name: this.props.theCustomer.first_name,
@@ -72,7 +73,7 @@ class EditTab extends Component {
     this.props.getClassTypes().then(() => {
       this.setState({
         city_options: this.props.cityAndClass.cities,
-        class_tpye_options: this.props.cityAndClass.customerTypes
+        class_type_options: this.props.cityAndClass.customerTypes
       });
     });
   };
@@ -92,7 +93,9 @@ class EditTab extends Component {
   handleChange = (status, e) => {
     this.setState({
       [status]: e.target.value,
-      anyChange: true
+      [`${status}_e`]: false,
+      anyChange: true,
+      hasError: false
     });
   };
 
@@ -148,6 +151,7 @@ class EditTab extends Component {
         points: this.state.points,
         class_type: this.state.class_type
       };
+      console.log(prepareData);
       this.props
         .updateCustomer(this.state.pk, prepareData)
         .then(() => {
@@ -188,7 +192,7 @@ class EditTab extends Component {
         className={`text-right`}
         label={title}
         onChange={e => this.handleChange(status, e)}
-        onSelect={() => this.handleSelect(status)}
+        // onSelect={() => this.handleSelect(status)}
         onBlur={() => this.handleBlur(status)}
         defaultValue={this.state[convert] ? null : this.state[status]}
         placeholder={this.state[convert] ? this.state[status] : null}
@@ -203,18 +207,29 @@ class EditTab extends Component {
       />
     );
   };
-
+  selectOnChange = (e, { name, value }) => {
+    let status = this.convertSelect(name);
+    this.setState({
+      ...this.state,
+      [status]: value,
+      anyChange: true
+    });
+  };
   createSelect = (status, title) => {
     let convertSelect = this.convertSelect(status);
+    console.log(convertSelect, this.state[convertSelect]);
     return (
       <Form.Select
+        name={status}
         search
         selection
         fluid
         className="text-right"
         label={title}
         placeholder={title}
+        onChange={this.selectOnChange}
         options={this.state[status]}
+        value={this.state[convertSelect]}
         defaultValue={this.state[convertSelect]}
       />
     );
