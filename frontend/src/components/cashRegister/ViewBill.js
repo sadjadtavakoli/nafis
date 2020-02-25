@@ -181,7 +181,7 @@ class ViewBillModal extends React.Component {
                         <Table.Cell>
                           <span style={{ fontWeight: "bold" }}>نوع:</span>
                           &nbsp;
-                          {/* <span>{bill.items[0].product.f_type.name}</span> */}
+                          <span>{bill.buyer.class_type}</span>
                         </Table.Cell>
                       </Table.Row>
                     </Table.Body>
@@ -285,79 +285,71 @@ class ViewBillModal extends React.Component {
                 })}
               </Table.Body>
             </Table>
-            <Table celled className="rtl text-center" columns="5">
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell className="table-border-left">
-                    <TableLabel>1</TableLabel>
-                    مبلغ خام
-                  </Table.HeaderCell>
-                  <Table.HeaderCell>
-                    <TableLabel>2</TableLabel>
-                    مجموع تخفیف کالایی
-                  </Table.HeaderCell>
-                  <Table.HeaderCell>
-                    <TableLabel>3</TableLabel>
-                    تخفیف روی کل فاکتور
-                  </Table.HeaderCell>
-                  <Table.HeaderCell>
-                    <TableLabel>4</TableLabel>
-                    <span>امتیاز</span>
-                    <Label
-                      color={this.state.editPoints ? "green" : "teal"}
-                      style={{ marginRight: "5px" }}
-                      className="pointer"
-                      onClick={
-                        !this.state.editPoints
-                          ? this.handleEditClick
-                          : () => this.handleEditSubmit(bill.pk)
-                      }
-                    >
-                      {this.state.editPoints ? "اعمال" : "ویرایش"}
-                    </Label>
-                  </Table.HeaderCell>
-                  <Table.HeaderCell className="table-border-left-none">
-                    <TableLabel>5</TableLabel>
-                    مبلغ قابل پرداخت
-                  </Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                <Table.Row>
-                  <Table.Cell className="table-border-left" id="norm-latin">
-                    <TableLabel>1</TableLabel>
-                    {digitToComma(bill.final_price)}
-                  </Table.Cell>
-                  <Table.Cell id="norm-latin">
-                    <TableLabel>2</TableLabel>
-                    {digitToComma(bill.total_discount)}
-                  </Table.Cell>
-                  <Table.Cell id="norm-latin">
-                    <TableLabel>3</TableLabel>
-                    {digitToComma(bill.items_discount)}
-                  </Table.Cell>
-                  <Table.Cell id="norm-latin">
-                    <TableLabel>4</TableLabel>
-                    <Input
-                      value={this.state.points}
-                      onChange={e => this.handlePointsChange(e)}
-                      readOnly={this.state.editPoints ? false : true}
-                      type="number"
-                      className="ltr"
-                    />
-                  </Table.Cell>
-                  <Table.Cell
-                    className="table-border-left-none"
-                    id="norm-latin"
+            <Grid reversed celled className={"ltr"}>
+              <Grid.Row>
+                <Grid.Column className={"norm-latin text-right"} width={13}>
+                  <span>{digitToComma(bill.final_price)}</span>
+                </Grid.Column>
+                <Grid.Column width={3} className={"bg-table"}>
+                  مبلغ خام
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column className={"norm-latin text-right"} width={13}>
+                  <span>{digitToComma(bill.total_discount)}</span>
+                </Grid.Column>
+                <Grid.Column width={3} className={"bg-table"}>
+                  مجموع تخفیف کالایی
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column className={"norm-latin text-right"} width={13}>
+                  <span>{digitToComma(bill.items_discount)}</span>
+                </Grid.Column>
+                <Grid.Column width={3} className={"bg-table"}>
+                  تخفیف روی کل فاکتور
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column className={"norm-latin text-right"} width={13}>
+                  <Input
+                    value={this.state.points}
+                    onChange={e => this.handlePointsChange(e)}
+                    readOnly={this.state.editPoints ? false : true}
+                    type="number"
+                    className="ltr"
+                  />
+                </Grid.Column>
+                <Grid.Column width={3} className={"bg-table"}>
+                  <Label
+                    color={this.state.editPoints ? "green" : "teal"}
+                    style={{ marginRight: "5px" }}
+                    className="pointer"
+                    onClick={
+                      !this.state.editPoints
+                        ? this.handleEditClick
+                        : () => this.handleEditSubmit(bill.pk)
+                    }
                   >
-                    <TableLabel>5</TableLabel>
+                    {this.state.editPoints ? "اعمال" : "ویرایش"}
+                  </Label>
+                  <span>امتیاز</span>
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column className={"norm-latin text-right"} width={13}>
+                  <span>
                     {digitToComma(
                       Number(bill.remaining_payment) - Number(this.state.points)
                     )}
-                  </Table.Cell>
-                </Table.Row>
-              </Table.Body>
-            </Table>
+                  </span>
+                </Grid.Column>
+                <Grid.Column width={3} className={"bg-table"}>
+                  مبلغ قابل پرداخت
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+
             <hr color="#ddd" />
 
             {this.state.anyPays && (
