@@ -42,7 +42,6 @@ class InformationPage extends React.Component {
 
   componentDidMount() {
     this.getOneBill();
-    console.log(this.props.match.params);
   }
 
   getOneBill = () => {

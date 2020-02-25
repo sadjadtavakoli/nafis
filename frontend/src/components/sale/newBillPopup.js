@@ -66,8 +66,7 @@ class NewBillPopup extends React.Component {
         selling_price: this.state.productData.selling_price
       };
       if (this.props.pk) {
-        console.log("pk", prepareData.name);
-        this.props.addNewItem(this.props.pk, prepareData).then(res => {
+        this.props.addNewItem(prepareData).then(res => {
           toastr.success("ثبت آیتم جدید", "ثبت آیتم جدید با موفقیت انجام شد");
           this.props.onClose();
           console.log("done");
