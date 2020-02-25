@@ -144,36 +144,41 @@ class Suppliers extends Component {
                 return (
                   <Table.Body>
                     <Table.Row key={item.pk}>
-                      <Table.Cell style={{ borderLeft: "1px solid #ddd" }}>
+                      <Table.Cell
+                        collapsing
+                        style={{ borderLeft: "1px solid #ddd" }}
+                      >
                         <TableLabel>1</TableLabel>
                         {item.first_name}
                       </Table.Cell>
-                      <Table.Cell>
+                      <Table.Cell collapsing>
                         <TableLabel>2</TableLabel>
                         <span>{item.last_name}</span>
                       </Table.Cell>
-                      <Table.Cell className="norm-latin">
+                      <Table.Cell collapsing className="norm-latin">
                         <TableLabel>3</TableLabel>
                         <span>{item.email}</span>
                       </Table.Cell>
-                      <Table.Cell className="norm-latin">
+                      <Table.Cell collapsing className="norm-latin">
                         <TableLabel>4</TableLabel>
                         <span>{item.phone_number}</span>
                       </Table.Cell>
-                      <Table.Cell>
+                      <Table.Cell collapsing>
                         <TableLabel>5</TableLabel>
                         <span>{item.address}</span>
                       </Table.Cell>
                       <Table.Cell>
                         <Button
+                          className="yekan"
+                          content="ویرایش"
+                          labelPosition="right"
                           color="teal"
+                          icon="info"
                           onClick={() => {
                             this.handleClick(item.pk);
                             history.push(`/suppliers/supplier/${item.pk}/`);
                           }}
-                        >
-                          <span>مشاهده و ویرایش</span>
-                        </Button>
+                        />
                       </Table.Cell>
                     </Table.Row>
                   </Table.Body>

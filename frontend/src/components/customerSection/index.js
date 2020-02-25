@@ -202,38 +202,43 @@ class Customers extends Component {
               ? this.state.customers.map(item => {
                   return (
                     <Table.Row key={item.pk}>
-                      <Table.Cell style={{ borderLeft: "1px solid #ddd" }}>
+                      <Table.Cell
+                        collapsing
+                        style={{ borderLeft: "1px solid #ddd" }}
+                      >
                         <TableLabel>1</TableLabel>
                         <span>{item.first_name}</span>
                         <span>&nbsp;</span>
                         <span>{item.last_name}</span>
                       </Table.Cell>
-                      <Table.Cell className="norm-latin">
+                      <Table.Cell collapsing className="norm-latin">
                         <TableLabel>2</TableLabel>
 
                         <span>{item.phone_number}</span>
                       </Table.Cell>
                       <Table.Cell>
                         <Button
-                          className="m-1"
+                          className="m-1 yekan"
                           color="teal"
+                          icon="address card"
+                          labelPosition="right"
+                          content="نمایه مشتری"
                           onClick={() => {
                             this.handleViewClick(item.pk);
                             history.push(`/customers/customer/${item.pk}/`);
                           }}
-                        >
-                          <span>پروفایل و پرداختی های مشتری</span>
-                        </Button>
+                        ></Button>
                         {isPermit("admin", this.state.job) ? (
                           <Button
-                            className="m-1"
+                            className="m-1 yekan"
                             color="red"
+                            labelPosition="right"
+                            icon="trash"
+                            content="حذف"
                             onClick={() => {
                               this.deleteCustomer(item.pk);
                             }}
-                          >
-                            <span>حذف</span>
-                          </Button>
+                          ></Button>
                         ) : null}
                       </Table.Cell>
                     </Table.Row>

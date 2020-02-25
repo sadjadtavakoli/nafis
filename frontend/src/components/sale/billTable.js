@@ -173,13 +173,12 @@ class BillTable extends React.Component {
                     <Button
                       onClick={() => this.openInformationModal(item)}
                       icon
-                      className="m-1"
+                      className="m-1 yekan"
                       labelPosition="right"
                       color="teal"
-                    >
-                      <span className="yekan">مشاهده و ویرایش</span>
-                      <Icon name="info" />
-                    </Button>
+                      content="مشاهده و ویرایش"
+                      icon="info"
+                    ></Button>
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center rtl">
                     <TableLabel>6</TableLabel>
