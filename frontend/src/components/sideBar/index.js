@@ -177,7 +177,7 @@ class SideBar extends React.Component {
           </Sidebar>
 
           <Sidebar.Pusher>
-            <Segment disabled={this.state.visible}>
+            <Segment original="" disabled={this.state.visible}>
               {this.props.children}
             </Segment>
           </Sidebar.Pusher>
