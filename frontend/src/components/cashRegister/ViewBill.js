@@ -444,6 +444,12 @@ class ViewBillModal extends React.Component {
                 color="teal"
                 size="huge"
                 icon="add"
+                disabled={
+                  Number(bill.remaining_payment) - Number(this.state.points) ===
+                  0
+                    ? true
+                    : false
+                }
               />
               <Button
                 circular
@@ -504,7 +510,9 @@ class ViewBillModal extends React.Component {
               <AddPaymentModal
                 open={this.state.openAddPayment}
                 onClose={this.toggleAddPaymentModal}
-                price={bill.final_price}
+                price={
+                  Number(bill.remaining_payment) - Number(this.state.points)
+                }
                 pk={bill.pk}
                 refetch={this.getBill}
               />
@@ -527,6 +535,7 @@ class ViewBillModal extends React.Component {
 }
 
 const mapStateToProps = state => {
+  console.log(state.cash.theBill);
   return {
     theBill: state.cash.theBill
   };

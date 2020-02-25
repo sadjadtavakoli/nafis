@@ -20,27 +20,77 @@ class AddPaymentModal extends React.Component {
       }
     ],
     card_amount: this.props.price,
-    cash_amount: 0
+    cash_amount: 0,
+    disable_button: false,
+    cheque_amount: this.props.price,
+    cheque_number: null,
+    bank: null,
+    issue_date: null,
+    expiry_date: null
   };
 
   setStateType = (_, { value }) => {
-    this.setState({ type: value });
-  };
-
-  handleInputChange = (e, status) => {
-    this.setState({
-      [status]: e.target.value
+    this.setState({ type: value }, () => {
+      this.setState({
+        card_amount: this.props.price,
+        cash_amount: 0,
+        disable_button: false,
+        cheque_amount: this.props.price,
+        cheque_number: null,
+        bank: null,
+        issue_date: null,
+        expiry_date: null
+      });
     });
   };
 
+  handleInputChange = (e, status) => {
+    this.setState(
+      {
+        [status]: e.target.value
+      },
+      () => {
+        if (this.state.type === "cash_card") {
+          if (
+            Number(this.state.card_amount) + Number(this.state.cash_amount) >
+            this.props.price
+          ) {
+            this.setState({ disable_button: true });
+          } else {
+            this.setState({ disable_button: false });
+          }
+        }
+        if (this.state.type === "cheque") {
+          if (Number(this.state.cheque_amount) > this.props.price) {
+            this.setState({ disable_button: true });
+          } else {
+            this.setState({ disable_button: false });
+          }
+        }
+      }
+    );
+  };
+
   handleSubmit = () => {
-    let card_amount =
-      Number(this.state.card_amount) + Number(this.state.cash_amount);
-    const prepareData = {
-      create_date: getTodayJalaali(),
-      card_amount,
-      type: this.state.type
-    };
+    let prepareData = {};
+    if (this.state.type === "cash_card") {
+      let card_amount =
+        Number(this.state.card_amount) + Number(this.state.cash_amount);
+      prepareData = {
+        create_date: getTodayJalaali(),
+        card_amount,
+        type: this.state.type
+      };
+    } else {
+      prepareData = {
+        create_date: getTodayJalaali(),
+        cheque_amount: this.state.cheque_amount,
+        cheque_number: this.state.cheque_number,
+        bank: this.state.bank,
+        issue_date: this.state.issue_date,
+        expiry_date: this.state.expiry_date
+      };
+    }
     this.props
       .addPaymentToBill(this.props.pk, prepareData)
       .then(() => {
@@ -73,12 +123,7 @@ class AddPaymentModal extends React.Component {
         <Modal.Content>
           <h5 className="yekan">
             انتخاب نوع پرداخت&nbsp;
-            <span
-              style={{ fontWeight: "bold", color: "red" }}
-              onChange={this.handleTypeChange}
-            >
-              *
-            </span>
+            <span style={{ fontWeight: "bold", color: "red" }}>*</span>
           </h5>
           <Dropdown
             placeholder="انتخاب نوع پرداخت"
@@ -99,6 +144,9 @@ class AddPaymentModal extends React.Component {
                 fluid
                 className="ltr"
                 defaultValue={this.props.price}
+                onChange={e => {
+                  this.handleInputChange(e, "cheque_amount");
+                }}
               />
               <h5 className="yekan">
                 شماره چک&nbsp;
@@ -107,8 +155,11 @@ class AddPaymentModal extends React.Component {
               <Input
                 type="number"
                 fluid
-                className="rtl placeholder-rtl"
+                className="rtl placeholder-rtl text-right"
                 placeholder="شماره چک"
+                onChange={e => {
+                  this.handleInputChange(e, "cheque_number");
+                }}
               />
               <h5 className="yekan">
                 بانک&nbsp;
@@ -118,6 +169,9 @@ class AddPaymentModal extends React.Component {
                 fluid
                 className="rtl placeholder-rtl text-right yekan"
                 placeholder="بانک"
+                onChange={e => {
+                  this.handleInputChange(e, "bank");
+                }}
               />
               <h5 className="yekan">
                 تاریخ صدور&nbsp;
@@ -127,6 +181,9 @@ class AddPaymentModal extends React.Component {
                 fluid
                 className="rtl placeholder-rtl text-right yekan"
                 placeholder="نمونه:‌ 1398/1/10"
+                onChange={e => {
+                  this.handleInputChange(e, "issue_date");
+                }}
               />
               <h5 className="yekan">
                 تاریخ اعتبار&nbsp;
@@ -136,6 +193,9 @@ class AddPaymentModal extends React.Component {
                 fluid
                 className="rtl placeholder-rtl text-right yekan"
                 placeholder="نمونه:‌ 1398/1/10"
+                onChange={e => {
+                  this.handleInputChange(e, "expiry_date");
+                }}
               />
             </React.Fragment>
           )}
@@ -173,7 +233,12 @@ class AddPaymentModal extends React.Component {
               بستن
             </Button>
             <Button.Or text="یا" className="yekan" />
-            <Button className="yekan" positive onClick={this.handleSubmit}>
+            <Button
+              className="yekan"
+              positive
+              onClick={this.handleSubmit}
+              disabled={this.state.disable_button}
+            >
               افزودن
             </Button>
           </Button.Group>

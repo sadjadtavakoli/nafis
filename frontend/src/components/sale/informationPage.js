@@ -349,20 +349,7 @@ class InformationPage extends React.Component {
                   )} تومان`}
                 />
               </Form.Group>
-              {!this.props.data.items.length && (
-                <Message
-                  icon="inbox"
-                  color="red"
-                  header="قلمی در این فاکتور موجود نمی باشد"
-                  content={
-                    <span>
-                      در راستای جلوگیری از خطای انسانی در فرآیند ثبت و ویرایش،
-                      جهت افزودن آیتم،توصیه میشود در صفحه‌ی قبلی بروی{" "}
-                      <b>افزودن آیتم جدید</b> کلیک نمایید
-                    </span>
-                  }
-                />
-              )}
+
               <div className="text-center">
                 <Popup
                   content={
@@ -395,6 +382,20 @@ class InformationPage extends React.Component {
                   }
                 />
               </div>
+              {!this.props.data.items.length && (
+                <Message
+                  icon="inbox"
+                  color="red"
+                  header="قلمی در این فاکتور موجود نمی باشد"
+                  content={
+                    <span>
+                      در راستای جلوگیری از خطای انسانی در فرآیند ثبت و ویرایش،
+                      جهت افزودن آیتم،توصیه میشود در صفحه‌ی قبلی بروی{" "}
+                      <b>افزودن آیتم جدید</b> کلیک نمایید
+                    </span>
+                  }
+                />
+              )}
               <Segment
                 hidden={!this.props.data.items.length}
                 style={{ paddingTop: 0 }}
