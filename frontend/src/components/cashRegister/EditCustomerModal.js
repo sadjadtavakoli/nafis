@@ -1,15 +1,14 @@
-import React, { Component } from "react";
-import { Form, Button } from "semantic-ui-react";
-import { connect } from "react-redux";
+import React from "react";
+import { Modal, Button, Input } from "semantic-ui-react";
 import {
   getACustomer,
-  updateCustomer,
-  getClassTypes
+  updateCustomer
 } from "../../actions/CustomerSectionActions";
+import { connect } from "react-redux";
 import { toastr } from "react-redux-toastr";
-import history from "../../history";
+import { convertToJalaali } from "../utils/jalaaliUtils";
 
-class EditTab extends Component {
+class EditCustomerPopup extends React.Component {
   state = {
     pk: null,
     first_name: null,
@@ -17,33 +16,25 @@ class EditTab extends Component {
     email: null,
     phone_number: null,
     address: null,
-    city: null,
     birth_date: null,
     marriage_date: null,
-    points: 0,
-    class_type: null,
+    points: null,
     first_name_b: false,
     last_name_b: false,
     email_b: false,
     phone_number_b: false,
     address_b: false,
-    city_b: false,
     birth_date_b: false,
     marriage_date_b: false,
     points_b: false,
-    class_type_b: false,
     first_name_e: false,
     last_name_e: false,
     email_e: false,
     phone_number_e: false,
     address_e: false,
-    city_e: false,
     birth_date_e: false,
     marriage_date_e: false,
     points_e: false,
-    class_type_e: false,
-    city_options: [],
-    class_options: [],
     anyChange: false
   };
 
@@ -52,7 +43,7 @@ class EditTab extends Component {
   }
 
   getCustomerInfo = () => {
-    this.props.getACustomer(this.props.passingPk).then(() => {
+    this.props.getACustomer(this.props.pk).then(() => {
       this.setState({
         pk: this.props.passingPk,
         first_name: this.props.theCustomer.first_name,
@@ -62,17 +53,7 @@ class EditTab extends Component {
         address: this.props.theCustomer.address,
         birth_date: this.props.theCustomer.birth_date,
         marriage_date: this.props.theCustomer.marriage_date,
-        points: this.props.theCustomer.points,
-        city: this.props.theCustomer.city && this.props.theCustomer.city.pk,
-        class_type:
-          this.props.theCustomer.class_type &&
-          this.props.theCustomer.class_type.pk
-      });
-    });
-    this.props.getClassTypes().then(() => {
-      this.setState({
-        city_options: this.props.cityAndClass.cities,
-        class_tpye_options: this.props.cityAndClass.customerTypes
+        points: this.props.theCustomer.points
       });
     });
   };
@@ -83,10 +64,6 @@ class EditTab extends Component {
 
   convertStatusE = status => {
     return status.concat("_e");
-  };
-
-  convertSelect = status => {
-    return status.replace("_options", "");
   };
 
   handleChange = (status, e) => {
@@ -116,19 +93,29 @@ class EditTab extends Component {
       });
       hasError = true;
     }
+    if (!this.state.email) {
+      this.setState({
+        email_e: true
+      });
+      hasError = true;
+    }
     if (this.state.phone_number.length !== 11) {
       this.setState({
         phone_number_e: true
       });
       hasError = true;
     }
-    if (this.state.email) {
-      if (!email) {
-        this.setState({
-          email_e: true
-        });
-        hasError = true;
-      }
+    if (!this.state.points) {
+      this.setState({
+        points_e: true
+      });
+      hasError = true;
+    }
+    if (!email) {
+      this.setState({
+        email_e: true
+      });
+      hasError = true;
     }
     if (hasError) {
       this.setState({
@@ -142,17 +129,17 @@ class EditTab extends Component {
         email: this.state.email,
         phone_number: this.state.phone_number,
         address: this.state.address,
-        city: this.state.city,
         birth_date: this.state.birth_date,
         marriage_date: this.state.marriage_date,
-        points: this.state.points,
-        class_type: this.state.class_type
+        points: this.state.points
       };
       this.props
-        .updateCustomer(this.state.pk, prepareData)
+        .updateCustomer(this.props.pk, prepareData)
         .then(() => {
           toastr.success(".عملیات ویرایش با موفقیت انجام شد");
           this.getCustomerInfo();
+          this.props.madeChange();
+          this.props.onClose();
         })
         .catch(() => {
           toastr.error(".عملیات ویرایش موفقیت آمیز نبود");
@@ -177,18 +164,36 @@ class EditTab extends Component {
     });
   };
 
-  createInput = (status, title) => {
+  createInput = status => {
     let convert = this.convertStatus(status);
     let convertE = this.convertStatusE(status);
     return (
-      <Form.Input
-        className={`text-right`}
-        label={title}
+      <Input
+        fluid
+        id={
+          status === "first_name" ||
+          status === "last_name" ||
+          status === "address"
+            ? "customer"
+            : "customer-latin"
+        }
         onChange={e => this.handleChange(status, e)}
         onSelect={() => this.handleSelect(status)}
         onBlur={() => this.handleBlur(status)}
-        defaultValue={this.state[convert] ? null : this.state[status]}
-        placeholder={this.state[convert] ? this.state[status] : null}
+        defaultValue={
+          this.state[convert]
+            ? null
+            : status === "birth_date" || status === "marriage_date"
+            ? convertToJalaali(this.state[status])
+            : this.state[status]
+        }
+        placeholder={
+          this.state[convert]
+            ? status === "birth_date" || status === "marriage_date"
+              ? convertToJalaali(this.state[status])
+              : this.state[status]
+            : null
+        }
         error={this.state[convertE]}
         readOnly={
           status === "phone_number" || status === "points"
@@ -201,75 +206,62 @@ class EditTab extends Component {
     );
   };
 
-  createSelect = (status, title) => {
-    let convertSelect = this.convertSelect(status);
-    return (
-      <Form.Select
-        search
-        selection
-        fluid
-        className="text-right"
-        label={title}
-        placeholder={title}
-        options={this.state[status]}
-        defaultValue={this.state[convertSelect]}
-      />
-    );
-  };
-
   render() {
     return (
-      <div className="rtl text-right">
-        <Form>
-          <Form.Group unstackable widths={2}>
-            {this.createInput("first_name", "نام")}
-            {this.createInput("last_name", "نام خانوداگی")}
-          </Form.Group>
-          <Form.Group unstackable widths={2}>
-            {this.createInput("email", "ایمیل")}
-            {this.createInput("phone_number", "شماره تلفن")}
-          </Form.Group>
-          <Form.Group unstackable widths={2}>
-            {this.createInput("address", "آدرس")}
-            {this.createSelect("city_options", "شهر")}
-          </Form.Group>
-          <Form.Group unstackable widths={2}>
-            {this.createInput("birth_date", "تاریخ تولد")}
-            {this.createInput("marriage_date", "تاریخ ازدواج")}
-          </Form.Group>
-          <Form.Group unstackable widths={2}>
-            {this.createInput("points", "امتیاز مشتری")}
-            {this.createSelect("class_type_options", "کلاس")}
-          </Form.Group>
-          <Button
-            onClick={this.handleSubmit}
-            disabled={this.state.anyChange ? false : true}
-            color={this.state.hasError ? "red" : "green"}
-            content="اعمال"
-            className="yekan"
-          />
-          <Button
-            className="yekan"
-            content="بازگشت"
-            onClick={() => {
-              history.push("/customers/");
-            }}
-          />
-        </Form>
-      </div>
+      <Modal
+        open={this.props.open}
+        onClose={this.props.onClose}
+        size="tiny"
+        className="rtl text-right"
+      >
+        <Modal.Header>
+          <h3
+            className="yekan d-flex"
+            style={{ alignItems: "center", marginBottom: 0 }}
+          >
+            ویرایش مشتری
+          </h3>
+        </Modal.Header>
+        <Modal.Content>
+          <h5 className="yekan">نام</h5>
+          {this.createInput("first_name")}
+          <h5 className="yekan">نام خانوادگی</h5>
+          {this.createInput("last_name")}
+          <h5 className="yekan">ایمیل</h5>
+          {this.createInput("email")}
+          <h5 className="yekan">شماره تلفن</h5>
+          {this.createInput("phone_number")}
+          <h5 className="yekan">آدرس</h5>
+          {this.createInput("address")}
+          <h5 className="yekan">تاریخ تولد</h5>
+          {this.createInput("birth_date")}
+          <h5 className="yekan">تاریخ ازدواج</h5>
+          {this.createInput("marriage_date")}
+          <h5 className="yekan">امتیاز مشتری</h5>
+          {this.createInput("points")}
+        </Modal.Content>
+        <Modal.Actions className="ltr text-center">
+          <Button.Group>
+            <Button className="yekan" onClick={this.props.onClose}>
+              بستن
+            </Button>
+            <Button.Or text="یا" className="yekan" />
+            <Button className="yekan" positive onClick={this.handleSubmit}>
+              ویرایش
+            </Button>
+          </Button.Group>
+        </Modal.Actions>
+      </Modal>
     );
   }
 }
 
 const mapStateToProps = state => {
   return {
-    theCustomer: state.customers.theCustomer,
-    cityAndClass: state.customers.classTypesAndCity
+    theCustomer: state.customers.theCustomer
   };
 };
 
-export default connect(mapStateToProps, {
-  getACustomer,
-  updateCustomer,
-  getClassTypes
-})(EditTab);
+export default connect(mapStateToProps, { getACustomer, updateCustomer })(
+  EditCustomerPopup
+);

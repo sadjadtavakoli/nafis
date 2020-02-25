@@ -14,6 +14,7 @@ import {
 } from "../../actions/DepositoryActions";
 import { digitToComma } from "../utils/numberUtils";
 import LoadingBar from "../utils/loadingBar";
+import TableLabel from "../utils/tableLabelGenerator";
 import NotFound from "../utils/notFound";
 import history from "../../history";
 
@@ -106,6 +107,7 @@ class ProductTable extends React.Component {
         placeholder="کد محصول را وارد نمایید"
         className="placeholder-rtl yekan ltr"
         onSearchChange={this.handleSearchChange}
+        style={{ marginRight: "10px" }}
       />
     );
   };
@@ -121,27 +123,12 @@ class ProductTable extends React.Component {
                 className="rtl text-right"
               >
                 <Grid>
-                  <Grid.Column
-                    width={this.state.width < 768 ? 16 : 3}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      paddingLeft: 0
-                    }}
-                  >
-                    <span>لیست محصولات موجود</span>
-                    <Button
-                      icon
-                      onClick={() =>
-                        this.getProductsList(this.state.activePage)
-                      }
-                    >
-                      <Icon name="repeat" />
-                    </Button>
-                  </Grid.Column>
-                  <Grid.Column width={this.state.width < 768 ? 16 : 6}>
+                  <Grid.Row>
+                    <h3 className="yekan" style={{ margin: "0 20px 0 0" }}>
+                      لیست محصولات موجود
+                    </h3>
                     {this.searchBar()}
-                  </Grid.Column>
+                  </Grid.Row>
                 </Grid>
               </Table.HeaderCell>
             </Table.Row>
@@ -156,30 +143,39 @@ class ProductTable extends React.Component {
                     </Table.HeaderCell>
                   ) : null}
                   <Table.HeaderCell className="text-center">
+                    <TableLabel>9</TableLabel>
                     رنگ پس زمینه
                   </Table.HeaderCell>
                   <Table.HeaderCell className="text-center">
+                    <TableLabel>8</TableLabel>
                     رنگ طرح
                   </Table.HeaderCell>
                   <Table.HeaderCell className="text-center">
+                    <TableLabel>7</TableLabel>
                     جنس
                   </Table.HeaderCell>
                   <Table.HeaderCell className="text-center">
+                    <TableLabel>6</TableLabel>
                     نوع پارچه
                   </Table.HeaderCell>
                   <Table.HeaderCell className="text-center">
+                    <TableLabel>5</TableLabel>
                     نوع طرح
                   </Table.HeaderCell>
                   <Table.HeaderCell className="text-center">
+                    <TableLabel>4</TableLabel>
                     مقدار باقی مانده
                   </Table.HeaderCell>
                   <Table.HeaderCell className="text-center">
+                    <TableLabel>3</TableLabel>
                     قیمت فروش
                   </Table.HeaderCell>
                   <Table.HeaderCell className="text-center">
+                    <TableLabel>2</TableLabel>
                     نام محصول
                   </Table.HeaderCell>
                   <Table.HeaderCell className="text-center">
+                    <TableLabel>1</TableLabel>
                     کد محصول
                   </Table.HeaderCell>
                 </Table.Row>
@@ -203,46 +199,55 @@ class ProductTable extends React.Component {
                         </Table.Cell>
                       ) : null}
                       <Table.Cell className="norm-latin text-center">
+                        <TableLabel>9</TableLabel>
                         <span className="yekan">
                           {item.background_color && item.background_color.name}
                         </span>
                       </Table.Cell>
                       <Table.Cell className="norm-latin text-center">
+                        <TableLabel>8</TableLabel>
                         <span className="yekan">
                           {item.design_color && item.design_color.name}
                         </span>
                       </Table.Cell>
                       <Table.Cell className="norm-latin text-center">
+                        <TableLabel>7</TableLabel>
                         <span className="yekan">
                           {item.material && item.material.name}
                         </span>
                       </Table.Cell>
                       <Table.Cell className="norm-latin text-center">
+                        <TableLabel>6</TableLabel>
                         <span className="yekan">
                           {item.f_type && item.f_type.name}
                         </span>
                       </Table.Cell>
                       <Table.Cell className="norm-latin text-center">
+                        <TableLabel>5</TableLabel>
                         <span className="yekan">
                           {item.design && item.design.name}
                         </span>
                       </Table.Cell>
                       <Table.Cell className="norm-latin text-center ltr">
+                        <TableLabel>4</TableLabel>
                         <span className="yekan">متر</span>
                         <span>&nbsp;</span>
                         <span>{item.stock_amount}</span>
                       </Table.Cell>
                       <Table.Cell className="norm-latin text-center rtl">
+                        <TableLabel>3</TableLabel>
                         <span>{digitToComma(item.selling_price)}</span>{" "}
                         <span className="yekan">تومان</span>
                       </Table.Cell>
                       <Table.Cell className="yekan text-center">
+                        <TableLabel>2</TableLabel>
                         <span>{item.name}</span>
                       </Table.Cell>
                       <Table.Cell
                         className="norm-latin text-center"
                         textAlign="right"
                       >
+                        <TableLabel>1</TableLabel>
                         <span>{item.code}</span>
                       </Table.Cell>
                     </Table.Row>

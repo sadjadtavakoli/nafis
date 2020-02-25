@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Tab, Container } from "semantic-ui-react";
-
 import ChequeTab from "./ChequeTab";
 import EditTab from "./EditTab";
 import FactorsTab from "./FactorsTab";

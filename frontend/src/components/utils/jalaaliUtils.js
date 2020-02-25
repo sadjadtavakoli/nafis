@@ -294,7 +294,7 @@ function getTodayGregorian() {
 }
 function convertToJalaali(date) {
   if (!date) return "";
-  let parts = date.split("/");
+  let parts = date.split("-");
   if (parts.length > 1) {
     parts = toJalaali(
       parseInt(parts[0]),

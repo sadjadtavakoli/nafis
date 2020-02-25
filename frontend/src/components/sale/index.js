@@ -50,15 +50,9 @@ class Sale extends React.Component {
                 className="yekan"
                 onClick={() => this.setState({ open: true })}
                 color="green"
-                content="افزودن فاکتور"
+                content="افزودن فاکتور جدید"
                 icon="add"
                 labelPosition="right"
-              />
-              <Button
-                style={{ float: "left" }}
-                onClick={() => history.push("/")}
-                color="teal"
-                icon="home"
               />
             </Segment>
             <Tab

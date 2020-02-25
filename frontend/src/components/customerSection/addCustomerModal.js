@@ -13,10 +13,11 @@ const INITIAL_STATE = {
   email: null,
   phone_number: null,
   address: null,
-  city: null,
+  city: "",
   bitrth_date: null,
   marriage_date: null,
   points: 0,
+  class: null,
   class_type_options: [],
   city_options: [],
   first_name_b: false,
@@ -120,14 +121,19 @@ class AddCustomerModal extends Component {
         bitrth_date: this.state.bitrth_date,
         marriage_date: this.state.marriage_date,
         points: this.state.points,
-        class_type_options: this.state.class_type_options,
-        city_options: this.state.city_options
+        class_type: this.state.class
       };
       this.props.setNewCustomer(prepareData).then(() => {
         this.props.onClose();
         toastr.success("ثبت مشتری جدید", "مشتری جدید با موفقیت ثبت شد");
       });
     }
+  };
+
+  selectChange = (_, { name, value }) => {
+    this.setState({
+      [name]: value
+    });
   };
 
   render() {
@@ -157,7 +163,7 @@ class AddCustomerModal extends Component {
           <Form className="rtl">
             <Form.Group unstackable widths={2}>
               <Form.Input
-                className="ltr placeholder-rtl text-right"
+                className="rtl placeholder-rtl text-right"
                 label={
                   <div style={{ marginBottom: "4px", direction: "rtl" }}>
                     <span style={{ fontWeight: "bold", margin: "0 0 4px" }}>
@@ -174,7 +180,7 @@ class AddCustomerModal extends Component {
                 error={this.state.first_name_b}
               />
               <Form.Input
-                className="ltr placeholder-rtl text-right"
+                className="rtl placeholder-rtl text-right"
                 placeholder={
                   this.state.last_name_b
                     ? "وارد کردن نام خانوادگی الزامی است"
@@ -222,19 +228,21 @@ class AddCustomerModal extends Component {
             </Form.Group>
             <Form.Group unstackable widths={2}>
               <Form.Input
-                className="ltr placeholder-rtl text-right"
+                className="rtl placeholder-rtl text-right"
                 label="آدرس"
                 onChange={e => this.inputChange(e, "address")}
                 placeholder="آدرس محل سکونت"
               />
               <Form.Select
-                className="ltr placeholder-rtl text-right"
+                className="rtl placeholder-rtl text-right"
                 placeholder="شهر"
                 label="شهر"
                 search
                 selection
                 fluid
                 options={this.state.city_options}
+                name="city"
+                onChange={this.selectChange}
               />
             </Form.Group>
             <Form.Group unstackable widths={2}>
@@ -260,12 +268,14 @@ class AddCustomerModal extends Component {
                 placeholder="امتیاز"
               />
               <Form.Select
-                className="ltr placeholder-rtl"
+                className="rtl placeholder-rtl"
                 placeholder="نوع کلاس"
                 label="نوع کلاس"
                 search
                 selection
                 options={this.state.class_type_options}
+                name="class"
+                onChange={this.selectChange}
               />
             </Form.Group>
           </Form>
@@ -278,6 +288,7 @@ class AddCustomerModal extends Component {
               this.props.onClose();
               this.setState(INITIAL_STATE);
             }}
+            className="yekan"
           >
             لغو
           </Button>
@@ -286,6 +297,7 @@ class AddCustomerModal extends Component {
             icon="checkmark"
             labelPosition="right"
             content="افزودن"
+            className="yekan"
             onClick={this.handleSubmit}
           />
         </Modal.Actions>

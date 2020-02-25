@@ -40,6 +40,9 @@
     font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
   }
 }
+#norm-latin {
+  font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
 .ui.pointing.menu {
   direction: rtl;
 }
@@ -49,6 +52,14 @@
   }
   @media (max-width: 768px) {
     display: block !important;
+  }
+  &.d-flex {
+    @media (min-width: 768px) {
+      display: none !important;
+    }
+    @media (max-width: 768px) {
+      display: inline-flex !important;
+    }
   }
 }
 .only-desktop {
@@ -127,6 +138,9 @@ div[role="combobox"] {
 .m-0 {
   margin: 0 !important;
 }
+.m-1 {
+  margin: 0.25em !important;
+}
 .invisible {
   visibility: hidden;
 }
@@ -194,11 +208,15 @@ label {
   }
 }
 
-// REPORT STYLE SHEET \\
-
 .table-border-left {
   border-left: 1px solid #ddd !important;
 }
+
+.table-border-left-none {
+  border-left: none !important;
+}
+
+// REPORT STYLE SHEET \\
 
 .grid-padding {
   padding: 20px !important;
@@ -262,11 +280,6 @@ label {
 
 // SUPPLIERS
 
-.error input {
-  background-color: #f3f4f5 !important;
-  color: rgb(100, 100, 100) !important;
-  border-color: #aaaaaa !important;
-}
 .s-h2-padding {
   padding: 0 1em;
 }
@@ -322,4 +335,45 @@ label {
 
 .blurring.dimmed.dimmable > .popup:not(.dimmer) {
   filter: unset !important;
+}
+
+#customer {
+  font-family: yekan;
+  text-align: right;
+  direction: rtl;
+}
+
+#customer-latin {
+  font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
+  text-align: left;
+  direction: ltr;
+}
+
+.nafis-logo {
+  width: 128px;
+  height: 128px;
+  padding-right: 0;
+}
+
+.sale-mobile {
+  #add-bill
+    > div.scrolling.content
+    > form
+    > div.unstackable.one.fields
+    > div.field.ltr.placeholder-rtl.text-right
+    > label {
+    margin: 100px;
+  }
+  #add-bill
+    > div.scrolling.content
+    > form
+    > div.unstackable.one.fields
+    > div.field.ltr.placeholder-rtl.text-right
+    > label {
+    margin-top: 10px;
+  }
+}
+
+.customer-padding {
+  padding: 0 1em;
 }

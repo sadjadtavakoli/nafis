@@ -4,9 +4,10 @@ import { Table, Pagination, Button, Icon, Popup } from "semantic-ui-react";
 import { getActiveBill } from "../../actions/SaleActions";
 import { digitToComma, phoneNumberBeautifier } from "../utils/numberUtils";
 import { standardTimeToJalaali } from "../utils/jalaaliUtils";
-import ShowBillInformation from "./showBillInnformation";
+import InformationModal from "./informationModal";
 import LoadingBar from "../utils/loadingBar";
 import NotFound from "../utils/notFound";
+import TableLabel from "../utils/tableLabelGenerator";
 import NewBillPopup from "./newBillPopup";
 
 const colSpan = 7;
@@ -20,7 +21,8 @@ class BillTable extends React.Component {
     isOpenAddItem: NaN,
     activePage: 1,
     firstTime: true,
-    openingModal: false
+    openingModal: false,
+    pk: null
   };
 
   componentDidMount() {
@@ -61,7 +63,7 @@ class BillTable extends React.Component {
 
   openInformationModal = itemData => {
     this.setState({ itemData }, () => {
-      this.setState({ isOpenInformationModal: true });
+      this.setState({ isOpenInformationModal: true, pk: itemData.pk });
     });
   };
 
@@ -96,13 +98,7 @@ class BillTable extends React.Component {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell colSpan={colSpan} className="rtl text-right">
-                <span>لیست فاکتور های فعال</span>
-                <Button
-                  icon
-                  onClick={() => this.getActiveBill(this.state.activePage)}
-                >
-                  <Icon name="repeat" />
-                </Button>
+                <h3 className="yekan">لیست فاکتور های فعال</h3>
               </Table.HeaderCell>
             </Table.Row>
             <Table.Row>
@@ -110,21 +106,27 @@ class BillTable extends React.Component {
                 عملیات
               </Table.HeaderCell>
               <Table.HeaderCell className="text-center">
+                <TableLabel>6</TableLabel>
                 تعداد پرداختی ها
               </Table.HeaderCell>
               <Table.HeaderCell className="text-center">
+                <TableLabel>5</TableLabel>
                 تاریخ ثبت
               </Table.HeaderCell>
               <Table.HeaderCell className="text-center">
+                <TableLabel>4</TableLabel>
                 مبلغ کل
               </Table.HeaderCell>
               <Table.HeaderCell className="text-center">
+                <TableLabel>3</TableLabel>
                 مبلغ نهایی
               </Table.HeaderCell>
               <Table.HeaderCell className="text-center">
+                <TableLabel>2</TableLabel>
                 تخفیف کل
               </Table.HeaderCell>
               <Table.HeaderCell className="text-center">
+                <TableLabel>1</TableLabel>
                 شماره تلفن خریدار
               </Table.HeaderCell>
             </Table.Row>
@@ -153,6 +155,7 @@ class BillTable extends React.Component {
                       wide="very"
                       trigger={
                         <Button
+                          className="m-1"
                           onClick={() => this.toggleAddItemPopup(index)}
                           icon
                           labelPosition="right"
@@ -170,31 +173,36 @@ class BillTable extends React.Component {
                     <Button
                       onClick={() => this.openInformationModal(item)}
                       icon
+                      className="m-1 yekan"
                       labelPosition="right"
-                      color="yellow"
-                    >
-                      <span className="yekan">مشاهده و ویرایش</span>
-                      <Icon name="info" />
-                    </Button>
+                      color="teal"
+                      content="مشاهده و ویرایش"
+                      icon="info"
+                    ></Button>
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center rtl">
+                    <TableLabel>6</TableLabel>
                     <span>{item.payments.length}</span>&nbsp;
                     <span className="yekan">پرداختی</span>
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center">
+                    <TableLabel>5</TableLabel>
                     <span>{standardTimeToJalaali(item.create_date)}</span>
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center rtl">
+                    <TableLabel>4</TableLabel>
                     <span>{digitToComma(item.price)}</span>&nbsp;
                     <span className="yekan">تومان</span>
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center rtl">
+                    <TableLabel>3</TableLabel>
                     <b>
                       <span>{digitToComma(item.final_price)}</span>&nbsp;
                       <span className="yekan">تومان</span>
                     </b>
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center rtl">
+                    <TableLabel>2</TableLabel>
                     {item.total_discount ? (
                       <React.Fragment>
                         <span>{digitToComma(item.total_discount)}</span>
@@ -205,6 +213,7 @@ class BillTable extends React.Component {
                     )}{" "}
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center">
+                    <TableLabel>1</TableLabel>
                     <span>
                       {phoneNumberBeautifier(item.buyer.phone_number)}
                     </span>
@@ -228,12 +237,11 @@ class BillTable extends React.Component {
         </Table>
 
         {this.state.isOpenInformationModal ? (
-          <ShowBillInformation
-            key={this.state.isOpenInformationModal}
+          <InformationModal
             refetch={() => this.getActiveBill(this.state.activePage)}
-            data={this.state.itemData}
             open={this.state.isOpenInformationModal}
             onClose={this.closeInformationModal}
+            pk={this.state.pk}
           />
         ) : null}
       </React.Fragment>
@@ -248,4 +256,6 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, { getActiveBill })(BillTable);
+export default connect(mapStateToProps, {
+  getActiveBill
+})(BillTable);

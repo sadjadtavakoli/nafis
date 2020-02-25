@@ -1,6 +1,7 @@
 import React from "react";
 import { Segment, Loader, Dimmer, Image } from "semantic-ui-react";
 import paragraph from "../../assets/paragraph.png";
+
 class LoadingBar extends React.Component {
   render() {
     return (
@@ -16,4 +17,5 @@ class LoadingBar extends React.Component {
     );
   }
 }
+
 export default LoadingBar;

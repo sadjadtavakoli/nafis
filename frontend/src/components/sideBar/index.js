@@ -4,7 +4,9 @@ import { connect } from "react-redux";
 import { Icon, Menu, Segment, Sidebar, Button } from "semantic-ui-react";
 import history from "../../history";
 import { logOut } from "../../actions/LoginActions";
+import HomeButton from "../utils/HomeButton";
 import { isPermit } from "../mainPage/permission";
+import userAvatar from "../../assets/user-avatar.png";
 class SideBar extends React.Component {
   state = {
     visible: false,
@@ -35,7 +37,10 @@ class SideBar extends React.Component {
   };
 
   logOut = () => {
-    this.props.logOut();
+    var r = window.confirm("آیا برای خروج از سامانه مطمئن هستید؟");
+    if (r == true) {
+      this.props.logOut();
+    }
   };
 
   goTo = page => {
@@ -60,20 +65,25 @@ class SideBar extends React.Component {
                 icon="bars"
               />
               <Menu.Item fitted={true} onClick={this.logOut}>
-                <Button icon labelPosition="left">
-                  <span>خروج</span>
-                  <Icon name="sign-out" />
-                </Button>
+                <Button
+                  icon="sign-out"
+                  labelPosition="left"
+                  content="خروج"
+                  className="yekan"
+                />
+              </Menu.Item>
+              <Menu.Item fitted={true}>
+                <HomeButton />
               </Menu.Item>
             </Menu.Menu>
             <Menu.Menu position="right">
-              <Menu.Item style={{ paddingRight: 0 }}>
+              <Menu.Item style={{ padding: 0 }}>
                 {this.state.userData.first_name +
                   " " +
                   this.state.userData.last_name}
               </Menu.Item>
               <Menu.Item style={{ paddingLeft: 0 }}>
-                <img src="http://uupload.ir/files/6dzr_business-user-account-png-image-min.png" />
+                <img src={userAvatar} />
               </Menu.Item>
             </Menu.Menu>
           </Menu>
@@ -167,7 +177,7 @@ class SideBar extends React.Component {
           </Sidebar>
 
           <Sidebar.Pusher>
-            <Segment disabled={this.state.visible}>
+            <Segment original="" disabled={this.state.visible}>
               {this.props.children}
             </Segment>
           </Sidebar.Pusher>
