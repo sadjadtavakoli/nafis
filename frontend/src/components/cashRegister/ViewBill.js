@@ -159,7 +159,13 @@ class ViewBillModal extends React.Component {
                   </Table>
                 </Segment.Group>
               </Grid.Column>
-              <Grid.Column floated="left" width={2} style={{ paddingRight: 0 }}>
+              <Grid.Column
+                floated="left"
+                className={"only-desktop"}
+                // mobile={16}
+                width={2}
+                style={{ paddingRight: 0 }}
+              >
                 <img src={logo} className="nafis-logo" />
               </Grid.Column>
             </Grid>
@@ -325,7 +331,7 @@ class ViewBillModal extends React.Component {
                 circular
                 onClick={() => window.history.back()}
                 size="huge"
-                icon="step backward"
+                icon="arrow left"
               />
             </div>
 

@@ -20,6 +20,9 @@ class FactorsTab extends Component {
   };
 
   componentDidMount() {
+    this.fetchData();
+  }
+  fetchData() {
     this.props.getAllBills(this.props.passingPk).then(() => {
       this.setState({
         fetch: true
@@ -27,7 +30,6 @@ class FactorsTab extends Component {
     });
     this.props.getRemainedBills(this.props.passingPk);
   }
-
   handleToggleClick = () => {
     this.setState({ remainedBillsToggle: !this.state.remainedBillsToggle });
     if (!this.state.remainedBillsToggle) {
@@ -47,22 +49,26 @@ class FactorsTab extends Component {
   };
 
   deleteBill = pk => {
-    this.props
-      .deleteBill(pk)
-      .then(() => {
-        toastr.success("فاکتور با موفقیت حذف شد");
-      })
-      .catch(() => {
-        toastr.error(
-          "خطا در عملیات حذف فاکتور",
-          "نمی‌توانید فاکتوری را که پرداخت دارد حذف کنید، ابتدا پرداخت‌ها را حذف نموده سپس نسبت به حذف فاکتور اقدام نمایید"
-        );
-      });
+    var r = window.confirm("آیا از حذف این مورد مطمئن هستید؟");
+    if (r == true) {
+      this.props
+        .deleteBill(pk)
+        .then(() => {
+          toastr.success("فاکتور با موفقیت حذف شد");
+          this.fetchData();
+        })
+        .catch(() => {
+          toastr.error(
+            "خطا در عملیات حذف فاکتور",
+            "نمی‌توانید فاکتوری را که پرداخت دارد حذف کنید، ابتدا پرداخت‌ها را حذف نموده سپس نسبت به حذف فاکتور اقدام نمایید"
+          );
+        });
+    }
   };
 
   createTable = () => {
     let bills = this.props.allBills;
-    console.log("results", bills.results);
+    // console.log("results", bills.results);
     return (
       <Table celled structured className="text-center">
         <Table.Header>
@@ -162,7 +168,7 @@ class FactorsTab extends Component {
                   <span>{bill.status === "active" ? "باز" : null}</span>
                   <span>{bill.status === "remained" ? "مانده" : null}</span>
                 </Table.Cell>
-                <Table.Cell className="yekan" fluid>
+                <Table.Cell className="yekan">
                   <Button
                     className="yekan"
                     color="teal"
