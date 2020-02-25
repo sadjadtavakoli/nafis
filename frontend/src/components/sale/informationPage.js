@@ -292,16 +292,15 @@ class InformationPage extends React.Component {
     return (
       <Container>
         <Segment stacked className="rtl">
-          <Header as="h3" className="yekan">
+          <h3 className="yekan">
             مشاهده و ویرایش فاکتور
-          </Header>
-          <Button
-            circular
-            onClick={() => window.history.back()}
-            size="huge"
-            icon="arrow left"
-            style={{ float: "left" }}
-          />
+            <Button
+              circular
+              onClick={() => window.history.back()}
+              icon="arrow left"
+              style={{ float: "left" }}
+            />
+          </h3>
         </Segment>
         {this.props.data ? (
           <Segment className="rtl text-right">
