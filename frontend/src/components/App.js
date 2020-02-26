@@ -17,7 +17,7 @@ import Reports from "./reports";
 import Customers from "./customerSection";
 import CustomerPage from "./customerSection/CustomerPage";
 import Suppliers from "./suppliers";
-import Supplier from "./suppliers/Supplier";
+import EditSupplier from "./suppliers/EditSupplier";
 import DepositoryEdit from "./depository/depositoryEdit";
 import ViewBill from "./cashRegister/ViewBill";
 
@@ -45,7 +45,11 @@ const App = ({ token }) => {
               component={CustomerPage}
             />
             <Route path="/suppliers/" exact component={Suppliers} />
-            <Route path="/suppliers/supplier/:pk/" exact component={Supplier} />
+            <Route
+              path="/suppliers/edit-supplier/:pk/"
+              exact
+              component={EditSupplier}
+            />
             <Route
               path="/depository/depository-edit/:code/:pk/"
               exact

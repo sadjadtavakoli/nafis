@@ -6,16 +6,21 @@ import { toastr } from "react-redux-toastr";
 
 class Add extends Component {
   state = {
-    first_name: "",
-    last_name: "",
-    email: "",
-    phone_number: "",
-    address: "",
+    first_name: null,
+    last_name: null,
+    email: null,
+    phone_number: null,
+    mobile_number: null,
+    address: null,
+    store: null,
+
     first_name_b: false,
     last_name_b: false,
     email_b: false,
     phone_number_b: false,
-    address_b: false
+    mobile_number_b: false,
+    address_b: false,
+    store_b: false
   };
 
   inputChange = (event, inputName) => {
@@ -49,9 +54,21 @@ class Add extends Component {
       });
       hasError = true;
     }
-    if (String(this.state.phone_number).length !== 11) {
+    if (String(this.state.phone_number).length < 1) {
       this.setState({
         phone_number_b: true
+      });
+      hasError = true;
+    }
+    if (String(this.state.mobile_number).length !== 11) {
+      this.setState({
+        mobile_number_b: true
+      });
+      hasError = true;
+    }
+    if (String(this.state.store).length < 1) {
+      this.setState({
+        store_b: true
       });
       hasError = true;
     }
@@ -67,7 +84,9 @@ class Add extends Component {
         last_name: this.state.last_name,
         email: this.state.email,
         phone_number: this.state.phone_number,
-        address: this.state.address
+        mobile_number: this.state.mobile_number,
+        address: this.state.address,
+        store: this.state.store
       };
       this.props.setNewSupplier(prepareData).then(() => {
         this.props.onClose();
@@ -85,7 +104,8 @@ class Add extends Component {
       last_name_b: false,
       email_b: false,
       phone_number_b: false,
-      address_b: false
+      address_b: false,
+      store_b: false
     });
   };
 
@@ -95,7 +115,7 @@ class Add extends Component {
       <Form.Input
         className={`${
           status === "email" || status === "phone_number"
-            ? "ltr text-left norm-latin"
+            ? "ltr text-left yekan"
             : "rtl text-right yekan"
         } placeholder-rtl`}
         label={label}
@@ -127,7 +147,11 @@ class Add extends Component {
             </Form.Group>
             <Form.Group unstackable widths={2}>
               {this.createInput("ایمیل", "email")}
+              {this.createInput("نام فروشگاه", "store")}
+            </Form.Group>
+            <Form.Group unstackable widths={2}>
               {this.createInput("شماره تلفن", "phone_number")}
+              {this.createInput("شماره موبایل", "mobile_number")}
             </Form.Group>
             <Form.Group unstackable widths={2}>
               {this.createInput("آدرس", "address")}
