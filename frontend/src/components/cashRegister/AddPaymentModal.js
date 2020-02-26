@@ -2,7 +2,7 @@ import React from "react";
 import { Dropdown, Button, Input, Modal } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { addPaymentToBill } from "../../actions/CashRegisterActions";
-import { getTodayJalaali } from "../utils/jalaaliUtils";
+import { getTodayJalaali, toGregorian } from "../utils/jalaaliUtils";
 import { toastr } from "react-redux-toastr";
 
 class AddPaymentModal extends React.Component {
@@ -71,6 +71,12 @@ class AddPaymentModal extends React.Component {
     );
   };
 
+  convertToG = date => {
+    let arr = date.split("/");
+    let obj = toGregorian(Number(arr[0]), Number(arr[1]), Number(arr[2]));
+    return obj.gy + "-" + obj.gm + "-" + obj.gd;
+  };
+
   handleSubmit = () => {
     let prepareData = {};
     if (this.state.type === "cash_card") {
@@ -78,17 +84,19 @@ class AddPaymentModal extends React.Component {
         Number(this.state.card_amount) + Number(this.state.cash_amount);
       prepareData = {
         create_date: getTodayJalaali(),
-        card_amount,
+        card_amount: card_amount,
         type: this.state.type
       };
     } else {
+      let issue_date = this.convertToG(this.state.issue_date);
+      let expiry_date = this.convertToG(this.state.expiry_date);
       prepareData = {
-        create_date: getTodayJalaali(),
-        cheque_amount: this.state.cheque_amount,
-        cheque_number: this.state.cheque_number,
+        amount: this.state.cheque_amount,
+        number: this.state.cheque_number,
         bank: this.state.bank,
-        issue_date: this.state.issue_date,
-        expiry_date: this.state.expiry_date
+        issue_date: issue_date,
+        expiry_date: expiry_date,
+        type: this.state.type
       };
     }
     this.props

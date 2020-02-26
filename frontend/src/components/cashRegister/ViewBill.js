@@ -48,6 +48,12 @@ class ViewBillModal extends React.Component {
     this.getBill();
   }
 
+  componentDidUpdate() {
+    if (this.props.theBill) {
+      console.log(this.props.theBill.payments.length);
+    }
+  }
+
   getBill = () => {
     this.props.getOneBill(this.props.match.params.pk).then(() => {
       this.props.getClassTypes().then(res => {
@@ -57,7 +63,6 @@ class ViewBillModal extends React.Component {
             this.setState({ class_type: classTypeItem.text });
           }
         });
-        console.log(this.props.theBill);
         this.setState({
           fetch: true,
           anyPays: this.props.theBill.payments.length ? true : false,
@@ -567,7 +572,6 @@ class ViewBillModal extends React.Component {
 }
 
 const mapStateToProps = state => {
-  console.log(state.cash.theBill);
   return {
     theBill: state.cash.theBill
   };
