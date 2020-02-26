@@ -220,7 +220,8 @@ class BillsViewSet(NafisBase, ModelViewSet):
             total_cheque_paid += bill.cheque_paid
             total_cash_paid += bill.cash_paid
             total_card_paid += bill.card_paid
-            reminded_payments += bill.remaining_payment
+            if bill.status == "remained":
+                reminded_payments += bill.remaining_payment
         data['bills_data'] = BillSerializer(bills, many=True).data
         data['total_profit'] = total_benefit
         data['total_discount'] = total_discount
