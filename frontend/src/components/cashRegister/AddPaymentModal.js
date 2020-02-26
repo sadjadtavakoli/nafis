@@ -2,7 +2,7 @@ import React from "react";
 import { Dropdown, Button, Input, Modal } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { addPaymentToBill } from "../../actions/CashRegisterActions";
-import { getTodayJalaali } from "../utils/jalaaliUtils";
+import { getTodayJalaali, toGregorian } from "../utils/jalaaliUtils";
 import { toastr } from "react-redux-toastr";
 
 class AddPaymentModal extends React.Component {
@@ -20,28 +20,85 @@ class AddPaymentModal extends React.Component {
       }
     ],
     card_amount: this.props.price,
-    cash_amount: 0
+    cash_amount: 0,
+    disable_button: false,
+    cheque_amount: this.props.price,
+    cheque_number: null,
+    bank: null,
+    issue_date: null,
+    expiry_date: null
   };
 
   setStateType = (_, { value }) => {
-    this.setState({ type: value });
-  };
-
-  handleInputChange = (e, status) => {
-    this.setState({
-      [status]: e.target.value
+    this.setState({ type: value }, () => {
+      this.setState({
+        card_amount: this.props.price,
+        cash_amount: 0,
+        disable_button: false,
+        cheque_amount: this.props.price,
+        cheque_number: null,
+        bank: null,
+        issue_date: null,
+        expiry_date: null
+      });
     });
   };
 
+  handleInputChange = (e, status) => {
+    this.setState(
+      {
+        [status]: e.target.value
+      },
+      () => {
+        if (this.state.type === "cash_card") {
+          if (
+            Number(this.state.card_amount) + Number(this.state.cash_amount) >
+            this.props.price
+          ) {
+            this.setState({ disable_button: true });
+          } else {
+            this.setState({ disable_button: false });
+          }
+        }
+        if (this.state.type === "cheque") {
+          if (Number(this.state.cheque_amount) > this.props.price) {
+            this.setState({ disable_button: true });
+          } else {
+            this.setState({ disable_button: false });
+          }
+        }
+      }
+    );
+  };
+
+  convertToG = date => {
+    let arr = date.split("/");
+    let obj = toGregorian(Number(arr[0]), Number(arr[1]), Number(arr[2]));
+    return obj.gy + "-" + obj.gm + "-" + obj.gd;
+  };
+
   handleSubmit = () => {
-    let card_amount =
-      Number(this.state.card_amount) + Number(this.state.cash_amount);
-    const prepareData = {
-      create_date: getTodayJalaali(),
-      card_amount,
-      type: this.state.type
-    };
-    console.log("sent card amount", prepareData.card_amount);
+    let prepareData = {};
+    if (this.state.type === "cash_card") {
+      let card_amount =
+        Number(this.state.card_amount) + Number(this.state.cash_amount);
+      prepareData = {
+        create_date: getTodayJalaali(),
+        card_amount: card_amount,
+        type: this.state.type
+      };
+    } else {
+      let issue_date = this.convertToG(this.state.issue_date);
+      let expiry_date = this.convertToG(this.state.expiry_date);
+      prepareData = {
+        amount: this.state.cheque_amount,
+        number: this.state.cheque_number,
+        bank: this.state.bank,
+        issue_date: issue_date,
+        expiry_date: expiry_date,
+        type: this.state.type
+      };
+    }
     this.props
       .addPaymentToBill(this.props.pk, prepareData)
       .then(() => {
@@ -74,12 +131,7 @@ class AddPaymentModal extends React.Component {
         <Modal.Content>
           <h5 className="yekan">
             انتخاب نوع پرداخت&nbsp;
-            <span
-              style={{ fontWeight: "bold", color: "red" }}
-              onChange={this.handleTypeChange}
-            >
-              *
-            </span>
+            <span style={{ fontWeight: "bold", color: "red" }}>*</span>
           </h5>
           <Dropdown
             placeholder="انتخاب نوع پرداخت"
@@ -100,6 +152,9 @@ class AddPaymentModal extends React.Component {
                 fluid
                 className="ltr"
                 defaultValue={this.props.price}
+                onChange={e => {
+                  this.handleInputChange(e, "cheque_amount");
+                }}
               />
               <h5 className="yekan">
                 شماره چک&nbsp;
@@ -108,8 +163,11 @@ class AddPaymentModal extends React.Component {
               <Input
                 type="number"
                 fluid
-                className="rtl placeholder-rtl"
+                className="rtl placeholder-rtl text-right"
                 placeholder="شماره چک"
+                onChange={e => {
+                  this.handleInputChange(e, "cheque_number");
+                }}
               />
               <h5 className="yekan">
                 بانک&nbsp;
@@ -119,6 +177,9 @@ class AddPaymentModal extends React.Component {
                 fluid
                 className="rtl placeholder-rtl text-right yekan"
                 placeholder="بانک"
+                onChange={e => {
+                  this.handleInputChange(e, "bank");
+                }}
               />
               <h5 className="yekan">
                 تاریخ صدور&nbsp;
@@ -128,6 +189,9 @@ class AddPaymentModal extends React.Component {
                 fluid
                 className="rtl placeholder-rtl text-right yekan"
                 placeholder="نمونه:‌ 1398/1/10"
+                onChange={e => {
+                  this.handleInputChange(e, "issue_date");
+                }}
               />
               <h5 className="yekan">
                 تاریخ اعتبار&nbsp;
@@ -137,6 +201,9 @@ class AddPaymentModal extends React.Component {
                 fluid
                 className="rtl placeholder-rtl text-right yekan"
                 placeholder="نمونه:‌ 1398/1/10"
+                onChange={e => {
+                  this.handleInputChange(e, "expiry_date");
+                }}
               />
             </React.Fragment>
           )}
@@ -174,7 +241,12 @@ class AddPaymentModal extends React.Component {
               بستن
             </Button>
             <Button.Or text="یا" className="yekan" />
-            <Button className="yekan" positive onClick={this.handleSubmit}>
+            <Button
+              className="yekan"
+              positive
+              onClick={this.handleSubmit}
+              disabled={this.state.disable_button}
+            >
               افزودن
             </Button>
           </Button.Group>

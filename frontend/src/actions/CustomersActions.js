@@ -53,6 +53,7 @@ export const getACustomer = pk => async dispatch => {
     `/customers/${pk}/`
   );
   dispatch({ type: GET_A_CUSTOMER, payload: response.data });
+  return response.data;
 };
 
 export const deleteCustomer = pk => async () => {

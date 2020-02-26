@@ -6,7 +6,7 @@ import {
   deleteCustomer,
   getCustomerBySearch,
   getCustomerUsers
-} from "../../actions/CustomerSectionActions";
+} from "../../actions/CustomersActions";
 import { toastr } from "react-redux-toastr";
 import LoadingBar from "../utils/loadingBar";
 import TableLabel from "../utils/tableLabelGenerator";

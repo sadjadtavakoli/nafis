@@ -7,7 +7,9 @@ import {
   Button,
   Checkbox,
   Modal,
-  Header
+  Header,
+  Input,
+  Label
 } from "semantic-ui-react";
 import { connect } from "react-redux";
 import {
@@ -15,34 +17,58 @@ import {
   deletePayment,
   doneTheBill
 } from "../../actions/CashRegisterActions";
+import { getClassTypes } from "../../actions/CustomersActions";
 import LoadingBar from "../utils/loadingBar";
 import TableLabel from "../utils/tableLabelGenerator";
 import AddPaymentModal from "./AddPaymentModal";
 import { digitToComma } from "../utils/numberUtils";
 import EditCustomerModal from "./EditCustomerModal";
-import { standardTimeToJalaali } from "../utils/jalaaliUtils";
+import { standardTimeToJalaali, convertToJalaali } from "../utils/jalaaliUtils";
 import logo from "../../assets/logo_printable.png";
 import { toastr } from "react-redux-toastr";
 import history from "../../history";
+import { updateBill } from "../../actions/SaleActions";
 
 class ViewBillModal extends React.Component {
   state = {
+    userData: JSON.parse(localStorage.getItem("user")),
+    class_type: "",
     fetch: false,
     openAddPayment: false,
     openEditCustomer: false,
     anyPays: false,
-    open: false
+    open: false,
+    editPoints: false,
+    // points: 0,
+    toggle: false,
+    used_points: 0
   };
 
   componentDidMount() {
     this.getBill();
   }
 
+  componentDidUpdate() {
+    if (this.props.theBill) {
+      console.log(this.props.theBill.payments.length);
+    }
+  }
+
   getBill = () => {
     this.props.getOneBill(this.props.match.params.pk).then(() => {
-      this.setState({
-        fetch: true,
-        anyPays: this.props.theBill.payments.length ? true : false
+      this.props.getClassTypes().then(res => {
+        let customerTypes = res.data.customerTypes;
+        customerTypes.map(classTypeItem => {
+          if (classTypeItem.value == this.props.theBill.buyer.class_type) {
+            this.setState({ class_type: classTypeItem.text });
+          }
+        });
+        this.setState({
+          fetch: true,
+          anyPays: this.props.theBill.payments.length ? true : false,
+          // points: this.props.theBill.buyer.points,
+          used_points: this.props.theBill.used_points
+        });
       });
     });
   };
@@ -54,9 +80,14 @@ class ViewBillModal extends React.Component {
   };
 
   toggleEditCustomerModal = () => {
-    this.setState({
-      openEditCustomer: !this.state.openEditCustomer
-    });
+    this.setState(
+      {
+        openEditCustomer: !this.state.openEditCustomer
+      },
+      () => {
+        this.getBill();
+      }
+    );
   };
 
   deletePayment = pk => {
@@ -77,8 +108,46 @@ class ViewBillModal extends React.Component {
   closeModal = () => this.setState({ open: false });
 
   handleSubmit = pk => {
-    this.props.doneTheBill(pk).then(() => {
+    let sms = this.state.toggle;
+    this.props.doneTheBill(pk, sms).then(() => {
       history.push(`/factor/${pk}/print`);
+    });
+  };
+
+  handlePointsChange = e => {
+    this.setState({
+      used_points: e.target.value
+    });
+  };
+
+  handleEditClick = () => {
+    this.setState({
+      editPoints: true
+    });
+  };
+
+  handleEditSubmit = pk => {
+    this.props
+      .updateBill(pk, { used_points: Number(this.state.used_points) })
+      .then(() => {
+        this.setState(
+          {
+            editPoints: false
+          },
+          () => {
+            this.getBill();
+            toastr.success("امتیاز با موفقیت اعمال شد");
+          }
+        );
+      })
+      .catch((e, r) => {
+        toastr.error("امتیاز استفاده شده بیشتر از حد مجاز است");
+      });
+  };
+
+  handleToggleChange = () => {
+    this.setState({
+      toggle: !this.state.toggle
     });
   };
 
@@ -113,8 +182,9 @@ class ViewBillModal extends React.Component {
                           <span style={{ fontWeight: "bold" }}>صندوق دار:</span>
                           &nbsp;
                           <span>
-                            {window.localStorage.user.first_name}&nbsp;
-                            {window.localStorage.user.last_name}
+                            {this.state.userData.first_name +
+                              " " +
+                              this.state.userData.last_name}
                           </span>
                         </Table.Cell>
                       </Table.Row>
@@ -128,15 +198,16 @@ class ViewBillModal extends React.Component {
                             {bill.buyer.last_name}
                           </span>
                           <Button
-                            circular
+                            size="mini"
                             className="yekan"
                             color="teal"
+                            labelPosition="right"
+                            icon="edit"
+                            content="ویرایش مشتری"
                             onClick={() => {
                               this.toggleEditCustomerModal();
                             }}
-                          >
-                            ویرایش
-                          </Button>
+                          />
                         </Table.Cell>
                         <Table.Cell>
                           <span style={{ fontWeight: "bold" }}>امتیاز:</span>
@@ -151,9 +222,9 @@ class ViewBillModal extends React.Component {
                           <span id="norm-latin">{bill.buyer.phone_number}</span>
                         </Table.Cell>
                         <Table.Cell>
-                          <span style={{ fontWeight: "bold" }}>نوع:</span>
+                          <span style={{ fontWeight: "bold" }}>نوع مشتری:</span>
                           &nbsp;
-                          <span>{bill.items[0].product.f_type.name}</span>
+                          <span>{this.state.class_type}</span>
                         </Table.Cell>
                       </Table.Row>
                     </Table.Body>
@@ -257,51 +328,72 @@ class ViewBillModal extends React.Component {
                 })}
               </Table.Body>
             </Table>
-            <Table celled className="rtl text-center" columns="4">
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell className="table-border-left">
-                    <TableLabel>1</TableLabel>
-                    مبلغ خام
-                  </Table.HeaderCell>
-                  <Table.HeaderCell>
-                    <TableLabel>2</TableLabel>
-                    مچموع تخفیف کالایی
-                  </Table.HeaderCell>
-                  <Table.HeaderCell>
-                    <TableLabel>3</TableLabel>
-                    تخفیف روی کل فاکتور
-                  </Table.HeaderCell>
-                  <Table.HeaderCell className="table-border-left-none">
-                    <TableLabel>4</TableLabel>
-                    مبلغ قابل پرداخت
-                  </Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                <Table.Row>
-                  <Table.Cell className="table-border-left" id="norm-latin">
-                    <TableLabel>1</TableLabel>
-                    {digitToComma(bill.final_price)}
-                  </Table.Cell>
-                  <Table.Cell id="norm-latin">
-                    <TableLabel>2</TableLabel>
-                    {digitToComma(bill.total_discount)}
-                  </Table.Cell>
-                  <Table.Cell id="norm-latin">
-                    <TableLabel>3</TableLabel>
-                    {digitToComma(bill.items_discount)}
-                  </Table.Cell>
-                  <Table.Cell
-                    className="table-border-left-none"
-                    id="norm-latin"
+            <Grid reversed celled className={"ltr"}>
+              <Grid.Row>
+                <Grid.Column className={"norm-latin text-right"} width={13}>
+                  <span>{digitToComma(bill.final_price)}</span>
+                </Grid.Column>
+                <Grid.Column width={3} className={"bg-table"}>
+                  مبلغ خام
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column className={"norm-latin text-right"} width={13}>
+                  <span>{digitToComma(bill.total_discount)}</span>
+                </Grid.Column>
+                <Grid.Column width={3} className={"bg-table"}>
+                  مجموع تخفیف کالایی
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column className={"norm-latin text-right"} width={13}>
+                  <span>{digitToComma(bill.items_discount)}</span>
+                </Grid.Column>
+                <Grid.Column width={3} className={"bg-table"}>
+                  تخفیف روی کل فاکتور
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column className={"norm-latin text-right"} width={13}>
+                  <Input
+                    value={this.state.used_points}
+                    onChange={e => this.handlePointsChange(e)}
+                    readOnly={this.state.editPoints ? false : true}
+                    type="number"
+                    className="ltr"
+                  />
+                </Grid.Column>
+                <Grid.Column width={3} className={"bg-table"}>
+                  <Label
+                    color={this.state.editPoints ? "green" : "teal"}
+                    style={{ marginRight: "5px" }}
+                    className="pointer"
+                    onClick={
+                      !this.state.editPoints
+                        ? this.handleEditClick
+                        : () => this.handleEditSubmit(bill.pk)
+                    }
                   >
-                    <TableLabel>4</TableLabel>
-                    {digitToComma(bill.remaining_payment)}
-                  </Table.Cell>
-                </Table.Row>
-              </Table.Body>
-            </Table>
+                    {this.state.editPoints ? "اعمال" : "ویرایش"}
+                  </Label>
+                  <span>امتیاز</span>
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column className={"norm-latin text-right"} width={13}>
+                  <span>
+                    {digitToComma(
+                      Number(bill.remaining_payment) -
+                        Number(this.state.used_points)
+                    )}
+                  </span>
+                </Grid.Column>
+                <Grid.Column width={3} className={"bg-table"}>
+                  مبلغ قابل پرداخت
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+
             <hr color="#ddd" />
 
             {this.state.anyPays && (
@@ -356,10 +448,11 @@ class ViewBillModal extends React.Component {
                           <Button
                             color="red"
                             className="yekan"
+                            icon="trash"
+                            labelPosition="right"
+                            content={"حذف"}
                             onClick={() => this.deletePayment(payment.pk)}
-                          >
-                            حذف
-                          </Button>
+                          />
                         </Table.Cell>
                       </Table.Row>
                     );
@@ -386,6 +479,13 @@ class ViewBillModal extends React.Component {
                 color="teal"
                 size="huge"
                 icon="add"
+                disabled={
+                  Number(bill.remaining_payment) -
+                    Number(this.state.used_points) ===
+                  0
+                    ? true
+                    : false
+                }
               />
               <Button
                 circular
@@ -403,10 +503,25 @@ class ViewBillModal extends React.Component {
               <Modal.Header className="yekan text-right">
                 بستن فاکتور
               </Modal.Header>
-              <Modal.Content>
+              <Modal.Content className="rtl text-right">
                 <Header className="yekan text-right">
                   آیا از بستن این فاکتور اطمینان دارید؟
                 </Header>
+                <div style={{ display: "inline-flex" }}>
+                  <span className="rtl text-right" style={{ fontSize: "17px" }}>
+                    ارسال
+                  </span>
+                  &nbsp;
+                  <span id="norm-latin" style={{ fontSize: "17px" }}>
+                    sms
+                  </span>
+                  &nbsp; &nbsp; &nbsp;
+                  <Checkbox
+                    className="text-right rtl"
+                    toggle
+                    onChange={this.handleToggleChange}
+                  />
+                </div>
               </Modal.Content>
               <Modal.Actions>
                 <Button
@@ -431,7 +546,10 @@ class ViewBillModal extends React.Component {
               <AddPaymentModal
                 open={this.state.openAddPayment}
                 onClose={this.toggleAddPaymentModal}
-                price={bill.final_price}
+                price={
+                  Number(bill.remaining_payment) -
+                  Number(this.state.used_points)
+                }
                 pk={bill.pk}
                 refetch={this.getBill}
               />
@@ -454,7 +572,6 @@ class ViewBillModal extends React.Component {
 }
 
 const mapStateToProps = state => {
-  console.log("state sale", state.sale);
   return {
     theBill: state.cash.theBill
   };
@@ -463,5 +580,7 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps, {
   getOneBill,
   deletePayment,
-  doneTheBill
+  doneTheBill,
+  updateBill,
+  getClassTypes
 })(ViewBillModal);

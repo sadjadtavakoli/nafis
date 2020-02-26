@@ -3,12 +3,13 @@ import { connect } from "react-redux";
 import { Table, Pagination, Button, Icon, Popup } from "semantic-ui-react";
 import { getActiveBill } from "../../actions/SaleActions";
 import { digitToComma, phoneNumberBeautifier } from "../utils/numberUtils";
-import { standardTimeToJalaali } from "../utils/jalaaliUtils";
-import InformationModal from "./informationModal";
+import { standardTimeToJalaali, convertToJalaali } from "../utils/jalaaliUtils";
+import InformationModal from "./informationPage";
 import LoadingBar from "../utils/loadingBar";
 import NotFound from "../utils/notFound";
 import TableLabel from "../utils/tableLabelGenerator";
 import NewBillPopup from "./newBillPopup";
+import history from "../../history";
 
 const colSpan = 7;
 
@@ -47,6 +48,7 @@ class BillTable extends React.Component {
           ? Math.ceil(this.props.activeBill.count / 25)
           : 0
       });
+      console.log("active bill", this.props.activeBill);
     });
   };
 
@@ -98,7 +100,15 @@ class BillTable extends React.Component {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell colSpan={colSpan} className="rtl text-right">
-                <h3 className="yekan">لیست فاکتور های فعال</h3>
+                <h3 className="yekan">
+                  لیست فاکتور های فعال
+                  <Button
+                    icon
+                    onClick={() => this.getActiveBill(this.state.activePage)}
+                  >
+                    <Icon name="repeat" />
+                  </Button>
+                </h3>
               </Table.HeaderCell>
             </Table.Row>
             <Table.Row>
@@ -171,7 +181,9 @@ class BillTable extends React.Component {
                     />
 
                     <Button
-                      onClick={() => this.openInformationModal(item)}
+                      onClick={() => {
+                        history.push(`/information/${item.pk}`);
+                      }}
                       icon
                       className="m-1 yekan"
                       labelPosition="right"

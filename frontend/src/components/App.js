@@ -14,12 +14,13 @@ import PrintableFactor from "./factor";
 import Login from "./auth/login";
 import DailyReport from "./dailyReport";
 import Reports from "./reports";
-import Customers from "./customerSection";
-import CustomerPage from "./customerSection/CustomerPage";
+import Customers from "./customers";
+import CustomerPage from "./customers/CustomerPage";
 import Suppliers from "./suppliers";
 import EditSupplier from "./suppliers/EditSupplier";
 import DepositoryEdit from "./depository/depositoryEdit";
 import ViewBill from "./cashRegister/ViewBill";
+import InformationPage from "./sale/informationPage";
 
 const App = ({ token }) => {
   return (
@@ -56,6 +57,7 @@ const App = ({ token }) => {
               component={DepositoryEdit}
             />
             <Route path="/cashregister/:pk" exact component={ViewBill} />
+            <Route path="/information/:pk" exact component={InformationPage} />
           </SideBar>
         </Router>
       ) : (

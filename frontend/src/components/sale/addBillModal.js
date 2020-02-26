@@ -105,7 +105,7 @@ class AddBillModal extends React.Component {
                 fluid
                 defaultValue={data.product}
                 label="کد محصول"
-                placeholder=""
+                readOnly
               />
               <Form.Input
                 className="ltr placeholder-rtl"

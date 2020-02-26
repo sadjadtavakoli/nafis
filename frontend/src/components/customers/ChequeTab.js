@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import {
   getAllCheques,
   getRemainedCheques
-} from "../../actions/CustomerSectionActions";
+} from "../../actions/CustomersActions";
 import { digitToComma } from "../utils/numberUtils";
 import NotFound from "../utils/notFound";
 import LoadingBar from "../utils/loadingBar";
@@ -131,7 +131,6 @@ class FactorsTab extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log("state", state);
   return {
     allCheques: state.customers.allCheques,
     remainedCheques: state.customers.remainedCheques

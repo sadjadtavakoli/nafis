@@ -20,9 +20,8 @@ import {
   toGregorian,
   getTodayJalaali
 } from "../utils/jalaaliUtils";
-import DatePickerModal from "./DatePickerModal";
+import DatePickerModal from "../utils/DatePickerModal";
 import NotFound from "../utils/notFound";
-import history from "../../history";
 import { digitToComma } from "../utils/numberUtils";
 
 const colors = {
@@ -464,14 +463,6 @@ class Reports extends React.Component {
     });
     this.props.getChartsReport(1, getTodayGregorian(), getTodayGregorian());
     this.props.getIntervalReports(1, getTodayGregorian(), getTodayGregorian());
-    if (
-      typeof window.orientation !== "undefined" ||
-      navigator.userAgent.indexOf("IEMobile") !== -1
-    ) {
-      console.log("mobile");
-    } else {
-      console.log("desktop");
-    }
   }
 
   componentDidUpdate() {

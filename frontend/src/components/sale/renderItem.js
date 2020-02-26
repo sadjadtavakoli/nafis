@@ -119,7 +119,7 @@ const ItemsRender = ({
                 trigger={
                   <Form.Input
                     fluid
-                    readOnly={editting !== index ? true : false}
+                    readOnly={true}
                     type="number"
                     className="rtl placeholder-rtl text-right"
                     defaultValue={item.product.code}

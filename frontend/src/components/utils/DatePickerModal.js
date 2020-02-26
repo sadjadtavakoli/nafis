@@ -15,7 +15,6 @@ class DatePickerModal extends React.Component {
   state = INITIAL_STATE;
 
   setSelectedDayRange = e => {
-    console.log(e);
     this.setState({
       selectedDayRange: {
         ...this.state.selectedDayRange,
