@@ -80,11 +80,12 @@ class AddPaymentModal extends React.Component {
   handleSubmit = () => {
     let prepareData = {};
     if (this.state.type === "cash_card") {
-      let card_amount =
-        Number(this.state.card_amount) + Number(this.state.cash_amount);
+      let card_amount = Number(this.state.card_amount);
+      let cash_amount = Number(this.state.cash_amount);
       prepareData = {
         create_date: getTodayJalaali(),
         card_amount: card_amount,
+        cash_amount: cash_amount,
         type: this.state.type
       };
     } else {
