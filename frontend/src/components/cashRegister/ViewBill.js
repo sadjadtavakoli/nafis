@@ -470,7 +470,6 @@ class ViewBillModal extends React.Component {
                 size="huge"
                 color="green"
                 icon="check"
-                disabled={!bill.payments.length}
               />
               <Button
                 circular
