@@ -102,7 +102,7 @@ class InformationPage extends React.Component {
             labelEdit: false,
             discount_s: false
           });
-          this.props.refetch();
+          this.getOneBill();
         });
     }
   };
@@ -163,7 +163,7 @@ class InformationPage extends React.Component {
       editMode: false,
       editting: null
     });
-    this.props.refetch();
+    this.getOneBill();
   };
 
   submitItemPopup = () => {
