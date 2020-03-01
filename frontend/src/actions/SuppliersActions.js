@@ -2,7 +2,9 @@ import {
   GET_SUPPLIERS,
   GET_THE_SUPPLIER,
   ADD_SUPPLIER,
-  GET_USERS_SUPPLIERS
+  GET_SUPPLIER_FACTORS,
+  GET_SUPPLIER_FACTOR,
+  DELETE_SUPPLIER_FACTOR
 } from "./types";
 import { server, putServer } from "../apis/server";
 
@@ -49,5 +51,36 @@ export const getSupplierBySearch = query => async dispatch => {
     }
   );
   dispatch({ type: GET_SUPPLIERS, payload: response.data });
+  return response;
+};
+
+export const getSupplierFactors = pk => async dispatch => {
+  const response = await server(localStorage.getItem("token")).get(
+    `/suppliers/${pk}/bills/`
+  );
+  dispatch({ type: GET_SUPPLIER_FACTORS, payload: response.data });
+  return response;
+};
+
+export const deleteSupplierFactor = pk => async dispatch => {
+  const response = await server(localStorage.getItem("token")).delete(
+    `/supplier-bills/${pk}/`
+  );
+  dispatch({ type: DELETE_SUPPLIER_FACTOR, payload: response.data });
+  return response;
+};
+
+export const getSupplierFactor = pk => async dispatch => {
+  const response = await server(localStorage.getItem("token")).get(
+    `/supplier-bills/${pk}/`
+  );
+  dispatch({ type: GET_SUPPLIER_FACTOR, payload: response.data });
+  return response;
+};
+
+export const deleteFactorItem = pk => async () => {
+  const response = await server(localStorage.getItem("token")).delete(
+    `/supplier-bill-items/${pk}/`
+  );
   return response;
 };

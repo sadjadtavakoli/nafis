@@ -45,7 +45,6 @@ class Suppliers extends Component {
           allSuppliers: this.props.allSuppliers.results,
           loading: false
         });
-        console.log("suppliers", this.props.allSuppliers);
       })
       .catch(() => {
         this.setState({ notFound: true, loading: false });
@@ -223,10 +222,10 @@ class Suppliers extends Component {
                       <Table.Cell>
                         <Button
                           className="yekan"
-                          content="ویرایش"
+                          content="نمایه"
                           labelPosition="right"
                           color="teal"
-                          icon="info"
+                          icon="address card"
                           onClick={() => {
                             this.handleClick(item.pk);
                             history.push(
@@ -269,6 +268,7 @@ class Suppliers extends Component {
 }
 
 const mapStateToProps = state => {
+  console.log("state", state);
   return {
     allSuppliers: state.suppliers.suppliers,
     newSupplier: state.suppliers.newSupplier

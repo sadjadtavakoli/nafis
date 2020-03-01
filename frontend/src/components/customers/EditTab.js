@@ -160,7 +160,7 @@ class EditTab extends Component {
         .then(() => {
           toastr.success(".عملیات ویرایش با موفقیت انجام شد");
           this.getCustomerInfo();
-          if (this.props.onClose != undefined) {
+          if (this.props.onClose !== undefined) {
             this.props.onClose();
           }
         })
@@ -321,7 +321,7 @@ class EditTab extends Component {
             className="yekan"
             content={this.props.fromCashregister ? "بستن" : "بازگشت"}
             onClick={() => {
-              if (this.props.onClose != undefined) {
+              if (this.props.onClose !== undefined) {
                 this.props.onClose();
               } else {
                 history.push("/customers/");

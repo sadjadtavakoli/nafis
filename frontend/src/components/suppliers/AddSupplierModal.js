@@ -115,7 +115,7 @@ class Add extends Component {
       <Form.Input
         className={`${
           status === "email" || status === "phone_number"
-            ? "ltr text-left yekan"
+            ? "ltr yekan"
             : "rtl text-right yekan"
         } placeholder-rtl`}
         label={label}
