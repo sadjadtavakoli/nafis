@@ -23,7 +23,7 @@ import TableLabel from "../utils/tableLabelGenerator";
 import AddPaymentModal from "./AddPaymentModal";
 import { digitToComma } from "../utils/numberUtils";
 import EditCustomerModal from "./EditCustomerModal";
-import { standardTimeToJalaali, convertToJalaali } from "../utils/jalaaliUtils";
+import { standardTimeToJalaali } from "../utils/jalaaliUtils";
 import logo from "../../assets/logo_printable.png";
 import { toastr } from "react-redux-toastr";
 import history from "../../history";
@@ -295,7 +295,9 @@ class ViewBillModal extends React.Component {
                       </Table.Cell>
                       <Table.Cell id="norm-latin">
                         <TableLabel>4</TableLabel>
-                        {item.amount}
+                        {item.end_of_roll_amount > 0
+                          ? item.end_of_roll_amount
+                          : item.amount}
                       </Table.Cell>
                       <Table.Cell id="norm-latin">
                         <TableLabel>5</TableLabel>
@@ -325,28 +327,31 @@ class ViewBillModal extends React.Component {
             <Grid reversed celled className={"ltr"}>
               <Grid.Row>
                 <Grid.Column className={"norm-latin text-right"} width={13}>
-                  <span>{digitToComma(bill.final_price)}</span>
+                  <span>{digitToComma(bill.price)}</span>
                 </Grid.Column>
                 <Grid.Column width={3} className={"bg-table"}>
                   مبلغ خام
                 </Grid.Column>
               </Grid.Row>
-              <Grid.Row>
-                <Grid.Column className={"norm-latin text-right"} width={13}>
-                  <span>{digitToComma(bill.total_discount)}</span>
-                </Grid.Column>
-                <Grid.Column width={3} className={"bg-table"}>
-                  مجموع تخفیف کالایی
-                </Grid.Column>
-              </Grid.Row>
+
               <Grid.Row>
                 <Grid.Column className={"norm-latin text-right"} width={13}>
                   <span>{digitToComma(bill.items_discount)}</span>
                 </Grid.Column>
                 <Grid.Column width={3} className={"bg-table"}>
+                  مجموع تخفیف کالایی
+                </Grid.Column>
+              </Grid.Row>
+
+              <Grid.Row>
+                <Grid.Column className={"norm-latin text-right"} width={13}>
+                  <span>{digitToComma(bill.discount)}</span>
+                </Grid.Column>
+                <Grid.Column width={3} className={"bg-table"}>
                   تخفیف روی کل فاکتور
                 </Grid.Column>
               </Grid.Row>
+
               <Grid.Row>
                 <Grid.Column className={"norm-latin text-right"} width={13}>
                   <Input
@@ -373,6 +378,7 @@ class ViewBillModal extends React.Component {
                   <span>امتیاز</span>
                 </Grid.Column>
               </Grid.Row>
+
               <Grid.Row>
                 <Grid.Column className={"norm-latin text-right"} width={13}>
                   <span>
@@ -395,7 +401,6 @@ class ViewBillModal extends React.Component {
                 <Table.Header>
                   <Table.Row>
                     <Table.HeaderCell colSpan="4" className="text-right">
-                      <TableLabel>1</TableLabel>
                       پرداخت ها
                     </Table.HeaderCell>
                   </Table.Row>
@@ -403,15 +408,15 @@ class ViewBillModal extends React.Component {
                 <Table.Header>
                   <Table.Row>
                     <Table.HeaderCell className="table-border-left">
-                      <TableLabel>2</TableLabel>
+                      <TableLabel>1</TableLabel>
                       تاریخ ایجاد
                     </Table.HeaderCell>
                     <Table.HeaderCell>
-                      <TableLabel>3</TableLabel>
+                      <TableLabel>2</TableLabel>
                       مبلغ پرداختی
                     </Table.HeaderCell>
                     <Table.HeaderCell>
-                      <TableLabel>4</TableLabel>
+                      <TableLabel>3</TableLabel>
                       نوع پرداخت
                     </Table.HeaderCell>
                     <Table.HeaderCell className="table-border-left-none">
@@ -436,7 +441,9 @@ class ViewBillModal extends React.Component {
                         </Table.Cell>
                         <Table.Cell>
                           <TableLabel>3</TableLabel>
-                          {payment.type === "card" ? "نقد و کارت" : "چک"}
+                          {payment.type === "card" ? "کارت" : null}
+                          {payment.type === "cash" ? "نقد" : null}
+                          {payment.type === "cheque" ? "چک" : null}
                         </Table.Cell>
                         <Table.Cell className="table-border-left-none">
                           <Button
@@ -463,7 +470,6 @@ class ViewBillModal extends React.Component {
                 size="huge"
                 color="green"
                 icon="check"
-                disabled={!bill.payments.length}
               />
               <Button
                 circular

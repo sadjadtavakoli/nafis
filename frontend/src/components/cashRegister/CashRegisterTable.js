@@ -9,6 +9,7 @@ import LoadingBar from "../utils/loadingBar";
 import { toastr } from "react-redux-toastr";
 import history from "../../history";
 import TableLabel from "../utils/tableLabelGenerator";
+import RepeatButton from "../utils/RepeatButton";
 const colSpan = 5;
 
 class CashRegisterTable extends React.Component {
@@ -70,19 +71,18 @@ class CashRegisterTable extends React.Component {
   render() {
     return (
       <React.Fragment>
-        {this.state.fetch && this.props.activeBills.length ? (
-          <Table celled className="rtl text-center">
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell colSpan={colSpan} className="text-right">
-                  لیست فاکتورهای فعال
-                  <Button icon onClick={this.getActiveBills}>
-                    <Icon name="repeat" />
-                  </Button>
-                </Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
-
+        <Table celled className="rtl text-center">
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell colSpan={colSpan} className="text-right">
+                لیست فاکتورهای فعال
+                <RepeatButton
+                  onClick={() => this.getActiveBills(this.state.activePage)}
+                />
+              </Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          {this.state.fetch && this.props.activeBills.length ? (
             <React.Fragment>
               <Table.Header>
                 <Table.Row>
@@ -179,8 +179,8 @@ class CashRegisterTable extends React.Component {
                 </Table.Row>
               </Table.Footer>
             </React.Fragment>
-          </Table>
-        ) : null}
+          ) : null}
+        </Table>
         {!this.state.fetch ? <LoadingBar /> : null}
         {this.state.fetch && !this.props.activeBills.length ? (
           <NotFound />
