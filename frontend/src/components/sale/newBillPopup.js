@@ -66,12 +66,10 @@ class NewBillPopup extends React.Component {
         selling_price: this.state.productData.selling_price
       };
       if (this.props.pk) {
-        this.props.addNewItem(this.props.pk, prepareData).then(res => {
-          this.props.refetch(res);
-          setTimeout(() => {
-            toastr.success("ثبت آیتم جدید", "ثبت آیتم جدید با موفقیت انجام شد");
-            this.props.onClose();
-          }, 500);
+        this.props.addNewItem(prepareData).then(res => {
+          toastr.success("ثبت آیتم جدید", "ثبت آیتم جدید با موفقیت انجام شد");
+          this.props.getOneBill();
+          this.props.onClose();
         });
       } else {
         this.props.onSubmit(prepareData);
@@ -201,7 +199,7 @@ class NewBillPopup extends React.Component {
             <div className="text-center">
               <Button.Group className="ltr">
                 <Button className="yekan" onClick={this.props.onClose}>
-                  بستن&nbsp;&nbsp;&nbsp;
+                  بستن
                 </Button>
                 <Button.Or text="یا" />
                 <Button

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Tab, Container } from "semantic-ui-react";
-
 import ChequeTab from "./ChequeTab";
 import EditTab from "./EditTab";
 import FactorsTab from "./FactorsTab";
@@ -10,7 +9,7 @@ const panes = pk => [
     menuItem: "پروفایل",
     render: () => (
       <Tab.Pane attached={false}>
-        <EditTab passingPk={pk} />
+        <EditTab passingPk={pk} showActionButtons={true} />
       </Tab.Pane>
     )
   },

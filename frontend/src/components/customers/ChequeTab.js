@@ -4,10 +4,11 @@ import { connect } from "react-redux";
 import {
   getAllCheques,
   getRemainedCheques
-} from "../../actions/CustomerSectionActions";
+} from "../../actions/CustomersActions";
 import { digitToComma } from "../utils/numberUtils";
 import NotFound from "../utils/notFound";
 import LoadingBar from "../utils/loadingBar";
+import TableLabel from "../utils/tableLabelGenerator";
 import { standardTimeToJalaali } from "../utils/jalaaliUtils";
 
 class FactorsTab extends Component {
@@ -51,13 +52,24 @@ class FactorsTab extends Component {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell className="d-table-border">
+                <TableLabel>1</TableLabel>
                 شماره
               </Table.HeaderCell>
-              <Table.HeaderCell>بانک</Table.HeaderCell>
-              <Table.HeaderCell>تاریخ صدور</Table.HeaderCell>
-              <Table.HeaderCell>تاریخ انقضا</Table.HeaderCell>
-              <Table.HeaderCell>مبلغ</Table.HeaderCell>
-              <Table.HeaderCell>وضعیت</Table.HeaderCell>
+              <Table.HeaderCell>
+                <TableLabel>2</TableLabel>بانک
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <TableLabel>3</TableLabel>تاریخ صدور
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <TableLabel>4</TableLabel>تاریخ انقضا
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <TableLabel>5</TableLabel>مبلغ
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <TableLabel>6</TableLabel>وضعیت
+              </Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -66,20 +78,28 @@ class FactorsTab extends Component {
                 return (
                   <Table.Row>
                     <Table.Cell className="d-table-border">
+                      <TableLabel>1</TableLabel>
                       {item.number}
                     </Table.Cell>
-                    <Table.Cell>{item.bank}</Table.Cell>
+                    <Table.Cell>
+                      <TableLabel>2</TableLabel>
+                      {item.bank}
+                    </Table.Cell>
                     <Table.Cell className="norm-latin">
+                      <TableLabel>3</TableLabel>
                       <span>{standardTimeToJalaali(item.issue_date)}</span>
                     </Table.Cell>
                     <Table.Cell className="norm-latin">
+                      <TableLabel>4</TableLabel>
                       <span>{standardTimeToJalaali(item.expiry_date)}</span>
                     </Table.Cell>
                     <Table.Cell className="norm-latin">
+                      <TableLabel>5</TableLabel>
                       <span>{digitToComma(item.amount)} </span>
                       <span className="yekan">تومان</span>
                     </Table.Cell>
                     <Table.Cell>
+                      <TableLabel>6</TableLabel>
                       {item.status === "remained" ? "باقی مانده" : "بسته شده"}
                     </Table.Cell>
                   </Table.Row>
@@ -111,7 +131,6 @@ class FactorsTab extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log("state", state);
   return {
     allCheques: state.customers.allCheques,
     remainedCheques: state.customers.remainedCheques

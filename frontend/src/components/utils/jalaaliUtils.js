@@ -283,7 +283,7 @@ function getNow() {
 function getTodayJalaali() {
   let date = new Date();
   date =
-    date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
+    date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
   return convertToJalaali(date);
 }
 function getTodayGregorian() {
@@ -294,7 +294,8 @@ function getTodayGregorian() {
 }
 function convertToJalaali(date) {
   if (!date) return "";
-  let parts = date.split("/");
+  date = date.replace(/\//g, "-");
+  let parts = date.split("-");
   if (parts.length > 1) {
     parts = toJalaali(
       parseInt(parts[0]),
@@ -311,14 +312,10 @@ function convertToJalaali(date) {
   return date;
 }
 function standardTimeToJalaali(__date) {
-  // console.log('date',1,__date)
   let date = new Date(__date);
-  // console.log('date',2,date)
   let day = date.getDate();
   let month = date.getMonth() + 1;
   let year = date.getFullYear();
-  // console.log('date',3,year,month,day)
   let jDate = convertToJalaali(year + "/" + month + "/" + day);
-  // console.log('date',4,jDate)
   return jDate;
 }

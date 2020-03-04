@@ -32,7 +32,7 @@ export const getCustomerBySearch = query => async dispatch => {
   return response;
 };
 
-export const getAllBills = (pk, oo) => async dispatch => {
+export const getAllBills = pk => async dispatch => {
   const response = await server(localStorage.getItem("token")).get(
     `/customers/${pk}/bills/`
   );
@@ -53,6 +53,7 @@ export const getACustomer = pk => async dispatch => {
     `/customers/${pk}/`
   );
   dispatch({ type: GET_A_CUSTOMER, payload: response.data });
+  return response.data;
 };
 
 export const deleteCustomer = pk => async () => {

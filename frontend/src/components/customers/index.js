@@ -6,9 +6,10 @@ import {
   deleteCustomer,
   getCustomerBySearch,
   getCustomerUsers
-} from "../../actions/CustomerSectionActions";
+} from "../../actions/CustomersActions";
 import { toastr } from "react-redux-toastr";
 import LoadingBar from "../utils/loadingBar";
+import TableLabel from "../utils/tableLabelGenerator";
 import NotFound from "../utils/notFound";
 import AddCustomerModal from "./addCustomerModal";
 
@@ -30,7 +31,8 @@ class Customers extends Component {
     pk: null,
     loading: true,
     open: false,
-    productID: NaN
+    productID: NaN,
+    width: window.innerWidth
   };
 
   componentDidMount() {
@@ -45,8 +47,6 @@ class Customers extends Component {
     ) {
       this.getCustomers(this.state.activePage);
     }
-    // console.log("customers", this.props.usersCustomers);
-    // console.log("search input", this.state.value);
   }
 
   getCustomers = () => {
@@ -124,8 +124,6 @@ class Customers extends Component {
           this.props
             .getCustomerBySearch(this.state.value)
             .then(res => {
-              console.log("response ast", res.data.length);
-
               this.setState({
                 notFound: res.data.length === 0,
                 customers: this.props.usersCustomers,
@@ -135,7 +133,6 @@ class Customers extends Component {
             .catch(() => {
               this.setState({ notFound: true });
             });
-          // console.log("done else");
         }
         this.setState({
           searchLoading: false
@@ -174,39 +171,24 @@ class Customers extends Component {
             icon="add"
             labelPosition="right"
           />
-          <Button
-            style={{ float: "left" }}
-            onClick={() => history.push("/")}
-            color="teal"
-            icon="home"
-          />
         </Segment>
         <Table celled className="rtl text-center" columns={3}>
           <Table.Header className="text-right">
             <Table.HeaderCell colSpan="3">
-              <Grid>
-                <Grid.Column width={5}>
-                  <span
-                    style={{
-                      fontSize: "20px",
-                      lineHeight: "35px",
-                      textAlign: "center"
-                    }}
-                  >
-                    لیست مشتریان موجود
-                  </span>
-                </Grid.Column>
-                <Grid.Column>
-                  <span>{this.searchBar()}</span>
-                </Grid.Column>
+              <Grid columns={1} style={{ margin: "0.25em 0" }}>
+                <h2 className="yekan">لیست مشتریان موجود</h2>
+                {this.searchBar()}
               </Grid>
             </Table.HeaderCell>
             {this.state.customers && this.state.customers.length > 0 ? (
               <Table.Row className="text-center">
                 <Table.HeaderCell style={{ borderLeft: "1px solid #ddd" }}>
+                  <TableLabel>1</TableLabel>
                   نام و نام خانوادگی
                 </Table.HeaderCell>
-                <Table.HeaderCell>شماره موبایل</Table.HeaderCell>
+                <Table.HeaderCell>
+                  <TableLabel>2</TableLabel>شماره موبایل
+                </Table.HeaderCell>
                 <Table.HeaderCell>عملیات</Table.HeaderCell>
               </Table.Row>
             ) : null}
@@ -216,48 +198,51 @@ class Customers extends Component {
               ? this.state.customers.map(item => {
                   return (
                     <Table.Row key={item.pk}>
-                      <Table.Cell style={{ borderLeft: "1px solid #ddd" }}>
+                      <Table.Cell
+                        collapsing
+                        style={{ borderLeft: "1px solid #ddd" }}
+                      >
+                        <TableLabel>1</TableLabel>
                         <span>{item.first_name}</span>
                         <span>&nbsp;</span>
                         <span>{item.last_name}</span>
                       </Table.Cell>
-                      <Table.Cell className="norm-latin">
+                      <Table.Cell collapsing className="norm-latin">
+                        <TableLabel>2</TableLabel>
+
                         <span>{item.phone_number}</span>
                       </Table.Cell>
                       <Table.Cell>
                         <Button
+                          className="m-1 yekan"
                           color="teal"
+                          icon="address card"
+                          labelPosition="right"
+                          content="نمایه مشتری"
                           onClick={() => {
                             this.handleViewClick(item.pk);
                             history.push(`/customers/customer/${item.pk}/`);
                           }}
-                        >
-                          <span>ویرایش</span>
-                        </Button>
+                        ></Button>
                         {isPermit("admin", this.state.job) ? (
                           <Button
+                            className="m-1 yekan"
                             color="red"
+                            labelPosition="right"
+                            icon="trash"
+                            content="حذف"
                             onClick={() => {
                               this.deleteCustomer(item.pk);
                             }}
-                          >
-                            <span>حذف</span>
-                          </Button>
+                          ></Button>
                         ) : null}
                       </Table.Cell>
                     </Table.Row>
                   );
                 })
               : null}
-
             {this.state.loading ? <LoadingBar /> : null}
-
             {this.state.notFound ? <NotFound /> : null}
-            {/* {this.props.usersCustomers &&
-            this.props.usersCustomers.results &&
-            this.props.usersCustomers.results.length === 0 ? (
-              <NotFound />
-            ) : null} */}
           </Table.Body>
           {this.props.usersCustomers && this.props.usersCustomers.count > 25 ? (
             <Table.Footer>
