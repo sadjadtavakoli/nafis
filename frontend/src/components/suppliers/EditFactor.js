@@ -24,13 +24,16 @@ import { toastr } from "react-redux-toastr";
 const EditFactor = () => {
   const [fetch, setFetch] = useState(false);
   const [currencyReadOnly, setCurrencyReadOnly] = useState(true);
+  const [count, setCount] = useState(0);
 
   const pk = Number(window.location.href.split("/")[4]);
 
   const currencyOptions = [
-    { key: 1, text: "تومان", value: 1 },
-    { key: 2, text: "دلار", value: 2 },
-    { key: 3, text: "درهم", value: 3 }
+    { text: "ریال", value: "ریال" },
+    { text: "دلار", value: "دلار" },
+    { text: "روپیه", value: "روپیه" },
+    { text: "درهم", value: "درهم" },
+    { text: "یوان", value: "یوان" }
   ];
 
   const factor = useSelector(state => state.suppliers.factor);
@@ -40,7 +43,10 @@ const EditFactor = () => {
     let confirm = window.confirm("آیا از حذف این آیتم مطمئن هستید؟");
     if (confirm) {
       dispatch(deleteFactorItem(pk))
-        .then(() => toastr.success("آیتم با موفقیت حذف شد"))
+        .then(() => {
+          setCount(count + 1);
+          toastr.success("آیتم با موفقیت حذف شد");
+        })
         .catch(() => toastr.error("خطا در عملیات حذف آیتم"));
     }
   };
@@ -51,7 +57,6 @@ const EditFactor = () => {
     });
   }, []);
 
-  console.log("factor items", fetch && factor.items[0]);
   return (
     <Container>
       <Segment stacked className="rtl">
@@ -85,7 +90,7 @@ const EditFactor = () => {
                         <Grid.Column width={8}>
                           نوع ارز:&nbsp;&nbsp;&nbsp;
                           <Dropdown
-                            defaultValue={1}
+                            defaultValue={"ریال"}
                             options={currencyOptions}
                             disabled={currencyReadOnly}
                           />

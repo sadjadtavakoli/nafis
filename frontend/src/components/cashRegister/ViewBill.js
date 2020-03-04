@@ -48,12 +48,6 @@ class ViewBillModal extends React.Component {
     this.getBill();
   }
 
-  componentDidUpdate() {
-    if (this.props.theBill) {
-      console.log(this.props.theBill.payments.length);
-    }
-  }
-
   getBill = () => {
     this.props.getOneBill(this.props.match.params.pk).then(() => {
       this.props.getClassTypes().then(res => {

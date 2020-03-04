@@ -15,21 +15,26 @@ import history from "../../history";
 const SupplierFactor = ({ pk }) => {
   const [openModal, setOpenModal] = useState(false);
   const [fetch, setFetch] = useState(false);
+  const [count, setCount] = useState(0);
 
   const closeModal = () => setOpenModal(false);
+  const addCount = () => {
+    setCount(count + 1);
+  };
 
   const factors = useSelector(state => state.suppliers.factors);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getSupplierFactors(pk)).then(() => setFetch(true));
-  }, []);
+  }, [count]);
 
   const deleteFactor = pk => {
     let confirm = window.confirm("آیا از حذف این فاکتور مطمئن هستید؟");
     if (confirm)
       dispatch(deleteSupplierFactor(pk))
         .then(() => {
+          setCount(count + 1);
           toastr.success("فاکتور با موفقیت حذف گردید");
         })
         .catch(() => {
@@ -182,7 +187,12 @@ const SupplierFactor = ({ pk }) => {
       </Table>
 
       {openModal ? (
-        <AddSupplierFactorModal open={openModal} onClose={closeModal} />
+        <AddSupplierFactorModal
+          open={openModal}
+          onClose={closeModal}
+          pk={pk}
+          addCount={addCount}
+        />
       ) : null}
     </React.Fragment>
   );

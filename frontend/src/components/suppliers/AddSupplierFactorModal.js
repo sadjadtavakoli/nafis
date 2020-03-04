@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   Button,
@@ -6,16 +6,59 @@ import {
   Segment,
   Header,
   Divider,
-  Popup,
-  Card
+  Popup
 } from "semantic-ui-react";
+import { useDispatch } from "react-redux";
+import { addSupplierFactor } from "../../actions/SuppliersActions";
+import AddFactorItem from "./AddFactorItem";
 
-const AddSupplierFactorModal = ({ open, onClose }) => {
+const AddSupplierFactorModal = ({ open, onClose, pk, addCount }) => {
+  const [currency, setCurrency] = useState("ریال");
+  const [price, setPrice] = useState(0);
+  const [billCode, setBillCode] = useState(null);
+  const [status, setStatus] = useState("done");
+  const [popupOpen, setPopupOpen] = useState(false);
+
   const options = [
-    { text: "تومان", value: "toman" },
-    { text: "دلار", value: "dollor" },
-    { text: "درهم", value: "derham" }
+    { text: "ریال", value: "ریال" },
+    { text: "دلار", value: "دلار" },
+    { text: "روپیه", value: "روپیه" },
+    { text: "درهم", value: "درهم" },
+    { text: "یوان", value: "یوان" }
   ];
+
+  const statusOptions = [
+    { text: "تسویه", value: "done" },
+    { text: "عدم تسویه", value: "remained" }
+  ];
+
+  const togglePopupOpen = () => {
+    setPopupOpen(!popupOpen);
+  };
+
+  const dispatch = useDispatch();
+
+  const addFactor = pk => {
+    let data = {
+      currency,
+      currency_price: price,
+      items: null,
+      bill_code: billCode,
+      status
+    };
+    if (!data.bill_code) {
+      alert("شماره فاکتور نمیتواند خالی باشد");
+    }
+    dispatch(addSupplierFactor(pk, data))
+      .then(() => {
+        addCount();
+        onClose();
+      })
+      .catch(() => {
+        addCount();
+        onClose();
+      });
+  };
 
   return (
     <Modal
@@ -28,18 +71,34 @@ const AddSupplierFactorModal = ({ open, onClose }) => {
 
       <Modal.Content>
         <Form className="rtl">
-          <Form.Group unstackable widths={2}>
+          <Form.Group unstackable widths={4}>
             <Form.Select
               fluid
               label="نوع ارز"
               options={options}
-              defaultValue={"toman"}
+              defaultValue={currency}
+              onChange={e => setCurrency(e.target.textContent)}
             />
             <Form.Input
               className="rtl text-right yekan placeholder-rtl"
               label="قیمت"
-              placeholder="0"
+              placeholder={price}
               type="number"
+              onChange={e => setPrice(e.target.value)}
+            />
+            <Form.Input
+              className="rtl text-right yekan placeholder-rtl"
+              label="شماره فاکتور"
+              placeholder={"شماره فاکتور"}
+              type="number"
+              onChange={e => setBillCode(e.target.value)}
+            />
+            <Form.Select
+              fluid
+              label="حالت فاکتور"
+              options={statusOptions}
+              defaultValue={status}
+              onChange={e => setStatus(e.target.textContent)}
             />
           </Form.Group>
           <Segment>
@@ -47,47 +106,18 @@ const AddSupplierFactorModal = ({ open, onClose }) => {
             <Divider />
             <div className="text-center padded">
               <Popup
-                pinned
-                content={
-                  <Card>
-                    <Card.Header>
-                      <Header className="text-right">افزودن آیتم جدید</Header>
-                    </Card.Header>
-                    <Card.Content>
-                      <Form>
-                        <Form.Input
-                          className="rtl text-right yekan placeholder-rtl"
-                          label="کد محصول"
-                          placeholder="0"
-                          type="number"
-                        />
-                        <Form.Input
-                          className="rtl text-right yekan placeholder-rtl"
-                          label="مقدار خریداری شده"
-                          placeholder="0"
-                          type="number"
-                        />
-                        <Form.Input
-                          className="rtl text-right yekan placeholder-rtl"
-                          label="قیمت"
-                          placeholder="0"
-                          type="number"
-                        />
-                        <div className="text-center">
-                          <Button.Group className="text-yekan text-center">
-                            <Button>بستن</Button>
-                            <Button.Or text="یا" />
-                            <Button positive>افزودن</Button>
-                          </Button.Group>
-                        </div>
-                      </Form>
-                    </Card.Content>
-                  </Card>
-                }
-                on="click"
+                wide="very"
+                content={<AddFactorItem onClose={togglePopupOpen} />}
                 position="top center"
+                open={popupOpen}
                 trigger={
-                  <Button circular icon="plus" color="green" size="huge" />
+                  <Button
+                    circular
+                    icon="add"
+                    color="green"
+                    size="huge"
+                    onClick={togglePopupOpen}
+                  />
                 }
               />
             </div>
@@ -105,6 +135,7 @@ const AddSupplierFactorModal = ({ open, onClose }) => {
           labelPosition="right"
           content="تایید"
           className="yekan"
+          onClick={() => addFactor(pk)}
         />
       </Modal.Actions>
     </Modal>

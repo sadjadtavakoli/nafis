@@ -48,7 +48,6 @@ class CashRegisterTable extends React.Component {
   };
   getActiveBills = (page = 1) => {
     this.props.getActiveBills(page).then(res => {
-      console.log(res);
       this.setState({
         fetch: true,
         totalPageCount: this.props.activeBills
