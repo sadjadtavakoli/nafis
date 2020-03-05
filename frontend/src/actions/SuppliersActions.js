@@ -5,7 +5,8 @@ import {
   GET_SUPPLIER_FACTORS,
   GET_SUPPLIER_FACTOR,
   DELETE_SUPPLIER_FACTOR,
-  ADD_SUPPLIER_FACTOR
+  ADD_SUPPLIER_FACTOR,
+  GET_PRODUCT_LIST
 } from "./types";
 import { server, putServer } from "../apis/server";
 
@@ -93,4 +94,11 @@ export const addSupplierFactor = (pk, data) => async dispatch => {
   );
   dispatch({ type: ADD_SUPPLIER_FACTOR, payload: response.data });
   return response;
+};
+
+export const getProductsByCode = (code, page = 1) => async dispatch => {
+  const response = await server(
+    localStorage.getItem("token")
+  ).get("/products/code/", { params: { code, page } });
+  dispatch({ type: GET_PRODUCT_LIST, payload: response.data });
 };

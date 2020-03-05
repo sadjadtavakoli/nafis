@@ -6,18 +6,24 @@ import {
   Segment,
   Header,
   Divider,
-  Popup
+  Popup,
+  Card,
+  Label,
+  Icon,
+  Message
 } from "semantic-ui-react";
 import { useDispatch } from "react-redux";
 import { addSupplierFactor } from "../../actions/SuppliersActions";
 import AddFactorItem from "./AddFactorItem";
+import { priceToPersian, enToFa } from "../utils/numberUtils";
 
 const AddSupplierFactorModal = ({ open, onClose, pk, addCount }) => {
   const [currency, setCurrency] = useState("ریال");
   const [price, setPrice] = useState(0);
   const [billCode, setBillCode] = useState(null);
-  const [status, setStatus] = useState("done");
+  const [status, setStatus] = useState("تسویه");
   const [popupOpen, setPopupOpen] = useState(false);
+  const [items, setItems] = useState([]);
 
   const options = [
     { text: "ریال", value: "ریال" },
@@ -28,27 +34,45 @@ const AddSupplierFactorModal = ({ open, onClose, pk, addCount }) => {
   ];
 
   const statusOptions = [
-    { text: "تسویه", value: "done" },
-    { text: "عدم تسویه", value: "remained" }
+    { text: "تسویه", value: "تسویه" },
+    { text: "عدم تسویه", value: "عدم تسویه" }
   ];
 
   const togglePopupOpen = () => {
     setPopupOpen(!popupOpen);
   };
 
+  const onSubmit = data => {
+    setItems([...items, data]);
+  };
+
+  useEffect(() => {
+    console.log("items", items);
+  }, [items]);
+
   const dispatch = useDispatch();
 
   const addFactor = pk => {
+    let _status = null;
+    if (status === "تسویه") {
+      _status = "done";
+    } else {
+      _status = "remained";
+    }
+
     let data = {
       currency,
       currency_price: price,
       items: null,
       bill_code: billCode,
-      status
+      status: _status,
+      items
     };
+
     if (!data.bill_code) {
       alert("شماره فاکتور نمیتواند خالی باشد");
     }
+
     dispatch(addSupplierFactor(pk, data))
       .then(() => {
         addCount();
@@ -58,6 +82,17 @@ const AddSupplierFactorModal = ({ open, onClose, pk, addCount }) => {
         addCount();
         onClose();
       });
+  };
+
+  const deleteItem = index => {
+    var confirm = window.confirm("آیا از حذف این قلم مطمئن هستید؟");
+    if (confirm) {
+      for (var i = 0; i < items.length; i++) {
+        if (i === index) {
+          items.splice(i, 1);
+        }
+      }
+    }
   };
 
   return (
@@ -107,7 +142,12 @@ const AddSupplierFactorModal = ({ open, onClose, pk, addCount }) => {
             <div className="text-center padded">
               <Popup
                 wide="very"
-                content={<AddFactorItem onClose={togglePopupOpen} />}
+                content={
+                  <AddFactorItem
+                    onClose={togglePopupOpen}
+                    onSubmit={onSubmit}
+                  />
+                }
                 position="top center"
                 open={popupOpen}
                 trigger={
@@ -121,6 +161,77 @@ const AddSupplierFactorModal = ({ open, onClose, pk, addCount }) => {
                 }
               />
             </div>
+            {items
+              ? items.map((item, index) => {
+                  return (
+                    <Card fluid key={index}>
+                      <Card.Content>
+                        <Card.Header className="yekan">
+                          {item.name}
+                          <span>
+                            <Label
+                              color="red"
+                              onClick={() => deleteItem(index)}
+                              className="pointer"
+                              style={{ marginRight: 10 }}
+                            >
+                              <Icon name="trash" /> حذف آیتم
+                            </Label>
+                          </span>
+                        </Card.Header>
+                        <Card.Description className="yekan">
+                          <Message compact size="mini" color="teal">
+                            داده های زیر صرفا جهت خواندن هستن و برای جلوگیری از
+                            اشتباهات انسانی قابل تغییر نمی باشند.{" "}
+                          </Message>
+                        </Card.Description>
+                      </Card.Content>
+                      <Card.Content extra>
+                        <Form>
+                          <Form.Group widths="equal">
+                            <Form.Input
+                              className="ltr placeholder-rtl text-yekan"
+                              readOnly
+                              fluid
+                              defaultValue={item.name}
+                              label="نام محصول"
+                            />
+                            <Form.Input
+                              className="ltr placeholder-rtl"
+                              readOnly
+                              fluid
+                              defaultValue={enToFa(item.code)}
+                              label="کد محصول"
+                              readOnly
+                            />
+                            <Form.Input
+                              className="ltr placeholder-rtl"
+                              readOnly
+                              fluid
+                              defaultValue={enToFa(item.selling_price)}
+                              label="قیمت واحد"
+                            />
+                            <Form.Input
+                              className="ltr placeholder-rtl"
+                              readOnly
+                              fluid
+                              defaultValue={enToFa(item.amount)}
+                              label={`مقدار(متر)`}
+                            />
+                            <Form.Radio
+                              toggle
+                              readOnly
+                              fluid
+                              defaultChecked={item.rejected}
+                              label="مرجوع"
+                            />
+                          </Form.Group>
+                        </Form>
+                      </Card.Content>
+                    </Card>
+                  );
+                })
+              : null}
           </Segment>
         </Form>
       </Modal.Content>

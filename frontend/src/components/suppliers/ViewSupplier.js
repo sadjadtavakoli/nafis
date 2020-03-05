@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Tab, Container, Segment, Grid } from "semantic-ui-react";
 import EditSupplier from "./EditSupplier";
 import SupplierFactor from "./SupplierFactor";
 import BackButton from "../utils/BackButton";
 
 const ViewSupplier = React.memo(() => {
+  
   const panes = [
     {
       menuItem: "ویرایش",
@@ -29,7 +30,11 @@ const ViewSupplier = React.memo(() => {
           </Grid.Column>
         </Grid>
       </Segment>
-      <Tab menu={{ secondary: true, pointing: true }} panes={panes} />
+      <Tab
+        menu={{ secondary: true, pointing: true }}
+        panes={panes}
+        defaultActiveIndex={1}
+      />
     </Container>
   );
 });

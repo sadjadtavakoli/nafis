@@ -20,6 +20,8 @@ import {
 } from "../../actions/SuppliersActions";
 import { digitToComma, enToFa } from "../utils/numberUtils";
 import { toastr } from "react-redux-toastr";
+import notFound from "../utils/notFound";
+import NotFound from "../utils/notFound";
 
 const EditFactor = () => {
   const [fetch, setFetch] = useState(false);
@@ -213,6 +215,7 @@ const EditFactor = () => {
             })}
         </Table.Body>
       </Table>
+      {fetch && !factor.items.length ? <NotFound /> : null}
     </Container>
   );
 };

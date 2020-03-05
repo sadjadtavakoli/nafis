@@ -4,8 +4,8 @@ import {
   ADD_SUPPLIER,
   GET_SUPPLIER_FACTORS,
   GET_SUPPLIER_FACTOR,
-  DELETE_SUPPLIER_FACTOR,
-  ADD_SUPPLIER_FACTOR
+  ADD_SUPPLIER_FACTOR,
+  GET_PRODUCT_LIST
 } from "../actions/types";
 
 const INITIAL_VALUES = {};
@@ -24,6 +24,8 @@ export default (state = INITIAL_VALUES, action) => {
       return { ...state, factor: action.payload };
     case ADD_SUPPLIER_FACTOR:
       return { ...state, factor: action.payload };
+    case GET_PRODUCT_LIST:
+      return { ...state, product: action.payload };
     default:
       return state;
   }

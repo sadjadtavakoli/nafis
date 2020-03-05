@@ -19,7 +19,6 @@ import LoadingBar from "../utils/loadingBar";
 import TableLabel from "../utils/tableLabelGenerator";
 import EditSupplier from "./EditSupplier";
 import AddSupplierModal from "./AddSupplierModal";
-import { enToFa } from "../utils/numberUtils";
 
 class Suppliers extends Component {
   state = {
@@ -190,7 +189,7 @@ class Suppliers extends Component {
                         style={{ borderLeft: "1px solid #ddd" }}
                       >
                         <TableLabel>1</TableLabel>
-                        {enToFa(item.pk)}
+                        <span id="norm-latin">{item.pk}</span>
                       </Table.Cell>
                       <Table.Cell collapsing>
                         <TableLabel>2</TableLabel>
@@ -206,13 +205,11 @@ class Suppliers extends Component {
                       </Table.Cell>
                       <Table.Cell collapsing>
                         <TableLabel>5</TableLabel>
-                        <span id="norm-latin">{enToFa(item.phone_number)}</span>
+                        <span id="norm-latin">{item.phone_number}</span>
                       </Table.Cell>
                       <Table.Cell collapsing>
                         <TableLabel>6</TableLabel>
-                        <span id="norm-latin">
-                          {enToFa(item.mobile_number)}
-                        </span>
+                        <span id="norm-latin">{item.mobile_number}</span>
                       </Table.Cell>
                       <Table.Cell collapsing>
                         <TableLabel>7</TableLabel>
