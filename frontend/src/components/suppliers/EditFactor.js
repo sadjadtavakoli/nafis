@@ -8,25 +8,28 @@ import {
   Card,
   Input,
   Dropdown,
-  Popup,
-  Form,
-  Header
+  Popup
 } from "semantic-ui-react";
 import BackButton from "../utils/BackButton";
 import { useSelector, useDispatch } from "react-redux";
 import {
   getSupplierFactor,
-  deleteFactorItem
+  deleteFactorItem,
+  addFactorItem
 } from "../../actions/SuppliersActions";
-import { digitToComma, enToFa } from "../utils/numberUtils";
+import { digitToComma } from "../utils/numberUtils";
 import { toastr } from "react-redux-toastr";
-import notFound from "../utils/notFound";
 import NotFound from "../utils/notFound";
+import AddFactorItem from "./AddFactorItem";
+import AddPaymentModal from "../cashRegister/AddPaymentModal";
 
 const EditFactor = () => {
   const [fetch, setFetch] = useState(false);
   const [currencyReadOnly, setCurrencyReadOnly] = useState(true);
   const [count, setCount] = useState(0);
+  const [popupOpen, setPopupOpen] = useState(false);
+  let [totalPrice, setTotalPrice] = useState(0);
+  const [openModal, setOpenModal] = useState(false);
 
   const pk = Number(window.location.href.split("/")[4]);
 
@@ -58,6 +61,34 @@ const EditFactor = () => {
       setFetch(true);
     });
   }, []);
+
+  const togglePopupOpen = () => {
+    setPopupOpen(!popupOpen);
+  };
+
+  const onSubmit = data => {
+    dispatch(addFactorItem(data))
+      .then(() => {
+        setCount(count + 1);
+        toastr.success("آیتم جدید با موفقیت ثبت شد");
+      })
+      .catch(() => {
+        toastr.error("خطا در عملیات اضافه کردن آیتم");
+      });
+  };
+
+  useEffect(() => {
+    fetch && console.log(factor);
+    fetch &&
+      factor.items.map(item => {
+        let i = Number(item.product.buying_price) * Number(item.amount);
+        setTotalPrice((totalPrice += i));
+      });
+  }, [fetch]);
+
+  const closeModal = () => {
+    setOpenModal(false);
+  };
 
   return (
     <Container>
@@ -152,22 +183,25 @@ const EditFactor = () => {
             <Table.HeaderCell>کد جنس</Table.HeaderCell>
             <Table.HeaderCell>
               <Popup
-                pinned
+                wide="very"
                 content={
-                  <Card>
-                    <Card.Header>
-                      <Header className="text-right">افزودن آیتم جدید</Header>
-                    </Card.Header>
-                    <Card.Content>
-                      <Form>
-                        <Form.Input />
-                      </Form>
-                    </Card.Content>
-                  </Card>
+                  <AddFactorItem
+                    onClose={togglePopupOpen}
+                    editFactor={true}
+                    onSubmit={onSubmit}
+                    pk={pk}
+                  />
                 }
-                on="click"
                 position="top center"
-                trigger={<Button circular icon="add" color="green" />}
+                open={popupOpen}
+                trigger={
+                  <Button
+                    circular
+                    icon="add"
+                    color="green"
+                    onClick={togglePopupOpen}
+                  />
+                }
               />
             </Table.HeaderCell>
           </Table.Row>
@@ -192,29 +226,74 @@ const EditFactor = () => {
                   <Table.Cell>{item.product.background_color.name}</Table.Cell>
                   <Table.Cell>{item.product.material.name}</Table.Cell>
                   <Table.Cell>{item.product.f_type.name}</Table.Cell>
-                  <Table.Cell>
-                    {enToFa(digitToComma(item.product.selling_price))}
+                  <Table.Cell id="norm-latin">
+                    {digitToComma(item.product.selling_price)}
                   </Table.Cell>
-                  <Table.Cell>
-                    {enToFa(
-                      digitToComma(
-                        Number(item.product.buying_price) * Number(item.amount)
-                      )
+                  <Table.Cell id="norm-latin">
+                    {digitToComma(
+                      Number(item.product.buying_price) * Number(item.amount)
                     )}
                   </Table.Cell>
-                  <Table.Cell>
-                    {enToFa(digitToComma(item.product.buying_price))}
+                  <Table.Cell id="norm-latin">
+                    {digitToComma(item.product.buying_price)}
                   </Table.Cell>
-                  <Table.Cell>{enToFa(item.product.stock_amount)}</Table.Cell>
-                  <Table.Cell>{enToFa(item.amount)}</Table.Cell>
-                  <Table.Cell>{item.product.name}</Table.Cell>
-                  <Table.Cell>{enToFa(item.product.code)}</Table.Cell>
-                  <Table.Cell>{enToFa(index + 1)}</Table.Cell>
+                  <Table.Cell id="norm-latin">
+                    {item.product.stock_amount}
+                  </Table.Cell>
+                  <Table.Cell id="norm-latin">{item.amount}</Table.Cell>
+                  <Table.Cell id="norm-latin">{item.product.name}</Table.Cell>
+                  <Table.Cell id="norm-latin">{item.product.code}</Table.Cell>
+                  <Table.Cell id="norm-latin">{index + 1}</Table.Cell>
                 </Table.Row>
               );
             })}
         </Table.Body>
       </Table>
+      <Grid>
+        <Grid.Column floated="right" width="3">
+          <Table
+            celled
+            className="text-right"
+            collapsing
+            style={{ minWidth: "200px" }}
+          >
+            <Table.Header>
+              <Table.Row>
+                <Table.Cell id="norm-latin">{totalPrice}</Table.Cell>
+                <Table.HeaderCell>جمع کل</Table.HeaderCell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell id="norm-latin">-</Table.Cell>
+                <Table.HeaderCell>تخفیف</Table.HeaderCell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell id="norm-latin">{totalPrice}</Table.Cell>
+                <Table.HeaderCell>قابل پرداخت</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+          </Table>
+        </Grid.Column>
+        <Grid.Column></Grid.Column>
+      </Grid>
+      &nbsp;
+      <hr color="#ddd" />
+      <div className="text-center padded">
+        <Button
+          circular
+          size="huge"
+          icon="arrow left"
+          onClick={() => window.history.back()}
+        />
+        <Button
+          circular
+          size="huge"
+          icon="plus"
+          color="teal"
+          onClick={() => setOpenModal(true)}
+        />
+        <Button circular size="huge" icon="check" color="green" />
+      </div>
+      <AddPaymentModal open={openModal} onClose={closeModal} />
       {fetch && !factor.items.length ? <NotFound /> : null}
     </Container>
   );

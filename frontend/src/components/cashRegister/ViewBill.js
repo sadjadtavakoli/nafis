@@ -324,7 +324,7 @@ class ViewBillModal extends React.Component {
                 })}
               </Table.Body>
             </Table>
-            <Grid reversed celled className={"ltr"}>
+            <Grid reversed celled className="ltr">
               <Grid.Row>
                 <Grid.Column className={"norm-latin text-right"} width={13}>
                   <span>{digitToComma(bill.price)}</span>

@@ -183,8 +183,9 @@ const SupplierFactor = ({ pk }) => {
           </React.Fragment>
         ) : null}
         {!fetch ? <LoadingBar /> : null}
-        {fetch && !factors.count ? <NotFound /> : null}
       </Table>
+
+      {fetch && !factors.count ? <NotFound /> : null}
 
       {openModal ? (
         <AddSupplierFactorModal

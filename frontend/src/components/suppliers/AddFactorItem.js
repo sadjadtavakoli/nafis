@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { getProductsByCode } from "../../actions/SuppliersActions";
 import { enToFa } from "../utils/numberUtils";
 
-const AddFactorItem = ({ onClose, onSubmit }) => {
+const AddFactorItem = ({ onClose, onSubmit, pk }) => {
   const [fetch, setFecth] = useState(false);
   const [code, setCode] = useState(null);
   const [amount, setAmount] = useState(null);
@@ -24,12 +24,12 @@ const AddFactorItem = ({ onClose, onSubmit }) => {
     } else {
       let data = {
         name: product.name,
-        code: product.code,
-        selling_price: product.selling_price,
-        code,
-        amount,
-        raw_price: rawPrice,
-        rejected
+        product: Number(product.code),
+        selling_price: Number(product.selling_price),
+        amount: Number(amount),
+        price: Number(rawPrice),
+        rejected,
+        bill: pk
       };
       onSubmit(data);
       onClose();

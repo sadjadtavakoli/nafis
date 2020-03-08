@@ -49,11 +49,13 @@ class AddPaymentModal extends React.Component {
       });
     });
   };
+
   componentDidMount() {
     this.setState({
       todayJalaali: enToFa(getTodayJalaali())
     });
   }
+  
   handleInputChange = (e, status) => {
     this.setState(
       {
@@ -121,6 +123,7 @@ class AddPaymentModal extends React.Component {
       });
     this.props.onClose();
   };
+
   setDate = (inputName, selectedDate) => {
     console.log(inputName, selectedDate);
     this.setState({
@@ -128,6 +131,7 @@ class AddPaymentModal extends React.Component {
       calendarIsOpen: false
     });
   };
+
   calendarIconRenderer = (status, title) => {
     return (
       <Icon

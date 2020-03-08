@@ -6,7 +6,8 @@ import {
   GET_SUPPLIER_FACTOR,
   DELETE_SUPPLIER_FACTOR,
   ADD_SUPPLIER_FACTOR,
-  GET_PRODUCT_LIST
+  GET_PRODUCT_LIST,
+  ADD_FACTOR_ITEM
 } from "./types";
 import { server, putServer } from "../apis/server";
 
@@ -85,6 +86,14 @@ export const deleteFactorItem = pk => async () => {
     `/supplier-bill-items/${pk}/`
   );
   return response;
+};
+
+export const addFactorItem = data => async dispatch => {
+  const response = await server(localStorage.getItem("token")).post(
+    `/supplier-bill-items/`,
+    data
+  );
+  dispatch({ type: ADD_FACTOR_ITEM, payload: response.data });
 };
 
 export const addSupplierFactor = (pk, data) => async dispatch => {
