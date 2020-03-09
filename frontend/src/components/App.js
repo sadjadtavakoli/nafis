@@ -12,7 +12,7 @@ import Depository from "./depository";
 import CashRegister from "./cashRegister";
 import PrintableFactor from "./factor";
 import Login from "./auth/login";
-import DailyReport from "./dailyReport";
+import DailyReport from "./cashRegister/DailyReport";
 import Reports from "./reports";
 import Customers from "./customerSection";
 import CustomerPage from "./customerSection/CustomerPage";

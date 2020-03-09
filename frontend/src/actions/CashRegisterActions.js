@@ -1,4 +1,9 @@
-import { GET_ACTIVE_BILL, GET_ONE_BILL, ADD_PAYMENT_TO_BILL } from "./types";
+import {
+  GET_ACTIVE_BILL,
+  GET_ONE_BILL,
+  ADD_PAYMENT_TO_BILL,
+  GET_DAILY_REPORT
+} from "./types";
 import { server } from "../apis/server";
 
 export const getActiveBills = (page = 1) => async dispatch => {
@@ -44,5 +49,13 @@ export const doneTheBill = (billID, sendSms) => async () => {
   const response = await server(
     localStorage.getItem("token")
   ).post(`/bills/${billID}/done/`, { send_message: sendSms });
+  return response;
+};
+
+export const getDailyReport = () => async dispatch => {
+  const response = await server(localStorage.getItem("token")).get(
+    "/bills/daily-report/"
+  );
+  dispatch({ type: GET_DAILY_REPORT, payload: response.data });
   return response;
 };
