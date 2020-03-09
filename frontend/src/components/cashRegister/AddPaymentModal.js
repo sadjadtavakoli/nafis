@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Dropdown, Button, Input, Modal, Icon } from "semantic-ui-react";
 import { addPaymentToBill } from "../../actions/CashRegisterActions";
+import { addPaymentToSupplierBill } from "../../actions/SuppliersActions";
 import { getTodayJalaali, toGregorian } from "../utils/jalaaliUtils";
 import { enToFa } from "../utils/numberUtils";
 import { toastr } from "react-redux-toastr";
 import SingleDatePickerModal from "../utils/SingleDatePickerModal";
 
-const AddPaymentModal = ({ open, onClose, price, pk, refetch }) => {
+const AddPaymentModal = ({ open, onClose, price, pk, refetch, editFactor }) => {
   const [inputNameForDatePicker, setInputNameForDatePicker] = useState(null);
   const [titleForDatePicker, setTitleForDatePicker] = useState(null);
   const [calendarIsOpen, setCalendarIsOpen] = useState(false);
@@ -59,7 +60,7 @@ const AddPaymentModal = ({ open, onClose, price, pk, refetch }) => {
         create_date: getTodayJalaali(),
         card_amount,
         cash_amount,
-        type: type
+        type
       };
     } else {
       let issue_date = convertToG(issueDate);
@@ -74,14 +75,28 @@ const AddPaymentModal = ({ open, onClose, price, pk, refetch }) => {
       };
     }
 
-    dispatch(addPaymentToBill(pk, prepareData))
-      .then(() => {
-        toastr.success("عملیات با موفقیت انجام شد");
-        refetch();
-      })
-      .catch(() => {
-        toastr.error("خطا در فرایند عملیات اضافه کردن پرداخت");
-      });
+    if (editFactor) {
+      dispatch(addPaymentToSupplierBill(pk, prepareData))
+        .then(() => {
+          toastr.success("عملیات با موفقیت انجام شد", "پرداخت جدید اضافه شد");
+          refetch();
+        })
+        .catch(() =>
+          toastr.error(
+            "خطا در فرایند عملیات",
+            "لطفا پس از بررسی مجدد دوباره امتحان کنید"
+          )
+        );
+    } else {
+      dispatch(addPaymentToBill(pk, prepareData))
+        .then(() => {
+          toastr.success("عملیات با موفقیت انجام شد");
+          refetch();
+        })
+        .catch(() => {
+          toastr.error("خطا در فرایند عملیات اضافه کردن پرداخت");
+        });
+    }
     onClose();
   };
 
@@ -93,7 +108,6 @@ const AddPaymentModal = ({ open, onClose, price, pk, refetch }) => {
   // };
 
   const calendarIconRenderer = (status, title) => {
-    
     return (
       <Icon
         style={{ paddingTop: "0.3em" }}

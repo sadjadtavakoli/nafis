@@ -6,7 +6,8 @@ import {
   GET_SUPPLIER_FACTOR,
   ADD_SUPPLIER_FACTOR,
   GET_PRODUCT_LIST,
-  ADD_FACTOR_ITEM
+  ADD_FACTOR_ITEM,
+  ADD_PAYMENT_TO_SUPPLIER_BILL
 } from "../actions/types";
 
 const INITIAL_VALUES = {};
@@ -29,6 +30,8 @@ export default (state = INITIAL_VALUES, action) => {
       return { ...state, product: action.payload };
     case ADD_FACTOR_ITEM:
       return { ...state, product: action.payload };
+    case ADD_PAYMENT_TO_SUPPLIER_BILL:
+      return { ...state, payment: action.payload };
     default:
       return state;
   }

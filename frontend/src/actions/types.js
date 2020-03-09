@@ -34,6 +34,7 @@ export const GET_SUPPLIER_FACTOR = "GET_SUPPLIER_FACTOR";
 export const DELETE_SUPPLIER_FACTOR = "DELETE_SUPPLIER_FACTOR";
 export const ADD_SUPPLIER_FACTOR = "ADD_SUPPLIER_FACTOR";
 export const ADD_FACTOR_ITEM = "ADD_FACTOR_ITEM";
+export const ADD_PAYMENT_TO_SUPPLIER_BILL = "ADD_PAYMENT_TO_SUPPLIER_BILL";
 
 // kari nadashte bashim
 export const FETCH = types => `FETCH_${types}`;
