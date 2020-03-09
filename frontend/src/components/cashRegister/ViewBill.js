@@ -40,7 +40,6 @@ const ViewBillModal = () => {
   const [editPoints, setEditPoints] = useState(false);
   const [toggle, setToggle] = useState(false);
   const [usedPoints, setUsedPoints] = useState(0);
-  const [count, setCount] = useState(0);
 
   const pk = window.location.pathname.split("/")[2];
 
@@ -62,7 +61,6 @@ const ViewBillModal = () => {
       });
       setFetch(true);
       setPays(bill && bill.payments.length ? true : false);
-      // points: this.props.theBill.buyer.points,
       setUsedPoints(bill && bill.usedPoints);
     });
   };
@@ -71,13 +69,13 @@ const ViewBillModal = () => {
 
   const toggleEditCustomerModal = () => {
     setOpenEditCustomer(!openEditCustomer);
-    setCount(count + 1);
+    getBill();
   };
 
-  const deletePayment = pk => {
+  const deletePaymentFunc = pk => {
     let confirm = window.confirm("آیا از حذف این پرداخت مطمئن هستید؟");
     if (confirm) {
-      deletePayment(pk)
+      dispatch(deletePayment(pk))
         .then(() => {
           getBill();
           toastr.success("پرداخت با موفقیت حذف شد");
@@ -105,7 +103,7 @@ const ViewBillModal = () => {
     updateBill(pk, { usedPoints: Number(usedPoints) })
       .then(() => {
         setEditPoints(false);
-        setCount(count + 1);
+        getBill();
         toastr.success("امتیاز با موفقیت اعمال شد");
       })
       .catch(() => {
@@ -117,6 +115,21 @@ const ViewBillModal = () => {
 
   return (
     <Container>
+      <Segment stacked className="rtl">
+        <Grid verticalAlign="middle">
+          <Grid.Column floated="right">
+            <h2 className="yekan">صندوق</h2>
+          </Grid.Column>
+          <Grid.Column floated="left">
+            <Button
+              circular
+              icon="left arrow"
+              onClick={() => window.history.back()}
+            />
+          </Grid.Column>
+        </Grid>
+      </Segment>
+
       {fetch ? (
         <Segment.Group className="rtl" style={{ padding: "10px" }}>
           <Grid>
@@ -190,7 +203,6 @@ const ViewBillModal = () => {
             <Grid.Column
               floated="left"
               className={"only-desktop"}
-              // mobile={16}
               width={2}
               style={{ paddingRight: 0 }}
             >
@@ -411,7 +423,7 @@ const ViewBillModal = () => {
                           labelPosition="right"
                           content="حذف"
                           size="mini"
-                          onClick={() => deletePayment(payment.pk)}
+                          onClick={() => deletePaymentFunc(payment.pk)}
                         />
                       </Table.Cell>
                     </Table.Row>
@@ -493,7 +505,7 @@ const ViewBillModal = () => {
               onClose={toggleAddPaymentModal}
               price={Number(bill.remaining_payment) - Number(usedPoints)}
               pk={bill.pk}
-              // refetch={getBill}
+              refetch={getBill}
             />
           )}
           {openEditCustomer && (
@@ -501,7 +513,7 @@ const ViewBillModal = () => {
               open={openEditCustomer}
               onClose={toggleEditCustomerModal}
               pk={bill.buyer.pk}
-              // madeChange={getBill}
+              madeChange={getBill}
             />
           )}
         </Segment.Group>
