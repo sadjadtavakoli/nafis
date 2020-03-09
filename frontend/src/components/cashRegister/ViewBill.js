@@ -40,16 +40,17 @@ const ViewBillModal = () => {
   const [editPoints, setEditPoints] = useState(false);
   const [toggle, setToggle] = useState(false);
   const [usedPoints, setUsedPoints] = useState(0);
-  const [count, setCount] = useState(0);
 
   const pk = window.location.pathname.split("/")[2];
 
   const bill = useSelector(state => state.cash.theBill);
   const dispatch = useDispatch();
 
-  const addCount = () => setCount(count + 1);
-
   useEffect(() => {
+    getBill();
+  }, [fetch]);
+
+  const getBill = () => {
     dispatch(getOneBill(pk)).then(() => {
       dispatch(getClassTypes()).then(res => {
         let customerTypes = res.data.customerTypes;
@@ -62,13 +63,13 @@ const ViewBillModal = () => {
       setPays(bill && bill.payments.length ? true : false);
       setUsedPoints(bill && bill.used_points);
     });
-  }, [count]);
+  };
 
   const toggleAddPaymentModal = () => setOpenAddPayment(!openAddPayment);
 
   const toggleEditCustomerModal = () => {
     setOpenEditCustomer(!openEditCustomer);
-    setCount(count + 1);
+    getBill();
   };
 
   const deletePaymentFunc = pk => {
@@ -77,7 +78,7 @@ const ViewBillModal = () => {
       dispatch(deletePayment(pk))
         .then(() => {
           toastr.success("پرداخت با موفقیت حذف شد");
-          setCount(count + 1);
+          getBill();
         })
         .catch(() => {
           toastr.error("خطا در حذف پرداختی");
@@ -102,7 +103,7 @@ const ViewBillModal = () => {
     updateBill(pk, { usedPoints: Number(usedPoints) })
       .then(() => {
         setEditPoints(false);
-        setCount(count + 1);
+        getBill();
         toastr.success("امتیاز با موفقیت اعمال شد");
       })
       .catch(() => {
@@ -504,7 +505,7 @@ const ViewBillModal = () => {
               onClose={toggleAddPaymentModal}
               price={Number(bill.remaining_payment) - Number(usedPoints)}
               pk={bill.pk}
-              refetch={addCount}
+              refetch={getBill}
             />
           )}
           {openEditCustomer && (
@@ -512,7 +513,7 @@ const ViewBillModal = () => {
               open={openEditCustomer}
               onClose={toggleEditCustomerModal}
               pk={bill.buyer.pk}
-              madeChange={addCount}
+              madeChange={getBill}
             />
           )}
         </Segment.Group>
