@@ -1,29 +1,48 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Dropdown, Button, Input, Modal, Icon } from "semantic-ui-react";
 import { addPaymentToBill } from "../../actions/CashRegisterActions";
+import { addPaymentToSupplierBill } from "../../actions/SuppliersActions";
 import { getTodayJalaali, toGregorian } from "../utils/jalaaliUtils";
 import { enToFa } from "../utils/numberUtils";
 import { toastr } from "react-redux-toastr";
 import SingleDatePickerModal from "../utils/SingleDatePickerModal";
 
-const AddPaymentModal = ({ open, onClose, price, pk, refetch }) => {
+const AddPaymentModal = ({ open, onClose, price, pk, refetch, editFactor }) => {
   const [inputNameForDatePicker, setInputNameForDatePicker] = useState(null);
   const [titleForDatePicker, setTitleForDatePicker] = useState(null);
   const [calendarIsOpen, setCalendarIsOpen] = useState(false);
   const [todayJalaali, setTodayJalaali] = useState(null);
-  const paymentOptions = [
-    {
-      key: "cheque",
-      text: "چک",
-      value: "cheque"
-    },
-    {
-      key: "card",
-      text: "نقد و کارت",
-      value: "cash_card"
-    }
-  ];
+  const paymentOptions = !editFactor
+    ? [
+        {
+          key: "cheque",
+          text: "چک",
+          value: "cheque"
+        },
+        {
+          key: "card",
+          text: "نقد و کارت",
+          value: "cash_card"
+        }
+      ]
+    : [
+        {
+          key: "cheque",
+          text: "چک",
+          value: "cheque"
+        },
+        {
+          key: "cash",
+          text: "نقد",
+          value: "cash"
+        },
+        {
+          key: "card",
+          text: "کارت",
+          value: "card"
+        }
+      ];
   const [cardAmount, setCardAmount] = useState(price);
   const [cashAmount, setCashAmount] = useState(0);
   const [disableButton, setDisableButton] = useState(false);
@@ -52,36 +71,76 @@ const AddPaymentModal = ({ open, onClose, price, pk, refetch }) => {
 
   const handleSubmit = () => {
     let prepareData = {};
-    if (type === "cash_card") {
-      let card_amount = Number(cardAmount);
-      let cash_amount = Number(cashAmount);
-      prepareData = {
-        create_date: getTodayJalaali(),
-        card_amount,
-        cash_amount,
-        type: type
-      };
-    } else {
+    if (editFactor) {
       let issue_date = convertToG(issueDate);
       let expiry_date = convertToG(expiryDate);
-      prepareData = {
-        amount: chequeAmount,
-        number: chequeNumber,
-        bank,
-        issue_date,
-        expiry_date,
-        type
-      };
+      if (type === "cash") {
+        prepareData = {
+          amount: cashAmount,
+          type
+        };
+      }
+      if (type === "card") {
+        prepareData = {
+          amount: cardAmount,
+          type
+        };
+      }
+      if (type === "cheque") {
+        prepareData = {
+          bank,
+          issue_date,
+          expiry_date,
+          number: chequeNumber
+        };
+      }
+    } else {
+      if (type === "cash_card") {
+        let card_amount = Number(cardAmount);
+        let cash_amount = Number(cashAmount);
+        prepareData = {
+          create_date: getTodayJalaali(),
+          card_amount,
+          cash_amount,
+          type
+        };
+      }
+      if (type === "cheque") {
+        let issue_date = convertToG(issueDate);
+        let expiry_date = convertToG(expiryDate);
+        prepareData = {
+          amount: chequeAmount,
+          number: chequeNumber,
+          bank,
+          issue_date,
+          expiry_date,
+          type
+        };
+      }
     }
 
-    dispatch(addPaymentToBill(pk, prepareData))
-      .then(() => {
-        toastr.success("عملیات با موفقیت انجام شد");
-        refetch();
-      })
-      .catch(() => {
-        toastr.error("خطا در فرایند عملیات اضافه کردن پرداخت");
-      });
+    if (editFactor) {
+      dispatch(addPaymentToSupplierBill(pk, prepareData))
+        .then(() => {
+          toastr.success("عملیات با موفقیت انجام شد", "پرداخت جدید اضافه شد");
+          refetch();
+        })
+        .catch(() =>
+          toastr.error(
+            "خطا در فرایند عملیات",
+            "لطفا پس از بررسی مجدد دوباره امتحان کنید"
+          )
+        );
+    } else {
+      dispatch(addPaymentToBill(pk, prepareData))
+        .then(() => {
+          toastr.success("عملیات با موفقیت انجام شد");
+          refetch();
+        })
+        .catch(() => {
+          toastr.error("خطا در فرایند عملیات اضافه کردن پرداخت");
+        });
+    }
     onClose();
   };
 
@@ -93,7 +152,6 @@ const AddPaymentModal = ({ open, onClose, price, pk, refetch }) => {
   // };
 
   const calendarIconRenderer = (status, title) => {
-    
     return (
       <Icon
         style={{ paddingTop: "0.3em" }}
@@ -222,6 +280,38 @@ const AddPaymentModal = ({ open, onClose, price, pk, refetch }) => {
                 />
                 {calendarIconRenderer("expiry_date", "تاریخ اعتبار")}
               </div>
+            </React.Fragment>
+          )}
+
+          {type === "cash" && (
+            <React.Fragment>
+              <h5 className="yekan">
+                مبلغ پرداختی کارتی&nbsp;
+                <span style={{ fontWeight: "bold", color: "red" }}>*</span>
+              </h5>
+              <Input
+                fluid
+                className="ltr"
+                type="number"
+                defaultValue={price}
+                onChange={e => setCashAmount(e.target.value)}
+              />
+            </React.Fragment>
+          )}
+
+          {type === "card" && (
+            <React.Fragment>
+              <h5 className="yekan">
+                مبلغ پرداختی کارتی&nbsp;
+                <span style={{ fontWeight: "bold", color: "red" }}>*</span>
+              </h5>
+              <Input
+                fluid
+                className="ltr"
+                type="number"
+                defaultValue={price}
+                onChange={e => setCardAmount(e.target.value)}
+              />
             </React.Fragment>
           )}
 

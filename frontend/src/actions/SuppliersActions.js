@@ -7,7 +7,8 @@ import {
   DELETE_SUPPLIER_FACTOR,
   ADD_SUPPLIER_FACTOR,
   GET_PRODUCT_LIST,
-  ADD_FACTOR_ITEM
+  ADD_FACTOR_ITEM,
+  ADD_PAYMENT_TO_SUPPLIER_BILL
 } from "./types";
 import { server, putServer } from "../apis/server";
 
@@ -110,4 +111,20 @@ export const getProductsByCode = (code, page = 1) => async dispatch => {
     localStorage.getItem("token")
   ).get("/products/code/", { params: { code, page } });
   dispatch({ type: GET_PRODUCT_LIST, payload: response.data });
+};
+
+export const addPaymentToSupplierBill = (pk, data) => async dispatch => {
+  const response = await server(localStorage.getItem("token")).post(
+    `/supplier-bill/${pk}/add-payment/`,
+    data
+  );
+  dispatch({ type: ADD_PAYMENT_TO_SUPPLIER_BILL, payload: response.data });
+  return response;
+};
+
+export const deletePayment = pk => async () => {
+  const response = await server(localStorage.getItem("token")).delete(
+    `/payments/${pk}/`
+  );
+  return response;
 };
