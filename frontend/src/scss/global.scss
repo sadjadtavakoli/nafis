@@ -132,6 +132,9 @@ div[role="combobox"] {
 .d-flex {
   display: flex !important;
 }
+.d-inline-flex {
+  display: inline-flex !important;
+}
 .d-none {
   display: none;
 }
@@ -336,7 +339,10 @@ label {
 .blurring.dimmed.dimmable > .popup:not(.dimmer) {
   filter: unset !important;
 }
-
+.bg-table {
+  background: #f9fafb;
+  font-weight: bold;
+}
 #customer {
   font-family: yekan;
   text-align: right;

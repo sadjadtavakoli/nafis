@@ -3,12 +3,14 @@ import { connect } from "react-redux";
 import { Table, Pagination, Button, Icon, Popup } from "semantic-ui-react";
 import { getActiveBill } from "../../actions/SaleActions";
 import { digitToComma, phoneNumberBeautifier } from "../utils/numberUtils";
-import { standardTimeToJalaali } from "../utils/jalaaliUtils";
-import InformationModal from "./informationModal";
+import { standardTimeToJalaali, convertToJalaali } from "../utils/jalaaliUtils";
+import InformationModal from "./informationPage";
 import LoadingBar from "../utils/loadingBar";
 import NotFound from "../utils/notFound";
 import TableLabel from "../utils/tableLabelGenerator";
 import NewBillPopup from "./newBillPopup";
+import history from "../../history";
+import RepeatButton from "../utils/RepeatButton";
 
 const colSpan = 7;
 
@@ -47,6 +49,7 @@ class BillTable extends React.Component {
           ? Math.ceil(this.props.activeBill.count / 25)
           : 0
       });
+      console.log("active bill", this.props.activeBill);
     });
   };
 
@@ -86,53 +89,57 @@ class BillTable extends React.Component {
     }
     // ---
 
-    // Render Not Found
-    if (!this.state.activeBill.length && !this.state.firstTime) {
-      return <NotFound />;
-    }
-    // ---
-
     return (
       <React.Fragment>
         <Table celled striped>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell colSpan={colSpan} className="rtl text-right">
-                <h3 className="yekan">لیست فاکتور های فعال</h3>
+                <h3 className="yekan">
+                  لیست فاکتور های فعال
+                  <RepeatButton
+                    onClick={() => this.getActiveBill(this.state.activePage)}
+                  />
+                </h3>
               </Table.HeaderCell>
             </Table.Row>
-            <Table.Row>
-              <Table.HeaderCell className="text-center">
-                عملیات
-              </Table.HeaderCell>
-              <Table.HeaderCell className="text-center">
-                <TableLabel>6</TableLabel>
-                تعداد پرداختی ها
-              </Table.HeaderCell>
-              <Table.HeaderCell className="text-center">
-                <TableLabel>5</TableLabel>
-                تاریخ ثبت
-              </Table.HeaderCell>
-              <Table.HeaderCell className="text-center">
-                <TableLabel>4</TableLabel>
-                مبلغ کل
-              </Table.HeaderCell>
-              <Table.HeaderCell className="text-center">
-                <TableLabel>3</TableLabel>
-                مبلغ نهایی
-              </Table.HeaderCell>
-              <Table.HeaderCell className="text-center">
-                <TableLabel>2</TableLabel>
-                تخفیف کل
-              </Table.HeaderCell>
-              <Table.HeaderCell className="text-center">
-                <TableLabel>1</TableLabel>
-                شماره تلفن خریدار
-              </Table.HeaderCell>
-            </Table.Row>
+            {this.state.activeBill && this.state.activeBill.length > 0 ? (
+              <Table.Row>
+                <Table.HeaderCell className="text-center">
+                  عملیات
+                </Table.HeaderCell>
+                <Table.HeaderCell className="text-center">
+                  <TableLabel>6</TableLabel>
+                  تعداد پرداختی ها
+                </Table.HeaderCell>
+                <Table.HeaderCell className="text-center">
+                  <TableLabel>5</TableLabel>
+                  تاریخ ثبت
+                </Table.HeaderCell>
+                <Table.HeaderCell className="text-center">
+                  <TableLabel>4</TableLabel>
+                  مبلغ کل
+                </Table.HeaderCell>
+                <Table.HeaderCell className="text-center">
+                  <TableLabel>3</TableLabel>
+                  مبلغ نهایی
+                </Table.HeaderCell>
+                <Table.HeaderCell className="text-center">
+                  <TableLabel>2</TableLabel>
+                  تخفیف کل
+                </Table.HeaderCell>
+                <Table.HeaderCell className="text-center">
+                  <TableLabel>1</TableLabel>
+                  شماره تلفن خریدار
+                </Table.HeaderCell>
+              </Table.Row>
+            ) : null}
           </Table.Header>
 
           <Table.Body>
+            {!this.state.activeBill.length && !this.state.firstTime ? (
+              <NotFound />
+            ) : null}
             {this.state.activeBill.map((item, index) => {
               return (
                 <Table.Row key={index}>
@@ -171,7 +178,9 @@ class BillTable extends React.Component {
                     />
 
                     <Button
-                      onClick={() => this.openInformationModal(item)}
+                      onClick={() => {
+                        history.push(`/information/${item.pk}`);
+                      }}
                       icon
                       className="m-1 yekan"
                       labelPosition="right"

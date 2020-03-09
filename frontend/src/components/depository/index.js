@@ -35,9 +35,7 @@ class Depository extends React.Component {
     });
   };
   getProductsByFilter = filterParams => {
-    this.props.getProductsByFilter(filterParams).then(response => {
-      console.log("response", response.data);
-    });
+    this.props.getProductsByFilter(filterParams);
   };
   render() {
     return (

@@ -220,7 +220,8 @@ class BillsViewSet(NafisBase, ModelViewSet):
             total_cheque_paid += bill.cheque_paid
             total_cash_paid += bill.cash_paid
             total_card_paid += bill.card_paid
-            reminded_payments += bill.remaining_payment
+            if bill.status == "remained":
+                reminded_payments += bill.remaining_payment
         data['bills_data'] = BillSerializer(bills, many=True).data
         data['total_profit'] = total_benefit
         data['total_discount'] = total_discount
@@ -306,7 +307,9 @@ class BillItemViewSet(NafisBase, ModelViewSet):
         bill_item_product = self.get_object().product
         bill_item_amount = self.get_object().amount
         if bill.seller.username != request.user.username or bill.status != "active":
-            raise PermissionDenied
+            staff = Staff.objects.get(username=request.user.username)
+            if staff.job != "admin":
+                raise PermissionDenied
         super(BillItemViewSet, self).destroy(request, *args, **kwargs)
         bill_item_product.update_stock_amount(-1 * (bill_item_amount + 0.05))
         serializer = BillSerializer(bill)
@@ -457,31 +460,6 @@ class SupplierBillsViewSet(NafisBase, ModelViewSet):
 
         data = SupplierBillSerializer(SupplierBill.objects.get(pk=bill.pk)).data
         return Response(data, status=status.HTTP_201_CREATED)
-
-    # def create(self, request, *args, **kwargs):
-    #     data = self.request.data
-    #     items = data.get('items')
-    #     supplier = data.get('supplier')
-    #     bill_code = data.get('bill_code')
-    #     currency_price = data.get('currency_price', 1)
-    #     currency = data.get('currency', 'ریال')
-    #
-    #     bill = SupplierBill.objects.create(supplier=supplier, currency_price=currency_price, currency=currency,
-    #                                        bill_code=bill_code)
-    #
-    #     for item in items:
-    #         product_code = item['product']
-    #         try:
-    #             product = Product.objects.get(code=product_code)
-    #         except ObjectDoesNotExist:
-    #             raise ValidationError('محصولی با کد‌ {} وجود ندارد.'.format(product_code))
-    #         amount = item['amount']
-    #         raw_price = item.get('price', 0)
-    #         SupplierBillItem.objects.create(product=product, amount=amount, bill=bill, raw_price=raw_price)
-    #
-    #     serializer = self.get_serializer(bill)
-    #     headers = self.get_success_headers(serializer.data)
-    #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class SupplierBillItemViewSet(NafisBase, ModelViewSet):

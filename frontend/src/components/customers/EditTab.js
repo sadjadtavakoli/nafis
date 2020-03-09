@@ -1,16 +1,19 @@
 import React, { Component } from "react";
-import { Form, Button } from "semantic-ui-react";
+import { Form, Button, Icon } from "semantic-ui-react";
 import { connect } from "react-redux";
 import {
   getACustomer,
   updateCustomer,
   getClassTypes
-} from "../../actions/CustomerSectionActions";
+} from "../../actions/CustomersActions";
 import { toastr } from "react-redux-toastr";
 import history from "../../history";
-
+import SingleDatePickerModal from "../utils/SingleDatePickerModal";
 class EditTab extends Component {
   state = {
+    inputNameForDatePicker: "",
+    titleForDatePicker: "",
+    calendarIsOpen: false,
     pk: null,
     first_name: null,
     last_name: null,
@@ -53,6 +56,7 @@ class EditTab extends Component {
 
   getCustomerInfo = () => {
     this.props.getACustomer(this.props.passingPk).then(() => {
+      console.log(this.props.theCustomer.city);
       this.setState({
         pk: this.props.passingPk,
         first_name: this.props.theCustomer.first_name,
@@ -72,7 +76,7 @@ class EditTab extends Component {
     this.props.getClassTypes().then(() => {
       this.setState({
         city_options: this.props.cityAndClass.cities,
-        class_tpye_options: this.props.cityAndClass.customerTypes
+        class_type_options: this.props.cityAndClass.customerTypes
       });
     });
   };
@@ -92,7 +96,9 @@ class EditTab extends Component {
   handleChange = (status, e) => {
     this.setState({
       [status]: e.target.value,
-      anyChange: true
+      [`${status}_e`]: false,
+      anyChange: true,
+      hasError: false
     });
   };
 
@@ -148,11 +154,15 @@ class EditTab extends Component {
         points: this.state.points,
         class_type: this.state.class_type
       };
+      console.log(prepareData);
       this.props
         .updateCustomer(this.state.pk, prepareData)
         .then(() => {
           toastr.success(".عملیات ویرایش با موفقیت انجام شد");
           this.getCustomerInfo();
+          if (this.props.onClose != undefined) {
+            this.props.onClose();
+          }
         })
         .catch(() => {
           toastr.error(".عملیات ویرایش موفقیت آمیز نبود");
@@ -177,82 +187,145 @@ class EditTab extends Component {
     });
   };
 
-  createInput = (status, title) => {
+  createInput = (status, title, hasDatePicker = false) => {
     let convert = this.convertStatus(status);
     let convertE = this.convertStatusE(status);
     return (
-      <Form.Input
-        className={`text-right`}
-        label={title}
-        onChange={e => this.handleChange(status, e)}
-        onSelect={() => this.handleSelect(status)}
-        onBlur={() => this.handleBlur(status)}
-        defaultValue={this.state[convert] ? null : this.state[status]}
-        placeholder={this.state[convert] ? this.state[status] : null}
-        error={this.state[convertE]}
-        readOnly={
-          status === "phone_number" || status === "points"
-            ? localStorage.getItem("type") === "cashier"
-              ? true
-              : false
-            : false
-        }
-      />
+      <React.Fragment>
+        <Form.Input
+          className={`text-right`}
+          label={title}
+          onChange={e => this.handleChange(status, e)}
+          // onSelect={() => this.handleSelect(status)}
+          onBlur={() => this.handleBlur(status)}
+          defaultValue={this.state[convert] ? null : this.state[status]}
+          placeholder={this.state[convert] ? this.state[status] : null}
+          error={this.state[convertE]}
+          readOnly={
+            hasDatePicker ||
+            (status === "phone_number" || status === "points"
+              ? localStorage.getItem("type") === "cashier"
+                ? true
+                : false
+              : false)
+          }
+        />
+        {hasDatePicker ? (
+          <Icon
+            style={{ margin: "auto", paddingTop: "0.4em" }}
+            onClick={() => {
+              this.setState(
+                {
+                  inputNameForDatePicker: status,
+                  anyChange: true,
+                  titleForDatePicker: `انتخاب ${title}`
+                },
+                () => {
+                  this.handleCalendarClick(true);
+                }
+              );
+            }}
+            name="calendar alternate outline"
+            color="teal"
+            size="big"
+            className="date-picker-icon"
+          />
+        ) : null}
+      </React.Fragment>
     );
   };
-
+  selectOnChange = (e, { name, value }) => {
+    let status = this.convertSelect(name);
+    this.setState({
+      ...this.state,
+      [status]: value,
+      anyChange: true
+    });
+  };
   createSelect = (status, title) => {
     let convertSelect = this.convertSelect(status);
+    console.log(convertSelect, this.state[convertSelect]);
     return (
       <Form.Select
+        name={status}
         search
         selection
         fluid
         className="text-right"
         label={title}
         placeholder={title}
+        onChange={this.selectOnChange}
         options={this.state[status]}
+        value={this.state[convertSelect]}
         defaultValue={this.state[convertSelect]}
       />
     );
   };
-
+  setDate = (inputName, selectedDate) => {
+    console.log(inputName, selectedDate);
+    this.setState({
+      [inputName]: selectedDate,
+      calendarIsOpen: false
+    });
+  };
+  handleCalendarClick = status => {
+    this.setState({
+      calendarIsOpen: status
+    });
+  };
   render() {
     return (
       <div className="rtl text-right">
         <Form>
+          <SingleDatePickerModal
+            title={this.state.titleForDatePicker}
+            onClose={() => this.handleCalendarClick(false)}
+            isOpen={this.state.calendarIsOpen}
+            inputName={this.state.inputNameForDatePicker}
+            setDate={this.setDate}
+          />
           <Form.Group unstackable widths={2}>
             {this.createInput("first_name", "نام")}
             {this.createInput("last_name", "نام خانوداگی")}
           </Form.Group>
+          {!this.props.fromCashregister ? (
+            <Form.Group unstackable widths={2}>
+              {this.createInput("email", "ایمیل")}
+              {this.createInput("address", "آدرس")}
+            </Form.Group>
+          ) : null}
           <Form.Group unstackable widths={2}>
-            {this.createInput("email", "ایمیل")}
             {this.createInput("phone_number", "شماره تلفن")}
-          </Form.Group>
-          <Form.Group unstackable widths={2}>
-            {this.createInput("address", "آدرس")}
             {this.createSelect("city_options", "شهر")}
           </Form.Group>
           <Form.Group unstackable widths={2}>
-            {this.createInput("birth_date", "تاریخ تولد")}
-            {this.createInput("marriage_date", "تاریخ ازدواج")}
+            {this.createInput("birth_date", "تاریخ تولد", true)}
+            {this.createInput("marriage_date", "تاریخ ازدواج", true)}
           </Form.Group>
-          <Form.Group unstackable widths={2}>
-            {this.createInput("points", "امتیاز مشتری")}
-            {this.createSelect("class_type_options", "کلاس")}
-          </Form.Group>
+          {!this.props.fromCashregister ? (
+            <Form.Group unstackable widths={2}>
+              {this.createInput("points", "امتیاز مشتری")}
+              {this.createSelect("class_type_options", "کلاس")}
+            </Form.Group>
+          ) : null}
           <Button
             onClick={this.handleSubmit}
             disabled={this.state.anyChange ? false : true}
             color={this.state.hasError ? "red" : "green"}
+            icon="checkmark"
+            labelPosition="right"
             content="اعمال"
             className="yekan"
           />
           <Button
             className="yekan"
-            content="بازگشت"
+            content={this.props.fromCashregister ? "بستن" : "بازگشت"}
             onClick={() => {
-              history.push("/customers/");
+              if (this.props.onClose != undefined) {
+                this.props.onClose();
+              } else {
+                history.push("/customers/");
+              }
             }}
           />
         </Form>

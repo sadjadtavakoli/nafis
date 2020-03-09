@@ -1,4 +1,4 @@
-import { GET_ACTIVE_BILL, ADD_BILL, UPDATE_BILL_ITEM } from "./types";
+import { GET_ACTIVE_BILL, ADD_BILL } from "./types";
 import server, { putServer } from "../apis/server";
 
 export const getActiveBill = (page = 1) => async dispatch => {
@@ -8,7 +8,7 @@ export const getActiveBill = (page = 1) => async dispatch => {
   dispatch({ type: GET_ACTIVE_BILL, payload: response.data });
 };
 
-export const getCustomerByPhoneNumber = phone_number => async dispatch => {
+export const getCustomerByPhoneNumber = phone_number => async () => {
   return await server(localStorage.getItem("token")).get("/customers/phone/", {
     params: { phone_number }
   });
@@ -22,24 +22,23 @@ export const setNewBill = data => async dispatch => {
   dispatch({ type: ADD_BILL, payload: response.data });
 };
 
-export const updateBill = (pk, data) => async dispatch => {
+export const updateBill = (pk, data) => async () => {
   return await putServer(localStorage.getItem("token"), `/bills/${pk}/`, data);
 };
 
-export const addNewItem = (pk, data) => async dispatch => {
+export const addNewItem = data => async () => {
   return await server(localStorage.getItem("token")).post(`/bill-items/`, data);
 };
 
-export const updateBillItem = (pk, data) => async dispatch => {
+export const updateBillItem = (pk, data) => async () => {
   const response = await server(localStorage.getItem("token")).patch(
     `/bill-items/${pk}/`,
     data
   );
-  dispatch({ type: "UPDATE_BILL_ITEM", payload: response.data });
   return response;
 };
 
-export const deleteItem = pk => async dispatch => {
+export const deleteItem = pk => async () => {
   const response = await server(localStorage.getItem("token")).delete(
     `/bill-items/${pk}/`
   );

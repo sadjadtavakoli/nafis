@@ -9,7 +9,7 @@ const panes = pk => [
     menuItem: "پروفایل",
     render: () => (
       <Tab.Pane attached={false}>
-        <EditTab passingPk={pk} />
+        <EditTab passingPk={pk} showActionButtons={true} />
       </Tab.Pane>
     )
   },

@@ -54,8 +54,6 @@ class Suppliers extends Component {
     ) {
       this.getSuppliers(this.state.activePage);
     }
-    console.log("prevProps", prevProps.newSupplier);
-    console.log("props", this.props.newSupplier);
   }
 
   handleClick = pk => {

@@ -1,9 +1,7 @@
-export const reverseObject = (object) => {
-  console.log('reverseObject', typeof object)
+export const reverseObject = object => {
   var newObject = {};
   var keys = [];
-  if (!object)
-    return keys;
+  if (!object) return keys;
 
   for (var key in object) {
     keys.push(key);

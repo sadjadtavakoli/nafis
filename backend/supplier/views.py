@@ -45,8 +45,9 @@ class SupplierViewSet(NafisBase, ModelViewSet):
         currency_price = data.get('currency_price', 1)
         currency = data.get('currency', 'ریال')
         bill_code = data.get('bill_code')
+        statuss = data.get('status', 'remained')
         bill = SupplierBill.objects.create(supplier=supplier, currency_price=currency_price, currency=currency,
-                                           bill_code=bill_code)
+                                           bill_code=bill_code, status=statuss)
 
         for item in items:
             product_code = item['product']

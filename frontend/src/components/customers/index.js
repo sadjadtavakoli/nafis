@@ -6,7 +6,7 @@ import {
   deleteCustomer,
   getCustomerBySearch,
   getCustomerUsers
-} from "../../actions/CustomerSectionActions";
+} from "../../actions/CustomersActions";
 import { toastr } from "react-redux-toastr";
 import LoadingBar from "../utils/loadingBar";
 import TableLabel from "../utils/tableLabelGenerator";
@@ -124,8 +124,6 @@ class Customers extends Component {
           this.props
             .getCustomerBySearch(this.state.value)
             .then(res => {
-              console.log("response ast", res.data.length);
-
               this.setState({
                 notFound: res.data.length === 0,
                 customers: this.props.usersCustomers,
@@ -243,15 +241,8 @@ class Customers extends Component {
                   );
                 })
               : null}
-
             {this.state.loading ? <LoadingBar /> : null}
-
             {this.state.notFound ? <NotFound /> : null}
-            {/* {this.props.usersCustomers &&
-            this.props.usersCustomers.results &&
-            this.props.usersCustomers.results.length === 0 ? (
-              <NotFound />
-            ) : null} */}
           </Table.Body>
           {this.props.usersCustomers && this.props.usersCustomers.count > 25 ? (
             <Table.Footer>
