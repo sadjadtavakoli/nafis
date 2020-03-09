@@ -331,7 +331,6 @@ class FactorsTab extends Component {
             </Table.Row>
           </Table.Footer>
         ) : null}
-        {console.log(this.props.allBills)}
       </Table>
     );
   };

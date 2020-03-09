@@ -56,7 +56,6 @@ class EditTab extends Component {
 
   getCustomerInfo = () => {
     this.props.getACustomer(this.props.passingPk).then(() => {
-      console.log(this.props.theCustomer.city);
       this.setState({
         pk: this.props.passingPk,
         first_name: this.props.theCustomer.first_name,
@@ -154,13 +153,12 @@ class EditTab extends Component {
         points: this.state.points,
         class_type: this.state.class_type
       };
-      console.log(prepareData);
       this.props
         .updateCustomer(this.state.pk, prepareData)
         .then(() => {
           toastr.success(".عملیات ویرایش با موفقیت انجام شد");
           this.getCustomerInfo();
-          if (this.props.onClose != undefined) {
+          if (this.props.onClose !== undefined) {
             this.props.onClose();
           }
         })
@@ -244,7 +242,6 @@ class EditTab extends Component {
   };
   createSelect = (status, title) => {
     let convertSelect = this.convertSelect(status);
-    console.log(convertSelect, this.state[convertSelect]);
     return (
       <Form.Select
         name={status}
@@ -262,7 +259,6 @@ class EditTab extends Component {
     );
   };
   setDate = (inputName, selectedDate) => {
-    console.log(inputName, selectedDate);
     this.setState({
       [inputName]: selectedDate,
       calendarIsOpen: false
@@ -321,7 +317,7 @@ class EditTab extends Component {
             className="yekan"
             content={this.props.fromCashregister ? "بستن" : "بازگشت"}
             onClick={() => {
-              if (this.props.onClose != undefined) {
+              if (this.props.onClose !== undefined) {
                 this.props.onClose();
               } else {
                 history.push("/customers/");

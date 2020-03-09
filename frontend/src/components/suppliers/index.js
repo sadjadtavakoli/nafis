@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getSuppliersAction } from "../../actions/SuppliersActions";
+import {
+  getSuppliersAction,
+  getSupplierBySearch
+} from "../../actions/SuppliersActions";
 import {
   Table,
   Grid,
@@ -14,7 +17,7 @@ import NotFound from "../utils/notFound";
 import history from "../../history";
 import LoadingBar from "../utils/loadingBar";
 import TableLabel from "../utils/tableLabelGenerator";
-import Supplier from "./Supplier";
+import EditSupplier from "./EditSupplier";
 import AddSupplierModal from "./AddSupplierModal";
 
 class Suppliers extends Component {
@@ -26,16 +29,17 @@ class Suppliers extends Component {
     loading: true,
     pk: null,
     viewButtonClick: false,
-    notFound: false
+    notFound: false,
+    searchLoading: false
   };
 
   componentDidMount() {
     this.getSuppliers();
   }
 
-  getSuppliers = () => {
+  getSuppliers = (page = 1) => {
     this.props
-      .getSuppliersAction()
+      .getSuppliersAction(page)
       .then(() => {
         this.setState({
           allSuppliers: this.props.allSuppliers.results,
@@ -70,34 +74,66 @@ class Suppliers extends Component {
     this.setState({ open: false });
   };
 
+  handleSearchChange = (_, { value }) => {
+    this.setState({ notFound: false, searchLoading: true, value }, () => {
+      setTimeout(() => {
+        if (this.state.value.length < 1) {
+          this.getSuppliers(this.state.activePage);
+        } else {
+          this.props
+            .getSupplierBySearch(this.state.value)
+            .then(res => {
+              this.setState({
+                notFound: res.data.length === 0,
+                allSuppliers: this.props.allSuppliers,
+                totalPageCount: 1
+              });
+            })
+            .catch(() => {
+              this.setState({ notFound: true });
+            });
+        }
+        this.setState({
+          searchLoading: false
+        });
+      }, 300);
+    });
+  };
+
   render() {
     return (
       <Container>
         <AddSupplierModal open={this.state.open} onClose={this.onClose} />
         <Segment stacked className="rtl">
-          <Button
-            className="yekan"
-            onClick={() => this.setState({ open: true })}
-            color="green"
-            content="افزودن تامین کننده جدید"
-            icon="add"
-            labelPosition="right"
-            style={{ fontSize: "13.8px" }}
-          />
+          <h2 className="yekan s-h2-padding">تامین کنندگان</h2>
         </Segment>
         <Table celled className="rtl text-center" columns={6}>
           <Table.Header className="text-right">
             <Table.Row>
-              <Table.HeaderCell colSpan="6">
-                <Grid columns={1}>
-                  <Grid.Row>
-                    <h2 className="yekan s-h2-padding">تامین کنندگان</h2>
+              <Table.HeaderCell colSpan="9">
+                <Grid>
+                  <Grid.Column width={12}>
                     <Search
+                      input={{ icon: "search", iconPosition: "left" }}
+                      loading={this.state.searchLoading}
                       showNoResults={false}
                       placeholder="جست و جو..."
-                      className="placeholder-rtl yekan ltr"
+                      className="placeholder-rtl yekan rtl"
+                      id="text-right"
+                      onSearchChange={this.handleSearchChange}
                     />
-                  </Grid.Row>
+                  </Grid.Column>
+                  <Grid.Column width={4}>
+                    <Button
+                      className="yekan"
+                      onClick={() => this.setState({ open: true })}
+                      color="green"
+                      content="افزودن تامین کننده جدید"
+                      icon="add"
+                      labelPosition="right"
+                      style={{ fontSize: "13.8px" }}
+                    />
+                  </Grid.Column>
                 </Grid>
               </Table.HeaderCell>
             </Table.Row>
@@ -108,22 +144,34 @@ class Suppliers extends Component {
               <Table.Row>
                 <Table.HeaderCell style={{ borderLeft: "1px solid #ddd" }}>
                   <TableLabel>1</TableLabel>
-                  نام
+                  کد تامین کننده
                 </Table.HeaderCell>
                 <Table.HeaderCell>
                   <TableLabel>2</TableLabel>
-                  نام خانوادگی
+                  نام فروشگاه
                 </Table.HeaderCell>
                 <Table.HeaderCell>
                   <TableLabel>3</TableLabel>
-                  ایمیل
+                  نام مدیریت
                 </Table.HeaderCell>
                 <Table.HeaderCell>
                   <TableLabel>4</TableLabel>
-                  شماره موبایل
+                  نام خانوادگی مدیریت
                 </Table.HeaderCell>
                 <Table.HeaderCell>
                   <TableLabel>5</TableLabel>
+                  شماره تلفن
+                </Table.HeaderCell>
+                <Table.HeaderCell>
+                  <TableLabel>6</TableLabel>
+                  شماره موبایل
+                </Table.HeaderCell>
+                <Table.HeaderCell>
+                  <TableLabel>7</TableLabel>
+                  ایمیل
+                </Table.HeaderCell>
+                <Table.HeaderCell>
+                  <TableLabel>8</TableLabel>
                   آدرس
                 </Table.HeaderCell>
                 <Table.HeaderCell>عملیات</Table.HeaderCell>
@@ -141,34 +189,48 @@ class Suppliers extends Component {
                         style={{ borderLeft: "1px solid #ddd" }}
                       >
                         <TableLabel>1</TableLabel>
-                        {item.first_name}
+                        <span id="norm-latin">{item.pk}</span>
                       </Table.Cell>
                       <Table.Cell collapsing>
                         <TableLabel>2</TableLabel>
-                        <span>{item.last_name}</span>
+                        <span className="yekan">{item.store}</span>
                       </Table.Cell>
                       <Table.Cell collapsing className="norm-latin">
                         <TableLabel>3</TableLabel>
-                        <span>{item.email}</span>
+                        <span className="yekan">{item.first_name}</span>
                       </Table.Cell>
                       <Table.Cell collapsing className="norm-latin">
                         <TableLabel>4</TableLabel>
-                        <span>{item.phone_number}</span>
+                        <span className="yekan">{item.last_name}</span>
                       </Table.Cell>
                       <Table.Cell collapsing>
                         <TableLabel>5</TableLabel>
-                        <span>{item.address}</span>
+                        <span id="norm-latin">{item.phone_number}</span>
+                      </Table.Cell>
+                      <Table.Cell collapsing>
+                        <TableLabel>6</TableLabel>
+                        <span id="norm-latin">{item.mobile_number}</span>
+                      </Table.Cell>
+                      <Table.Cell collapsing>
+                        <TableLabel>7</TableLabel>
+                        <span id="norm-latin">{item.email}</span>
+                      </Table.Cell>
+                      <Table.Cell collapsing>
+                        <TableLabel>8</TableLabel>
+                        <span className="yekan">{item.address}</span>
                       </Table.Cell>
                       <Table.Cell>
                         <Button
                           className="yekan"
-                          content="ویرایش"
+                          content="نمایه"
                           labelPosition="right"
                           color="teal"
-                          icon="info"
+                          icon="address card"
                           onClick={() => {
                             this.handleClick(item.pk);
-                            history.push(`/suppliers/supplier/${item.pk}/`);
+                            history.push(
+                              `/suppliers/edit-supplier/${item.pk}/`
+                            );
                           }}
                         />
                       </Table.Cell>
@@ -199,7 +261,7 @@ class Suppliers extends Component {
             </Table.Footer>
           ) : null}
         </Table>
-        {this.state.viewButtonClick ? <Supplier /> : null}
+        {this.state.viewButtonClick ? <EditSupplier /> : null}
       </Container>
     );
   }
@@ -214,4 +276,7 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, { getSuppliersAction })(Suppliers);
+export default connect(mapStateToProps, {
+  getSuppliersAction,
+  getSupplierBySearch
+})(Suppliers);

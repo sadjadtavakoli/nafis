@@ -17,10 +17,11 @@ import Reports from "./reports";
 import Customers from "./customers";
 import CustomerPage from "./customers/CustomerPage";
 import Suppliers from "./suppliers";
-import Supplier from "./suppliers/Supplier";
+import ViewSupplier from "./suppliers/ViewSupplier";
 import DepositoryEdit from "./depository/depositoryEdit";
 import ViewBill from "./cashRegister/ViewBill";
 import InformationPage from "./sale/informationPage";
+import EditFactor from "./suppliers/EditFactor";
 
 const App = ({ token }) => {
   return (
@@ -46,7 +47,11 @@ const App = ({ token }) => {
               component={CustomerPage}
             />
             <Route path="/suppliers/" exact component={Suppliers} />
-            <Route path="/suppliers/supplier/:pk/" exact component={Supplier} />
+            <Route
+              path="/suppliers/edit-supplier/:pk/"
+              exact
+              component={ViewSupplier}
+            />
             <Route
               path="/depository/depository-edit/:code/:pk/"
               exact
@@ -54,6 +59,7 @@ const App = ({ token }) => {
             />
             <Route path="/cashregister/:pk" exact component={ViewBill} />
             <Route path="/information/:pk" exact component={InformationPage} />
+            <Route path="/supplier/:pk" exact component={EditFactor} />
           </SideBar>
         </Router>
       ) : (

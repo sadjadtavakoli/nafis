@@ -224,6 +224,7 @@ const mapStateToProps = state => {
     productsList: state.depository.productsList
   };
 };
+
 export default connect(mapStateToProps, { getProductsByCode, addNewItem })(
   NewBillPopup
 );
