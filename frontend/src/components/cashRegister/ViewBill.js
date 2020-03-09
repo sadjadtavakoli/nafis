@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Container,
   Segment,
@@ -11,7 +12,6 @@ import {
   Input,
   Label
 } from "semantic-ui-react";
-import { connect } from "react-redux";
 import {
   getOneBill,
   deletePayment,
@@ -29,69 +29,56 @@ import { toastr } from "react-redux-toastr";
 import history from "../../history";
 import { updateBill } from "../../actions/SaleActions";
 
-class ViewBillModal extends React.Component {
-  state = {
-    userData: JSON.parse(localStorage.getItem("user")),
-    class_type: "",
-    fetch: false,
-    openAddPayment: false,
-    openEditCustomer: false,
-    anyPays: false,
-    open: false,
-    editPoints: false,
-    // points: 0,
-    toggle: false,
-    used_points: 0
-  };
+const ViewBillModal = () => {
+  const userData = JSON.parse(localStorage.getItem("user"));
+  const [classType, setClassType] = useState(null);
+  const [fetch, setFetch] = useState(false);
+  const [openAddPayment, setOpenAddPayment] = useState(false);
+  const [openEditCustomer, setOpenEditCustomer] = useState(false);
+  const [pays, setPays] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [editPoints, setEditPoints] = useState(false);
+  const [toggle, setToggle] = useState(false);
+  const [usedPoints, setUsedPoints] = useState(0);
 
-  componentDidMount() {
-    this.getBill();
-  }
+  const pk = window.location.pathname.split("/")[2];
 
-  getBill = () => {
-    this.props.getOneBill(this.props.match.params.pk).then(() => {
-      this.props.getClassTypes().then(res => {
+  const bill = useSelector(state => state.cash.theBill);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    getBill();
+  }, [fetch]);
+
+  const getBill = () => {
+    dispatch(getOneBill(pk)).then(() => {
+      dispatch(getClassTypes()).then(res => {
         let customerTypes = res.data.customerTypes;
         customerTypes.map(classTypeItem => {
-          if (classTypeItem.value == this.props.theBill.buyer.class_type) {
-            this.setState({ class_type: classTypeItem.text });
-          }
-        });
-        this.setState({
-          fetch: true,
-          anyPays: this.props.theBill.payments.length ? true : false,
-          // points: this.props.theBill.buyer.points,
-          used_points: this.props.theBill.used_points
+          if (bill && classTypeItem.value == bill.buyer.classType)
+            setClassType(classTypeItem.text);
         });
       });
+      setFetch(true);
+      setPays(bill && bill.payments.length ? true : false);
+      setUsedPoints(bill && bill.used_points);
     });
   };
 
-  toggleAddPaymentModal = () => {
-    this.setState({
-      openAddPayment: !this.state.openAddPayment
-    });
+  const toggleAddPaymentModal = () => setOpenAddPayment(!openAddPayment);
+
+  const toggleEditCustomerModal = () => {
+    setOpenEditCustomer(!openEditCustomer);
+    getBill();
   };
 
-  toggleEditCustomerModal = () => {
-    this.setState(
-      {
-        openEditCustomer: !this.state.openEditCustomer
-      },
-      () => {
-        this.getBill();
-      }
-    );
-  };
-
-  deletePayment = pk => {
+  const deletePaymentFunc = pk => {
     let confirm = window.confirm("آیا از حذف این پرداخت مطمئن هستید؟");
     if (confirm) {
-      this.props
-        .deletePayment(pk)
+      dispatch(deletePayment(pk))
         .then(() => {
-          this.getBill();
           toastr.success("پرداخت با موفقیت حذف شد");
+          getBill();
         })
         .catch(() => {
           toastr.error("خطا در حذف پرداختی");
@@ -99,488 +86,443 @@ class ViewBillModal extends React.Component {
     }
   };
 
-  closeModal = () => this.setState({ open: false });
+  const closeModal = () => setOpen(false);
 
-  handleSubmit = pk => {
-    let sms = this.state.toggle;
-    this.props.doneTheBill(pk, sms).then(() => {
+  const handleSubmit = pk => {
+    let sms = toggle;
+    doneTheBill(pk, sms).then(() => {
       history.push(`/factor/${pk}/print`);
     });
   };
 
-  handlePointsChange = e => {
-    this.setState({
-      used_points: e.target.value
-    });
-  };
+  const handlePointsChange = e => setUsedPoints(e.target.value);
 
-  handleEditClick = () => {
-    this.setState({
-      editPoints: true
-    });
-  };
+  const handleEditClick = () => setEditPoints(true);
 
-  handleEditSubmit = pk => {
-    this.props
-      .updateBill(pk, { used_points: Number(this.state.used_points) })
+  const handleEditSubmit = pk => {
+    updateBill(pk, { usedPoints: Number(usedPoints) })
       .then(() => {
-        this.setState(
-          {
-            editPoints: false
-          },
-          () => {
-            this.getBill();
-            toastr.success("امتیاز با موفقیت اعمال شد");
-          }
-        );
+        setEditPoints(false);
+        getBill();
+        toastr.success("امتیاز با موفقیت اعمال شد");
       })
-      .catch((e, r) => {
+      .catch(() => {
         toastr.error("امتیاز استفاده شده بیشتر از حد مجاز است");
       });
   };
 
-  handleToggleChange = () => {
-    this.setState({
-      toggle: !this.state.toggle
-    });
-  };
+  const handleToggleChange = () => setToggle(!toggle);
 
-  render() {
-    const bill = this.props.theBill;
-    return (
-      <Container>
-        {this.state.fetch ? (
-          <Segment.Group className="rtl" style={{ padding: "10px" }}>
-            <Grid>
-              <Grid.Column floated="right" width={14}>
-                <Segment.Group horizontal>
-                  <Table className="text-right">
-                    <Table.Body>
-                      <Table.Row colSpan={3}>
-                        <Table.Cell>
-                          <span style={{ fontWeight: "bold" }}>
-                            شماره فاکتور:
-                          </span>
-                          &nbsp;
-                          <span id="norm-latin">{bill.pk}</span>
-                        </Table.Cell>
-                        <Table.Cell>
-                          <span style={{ fontWeight: "bold" }}>فروشنده:</span>
-                          &nbsp;
-                          <span>
-                            {bill.seller.first_name}&nbsp;
-                            {bill.seller.last_name}
-                          </span>
-                        </Table.Cell>
-                        <Table.Cell>
-                          <span style={{ fontWeight: "bold" }}>صندوق دار:</span>
-                          &nbsp;
-                          <span>
-                            {this.state.userData.first_name +
-                              " " +
-                              this.state.userData.last_name}
-                          </span>
-                        </Table.Cell>
-                      </Table.Row>
+  return (
+    <Container>
+      <Segment stacked className="rtl">
+        <Grid verticalAlign="middle">
+          <Grid.Column floated="right">
+            <h2 className="yekan">صندوق</h2>
+          </Grid.Column>
+          <Grid.Column floated="left">
+            <Button
+              circular
+              icon="left arrow"
+              onClick={() => window.history.back()}
+            />
+          </Grid.Column>
+        </Grid>
+      </Segment>
 
-                      <Table.Row>
-                        <Table.Cell>
-                          <span style={{ fontWeight: "bold" }}>نام مشتری:</span>
-                          &nbsp;
-                          <span>
-                            {bill.buyer.first_name}&nbsp;
-                            {bill.buyer.last_name}
-                          </span>
-                          <Button
-                            size="mini"
-                            className="yekan"
-                            color="teal"
-                            labelPosition="right"
-                            icon="edit"
-                            content="ویرایش مشتری"
-                            onClick={() => {
-                              this.toggleEditCustomerModal();
-                            }}
-                          />
-                        </Table.Cell>
-                        <Table.Cell>
-                          <span style={{ fontWeight: "bold" }}>امتیاز:</span>
-                          &nbsp;
-                          <span id="norm-latin">{bill.buyer.points}</span>
-                        </Table.Cell>
-                        <Table.Cell>
-                          <span style={{ fontWeight: "bold" }}>
-                            شماره همراه:
-                          </span>
-                          &nbsp;
-                          <span id="norm-latin">{bill.buyer.phone_number}</span>
-                        </Table.Cell>
-                        <Table.Cell>
-                          <span style={{ fontWeight: "bold" }}>نوع مشتری:</span>
-                          &nbsp;
-                          <span>{this.state.class_type}</span>
-                        </Table.Cell>
-                      </Table.Row>
-                    </Table.Body>
-                  </Table>
-                </Segment.Group>
+      {fetch ? (
+        <Segment.Group className="rtl" style={{ padding: "10px" }}>
+          <Grid>
+            <Grid.Column floated="right" width={14}>
+              <Segment.Group horizontal>
+                <Table className="text-right">
+                  <Table.Body>
+                    <Table.Row colSpan={3}>
+                      <Table.Cell>
+                        <span style={{ fontWeight: "bold" }}>
+                          شماره فاکتور:
+                        </span>
+                        &nbsp;
+                        <span id="norm-latin">{bill.pk}</span>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <span style={{ fontWeight: "bold" }}>فروشنده:</span>
+                        &nbsp;
+                        <span>
+                          {bill.seller.first_name}&nbsp;
+                          {bill.seller.last_name}
+                        </span>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <span style={{ fontWeight: "bold" }}>صندوق دار:</span>
+                        &nbsp;
+                        <span>
+                          {userData.first_name + " " + userData.last_name}
+                        </span>
+                      </Table.Cell>
+                    </Table.Row>
+
+                    <Table.Row>
+                      <Table.Cell>
+                        <span style={{ fontWeight: "bold" }}>نام مشتری:</span>
+                        &nbsp;
+                        <span>
+                          {bill.buyer.first_name}&nbsp;
+                          {bill.buyer.last_name}
+                        </span>
+                        <Button
+                          size="mini"
+                          className="yekan"
+                          color="teal"
+                          labelPosition="right"
+                          icon="edit"
+                          content="ویرایش مشتری"
+                          onClick={() => toggleEditCustomerModal()}
+                        />
+                      </Table.Cell>
+                      <Table.Cell>
+                        <span style={{ fontWeight: "bold" }}>امتیاز:</span>
+                        &nbsp;
+                        <span id="norm-latin">{bill.buyer.points}</span>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <span style={{ fontWeight: "bold" }}>شماره همراه:</span>
+                        &nbsp;
+                        <span id="norm-latin">{bill.buyer.phone_number}</span>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <span style={{ fontWeight: "bold" }}>نوع مشتری:</span>
+                        &nbsp;
+                        <span>{classType}</span>
+                      </Table.Cell>
+                    </Table.Row>
+                  </Table.Body>
+                </Table>
+              </Segment.Group>
+            </Grid.Column>
+            <Grid.Column
+              floated="left"
+              className={"only-desktop"}
+              width={2}
+              style={{ paddingRight: 0 }}
+            >
+              <img src={logo} className="nafis-logo" />
+            </Grid.Column>
+          </Grid>
+          <Table celled className="rtl text-center">
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell className="table-border-left">
+                  <TableLabel>1</TableLabel>
+                  ردیف
+                </Table.HeaderCell>
+                <Table.HeaderCell>
+                  <TableLabel>2</TableLabel>
+                  شرح کالا
+                </Table.HeaderCell>
+                <Table.HeaderCell>
+                  <TableLabel>3</TableLabel>
+                  کد کالا
+                </Table.HeaderCell>
+                <Table.HeaderCell>
+                  <TableLabel>4</TableLabel>
+                  متراژ
+                </Table.HeaderCell>
+                <Table.HeaderCell>
+                  <TableLabel>5</TableLabel>
+                  مبلغ واحد
+                </Table.HeaderCell>
+                <Table.HeaderCell>
+                  <TableLabel>6</TableLabel>
+                  تخفیف
+                </Table.HeaderCell>
+                <Table.HeaderCell>
+                  <TableLabel>7</TableLabel>
+                  مبلغ خام
+                </Table.HeaderCell>
+                <Table.HeaderCell>
+                  <TableLabel>8</TableLabel>
+                  مبلغ نهایی
+                </Table.HeaderCell>
+                <Table.HeaderCell className="table-border-left-none">
+                  <TableLabel>9</TableLabel>
+                  ته طاقه
+                </Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+
+            <Table.Body>
+              {bill.items.map((item, index) => {
+                return (
+                  <Table.Row>
+                    <Table.Cell className="table-border-left" id="norm-latin">
+                      <TableLabel>1</TableLabel>
+                      {index + 1}
+                    </Table.Cell>
+                    <Table.Cell>
+                      <TableLabel>2</TableLabel>
+                      {item.product.name}
+                    </Table.Cell>
+                    <Table.Cell id="norm-latin">
+                      <TableLabel>3</TableLabel>
+                      {item.product.code}
+                    </Table.Cell>
+                    <Table.Cell id="norm-latin">
+                      <TableLabel>4</TableLabel>
+                      {item.end_of_roll_amount > 0
+                        ? item.end_of_roll_amount
+                        : item.amount}
+                    </Table.Cell>
+                    <Table.Cell id="norm-latin">
+                      <TableLabel>5</TableLabel>
+                      {digitToComma(item.product.selling_price)}
+                    </Table.Cell>
+                    <Table.Cell id="norm-latin">
+                      <TableLabel>6</TableLabel>
+                      {digitToComma(item.discount)}
+                    </Table.Cell>
+                    <Table.Cell id="norm-latin">
+                      <TableLabel>7</TableLabel>
+                      {digitToComma(item.price)}
+                    </Table.Cell>
+                    <Table.Cell id="norm-latin">
+                      <TableLabel>8</TableLabel>
+                      {digitToComma(item.final_price)}
+                    </Table.Cell>
+                    <Table.Cell className="table-border-left-none">
+                      <TableLabel>9</TableLabel>
+                      <Checkbox toggle readOnly checked={item.end_of_roll} />
+                    </Table.Cell>
+                  </Table.Row>
+                );
+              })}
+            </Table.Body>
+          </Table>
+          <Grid reversed celled className={"ltr"}>
+            <Grid.Row>
+              <Grid.Column className={"norm-latin text-right"} width={13}>
+                <span>{digitToComma(bill.price)}</span>
               </Grid.Column>
-              <Grid.Column
-                floated="left"
-                className={"only-desktop"}
-                // mobile={16}
-                width={2}
-                style={{ paddingRight: 0 }}
-              >
-                <img src={logo} className="nafis-logo" />
+              <Grid.Column width={3} className={"bg-table"}>
+                مبلغ خام
               </Grid.Column>
-            </Grid>
+            </Grid.Row>
+
+            <Grid.Row>
+              <Grid.Column className={"norm-latin text-right"} width={13}>
+                <span>{digitToComma(bill.items_discount)}</span>
+              </Grid.Column>
+              <Grid.Column width={3} className={"bg-table"}>
+                مجموع تخفیف کالایی
+              </Grid.Column>
+            </Grid.Row>
+
+            <Grid.Row>
+              <Grid.Column className={"norm-latin text-right"} width={13}>
+                <span>{digitToComma(bill.discount)}</span>
+              </Grid.Column>
+              <Grid.Column width={3} className={"bg-table"}>
+                تخفیف روی کل فاکتور
+              </Grid.Column>
+            </Grid.Row>
+
+            <Grid.Row>
+              <Grid.Column className={"norm-latin text-right"} width={13}>
+                <Input
+                  value={usedPoints}
+                  onChange={e => handlePointsChange(e)}
+                  readOnly={editPoints ? false : true}
+                  type="number"
+                  className="ltr"
+                />
+              </Grid.Column>
+              <Grid.Column width={3} className={"bg-table"}>
+                <Label
+                  color={editPoints ? "green" : "teal"}
+                  style={{ marginRight: "5px" }}
+                  className="pointer"
+                  onClick={
+                    !editPoints
+                      ? handleEditClick
+                      : () => handleEditSubmit(bill.pk)
+                  }
+                >
+                  {editPoints ? "اعمال" : "ویرایش"}
+                </Label>
+                <span>امتیاز</span>
+              </Grid.Column>
+            </Grid.Row>
+
+            <Grid.Row>
+              <Grid.Column className={"norm-latin text-right"} width={13}>
+                <span>
+                  {digitToComma(
+                    Number(bill.remaining_payment) - Number(usedPoints)
+                  )}
+                </span>
+              </Grid.Column>
+              <Grid.Column width={3} className={"bg-table"}>
+                مبلغ قابل پرداخت
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+
+          <hr color="#ddd" />
+
+          {pays && (
             <Table celled className="rtl text-center">
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell colSpan="4" className="text-right">
+                    پرداخت ها
+                  </Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell className="table-border-left">
                     <TableLabel>1</TableLabel>
-                    ردیف
+                    تاریخ ایجاد
                   </Table.HeaderCell>
                   <Table.HeaderCell>
                     <TableLabel>2</TableLabel>
-                    شرح کالا
+                    مبلغ پرداختی
                   </Table.HeaderCell>
                   <Table.HeaderCell>
                     <TableLabel>3</TableLabel>
-                    کد کالا
-                  </Table.HeaderCell>
-                  <Table.HeaderCell>
-                    <TableLabel>4</TableLabel>
-                    متراژ
-                  </Table.HeaderCell>
-                  <Table.HeaderCell>
-                    <TableLabel>5</TableLabel>
-                    مبلغ واحد
-                  </Table.HeaderCell>
-                  <Table.HeaderCell>
-                    <TableLabel>6</TableLabel>
-                    تخفیف
-                  </Table.HeaderCell>
-                  <Table.HeaderCell>
-                    <TableLabel>7</TableLabel>
-                    مبلغ خام
-                  </Table.HeaderCell>
-                  <Table.HeaderCell>
-                    <TableLabel>8</TableLabel>
-                    مبلغ نهایی
+                    نوع پرداخت
                   </Table.HeaderCell>
                   <Table.HeaderCell className="table-border-left-none">
-                    <TableLabel>9</TableLabel>
-                    ته طاقه
+                    عملیات
                   </Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
-
               <Table.Body>
-                {bill.items.map((item, index) => {
+                {bill.payments.map(payment => {
                   return (
                     <Table.Row>
                       <Table.Cell className="table-border-left" id="norm-latin">
                         <TableLabel>1</TableLabel>
-                        {index + 1}
+                        {standardTimeToJalaali(payment.create_date)}
+                      </Table.Cell>
+                      <Table.Cell id="norm-latin">
+                        <TableLabel>2</TableLabel>
+                        {digitToComma(payment.amount)}
                       </Table.Cell>
                       <Table.Cell>
-                        <TableLabel>2</TableLabel>
-                        {item.product.name}
-                      </Table.Cell>
-                      <Table.Cell id="norm-latin">
                         <TableLabel>3</TableLabel>
-                        {item.product.code}
-                      </Table.Cell>
-                      <Table.Cell id="norm-latin">
-                        <TableLabel>4</TableLabel>
-                        {item.end_of_roll_amount > 0
-                          ? item.end_of_roll_amount
-                          : item.amount}
-                      </Table.Cell>
-                      <Table.Cell id="norm-latin">
-                        <TableLabel>5</TableLabel>
-                        {digitToComma(item.product.selling_price)}
-                      </Table.Cell>
-                      <Table.Cell id="norm-latin">
-                        <TableLabel>6</TableLabel>
-                        {digitToComma(item.discount)}
-                      </Table.Cell>
-                      <Table.Cell id="norm-latin">
-                        <TableLabel>7</TableLabel>
-                        {digitToComma(item.price)}
-                      </Table.Cell>
-                      <Table.Cell id="norm-latin">
-                        <TableLabel>8</TableLabel>
-                        {digitToComma(item.final_price)}
+                        {payment.type === "card" ? "کارت" : null}
+                        {payment.type === "cash" ? "نقد" : null}
+                        {payment.type === "cheque" ? "چک" : null}
                       </Table.Cell>
                       <Table.Cell className="table-border-left-none">
-                        <TableLabel>9</TableLabel>
-                        <Checkbox toggle readOnly checked={item.end_of_roll} />
+                        <Button
+                          color="red"
+                          className="yekan"
+                          icon="trash"
+                          labelPosition="right"
+                          content="حذف"
+                          size="mini"
+                          onClick={() => deletePaymentFunc(payment.pk)}
+                        />
                       </Table.Cell>
                     </Table.Row>
                   );
                 })}
               </Table.Body>
             </Table>
-            <Grid reversed celled className="ltr">
-              <Grid.Row>
-                <Grid.Column className={"norm-latin text-right"} width={13}>
-                  <span>{digitToComma(bill.price)}</span>
-                </Grid.Column>
-                <Grid.Column width={3} className={"bg-table"}>
-                  مبلغ خام
-                </Grid.Column>
-              </Grid.Row>
+          )}
+          
+          <div className="text-center padded">
+            <Button
+              circular
+              onClick={() => setOpen(true)}
+              size="huge"
+              color="green"
+              icon="check"
+            />
+            <Button
+              circular
+              onClick={() => toggleAddPaymentModal()}
+              color="teal"
+              size="huge"
+              icon="add"
+              disabled={
+                Number(bill.remaining_payment) - Number(usedPoints) === 0
+                  ? true
+                  : false
+              }
+            />
+            <Button
+              circular
+              onClick={() => window.history.back()}
+              size="huge"
+              icon="arrow left"
+            />
+          </div>
 
-              <Grid.Row>
-                <Grid.Column className={"norm-latin text-right"} width={13}>
-                  <span>{digitToComma(bill.items_discount)}</span>
-                </Grid.Column>
-                <Grid.Column width={3} className={"bg-table"}>
-                  مجموع تخفیف کالایی
-                </Grid.Column>
-              </Grid.Row>
-
-              <Grid.Row>
-                <Grid.Column className={"norm-latin text-right"} width={13}>
-                  <span>{digitToComma(bill.discount)}</span>
-                </Grid.Column>
-                <Grid.Column width={3} className={"bg-table"}>
-                  تخفیف روی کل فاکتور
-                </Grid.Column>
-              </Grid.Row>
-
-              <Grid.Row>
-                <Grid.Column className={"norm-latin text-right"} width={13}>
-                  <Input
-                    value={this.state.used_points}
-                    onChange={e => this.handlePointsChange(e)}
-                    readOnly={this.state.editPoints ? false : true}
-                    type="number"
-                    className="ltr"
-                  />
-                </Grid.Column>
-                <Grid.Column width={3} className={"bg-table"}>
-                  <Label
-                    color={this.state.editPoints ? "green" : "teal"}
-                    style={{ marginRight: "5px" }}
-                    className="pointer"
-                    onClick={
-                      !this.state.editPoints
-                        ? this.handleEditClick
-                        : () => this.handleEditSubmit(bill.pk)
-                    }
-                  >
-                    {this.state.editPoints ? "اعمال" : "ویرایش"}
-                  </Label>
-                  <span>امتیاز</span>
-                </Grid.Column>
-              </Grid.Row>
-
-              <Grid.Row>
-                <Grid.Column className={"norm-latin text-right"} width={13}>
-                  <span>
-                    {digitToComma(
-                      Number(bill.remaining_payment) -
-                        Number(this.state.used_points)
-                    )}
-                  </span>
-                </Grid.Column>
-                <Grid.Column width={3} className={"bg-table"}>
-                  مبلغ قابل پرداخت
-                </Grid.Column>
-              </Grid.Row>
-            </Grid>
-
-            <hr color="#ddd" />
-
-            {this.state.anyPays && (
-              <Table celled className="rtl text-center">
-                <Table.Header>
-                  <Table.Row>
-                    <Table.HeaderCell colSpan="4" className="text-right">
-                      پرداخت ها
-                    </Table.HeaderCell>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Header>
-                  <Table.Row>
-                    <Table.HeaderCell className="table-border-left">
-                      <TableLabel>1</TableLabel>
-                      تاریخ ایجاد
-                    </Table.HeaderCell>
-                    <Table.HeaderCell>
-                      <TableLabel>2</TableLabel>
-                      مبلغ پرداختی
-                    </Table.HeaderCell>
-                    <Table.HeaderCell>
-                      <TableLabel>3</TableLabel>
-                      نوع پرداخت
-                    </Table.HeaderCell>
-                    <Table.HeaderCell className="table-border-left-none">
-                      عملیات
-                    </Table.HeaderCell>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {bill.payments.map(payment => {
-                    return (
-                      <Table.Row>
-                        <Table.Cell
-                          className="table-border-left"
-                          id="norm-latin"
-                        >
-                          <TableLabel>1</TableLabel>
-                          {standardTimeToJalaali(payment.create_date)}
-                        </Table.Cell>
-                        <Table.Cell id="norm-latin">
-                          <TableLabel>2</TableLabel>
-                          {digitToComma(payment.amount)}
-                        </Table.Cell>
-                        <Table.Cell>
-                          <TableLabel>3</TableLabel>
-                          {payment.type === "card" ? "کارت" : null}
-                          {payment.type === "cash" ? "نقد" : null}
-                          {payment.type === "cheque" ? "چک" : null}
-                        </Table.Cell>
-                        <Table.Cell className="table-border-left-none">
-                          <Button
-                            color="red"
-                            className="yekan"
-                            icon="trash"
-                            labelPosition="right"
-                            content={"حذف"}
-                            onClick={() => this.deletePayment(payment.pk)}
-                          />
-                        </Table.Cell>
-                      </Table.Row>
-                    );
-                  })}
-                </Table.Body>
-              </Table>
-            )}
-            <div className="text-center padded">
-              <Button
-                circular
-                onClick={() => {
-                  this.setState({ open: true });
-                }}
-                size="huge"
-                color="green"
-                icon="check"
-              />
-              <Button
-                circular
-                onClick={() => {
-                  this.toggleAddPaymentModal();
-                }}
-                color="teal"
-                size="huge"
-                icon="add"
-                disabled={
-                  Number(bill.remaining_payment) -
-                    Number(this.state.used_points) ===
-                  0
-                    ? true
-                    : false
-                }
-              />
-              <Button
-                circular
-                onClick={() => window.history.back()}
-                size="huge"
-                icon="arrow left"
-              />
-            </div>
-
-            <Modal
-              dimmer={"blurring"}
-              open={this.state.open}
-              onClose={this.closeModal}
-            >
-              <Modal.Header className="yekan text-right">
-                بستن فاکتور
-              </Modal.Header>
-              <Modal.Content className="rtl text-right">
-                <Header className="yekan text-right">
-                  آیا از بستن این فاکتور اطمینان دارید؟
-                </Header>
-                <div style={{ display: "inline-flex" }}>
-                  <span className="rtl text-right" style={{ fontSize: "17px" }}>
-                    ارسال
-                  </span>
-                  &nbsp;
-                  <span id="norm-latin" style={{ fontSize: "17px" }}>
-                    sms
-                  </span>
-                  &nbsp; &nbsp; &nbsp;
-                  <Checkbox
-                    className="text-right rtl"
-                    toggle
-                    onChange={this.handleToggleChange}
-                  />
-                </div>
-              </Modal.Content>
-              <Modal.Actions>
-                <Button
-                  color="black"
-                  onClick={this.closeModal}
-                  className="yekan"
-                >
-                  انصراف
-                </Button>
-                <Button
-                  positive
-                  icon="checkmark"
-                  labelPosition="right"
-                  content="بستن فاکتور"
-                  onClick={() => this.handleSubmit(bill.pk)}
-                  className="yekan"
+          <Modal dimmer={"blurring"} open={open} onClose={closeModal}>
+            <Modal.Header className="yekan text-right">
+              بستن فاکتور
+            </Modal.Header>
+            <Modal.Content className="rtl text-right">
+              <Header className="yekan text-right">
+                آیا از بستن این فاکتور اطمینان دارید؟
+              </Header>
+              <div style={{ display: "inline-flex" }}>
+                <span className="rtl text-right" style={{ fontSize: "17px" }}>
+                  ارسال
+                </span>
+                &nbsp;
+                <span id="norm-latin" style={{ fontSize: "17px" }}>
+                  sms
+                </span>
+                &nbsp; &nbsp; &nbsp;
+                <Checkbox
+                  className="text-right rtl"
+                  toggle
+                  onChange={handleToggleChange}
                 />
-              </Modal.Actions>
-            </Modal>
-
-            {this.state.openAddPayment && (
-              <AddPaymentModal
-                open={this.state.openAddPayment}
-                onClose={this.toggleAddPaymentModal}
-                price={
-                  Number(bill.remaining_payment) -
-                  Number(this.state.used_points)
-                }
-                pk={bill.pk}
-                refetch={this.getBill}
+              </div>
+            </Modal.Content>
+            <Modal.Actions>
+              <Button color="black" onClick={closeModal} className="yekan">
+                انصراف
+              </Button>
+              <Button
+                positive
+                icon="checkmark"
+                labelPosition="right"
+                content="بستن فاکتور"
+                onClick={() => handleSubmit(bill.pk)}
+                className="yekan"
               />
-            )}
-            {this.state.openEditCustomer && (
-              <EditCustomerModal
-                open={this.state.openEditCustomer}
-                onClose={this.toggleEditCustomerModal}
-                pk={bill.buyer.pk}
-                madeChange={this.getBill}
-              />
-            )}
-          </Segment.Group>
-        ) : (
-          <LoadingBar />
-        )}
-      </Container>
-    );
-  }
-}
+            </Modal.Actions>
+          </Modal>
 
-const mapStateToProps = state => {
-  return {
-    theBill: state.cash.theBill
-  };
+          {openAddPayment && (
+            <AddPaymentModal
+              open={openAddPayment}
+              onClose={toggleAddPaymentModal}
+              price={Number(bill.remaining_payment) - Number(usedPoints)}
+              pk={bill.pk}
+              refetch={getBill}
+            />
+          )}
+          {openEditCustomer && (
+            <EditCustomerModal
+              open={openEditCustomer}
+              onClose={toggleEditCustomerModal}
+              pk={bill.buyer.pk}
+              madeChange={getBill}
+            />
+          )}
+        </Segment.Group>
+      ) : (
+        <LoadingBar />
+      )}
+    </Container>
+  );
 };
 
-export default connect(mapStateToProps, {
-  getOneBill,
-  deletePayment,
-  doneTheBill,
-  updateBill,
-  getClassTypes
-})(ViewBillModal);
+export default ViewBillModal;
