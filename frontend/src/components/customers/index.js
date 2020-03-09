@@ -49,8 +49,8 @@ class Customers extends Component {
     }
   }
 
-  getCustomers = () => {
-    this.props.getCustomerUsers(this.state.activePage).then(() => {
+  getCustomers = (page = 1) => {
+    this.props.getCustomerUsers(page).then(() => {
       this.setState({
         customers: this.props.usersCustomers.results,
         loading: false
@@ -148,7 +148,7 @@ class Customers extends Component {
         loading={this.state.searchLoading}
         showNoResults={false}
         placeholder="کد محصول را وارد نمایید"
-        className="placeholder-rtl yekan ltr"
+        className="rtl placeholder-rtl yekan text-right"
         onSearchChange={this.handleSearchChange}
       />
     );
@@ -271,8 +271,7 @@ const mapStateToProps = state => {
     usersCustomers: state.customers.usersCustomers,
     newCustomer: state.customers.newCustomer
       ? state.customers.newCustomer.pk
-      : { pk: 0 },
-    searchedCustomer: state.customers.searchedCustomer
+      : { pk: 0 }
   };
 };
 

@@ -432,6 +432,7 @@ const ViewBillModal = () => {
               </Table.Body>
             </Table>
           )}
+          
           <div className="text-center padded">
             <Button
               circular

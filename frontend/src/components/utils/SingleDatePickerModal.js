@@ -12,7 +12,6 @@ class SingleDatePickerModal extends React.Component {
   state = INITIAL_STATE;
 
   setSelectedDay = selectedDay => {
-    console.log(selectedDay);
     this.setState({
       selectedDay
     });

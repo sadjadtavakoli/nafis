@@ -93,6 +93,7 @@ const AddPaymentModal = ({ open, onClose, price, pk, refetch }) => {
   // };
 
   const calendarIconRenderer = (status, title) => {
+    
     return (
       <Icon
         style={{ paddingTop: "0.3em" }}

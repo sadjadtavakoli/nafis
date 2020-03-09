@@ -16,9 +16,17 @@
 .pointer {
   cursor: pointer;
 }
-.yekan,
+.yekan {
+  font-family: yekan !important;
+}
 .header {
   font-family: yekan !important;
+}
+.text-yekan {
+  font-family: yekan !important;
+  * {
+    font-family: yekan !important;
+  }
 }
 .m-auto {
   margin: auto;
@@ -112,6 +120,15 @@ div[role="combobox"] {
 }
 .text-right {
   text-align: right !important;
+  * {
+    text-align: right !important;
+  }
+}
+.text-left {
+  text-align: left !important;
+  * {
+    text-align: left !important;
+  }
 }
 .field {
   &.text-right {
@@ -382,4 +399,12 @@ label {
 
 .customer-padding {
   padding: 0 1em;
+}
+
+#text-right {
+  text-align: right !important;
+}
+
+body > div.ui.top.center.popup.transition.visible > div > div.header > div {
+  padding: 10px;
 }
