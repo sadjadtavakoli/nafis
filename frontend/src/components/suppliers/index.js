@@ -79,7 +79,7 @@ const Suppliers = () => {
         <Table.Header className="text-right">
           <Table.Row>
             <Table.HeaderCell colSpan="9">
-              <Grid>
+              <Grid stackable>
                 <Grid.Column width={12}>
                   <Search
                     input={{ icon: "search", iconPosition: "left" }}
