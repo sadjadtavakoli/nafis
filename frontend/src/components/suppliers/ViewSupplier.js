@@ -5,7 +5,6 @@ import SupplierFactor from "./SupplierFactor";
 import BackButton from "../utils/BackButton";
 
 const ViewSupplier = React.memo(() => {
-  
   const panes = [
     {
       menuItem: "ویرایش",
@@ -21,7 +20,7 @@ const ViewSupplier = React.memo(() => {
   return (
     <Container>
       <Segment stacked className="rtl">
-        <Grid>
+        <Grid stackable>
           <Grid.Column verticalAlign="middle" width={5}>
             <h2 className="yekan s-h2-padding">تامین کنندگان</h2>
           </Grid.Column>

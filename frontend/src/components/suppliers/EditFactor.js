@@ -118,7 +118,7 @@ const EditFactor = () => {
   return (
     <Container>
       <Segment stacked className="rtl">
-        <Grid>
+        <Grid stackable>
           <Grid.Column verticalAlign="middle" width={5}>
             <h2 className="yekan s-h2-padding">تامین کنندگان</h2>
           </Grid.Column>
@@ -127,20 +127,11 @@ const EditFactor = () => {
           </Grid.Column>
         </Grid>
       </Segment>
-      <Table celled className="text-center">
+      <Table celled className="rtl text-center">
         <Table.Header className="text-right">
           <Table.Row>
             <Table.HeaderCell colSpan="13">
-              <Grid>
-                <Grid.Column width={3} verticalAlign="middle">
-                  <Button
-                    content="ثبت عکس فاکتور"
-                    className="yekan"
-                    color="green"
-                    labelPosition="right"
-                    icon="add"
-                  />
-                </Grid.Column>
+              <Grid stackable>
                 <Grid.Column width={4} floated="right">
                   <Card className="yekan rtl">
                     <Card.Content>
@@ -188,25 +179,23 @@ const EditFactor = () => {
                     </Card.Content>
                   </Card>
                 </Grid.Column>
+                <Grid.Column width={3} verticalAlign="middle">
+                  <Button
+                    content="ثبت عکس فاکتور"
+                    className="yekan"
+                    color="green"
+                    labelPosition="right"
+                    icon="add"
+                  />
+                </Grid.Column>
               </Grid>
             </Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>عملیات</Table.HeaderCell>
-            <Table.HeaderCell>رنگ طرح</Table.HeaderCell>
-            <Table.HeaderCell>رنگ زمینه</Table.HeaderCell>
-            <Table.HeaderCell>جنس</Table.HeaderCell>
-            <Table.HeaderCell>نوع طرح</Table.HeaderCell>
-            <Table.HeaderCell>قیمت فروش</Table.HeaderCell>
-            <Table.HeaderCell>جمع کل</Table.HeaderCell>
-            <Table.HeaderCell>قیمت خرید</Table.HeaderCell>
-            <Table.HeaderCell>متراژ باقی مانده</Table.HeaderCell>
-            <Table.HeaderCell>متراژ خرید</Table.HeaderCell>
-            <Table.HeaderCell>نام جنس</Table.HeaderCell>
-            <Table.HeaderCell>کد جنس</Table.HeaderCell>
-            <Table.HeaderCell>
+            <Table.HeaderCell style={{ borderLeft: "1px solid #ddd" }}>
+              <TableLabel>1</TableLabel>
               <Popup
                 wide="very"
                 content={
@@ -228,6 +217,40 @@ const EditFactor = () => {
                 }
               />
             </Table.HeaderCell>
+            <Table.HeaderCell>
+              <TableLabel>2</TableLabel>کد جنس
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <TableLabel>3</TableLabel>نام جنس
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <TableLabel>4</TableLabel>متراژ خرید
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <TableLabel>5</TableLabel>متراژ باقی مانده
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <TableLabel>6</TableLabel>قیمت خرید
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <TableLabel>7</TableLabel>جمع کل
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <TableLabel>8</TableLabel>قیمت فروش
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <TableLabel>9</TableLabel>نوع طرح
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <TableLabel>10</TableLabel>جنس
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <TableLabel>11</TableLabel>رنگ زمینه
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <TableLabel>12</TableLabel>رنگ طرح
+            </Table.HeaderCell>
+            <Table.HeaderCell>عملیات</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -235,6 +258,59 @@ const EditFactor = () => {
             factor.items.map((item, index) => {
               return (
                 <Table.Row>
+                  <Table.Cell
+                    id="norm-latin"
+                    style={{ borderLeft: "1px solid #ddd" }}
+                  >
+                    <TableLabel>1</TableLabel>
+                    {index + 1}
+                  </Table.Cell>
+                  <Table.Cell id="norm-latin">
+                    <TableLabel>2</TableLabel>
+                    {item.product.code}
+                  </Table.Cell>
+                  <Table.Cell id="norm-latin">
+                    <TableLabel>3</TableLabel>
+                    {item.product.name}
+                  </Table.Cell>
+                  <Table.Cell id="norm-latin">
+                    <TableLabel>4</TableLabel>
+                    {item.amount}
+                  </Table.Cell>
+                  <Table.Cell id="norm-latin">
+                    <TableLabel>5</TableLabel>
+                    {item.product.stock_amount}
+                  </Table.Cell>
+                  <Table.Cell id="norm-latin">
+                    <TableLabel>6</TableLabel>
+                    {digitToComma(item.product.buying_price)}
+                  </Table.Cell>
+                  <Table.Cell id="norm-latin">
+                    <TableLabel>7</TableLabel>
+                    {digitToComma(
+                      Number(item.product.buying_price) * Number(item.amount)
+                    )}
+                  </Table.Cell>
+                  <Table.Cell id="norm-latin">
+                    <TableLabel>8</TableLabel>
+                    {digitToComma(item.product.selling_price)}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <TableLabel>9</TableLabel>
+                    {item.product.f_type.name}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <TableLabel>10</TableLabel>
+                    {item.product.material.name}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <TableLabel>11</TableLabel>
+                    {item.product.background_color.name}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <TableLabel>12</TableLabel>
+                    {item.product.design_color.name}
+                  </Table.Cell>
                   <Table.Cell>
                     <Button
                       content="حذف"
@@ -246,53 +322,38 @@ const EditFactor = () => {
                       labelPosition="right"
                     />
                   </Table.Cell>
-                  <Table.Cell>{item.product.design_color.name}</Table.Cell>
-                  <Table.Cell>{item.product.background_color.name}</Table.Cell>
-                  <Table.Cell>{item.product.material.name}</Table.Cell>
-                  <Table.Cell>{item.product.f_type.name}</Table.Cell>
-                  <Table.Cell id="norm-latin">
-                    {digitToComma(item.product.selling_price)}
-                  </Table.Cell>
-                  <Table.Cell id="norm-latin">
-                    {digitToComma(
-                      Number(item.product.buying_price) * Number(item.amount)
-                    )}
-                  </Table.Cell>
-                  <Table.Cell id="norm-latin">
-                    {digitToComma(item.product.buying_price)}
-                  </Table.Cell>
-                  <Table.Cell id="norm-latin">
-                    {item.product.stock_amount}
-                  </Table.Cell>
-                  <Table.Cell id="norm-latin">{item.amount}</Table.Cell>
-                  <Table.Cell id="norm-latin">{item.product.name}</Table.Cell>
-                  <Table.Cell id="norm-latin">{item.product.code}</Table.Cell>
-                  <Table.Cell id="norm-latin">{index + 1}</Table.Cell>
                 </Table.Row>
               );
             })}
         </Table.Body>
       </Table>
-      <Grid>
+      <Grid stackable >
         <Grid.Column floated="right" width="3">
-          <Table
-            celled
-            className="text-right"
-            collapsing
-            style={{ minWidth: "200px" }}
-          >
+          <Table celled className="rtl text-right" collapsing>
             <Table.Header>
               <Table.Row>
-                <Table.Cell id="norm-latin">{totalPrice}</Table.Cell>
-                <Table.HeaderCell>جمع کل</Table.HeaderCell>
+                <Table.HeaderCell style={{ borderLeft: "1px solid #ddd" }}>
+                  جمع کل
+                </Table.HeaderCell>
+                <Table.Cell id="norm-latin" style={{ borderLeft: "none" }}>
+                  {totalPrice}
+                </Table.Cell>
               </Table.Row>
               <Table.Row>
-                <Table.Cell id="norm-latin">-</Table.Cell>
-                <Table.HeaderCell>تخفیف</Table.HeaderCell>
+                <Table.HeaderCell style={{ borderLeft: "1px solid #ddd" }}>
+                  تخفیف
+                </Table.HeaderCell>
+                <Table.Cell id="norm-latin" style={{ borderLeft: "none" }}>
+                  -
+                </Table.Cell>
               </Table.Row>
               <Table.Row>
-                <Table.Cell id="norm-latin">{totalPrice}</Table.Cell>
-                <Table.HeaderCell>قابل پرداخت</Table.HeaderCell>
+                <Table.HeaderCell style={{ borderLeft: "1px solid #ddd" }}>
+                  قابل پرداخت
+                </Table.HeaderCell>
+                <Table.Cell id="norm-latin" style={{ borderLeft: "none" }}>
+                  {totalPrice}
+                </Table.Cell>
               </Table.Row>
             </Table.Header>
           </Table>

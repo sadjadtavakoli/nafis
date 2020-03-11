@@ -25,12 +25,10 @@ const Suppliers = () => {
   const [activePage, setActivePage] = useState(1);
   const [pk, setPk] = useState(null);
   const [searchLoading, setSearchLoading] = useState(false);
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState("");
 
   const suppliers = useSelector(state => state.suppliers.suppliers);
-  const newSupplier = useSelector(state =>
-    state.suppliers.newSupplier ? state.suppliers.newSupplier.pk : { pk: 0 }
-  );
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -40,7 +38,6 @@ const Suppliers = () => {
   const getSuppliers = (page = 1) => {
     dispatch(getSuppliersAction(page)).then(() => {
       setFetch(true);
-      console.log(suppliers && suppliers.results);
     });
   };
 
@@ -61,9 +58,13 @@ const Suppliers = () => {
       if (value.length < 1) {
         dispatch(getSuppliers(activePage));
       } else {
-        dispatch(getSupplierBySearch(value)).then(() => {
-          fetch(true);
-        });
+        dispatch(getSupplierBySearch(value))
+          .then(() => {
+            setFetch(true);
+          })
+          .catch(() => {
+            setFetch(false);
+          });
       }
       setSearchLoading(false);
     }, 300);
@@ -71,7 +72,7 @@ const Suppliers = () => {
 
   return (
     <Container>
-      <AddSupplierModal open={open} onClose={onClose} />
+      <AddSupplierModal open={open} onClose={onClose} refetch={getSuppliers} />
       <Segment stacked className="rtl">
         <h2 className="yekan s-h2-padding">تامین کنندگان</h2>
       </Segment>
@@ -79,7 +80,7 @@ const Suppliers = () => {
         <Table.Header className="text-right">
           <Table.Row>
             <Table.HeaderCell colSpan="9">
-              <Grid>
+              <Grid stackable>
                 <Grid.Column width={12}>
                   <Search
                     input={{ icon: "search", iconPosition: "left" }}
@@ -107,7 +108,7 @@ const Suppliers = () => {
           </Table.Row>
         </Table.Header>
 
-        {suppliers && suppliers.results.length ? (
+        {fetch && suppliers && suppliers.results.length ? (
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell style={{ borderLeft: "1px solid #ddd" }}>
@@ -142,12 +143,14 @@ const Suppliers = () => {
                 <TableLabel>8</TableLabel>
                 آدرس
               </Table.HeaderCell>
-              <Table.HeaderCell>عملیات</Table.HeaderCell>
+              <Table.HeaderCell style={{ borderLeft: "none" }}>
+                عملیات
+              </Table.HeaderCell>
             </Table.Row>
           </Table.Header>
         ) : null}
 
-        {suppliers && suppliers.results.length
+        {fetch && suppliers && suppliers.results.length
           ? suppliers.results.map(item => {
               return (
                 <Table.Body>
@@ -187,7 +190,7 @@ const Suppliers = () => {
                       <TableLabel>8</TableLabel>
                       <span className="yekan">{item.address}</span>
                     </Table.Cell>
-                    <Table.Cell>
+                    <Table.Cell style={{ borderLeft: "none" }}>
                       <Button
                         className="yekan"
                         content="نمایه"
