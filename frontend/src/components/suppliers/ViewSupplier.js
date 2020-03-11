@@ -20,11 +20,11 @@ const ViewSupplier = React.memo(() => {
   return (
     <Container>
       <Segment stacked className="rtl">
-        <Grid>
-          <Grid.Column verticalAlign="middle" width={5} mobile={12}>
+        <Grid stackable>
+          <Grid.Column verticalAlign="middle" width={5}>
             <h2 className="yekan s-h2-padding">تامین کنندگان</h2>
           </Grid.Column>
-          <Grid.Column verticalAlign="middle" floated="left" mobile={4}>
+          <Grid.Column verticalAlign="middle" floated="left">
             <BackButton />
           </Grid.Column>
         </Grid>
