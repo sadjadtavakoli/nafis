@@ -48,7 +48,7 @@ const SupplierFactor = ({ pk }) => {
         <Table.Header className="text-right">
           <Table.Row>
             <Table.HeaderCell colSpan="9">
-              <Grid>
+              <Grid stackable>
                 <Grid.Column width={3}>
                   <Button
                     content="ثبت فاکتور جدید"
