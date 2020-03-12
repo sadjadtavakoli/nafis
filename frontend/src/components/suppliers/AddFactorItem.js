@@ -39,7 +39,18 @@ const AddFactorItem = ({ onClose, onSubmit, pk }) => {
   return (
     <Card>
       <Card.Header>
-        <Header className="text-right">افزودن آیتم جدید</Header>
+        <Header className="text-right">
+          <h3
+            className="yekan d-flex"
+            style={{
+              alignItems: "center",
+              marginBottom: 0,
+              justifyContent: "flex-end"
+            }}
+          >
+            افزودن آیتم جدید
+          </h3>
+        </Header>
       </Card.Header>
       <Card.Content>
         {fetch ? (

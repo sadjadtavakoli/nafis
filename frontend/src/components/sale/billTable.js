@@ -185,8 +185,8 @@ class BillTable extends React.Component {
                   <Table.Cell className="norm-latin text-center rtl">
                     <TableLabel count={6}>
                       <span>{item.payments.length}</span>&nbsp;
+                      <span className="yekan">پرداختی</span>
                     </TableLabel>
-                    <span className="yekan">پرداختی</span>
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center">
                     <TableLabel count={5}>
@@ -196,8 +196,8 @@ class BillTable extends React.Component {
                   <Table.Cell className="norm-latin text-center rtl">
                     <TableLabel count={4}>
                       <span>{digitToComma(item.price)}</span>&nbsp;
+                      <span className="yekan">تومان</span>
                     </TableLabel>
-                    <span className="yekan">تومان</span>
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center rtl">
                     <TableLabel count={3}>
