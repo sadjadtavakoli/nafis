@@ -122,7 +122,7 @@ class FactorsTab extends Component {
                         : "فاکتورها"}
                     </h3>
                   </Grid.Column>
-                  <Grid.Column textAlign="right" verticalAlign="middle">
+                  {/* <Grid.Column textAlign="right" verticalAlign="middle">
                     <Search
                       input={{ icon: "search", iconPosition: "left" }}
                       loading={this.state.searchLoading}
@@ -131,7 +131,7 @@ class FactorsTab extends Component {
                       className="placeholder-rtl yekan ltr"
                       onSearchChange={this.handleSearchChange}
                     />
-                  </Grid.Column>
+                  </Grid.Column> */}
                 </Grid.Row>
               </Grid>
             </Table.HeaderCell>
