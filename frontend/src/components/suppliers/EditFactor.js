@@ -181,7 +181,7 @@ const EditFactor = () => {
                     </Card.Content>
                   </Card>
                 </Grid.Column>
-                <Grid.Column width={3} verticalAlign="middle">
+                {/* <Grid.Column width={3} verticalAlign="middle">
                   <Button
                     content="ثبت عکس فاکتور"
                     className="yekan"
@@ -189,7 +189,7 @@ const EditFactor = () => {
                     labelPosition="right"
                     icon="add"
                   />
-                </Grid.Column>
+                </Grid.Column> */}
               </Grid>
             </Table.HeaderCell>
           </Table.Row>
