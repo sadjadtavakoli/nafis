@@ -71,6 +71,14 @@ const AddPaymentModal = ({
     setTodayJalaali(enToFa(getTodayJalaali()));
   }, []);
 
+  useEffect(() => {
+    if (cardAmount > price || chequeAmount > price) {
+      setDisableButton(true);
+    } else {
+      setDisableButton(false);
+    }
+  }, [cardAmount, chequeAmount]);
+
   const convertToG = date => {
     let arr = date.split("-");
     let obj = toGregorian(Number(arr[0]), Number(arr[1]), Number(arr[2]));
