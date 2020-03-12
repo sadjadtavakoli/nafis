@@ -242,27 +242,27 @@ class FactorsTab extends Component {
                   </Table.Cell>
                   <Table.Cell className="norm-latin">
                     <TableLabel count={8}>
+                      <span className="yekan">تومان</span>
                       <span>{digitToComma(bill.price)}</span>&nbsp;
                     </TableLabel>
-                    <span className="yekan">تومان</span>
                   </Table.Cell>
                   <Table.Cell className="norm-latin">
                     <TableLabel count={9}>
+                      <span className="yekan">تومان</span>
                       <span>{digitToComma(bill.discount)}</span>&nbsp;
-                    <span className="yekan">تومان</span>
                     </TableLabel>
                   </Table.Cell>
                   <Table.Cell className="norm-latin">
                     <TableLabel count={10}>
+                      <span className="yekan"> تومان</span>
                       <span>{digitToComma(bill.final_price)}</span>
-                    <span className="yekan"> تومان</span>
                     </TableLabel>
                   </Table.Cell>
                   {this.state.remainedBillsToggle ? (
                     <Table.Cell className="norm-latin">
                       <TableLabel count={11}>
+                        <span className="yekan"> تومان</span>
                         <span>{digitToComma(bill.paid)}</span>
-                      <span className="yekan"> تومان</span>
                       </TableLabel>
                     </Table.Cell>
                   ) : null}

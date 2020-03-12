@@ -97,8 +97,8 @@ class FactorsTab extends Component {
                     </Table.Cell>
                     <Table.Cell className="norm-latin">
                       <TableLabel count={5}>
-                        <span>{digitToComma(item.amount)} </span>
                         <span className="yekan">تومان</span>
+                        <span>{digitToComma(item.amount)} </span>
                       </TableLabel>
                     </Table.Cell>
                     <Table.Cell>

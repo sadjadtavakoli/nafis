@@ -125,10 +125,9 @@ class CashRegisterTable extends React.Component {
                         style={{ fontFamily: "arial", fontWeight: "bold" }}
                       >
                         <TableLabel count={3}>
+                          <span className="yekan">تومان</span>
                           {digitToComma(bill.final_price)}&nbsp;
                         </TableLabel>
-
-                        <span className="yekan">تومان</span>
                       </Table.Cell>
                       <Table.Cell style={{ fontFamily: "arial" }}>
                         <TableLabel count={4}>

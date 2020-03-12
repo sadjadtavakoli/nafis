@@ -8,7 +8,8 @@ let TableLabel = props => {
         floated="left"
         mobile={10}
         computer={15}
-        className={"text-right"}
+        style={{ padding: "0.25em", margin: "auto" }}
+        className={props.className || "text-right"}
       >
         {props.children}
       </Grid.Column>

@@ -184,8 +184,8 @@ class BillTable extends React.Component {
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center rtl">
                     <TableLabel count={6}>
-                      <span>{item.payments.length}</span>&nbsp;
                       <span className="yekan">پرداختی</span>
+                      <span>{item.payments.length}</span>&nbsp;
                     </TableLabel>
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center">
@@ -195,15 +195,15 @@ class BillTable extends React.Component {
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center rtl">
                     <TableLabel count={4}>
-                      <span>{digitToComma(item.price)}</span>&nbsp;
                       <span className="yekan">تومان</span>
+                      <span>{digitToComma(item.price)}</span>&nbsp;
                     </TableLabel>
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center rtl">
                     <TableLabel count={3}>
                       <b>
-                        <span>{digitToComma(item.final_price)}</span>&nbsp;
                         <span className="yekan">تومان</span>
+                        <span>{digitToComma(item.final_price)}</span>&nbsp;
                       </b>
                     </TableLabel>
                   </Table.Cell>
@@ -211,8 +211,8 @@ class BillTable extends React.Component {
                     <TableLabel count={2}>
                       {item.total_discount ? (
                         <React.Fragment>
-                          <span>{digitToComma(item.total_discount)}</span>
                           <span className="yekan">تومان</span>
+                          <span>{digitToComma(item.total_discount)}</span>
                         </React.Fragment>
                       ) : (
                         "--"

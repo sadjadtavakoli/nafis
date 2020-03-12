@@ -104,8 +104,8 @@ const Cashregister = () => {
                       style={{ fontFamily: "arial", fontWeight: "bold" }}
                     >
                       <TableLabel count={3}>
-                        {digitToComma(bill.final_price)}&nbsp;
                         <span className="yekan">تومان</span>
+                        {digitToComma(bill.final_price)}&nbsp;
                       </TableLabel>
                     </Table.Cell>
                     <Table.Cell style={{ fontFamily: "arial" }}>

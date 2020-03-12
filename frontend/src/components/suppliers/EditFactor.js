@@ -121,10 +121,10 @@ const EditFactor = () => {
     <Container>
       <Segment stacked className="rtl">
         <Grid stackable>
-          <Grid.Column verticalAlign="middle" width={5}>
+          <Grid.Column verticalAlign="middle" mobile={8} computer={5}>
             <h2 className="yekan s-h2-padding">تامین کنندگان</h2>
           </Grid.Column>
-          <Grid.Column verticalAlign="middle" floated="left">
+          <Grid.Column verticalAlign="middle" floated="left" computer={1}>
             <BackButton />
           </Grid.Column>
         </Grid>
@@ -262,38 +262,40 @@ const EditFactor = () => {
               return (
                 <Table.Row>
                   <Table.Cell
-                    id="norm-latin"
-                    style={{ borderLeft: "1px solid #ddd" }}
+                    className="norm-latin font-weight-bold"
+                    style={{
+                      borderLeft: "1px solid #ddd"
+                    }}
                   >
-                    <TableLabel count={1}>{index + 1}</TableLabel>
+                    <TableLabel count={1}>#{index + 1}</TableLabel>
                   </Table.Cell>
-                  <Table.Cell id="norm-latin">
+                  <Table.Cell className="norm-latin">
                     <TableLabel count={2}>{item.product.code}</TableLabel>
                   </Table.Cell>
-                  <Table.Cell id="norm-latin">
+                  <Table.Cell className="yekan">
                     <TableLabel count={3}>{item.product.name}</TableLabel>
                   </Table.Cell>
-                  <Table.Cell id="norm-latin">
+                  <Table.Cell className="norm-latin">
                     <TableLabel count={4}>{item.amount}</TableLabel>
                   </Table.Cell>
-                  <Table.Cell id="norm-latin">
+                  <Table.Cell className="norm-latin">
                     <TableLabel count={5}>
                       {item.product.stock_amount}
                     </TableLabel>
                   </Table.Cell>
-                  <Table.Cell id="norm-latin">
+                  <Table.Cell className="norm-latin">
                     <TableLabel count={6}>
                       {digitToComma(item.product.buying_price)}
                     </TableLabel>
                   </Table.Cell>
-                  <Table.Cell id="norm-latin">
+                  <Table.Cell className="norm-latin">
                     <TableLabel count={7}>
                       {digitToComma(
                         Number(item.product.buying_price) * Number(item.amount)
                       )}
                     </TableLabel>
                   </Table.Cell>
-                  <Table.Cell id="norm-latin">
+                  <Table.Cell className="norm-latin">
                     <TableLabel count={8}>
                       {digitToComma(item.product.selling_price)}
                     </TableLabel>

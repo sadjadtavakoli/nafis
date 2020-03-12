@@ -223,9 +223,9 @@ class ProductTable extends React.Component {
                       </Table.Cell>
                       <Table.Cell className="norm-latin text-center rtl">
                         <TableLabel count={3}>
+                          <span className="yekan">تومان</span>
                           <span>{digitToComma(item.selling_price)}</span>{" "}
                         </TableLabel>
-                        <span className="yekan">تومان</span>
                       </Table.Cell>
                       <Table.Cell className="yekan text-center">
                         <TableLabel count={2}>
