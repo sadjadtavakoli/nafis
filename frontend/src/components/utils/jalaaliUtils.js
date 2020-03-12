@@ -277,8 +277,7 @@ function mod(a, b) {
 }
 function getNow() {
   let date = new Date();
-  date = date.toLocaleTimeString();
-  return date;
+  return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
 }
 function getTodayJalaali() {
   let date = new Date();
