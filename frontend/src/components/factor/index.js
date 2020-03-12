@@ -82,7 +82,7 @@ class PrintFactor extends React.Component {
           <div style={{ width: "76mm" }}>
             <div className="row border-black border-radius-7 mb-2">
               <div className="col-12 d-flex align-items-center justify-content-center">
-                <img src={logo} height="200" />
+                <img src={logo} height="150" />
               </div>
             </div>
             <div className="row border-black border-radius-7 mb-2 rtl text-right p-2">

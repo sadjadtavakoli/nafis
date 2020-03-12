@@ -437,16 +437,20 @@ const ViewBillModal = () => {
             </Table>
           )}
 
-          <div className="text-center padded">
+          <div className="text-right padded">
             <Button
-              circular
+              content="تایید فاکتور"
+              labelPosition="right"
+              className="yekan"
               onClick={() => setOpen(true)}
               size="huge"
               color="green"
               icon="check"
             />
             <Button
-              circular
+              content="افزودن پرداخت"
+              labelPosition="right"
+              className="yekan"
               onClick={() => toggleAddPaymentModal()}
               color="teal"
               size="huge"
@@ -458,7 +462,9 @@ const ViewBillModal = () => {
               }
             />
             <Button
-              circular
+              content="بازگشت"
+              labelPosition="right"
+              className="yekan"
               onClick={() => window.history.back()}
               size="huge"
               icon="arrow left"
