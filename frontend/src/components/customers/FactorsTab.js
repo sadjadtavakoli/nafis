@@ -140,62 +140,49 @@ class FactorsTab extends Component {
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell className="d-table-border">
-              <TableLabel>1</TableLabel>
-              ردیف
+              <TableLabel count={1}>ردیف</TableLabel>
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <TableLabel>2</TableLabel>
-              شماره فاکتور
+              <TableLabel count={2}>شماره فاکتور</TableLabel>
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <TableLabel>3</TableLabel>
-              شماره همراه
+              <TableLabel count={3}>شماره همراه</TableLabel>
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <TableLabel>4</TableLabel>
-              تاریخ بسته شدن
+              <TableLabel count={4}>تاریخ بسته شدن</TableLabel>
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <TableLabel>5</TableLabel>
-              تعداد اقلام
+              <TableLabel count={5}>تعداد اقلام</TableLabel>
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <TableLabel>6</TableLabel>
-              نام فروشنده
+              <TableLabel count={6}>نام فروشنده</TableLabel>
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <TableLabel>7</TableLabel>
-              نام صندوق دار
+              <TableLabel count={7}>نام صندوق دار</TableLabel>
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <TableLabel>8</TableLabel>
-              قیمت بدون تخفیف
+              <TableLabel count={8}>قیمت بدون تخفیف</TableLabel>
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <TableLabel>9</TableLabel>
-              تخفیف
+              <TableLabel count={9}>تخفیف</TableLabel>
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <TableLabel>10</TableLabel>
-              قیمت کل
+              <TableLabel count={10}>قیمت کل</TableLabel>
             </Table.HeaderCell>
             {this.state.remainedBillsToggle ? (
               <Table.HeaderCell>
-                <TableLabel>11</TableLabel>
-                بهای پرداخت شده
+                <TableLabel count={11}>بهای پرداخت شده</TableLabel>
               </Table.HeaderCell>
             ) : null}
             {this.state.remainedBillsToggle ? (
               <Table.HeaderCell>
-                <TableLabel>12</TableLabel>
-                بهای پرداختی مانده
+                <TableLabel count={12}>بهای پرداختی مانده</TableLabel>
               </Table.HeaderCell>
             ) : null}
             <Table.HeaderCell>
-              <TableLabel>
-                {this.state.remainedBillsToggle ? "13" : "11"}
+              <TableLabel count={this.state.remainedBillsToggle ? "13" : "11"}>
+                حالت فاکتور
               </TableLabel>
-              حالت فاکتور
             </Table.HeaderCell>
             <Table.HeaderCell>عملیات</Table.HeaderCell>
           </Table.Row>
@@ -206,83 +193,94 @@ class FactorsTab extends Component {
               return (
                 <Table.Row key={bill.pk}>
                   <Table.Cell className="d-table-border" id="norm-latin">
-                    <TableLabel>1</TableLabel>
-                    {index + 1}
+                    <TableLabel count={1}>{index + 1}</TableLabel>
                   </Table.Cell>
                   <Table.Cell className="norm-latin">
-                    <TableLabel>2</TableLabel>
-                    <span>{bill.pk}</span>
+                    <TableLabel count={2}>
+                      <span>{bill.pk}</span>
+                    </TableLabel>
                   </Table.Cell>
                   <Table.Cell className="norm-latin">
-                    <TableLabel>3</TableLabel>
-                    <span>{bill.buyer.phone_number}</span>
+                    <TableLabel count={3}>
+                      <span>{bill.buyer.phone_number}</span>
+                    </TableLabel>
                   </Table.Cell>
                   <Table.Cell className="norm-latin">
-                    <TableLabel>4</TableLabel>
-                    {bill.close_date ? (
-                      <span>{convertToJalaali(bill.close_date)}</span>
-                    ) : (
-                      <span className="yekan">ندارد</span>
-                    )}
+                    <TableLabel count={4}>
+                      {bill.close_date ? (
+                        <span>{convertToJalaali(bill.close_date)}</span>
+                      ) : (
+                        <span className="yekan">ندارد</span>
+                      )}
+                    </TableLabel>
                   </Table.Cell>
                   <Table.Cell id="norm-latin">
-                    <TableLabel>5</TableLabel>
-                    <span id="norm-latin">{bill.items.length}</span>
+                    <TableLabel count={5}>
+                      <span id="norm-latin">{bill.items.length}</span>
+                    </TableLabel>
                   </Table.Cell>
                   <Table.Cell className="yekan">
-                    <TableLabel>6</TableLabel>
-                    <span>
-                      {bill.seller.ffirst_name}&nbsp;{bill.seller.last_name}
-                    </span>
+                    <TableLabel count={6}>
+                      <span>
+                        {bill.seller.ffirst_name}&nbsp;{bill.seller.last_name}
+                      </span>
+                    </TableLabel>
                   </Table.Cell>
                   <Table.Cell className="yekan">
-                    <TableLabel>7</TableLabel>
-                    <span>
-                      {bill.closande ? (
-                        <span>
-                          {bill.closande.first_name}&nbsp;
-                          {bill.closande.last_name}
-                        </span>
-                      ) : (
-                        "موجود نمی باشد"
-                      )}
-                    </span>
+                    <TableLabel count={7}>
+                      <span>
+                        {bill.closande ? (
+                          <span>
+                            {bill.closande.first_name}&nbsp;
+                            {bill.closande.last_name}
+                          </span>
+                        ) : (
+                          "موجود نمی باشد"
+                        )}
+                      </span>
+                    </TableLabel>
                   </Table.Cell>
                   <Table.Cell className="norm-latin">
-                    <TableLabel>8</TableLabel>
-                    <span>{digitToComma(bill.price)}</span>&nbsp;
+                    <TableLabel count={8}>
+                      <span>{digitToComma(bill.price)}</span>&nbsp;
+                    </TableLabel>
                     <span className="yekan">تومان</span>
                   </Table.Cell>
                   <Table.Cell className="norm-latin">
-                    <TableLabel>9</TableLabel>
-                    <span>{digitToComma(bill.discount)}</span>&nbsp;
+                    <TableLabel count={9}>
+                      <span>{digitToComma(bill.discount)}</span>&nbsp;
+                    </TableLabel>
                     <span className="yekan">تومان</span>
                   </Table.Cell>
                   <Table.Cell className="norm-latin">
-                    <TableLabel>10</TableLabel>
-                    <span>{digitToComma(bill.final_price)}</span>
+                    <TableLabel count={10}>
+                      <span>{digitToComma(bill.final_price)}</span>
+                    </TableLabel>
                     <span className="yekan"> تومان</span>
                   </Table.Cell>
                   {this.state.remainedBillsToggle ? (
                     <Table.Cell className="norm-latin">
-                      <TableLabel>11</TableLabel>
-                      <span>{digitToComma(bill.paid)}</span>
+                      <TableLabel count={11}>
+                        <span>{digitToComma(bill.paid)}</span>
+                      </TableLabel>
                       <span className="yekan"> تومان</span>
                     </Table.Cell>
                   ) : null}
                   {this.state.remainedBillsToggle ? (
                     <Table.Cell className="norm-latin">
-                      <TableLabel>12</TableLabel>
-                      <span>{bill.final_price - bill.paid}</span>
+                      <TableLabel count={12}>
+                        <span>{bill.final_price - bill.paid}</span>
+                      </TableLabel>
                     </Table.Cell>
                   ) : null}
                   <Table.Cell className="yekan">
-                    <TableLabel>
-                      {this.state.remainedBillsToggle ? "13" : "11"}
+                    <TableLabel
+                      count={this.state.remainedBillsToggle ? "13" : "11"}
+                    >
+                      <span>{bill.status === "done" ? "تسویه" : null}</span>
+                      <span>{bill.status === "active" ? "باز" : null}</span>
+                      <span>{bill.status === "remained" ? "مانده" : null}</span>
                     </TableLabel>
-                    <span>{bill.status === "done" ? "تسویه" : null}</span>
-                    <span>{bill.status === "active" ? "باز" : null}</span>
-                    <span>{bill.status === "remained" ? "مانده" : null}</span>
                   </Table.Cell>
                   <Table.Cell className="yekan">
                     <Button

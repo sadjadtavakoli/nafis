@@ -1,11 +1,18 @@
 import React from "react";
-import { Label } from "semantic-ui-react";
+import { Label, Grid } from "semantic-ui-react";
 
 let TableLabel = props => {
   return (
-    <Label className={"only-device d-flex m-1 norm-latin"}>
-      <span>{props.children}</span>
-    </Label>
+    <Grid className={"ltr"}>
+      <Grid.Column floated="left" mobile={10} className={"text-right"}>
+        {props.children}
+      </Grid.Column>
+      <Grid.Column floated="right" mobile={5}>
+        <Label className={"only-device d-flex m-1 norm-latin"}>
+          <span>{props.count}</span>
+        </Label>
+      </Grid.Column>
+    </Grid>
   );
 };
 
