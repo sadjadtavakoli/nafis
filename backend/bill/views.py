@@ -493,7 +493,7 @@ class SupplierBillItemViewSet(NafisBase, ModelViewSet):
         return Response(serializer.data, headers=headers)
 
     def create(self, request, *args, **kwargs):
-        bill = Bill.objects.get(pk=self.request.data.get('bill', None))
+        bill = SupplierBill.objects.get(pk=self.request.data.get('bill', None))
         staff = Staff.objects.get(username=request.user.username)
         if staff.job in self.non_creator:
             raise PermissionDenied

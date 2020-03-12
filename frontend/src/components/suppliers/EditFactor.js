@@ -80,8 +80,10 @@ const EditFactor = () => {
         setCount(count + 1);
         toastr.success("آیتم جدید با موفقیت ثبت شد");
       })
-      .catch(() => {
-        toastr.error("خطا در عملیات اضافه کردن آیتم");
+      .catch(error => {
+        if (error.response) {
+          toastr.error("خطا در عملیات اضافه کردن آیتم", error.response.data);
+        }
       });
   };
 
