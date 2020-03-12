@@ -173,6 +173,7 @@ const SupplierFactor = ({ pk }) => {
                         <Grid.Row columns={2}>
                           <Grid.Column
                             style={{
+                              paddingRight: 3,
                               paddingLeft: 0
                             }}
                           >

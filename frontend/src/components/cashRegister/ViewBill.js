@@ -27,8 +27,8 @@ import { standardTimeToJalaali } from "../utils/jalaaliUtils";
 import logo from "../../assets/logo_printable.png";
 import { toastr } from "react-redux-toastr";
 import history from "../../history";
-import { updateBill } from "../../actions/SaleActions";
-
+import { deleteItem, updateBill } from "../../actions/SaleActions";
+import NotFound from "../utils/notFound";
 const ViewBillModal = () => {
   var messagesEnd;
   const userData = JSON.parse(localStorage.getItem("user"));
@@ -73,6 +73,19 @@ const ViewBillModal = () => {
     getBill();
   };
 
+  const deleteItemFunc = pk => {
+    let confirm = window.confirm("آیا از حذف این قلم مطمئن هستید؟");
+    if (confirm) {
+      dispatch(deleteItem(pk))
+        .then(() => {
+          toastr.success("قلم با موفقیت حذف شد");
+          getBill();
+        })
+        .catch(() => {
+          toastr.error("خطا در حذف قلم");
+        });
+    }
+  };
   const deletePaymentFunc = pk => {
     let confirm = window.confirm("آیا از حذف این پرداخت مطمئن هستید؟");
     if (confirm) {
@@ -213,46 +226,56 @@ const ViewBillModal = () => {
             </Grid.Column>
           </Grid>
           <Table celled className="rtl text-center">
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell className="table-border-left">
-                  <TableLabel>1</TableLabel>
-                  ردیف
-                </Table.HeaderCell>
-                <Table.HeaderCell>
-                  <TableLabel>2</TableLabel>
-                  شرح کالا
-                </Table.HeaderCell>
-                <Table.HeaderCell>
-                  <TableLabel>3</TableLabel>
-                  کد کالا
-                </Table.HeaderCell>
-                <Table.HeaderCell>
-                  <TableLabel>4</TableLabel>
-                  متراژ
-                </Table.HeaderCell>
-                <Table.HeaderCell>
-                  <TableLabel>5</TableLabel>
-                  مبلغ واحد
-                </Table.HeaderCell>
-                <Table.HeaderCell>
-                  <TableLabel>6</TableLabel>
-                  تخفیف
-                </Table.HeaderCell>
-                <Table.HeaderCell>
-                  <TableLabel>7</TableLabel>
-                  مبلغ خام
-                </Table.HeaderCell>
-                <Table.HeaderCell>
-                  <TableLabel>8</TableLabel>
-                  مبلغ نهایی
-                </Table.HeaderCell>
-                <Table.HeaderCell className="table-border-left-none">
-                  <TableLabel>9</TableLabel>
-                  ته طاقه
-                </Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
+            {bill.items.length ? (
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell className="table-border-left">
+                    <TableLabel>1</TableLabel>
+                    ردیف
+                  </Table.HeaderCell>
+                  <Table.HeaderCell>
+                    <TableLabel>2</TableLabel>
+                    شرح کالا
+                  </Table.HeaderCell>
+                  <Table.HeaderCell>
+                    <TableLabel>3</TableLabel>
+                    کد کالا
+                  </Table.HeaderCell>
+                  <Table.HeaderCell>
+                    <TableLabel>4</TableLabel>
+                    متراژ
+                  </Table.HeaderCell>
+                  <Table.HeaderCell>
+                    <TableLabel>5</TableLabel>
+                    مبلغ واحد
+                  </Table.HeaderCell>
+                  <Table.HeaderCell>
+                    <TableLabel>6</TableLabel>
+                    تخفیف
+                  </Table.HeaderCell>
+                  <Table.HeaderCell>
+                    <TableLabel>7</TableLabel>
+                    مبلغ خام
+                  </Table.HeaderCell>
+                  <Table.HeaderCell>
+                    <TableLabel>8</TableLabel>
+                    مبلغ نهایی
+                  </Table.HeaderCell>
+                  <Table.HeaderCell>
+                    <TableLabel>9</TableLabel>
+                    ته طاقه
+                  </Table.HeaderCell>
+                  <Table.HeaderCell className="table-border-left-none">
+                    عملیات
+                  </Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+            ) : (
+              <NotFound
+                header="لیست اقلام در این فاکتور موجود نمی باشد"
+                content=" "
+              />
+            )}
 
             <Table.Body>
               {bill.items.map((item, index) => {
@@ -292,9 +315,20 @@ const ViewBillModal = () => {
                       <TableLabel>8</TableLabel>
                       {digitToComma(item.final_price)}
                     </Table.Cell>
-                    <Table.Cell className="table-border-left-none">
+                    <Table.Cell>
                       <TableLabel>9</TableLabel>
                       <Checkbox toggle readOnly checked={item.end_of_roll} />
+                    </Table.Cell>
+                    <Table.Cell className="table-border-left-none">
+                      <Button
+                        color="red"
+                        className="yekan"
+                        icon="trash"
+                        labelPosition="right"
+                        content="حذف قلم"
+                        size="mini"
+                        onClick={() => deleteItemFunc(item.pk)}
+                      />
                     </Table.Cell>
                   </Table.Row>
                 );

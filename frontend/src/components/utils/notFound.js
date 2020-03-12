@@ -9,8 +9,8 @@ class NotFound extends React.Component {
           error
           className="rtl"
           icon="search"
-          header="نتیجه ای یافت نشد"
-          content="لطفا پس از بررسی دوباره امتحان کنید"
+          header={this.props.header || "نتیجه ای یافت نشد"}
+          content={this.props.content || "لطفا پس از بررسی دوباره امتحان کنید"}
         />
       </div>
     );
