@@ -88,7 +88,6 @@ const EditFactor = () => {
   };
 
   useEffect(() => {
-    fetch && console.log(factor);
     fetch &&
       factor.items.map(item => {
         let i = Number(item.product.buying_price) * Number(item.amount);
@@ -100,7 +99,7 @@ const EditFactor = () => {
     setOpenModal(false);
   };
 
-  const deletePaymentFunc = () => {
+  const deletePaymentFunc = pk => {
     dispatch(deletePayment(pk))
       .then(() => {
         toastr.success(

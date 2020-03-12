@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Card, Header, Form, Button, Label } from "semantic-ui-react";
+import React, { useState } from "react";
+import { Card, Header, Form, Button, Label, Icon } from "semantic-ui-react";
 import { useSelector, useDispatch } from "react-redux";
 import { getProductsByCode } from "../../actions/SuppliersActions";
 import { enToFa } from "../utils/numberUtils";
@@ -9,13 +9,29 @@ const AddFactorItem = ({ onClose, onSubmit, pk }) => {
   const [code, setCode] = useState(null);
   const [amount, setAmount] = useState(null);
   const [price, setPrice] = useState(null);
+  const [notFound, setNotFound] = useState(true);
 
   const product = useSelector(state => state.suppliers.product);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(getProductsByCode(code)).then(() => setFecth(true));
-  }, [code]);
+  const handleCodeChange = e => {
+    let value = e.target.value;
+    setCode(value);
+    if (value) {
+      dispatch(getProductsByCode(value))
+        .then(() => {
+          setFecth(true);
+          setNotFound(false);
+        })
+        .catch(() => {
+          setFecth(true);
+          setNotFound(true);
+        });
+    } else {
+      setFecth(false);
+      setNotFound(true);
+    }
+  };
 
   const submit = () => {
     if (!code) {
@@ -49,7 +65,7 @@ const AddFactorItem = ({ onClose, onSubmit, pk }) => {
         </Header>
       </Card.Header>
       <Card.Content>
-        {fetch ? (
+        {fetch && !notFound ? (
           <div className="text-center" style={{ marginBottom: "10px" }}>
             <Label color="teal">
               <p>
@@ -70,6 +86,14 @@ const AddFactorItem = ({ onClose, onSubmit, pk }) => {
             </Label>
           </div>
         ) : null}
+        {fetch && notFound ? (
+          <div className="text-center" style={{ marginBottom: "10px" }}>
+            <Label color="red">
+              <Icon name="warning circle" />
+              <span>محصول مورد نظر یافت نشد</span>
+            </Label>
+          </div>
+        ) : null}
         <Form>
           <Form.Group widths={2}>
             <Form.Input
@@ -84,7 +108,7 @@ const AddFactorItem = ({ onClose, onSubmit, pk }) => {
               type="number"
               value={code}
               min={1}
-              onChange={e => setCode(e.target.value)}
+              onChange={e => handleCodeChange(e)}
             />
           </Form.Group>
           <Form.Group widths={2}>
@@ -100,7 +124,7 @@ const AddFactorItem = ({ onClose, onSubmit, pk }) => {
             <Button.Group className="text-yekan text-center">
               <Button onClick={onClose}>بستن</Button>
               <Button.Or text="یا" />
-              <Button positive onClick={submit}>
+              <Button positive onClick={submit} disabled={notFound}>
                 افزودن
               </Button>
             </Button.Group>
