@@ -25,24 +25,27 @@ class FactorsTab extends Component {
         cheques: this.props.allCheques
       });
     });
-    this.props.getRemainedCheques(this.props.passingPk);
   }
 
   handleToggleClick = () => {
-    this.setState({ remainedChequesToggle: !this.state.remainedChequesToggle });
-    if (this.state.remainedChequesToggle) {
-      this.props.getRemainedCheques(this.props.passingPk).then(() => {
-        this.setState({
-          cheques: this.props.remainedCheques
-        });
-      });
-    } else {
-      this.props.getRemainedCheques(this.props.passingPk).then(() => {
-        this.setState({
-          cheques: this.props.allCheques
-        });
-      });
-    }
+    this.setState(
+      { remainedChequesToggle: !this.state.remainedChequesToggle },
+      () => {
+        if (this.state.remainedChequesToggle) {
+          this.props.getRemainedCheques(this.props.passingPk).then(() => {
+            this.setState({
+              cheques: this.props.remainedCheques
+            });
+          });
+        } else {
+          this.props.getAllCheques(this.props.passingPk).then(() => {
+            this.setState({
+              cheques: this.props.allCheques
+            });
+          });
+        }
+      }
+    );
   };
 
   createTable = () => {
