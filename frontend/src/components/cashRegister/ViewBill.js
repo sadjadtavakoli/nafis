@@ -442,9 +442,9 @@ const ViewBillModal = () => {
                       <Table.Cell>
                         <TableLabel count={3}>
                           {payment.type === "card" ? "کارت" : null}
-                        </TableLabel>
                         {payment.type === "cash" ? "نقد" : null}
                         {payment.type === "cheque" ? "چک" : null}
+                        </TableLabel>
                       </Table.Cell>
                       <Table.Cell className="table-border-left-none">
                         <Button
