@@ -137,56 +137,62 @@ class FactorsTab extends Component {
             </Table.HeaderCell>
           </Table.Row>
         </Table.Header>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell className="d-table-border">
-              <TableLabel count={1}>ردیف</TableLabel>
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <TableLabel count={2}>شماره فاکتور</TableLabel>
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <TableLabel count={3}>شماره همراه</TableLabel>
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <TableLabel count={4}>تاریخ بسته شدن</TableLabel>
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <TableLabel count={5}>تعداد اقلام</TableLabel>
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <TableLabel count={6}>نام فروشنده</TableLabel>
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <TableLabel count={7}>نام صندوق دار</TableLabel>
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <TableLabel count={8}>قیمت بدون تخفیف</TableLabel>
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <TableLabel count={9}>تخفیف</TableLabel>
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <TableLabel count={10}>قیمت کل</TableLabel>
-            </Table.HeaderCell>
-            {this.state.remainedBillsToggle ? (
-              <Table.HeaderCell>
-                <TableLabel count={11}>بهای پرداخت شده</TableLabel>
+        {this.state.fetch && bills.count ? (
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell className="d-table-border">
+                <TableLabel count={1}>ردیف</TableLabel>
               </Table.HeaderCell>
-            ) : null}
-            {this.state.remainedBillsToggle ? (
               <Table.HeaderCell>
-                <TableLabel count={12}>بهای پرداختی مانده</TableLabel>
+                <TableLabel count={2}>شماره فاکتور</TableLabel>
               </Table.HeaderCell>
-            ) : null}
-            <Table.HeaderCell>
-              <TableLabel count={this.state.remainedBillsToggle ? "13" : "11"}>
-                حالت فاکتور
-              </TableLabel>
-            </Table.HeaderCell>
-            <Table.HeaderCell>عملیات</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
+              <Table.HeaderCell>
+                <TableLabel count={3}>شماره همراه</TableLabel>
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <TableLabel count={4}>تاریخ بسته شدن</TableLabel>
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <TableLabel count={5}>تعداد اقلام</TableLabel>
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <TableLabel count={6}>نام فروشنده</TableLabel>
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <TableLabel count={7}>نام صندوق دار</TableLabel>
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <TableLabel count={8}>قیمت بدون تخفیف</TableLabel>
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <TableLabel count={9}>تخفیف</TableLabel>
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <TableLabel count={10}>قیمت کل</TableLabel>
+              </Table.HeaderCell>
+              {this.state.remainedBillsToggle ? (
+                <Table.HeaderCell>
+                  <TableLabel count={11}>بهای پرداخت شده</TableLabel>
+                </Table.HeaderCell>
+              ) : null}
+              {this.state.remainedBillsToggle ? (
+                <Table.HeaderCell>
+                  <TableLabel count={12}>بهای پرداختی مانده</TableLabel>
+                </Table.HeaderCell>
+              ) : null}
+              <Table.HeaderCell>
+                <TableLabel
+                  count={this.state.remainedBillsToggle ? "13" : "11"}
+                >
+                  حالت فاکتور
+                </TableLabel>
+              </Table.HeaderCell>
+              <Table.HeaderCell>عملیات</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+        ) : (
+          <NotFound />
+        )}
         <Table.Body>
           {this.state.fetch &&
             bills.results.map((bill, index) => {
