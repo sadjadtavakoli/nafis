@@ -209,7 +209,9 @@ const EditFactor = () => {
                 open={popupOpen}
                 trigger={
                   <Button
-                    circular
+                    content="تایید فاکتور"
+                    labelPosition="right"
+                    className="yekan"
                     icon="add"
                     color="green"
                     onClick={togglePopupOpen}
@@ -327,7 +329,7 @@ const EditFactor = () => {
             })}
         </Table.Body>
       </Table>
-      <Grid stackable >
+      <Grid stackable>
         <Grid.Column floated="right" width="3">
           <Table celled className="rtl text-right" collapsing>
             <Table.Header>
@@ -425,21 +427,32 @@ const EditFactor = () => {
           </Table.Body>
         </Table>
       )}
-      <div className="text-center padded">
+      <div className="text-right padded">
         <Button
-          circular
+          content="بازگشت"
+          labelPosition="right"
+          className="yekan"
           size="huge"
           icon="arrow left"
           onClick={() => window.history.back()}
         />
         <Button
-          circular
+          content="افزودن پرداخت"
+          labelPosition="right"
+          className="yekan"
           size="huge"
           icon="plus"
           color="teal"
           onClick={() => setOpenModal(true)}
         />
-        <Button circular size="huge" icon="check" color="green" />
+        <Button
+          content="تایید فاکتور"
+          labelPosition="right"
+          className="yekan"
+          size="huge"
+          icon="check"
+          color="green"
+        />
       </div>
       {openModal && (
         <AddPaymentModal
