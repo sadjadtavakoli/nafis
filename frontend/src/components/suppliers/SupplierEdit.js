@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { getTheSupplier, updateSupplier } from "../../actions/SuppliersActions";
 import { toastr } from "react-redux-toastr";
 
-class EditSupplier extends Component {
+class SupplierEdit extends Component {
   state = {
     pk: null,
 
@@ -234,5 +234,5 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, { getTheSupplier, updateSupplier })(
-  EditSupplier
+  SupplierEdit
 );

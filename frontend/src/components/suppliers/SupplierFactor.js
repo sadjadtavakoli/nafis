@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Table, Grid, Search, Button, Tab } from "semantic-ui-react";
+import { Table, Grid, Search, Button, Pagination } from "semantic-ui-react";
 import AddSupplierFactorModal from "./AddSupplierFactorModal";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -43,6 +43,10 @@ const SupplierFactor = ({ pk }) => {
         });
   };
 
+  const changePage = (_, { activePage }) => {
+    dispatch(getSupplierFactors(pk, activePage));
+  };
+
   return (
     <React.Fragment>
       <Table celled className="rtl text-center">
@@ -71,7 +75,6 @@ const SupplierFactor = ({ pk }) => {
             </Table.HeaderCell>
           </Table.Row>
         </Table.Header>
-
         {fetch && factors.count ? (
           <React.Fragment>
             <Table.Header>
@@ -214,6 +217,22 @@ const SupplierFactor = ({ pk }) => {
               })}
             </Table.Body>
           </React.Fragment>
+        ) : null}
+        {fetch && factors.count > 25 ? (
+          <Table.Footer>
+            <Table.Row>
+              <Table.HeaderCell colSpan="6">
+                <Pagination
+                  className="norm-latin ltr"
+                  defaultActivePage={1}
+                  onPageChange={changePage}
+                  firstItem={null}
+                  lastItem={null}
+                  totalPages={Math.ceil(factors.count / 25)}
+                />
+              </Table.HeaderCell>
+            </Table.Row>
+          </Table.Footer>
         ) : null}
         {!fetch ? <LoadingBar /> : null}
       </Table>

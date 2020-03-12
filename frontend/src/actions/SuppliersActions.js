@@ -58,9 +58,12 @@ export const getSupplierBySearch = query => async dispatch => {
   return response;
 };
 
-export const getSupplierFactors = pk => async dispatch => {
+export const getSupplierFactors = (pk, page = 1) => async dispatch => {
   const response = await server(localStorage.getItem("token")).get(
-    `/suppliers/${pk}/bills/`
+    `/suppliers/${pk}/bills/`,
+    {
+      params: { page }
+    }
   );
   dispatch({ type: GET_SUPPLIER_FACTORS, payload: response.data });
   return response;
