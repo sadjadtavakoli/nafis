@@ -84,7 +84,7 @@ export const getSupplierFactor = pk => async dispatch => {
 
 export const deleteFactorItem = pk => async () => {
   const response = await server(localStorage.getItem("token")).delete(
-    `/supplier-bill-items/${pk}/`
+    `/supplier-bill-item/${pk}/`
   );
   return response;
 };
