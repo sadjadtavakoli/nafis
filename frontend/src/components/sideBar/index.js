@@ -1,7 +1,7 @@
 import React from "react";
 // import animejs from "animejs";
 import { connect } from "react-redux";
-import { Icon, Menu, Segment, Sidebar, Button } from "semantic-ui-react";
+import { Icon, Menu, Segment, Sidebar, Button, Popup } from "semantic-ui-react";
 import history from "../../history";
 import { logOut } from "../../actions/LoginActions";
 import HomeButton from "../utils/HomeButton";
@@ -64,27 +64,48 @@ class SideBar extends React.Component {
                 onClick={() => this.setVisible(!this.state.visible)}
                 icon="bars"
               />
-              <Menu.Item fitted={true} onClick={this.logOut}>
-                <Button
-                  icon="sign-out"
-                  labelPosition="left"
-                  content="خروج"
-                  className="yekan"
-                />
-              </Menu.Item>
+
               <Menu.Item fitted={true}>
                 <HomeButton />
               </Menu.Item>
             </Menu.Menu>
             <Menu.Menu position="right">
               <Menu.Item style={{ padding: 0 }}>
-                {this.state.userData.first_name +
-                  " " +
-                  this.state.userData.last_name}
+                <Popup
+                  flowing
+                  hoverable
+                  position="bottom right"
+                  content={
+                    <Menu.Item
+                      className="pointer"
+                      as="p"
+                      fitted={true}
+                      onClick={this.logOut}
+                    >
+                      <p>خروج از سامانه</p>
+                    </Menu.Item>
+                  }
+                  trigger={
+                    <div
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        padding: "0.4em"
+                      }}
+                    >
+                      {this.state.userData.first_name +
+                        " " +
+                        this.state.userData.last_name}
+                      <img
+                        src={userAvatar}
+                        style={{ paddingLeft: "0.4em" }}
+                        height="42"
+                      />
+                    </div>
+                  }
+                />
               </Menu.Item>
-              <Menu.Item style={{ paddingLeft: 0 }}>
-                <img src={userAvatar} />
-              </Menu.Item>
+              <Menu.Item style={{ paddingLeft: 0 }}></Menu.Item>
             </Menu.Menu>
           </Menu>
         </div>
