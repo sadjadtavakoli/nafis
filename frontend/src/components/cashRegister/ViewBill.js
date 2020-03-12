@@ -36,7 +36,6 @@ const ViewBillModal = () => {
   const [fetch, setFetch] = useState(false);
   const [openAddPayment, setOpenAddPayment] = useState(false);
   const [openEditCustomer, setOpenEditCustomer] = useState(false);
-  const [pays, setPays] = useState(false);
   const [open, setOpen] = useState(false);
   const [editPoints, setEditPoints] = useState(false);
   const [toggle, setToggle] = useState(false);
@@ -49,7 +48,6 @@ const ViewBillModal = () => {
 
   useEffect(() => {
     getBill();
-    scrollToBottom();
   }, [fetch]);
 
   const getBill = () => {
@@ -57,13 +55,14 @@ const ViewBillModal = () => {
       dispatch(getClassTypes()).then(res => {
         let customerTypes = res.data.customerTypes;
         customerTypes.map(classTypeItem => {
-          if (bill && classTypeItem.value == bill.buyer.classType)
+          if (bill && classTypeItem.value === bill.buyer.class_type)
             setClassType(classTypeItem.text);
         });
       });
+
       setFetch(true);
-      setPays(bill && bill.payments.length ? true : false);
       setUsedPoints(bill && bill.used_points);
+      // scrollToBottom();
     });
   };
 
@@ -92,7 +91,7 @@ const ViewBillModal = () => {
 
   const handleSubmit = pk => {
     let sms = toggle;
-    doneTheBill(pk, sms).then(() => {
+    dispatch(doneTheBill(pk, sms)).then(() => {
       history.push(`/factor/${pk}/print`);
     });
   };
@@ -373,7 +372,7 @@ const ViewBillModal = () => {
 
           <hr color="#ddd" />
 
-          {pays && (
+          {bill && !!bill.payments.length && (
             <Table celled className="rtl text-center">
               <Table.Header>
                 <Table.Row>
