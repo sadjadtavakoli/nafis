@@ -108,28 +108,22 @@ class BillTable extends React.Component {
                   عملیات
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  <TableLabel>6</TableLabel>
-                  تعداد پرداختی ها
+                  <TableLabel count={6}>تعداد پرداختی ها</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  <TableLabel>5</TableLabel>
-                  تاریخ ثبت
+                  <TableLabel count={5}>تاریخ ثبت</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  <TableLabel>4</TableLabel>
-                  مبلغ کل
+                  <TableLabel count={4}>مبلغ کل</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  <TableLabel>3</TableLabel>
-                  مبلغ نهایی
+                  <TableLabel count={3}>مبلغ نهایی</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  <TableLabel>2</TableLabel>
-                  تخفیف کل
+                  <TableLabel count={2}>تخفیف کل</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  <TableLabel>1</TableLabel>
-                  شماره تلفن خریدار
+                  <TableLabel count={1}>شماره تلفن خریدار</TableLabel>
                 </Table.HeaderCell>
               </Table.Row>
             ) : null}
@@ -189,42 +183,48 @@ class BillTable extends React.Component {
                     ></Button>
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center rtl">
-                    <TableLabel>6</TableLabel>
-                    <span>{item.payments.length}</span>&nbsp;
+                    <TableLabel count={6}>
+                      <span>{item.payments.length}</span>&nbsp;
+                    </TableLabel>
                     <span className="yekan">پرداختی</span>
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center">
-                    <TableLabel>5</TableLabel>
-                    <span>{standardTimeToJalaali(item.create_date)}</span>
+                    <TableLabel count={5}>
+                      <span>{standardTimeToJalaali(item.create_date)}</span>
+                    </TableLabel>
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center rtl">
-                    <TableLabel>4</TableLabel>
-                    <span>{digitToComma(item.price)}</span>&nbsp;
+                    <TableLabel count={4}>
+                      <span>{digitToComma(item.price)}</span>&nbsp;
+                    </TableLabel>
                     <span className="yekan">تومان</span>
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center rtl">
-                    <TableLabel>3</TableLabel>
-                    <b>
-                      <span>{digitToComma(item.final_price)}</span>&nbsp;
-                      <span className="yekan">تومان</span>
-                    </b>
+                    <TableLabel count={3}>
+                      <b>
+                        <span>{digitToComma(item.final_price)}</span>&nbsp;
+                        <span className="yekan">تومان</span>
+                      </b>
+                    </TableLabel>
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center rtl">
-                    <TableLabel>2</TableLabel>
-                    {item.total_discount ? (
-                      <React.Fragment>
-                        <span>{digitToComma(item.total_discount)}</span>
-                        <span className="yekan">تومان</span>
-                      </React.Fragment>
-                    ) : (
-                      "--"
-                    )}{" "}
+                    <TableLabel count={2}>
+                      {item.total_discount ? (
+                        <React.Fragment>
+                          <span>{digitToComma(item.total_discount)}</span>
+                          <span className="yekan">تومان</span>
+                        </React.Fragment>
+                      ) : (
+                        "--"
+                      )}{" "}
+                    </TableLabel>
                   </Table.Cell>
                   <Table.Cell className="norm-latin text-center">
-                    <TableLabel>1</TableLabel>
-                    <span>
-                      {phoneNumberBeautifier(item.buyer.phone_number)}
-                    </span>
+                    <TableLabel count={1}>
+                      <span>
+                        {phoneNumberBeautifier(item.buyer.phone_number)}
+                      </span>
+                    </TableLabel>
                   </Table.Cell>
                 </Table.Row>
               );

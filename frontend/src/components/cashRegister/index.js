@@ -27,10 +27,10 @@ const Cashregister = () => {
     <Container>
       <Segment stacked className="rtl">
         <Grid verticalAlign="middle">
-          <Grid.Column floated="right">
+          <Grid.Column floated="right" computer={5} mobile={5}>
             <h2 className="yekan">صندوق</h2>
           </Grid.Column>
-          <Grid.Column floated="left">
+          <Grid.Column floated="left" computer={1} mobile={4}>
             <Button
               circular
               icon="left arrow"
@@ -45,10 +45,10 @@ const Cashregister = () => {
           <Table.Row>
             <Table.HeaderCell className="text-right" colSpan="5">
               <Grid verticalAlign="middle">
-                <Grid.Column width={5} floated="right">
+                <Grid.Column computer={5} mobile={16} floated="right">
                   <h3 className="yekan">لیست فاکتورهای فعال</h3>
                 </Grid.Column>
-                <Grid.Column width={4} floated="left">
+                <Grid.Column computer={4} mobile={16} floated="left">
                   <Button
                     onClick={() => history.push("/daily-report/")}
                     color="teal"
@@ -68,20 +68,16 @@ const Cashregister = () => {
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell className="table-border-left">
-                  <TableLabel>1</TableLabel>
-                  موبایل خریدار
+                  <TableLabel count={1}>موبایل خریدار</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell>
-                  <TableLabel>2</TableLabel>
-                  اسم فروشنده
+                  <TableLabel count={2}>اسم فروشنده</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell>
-                  <TableLabel>3</TableLabel>
-                  مبلغ نهایی فاکتور
+                  <TableLabel count={3}>مبلغ نهایی فاکتور</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell>
-                  <TableLabel>4</TableLabel>
-                  تاریخ فاکتور
+                  <TableLabel count={4}>تاریخ فاکتور</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell>عملیات فاکتور</Table.HeaderCell>
               </Table.Row>
@@ -95,25 +91,27 @@ const Cashregister = () => {
                       className="table-border-left"
                       style={{ fontFamily: "arial" }}
                     >
-                      <TableLabel>1</TableLabel>
-                      {bill.buyer.phone_number}
+                      <TableLabel count={1}>
+                        {bill.buyer.phone_number}
+                      </TableLabel>
                     </Table.Cell>
                     <Table.Cell>
-                      <TableLabel>2</TableLabel>
-                      {bill.seller.first_name} {bill.seller.last_name}
+                      <TableLabel count={2}>
+                        {bill.seller.first_name} {bill.seller.last_name}
+                      </TableLabel>
                     </Table.Cell>
                     <Table.Cell
                       style={{ fontFamily: "arial", fontWeight: "bold" }}
                     >
-                      <TableLabel>3</TableLabel>
-                      {digitToComma(bill.final_price)}&nbsp;
-                      <span className="yekan">تومان</span>
+                      <TableLabel count={3}>
+                        {digitToComma(bill.final_price)}&nbsp;
+                        <span className="yekan">تومان</span>
+                      </TableLabel>
                     </Table.Cell>
                     <Table.Cell style={{ fontFamily: "arial" }}>
-                      <TableLabel>4</TableLabel>
-                      {standardTimeToJalaali(
-                        convertToJalaali(bill.create_date)
-                      )}
+                      <TableLabel count={4}>
+                        {convertToJalaali(bill.create_date)}
+                      </TableLabel>
                     </Table.Cell>
                     <Table.Cell>
                       <Button

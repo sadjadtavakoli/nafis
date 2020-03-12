@@ -77,28 +77,29 @@ const SupplierFactor = ({ pk }) => {
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell style={{ borderLeft: "1px solid #ddd" }}>
-                  <TableLabel>1</TableLabel>
-                  ردیف
+                  <TableLabel count={1}>ردیف</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell>
-                  <TableLabel>2</TableLabel>شماره فاکتور
+                  <TableLabel count={2}>شماره فاکتور</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell>
-                  <TableLabel>3</TableLabel>خلاصه اجناس
+                  <TableLabel count={3}>خلاصه اجناس</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell>
-                  <TableLabel>4</TableLabel>
-                  تعداد اجناس ثبت شده در فاکتور
+                  <TableLabel count={4}>
+                    تعداد اجناس ثبت شده در فاکتور
+                  </TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell>
-                  <TableLabel>5</TableLabel>تاریخ ثبت فاکتور در سیستم
+                  <TableLabel count={5}>تاریخ ثبت فاکتور در سیستم</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell>
-                  <TableLabel>6</TableLabel>تاریخ خرید
+                  <TableLabel count={6}>تاریخ خرید</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell>
-                  <TableLabel>7</TableLabel>
-                  حالت فاکتور (تسویه یا عدم تسویه)
+                  <TableLabel count={7}>
+                    حالت فاکتور (تسویه یا عدم تسویه)
+                  </TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell style={{ borderLeft: "none" }}>
                   عملیات
@@ -114,59 +115,60 @@ const SupplierFactor = ({ pk }) => {
                       id="norm-latin"
                       style={{ borderLeft: "1px solid #ddd" }}
                     >
-                      <TableLabel>1</TableLabel>
-                      {index + 1}
+                      <TableLabel count={1}>{index + 1}</TableLabel>
                     </Table.Cell>
                     <Table.Cell id="norm-latin">
-                      <TableLabel>2</TableLabel>
-                      {factor.pk}
+                      <TableLabel count={2}>{factor.pk}</TableLabel>
                     </Table.Cell>
                     <Table.Cell>
-                      <TableLabel>3</TableLabel>
-                      {factor.items.length ? (
-                        factor.items.length > 5 ? (
-                          <React.Fragment>
-                            <span>{factor.items[0].product.name}</span>
-                            <br />
-                            <span>{factor.items[1].product.name}</span>
-                            <br />
-                            <span>{factor.items[2].product.name}</span>
-                            <br />
-                            <span>{factor.items[3].product.name}</span>
-                            <br />
-                            <span>{factor.items[4].product.name}</span>
-                            <br />
-                            <span>...</span>
-                          </React.Fragment>
+                      <TableLabel count={3}>
+                        {factor.items.length ? (
+                          factor.items.length > 5 ? (
+                            <React.Fragment>
+                              <span>{factor.items[0].product.name}</span>
+                              <br />
+                              <span>{factor.items[1].product.name}</span>
+                              <br />
+                              <span>{factor.items[2].product.name}</span>
+                              <br />
+                              <span>{factor.items[3].product.name}</span>
+                              <br />
+                              <span>{factor.items[4].product.name}</span>
+                              <br />
+                              <span>...</span>
+                            </React.Fragment>
+                          ) : (
+                            factor.items.map(item => {
+                              return (
+                                <span>
+                                  {item.product.name}
+                                  <br />
+                                </span>
+                              );
+                            })
+                          )
                         ) : (
-                          factor.items.map(item => {
-                            return (
-                              <span>
-                                {item.product.name}
-                                <br />
-                              </span>
-                            );
-                          })
-                        )
-                      ) : (
-                        "-"
-                      )}
+                          "-"
+                        )}
+                      </TableLabel>
                     </Table.Cell>
                     <Table.Cell id="norm-latin">
-                      <TableLabel>4</TableLabel>
-                      {factor.items.length}
+                      <TableLabel count={4}>{factor.items.length}</TableLabel>
                     </Table.Cell>
                     <Table.Cell id="norm-latin">
-                      <TableLabel>5</TableLabel>
-                      {standardTimeToJalaali(factor.create_date)}
+                      <TableLabel count={5}>
+                        {standardTimeToJalaali(factor.create_date)}
+                      </TableLabel>
                     </Table.Cell>
                     <Table.Cell id="norm-latin">
-                      <TableLabel>6</TableLabel>
-                      {standardTimeToJalaali(factor.create_date)}
+                      <TableLabel count={6}>
+                        {standardTimeToJalaali(factor.create_date)}
+                      </TableLabel>
                     </Table.Cell>
                     <Table.Cell>
-                      <TableLabel>7</TableLabel>
-                      {factor.status === "remained" ? "عدم تسویه" : "تسویه"}
+                      <TableLabel count={7}>
+                        {factor.status === "remained" ? "عدم تسویه" : "تسویه"}
+                      </TableLabel>
                     </Table.Cell>
                     <Table.Cell style={{ borderLeft: "none" }}>
                       <Grid>

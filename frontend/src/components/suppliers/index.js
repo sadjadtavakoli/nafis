@@ -112,36 +112,28 @@ const Suppliers = () => {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell style={{ borderLeft: "1px solid #ddd" }}>
-                <TableLabel>1</TableLabel>
-                کد تامین کننده
+                <TableLabel count={1}>کد تامین کننده</TableLabel>
               </Table.HeaderCell>
               <Table.HeaderCell>
-                <TableLabel>2</TableLabel>
-                نام فروشگاه
+                <TableLabel count={2}>نام فروشگاه</TableLabel>
               </Table.HeaderCell>
               <Table.HeaderCell>
-                <TableLabel>3</TableLabel>
-                نام مدیریت
+                <TableLabel count={3}>نام مدیریت</TableLabel>
               </Table.HeaderCell>
               <Table.HeaderCell>
-                <TableLabel>4</TableLabel>
-                نام خانوادگی مدیریت
+                <TableLabel count={4}>نام خانوادگی مدیریت</TableLabel>
               </Table.HeaderCell>
               <Table.HeaderCell>
-                <TableLabel>5</TableLabel>
-                شماره تلفن
+                <TableLabel count={5}>شماره تلفن</TableLabel>
               </Table.HeaderCell>
               <Table.HeaderCell>
-                <TableLabel>6</TableLabel>
-                شماره موبایل
+                <TableLabel count={6}>شماره موبایل</TableLabel>
               </Table.HeaderCell>
               <Table.HeaderCell>
-                <TableLabel>7</TableLabel>
-                ایمیل
+                <TableLabel count={7}>ایمیل</TableLabel>
               </Table.HeaderCell>
               <Table.HeaderCell>
-                <TableLabel>8</TableLabel>
-                آدرس
+                <TableLabel count={8}>آدرس</TableLabel>
               </Table.HeaderCell>
               <Table.HeaderCell style={{ borderLeft: "none" }}>
                 عملیات
@@ -159,36 +151,44 @@ const Suppliers = () => {
                       collapsing
                       style={{ borderLeft: "1px solid #ddd" }}
                     >
-                      <TableLabel>1</TableLabel>
-                      <span id="norm-latin">{item.pk}</span>
+                      <TableLabel count={1}>
+                        <span id="norm-latin">{item.pk}</span>
+                      </TableLabel>
                     </Table.Cell>
                     <Table.Cell collapsing>
-                      <TableLabel>2</TableLabel>
-                      <span className="yekan">{item.store}</span>
+                      <TableLabel count={2}>
+                        <span className="yekan">{item.store}</span>
+                      </TableLabel>
                     </Table.Cell>
                     <Table.Cell collapsing className="norm-latin">
-                      <TableLabel>3</TableLabel>
-                      <span className="yekan">{item.first_name}</span>
+                      <TableLabel count={3}>
+                        <span className="yekan">{item.first_name}</span>
+                      </TableLabel>
                     </Table.Cell>
                     <Table.Cell collapsing className="norm-latin">
-                      <TableLabel>4</TableLabel>
-                      <span className="yekan">{item.last_name}</span>
+                      <TableLabel count={4}>
+                        <span className="yekan">{item.last_name}</span>
+                      </TableLabel>
                     </Table.Cell>
                     <Table.Cell collapsing>
-                      <TableLabel>5</TableLabel>
-                      <span id="norm-latin">{item.phone_number}</span>
+                      <TableLabel count={5}>
+                        <span id="norm-latin">{item.phone_number}</span>
+                      </TableLabel>
                     </Table.Cell>
                     <Table.Cell collapsing>
-                      <TableLabel>6</TableLabel>
-                      <span id="norm-latin">{item.mobile_number}</span>
+                      <TableLabel count={6}>
+                        <span id="norm-latin">{item.mobile_number}</span>
+                      </TableLabel>
                     </Table.Cell>
                     <Table.Cell collapsing>
-                      <TableLabel>7</TableLabel>
-                      <span id="norm-latin">{item.email}</span>
+                      <TableLabel count={7}>
+                        <span id="norm-latin">{item.email}</span>
+                      </TableLabel>
                     </Table.Cell>
                     <Table.Cell collapsing>
-                      <TableLabel>8</TableLabel>
-                      <span className="yekan">{item.address}</span>
+                      <TableLabel count={8}>
+                        <span className="yekan">{item.address}</span>
+                      </TableLabel>
                     </Table.Cell>
                     <Table.Cell style={{ borderLeft: "none" }}>
                       <Button

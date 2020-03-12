@@ -183,11 +183,10 @@ class Customers extends Component {
             {this.state.customers && this.state.customers.length > 0 ? (
               <Table.Row className="text-center">
                 <Table.HeaderCell style={{ borderLeft: "1px solid #ddd" }}>
-                  <TableLabel>1</TableLabel>
-                  نام و نام خانوادگی
+                  <TableLabel count={1}>نام و نام خانوادگی</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell>
-                  <TableLabel>2</TableLabel>شماره موبایل
+                  <TableLabel count={2}>شماره موبایل</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell>عملیات</Table.HeaderCell>
               </Table.Row>
@@ -202,15 +201,16 @@ class Customers extends Component {
                         collapsing
                         style={{ borderLeft: "1px solid #ddd" }}
                       >
-                        <TableLabel>1</TableLabel>
-                        <span>{item.first_name}</span>
-                        <span>&nbsp;</span>
-                        <span>{item.last_name}</span>
+                        <TableLabel count={1}>
+                          <span>{item.first_name}</span>
+                          <span>&nbsp;</span>
+                          <span>{item.last_name}</span>
+                        </TableLabel>
                       </Table.Cell>
                       <Table.Cell collapsing className="norm-latin">
-                        <TableLabel>2</TableLabel>
-
-                        <span>{item.phone_number}</span>
+                        <TableLabel count={2}>
+                          <span>{item.phone_number}</span>
+                        </TableLabel>
                       </Table.Cell>
                       <Table.Cell>
                         <Button
