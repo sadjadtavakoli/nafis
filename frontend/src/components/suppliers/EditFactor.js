@@ -341,7 +341,7 @@ const EditFactor = () => {
                   جمع کل
                 </Table.HeaderCell>
                 <Table.Cell id="norm-latin" style={{ borderLeft: "none" }}>
-                  {totalPrice}
+                  {digitToComma(totalPrice)} <span>تومان</span>
                 </Table.Cell>
               </Table.Row>
               <Table.Row>
@@ -357,13 +357,12 @@ const EditFactor = () => {
                   قابل پرداخت
                 </Table.HeaderCell>
                 <Table.Cell id="norm-latin" style={{ borderLeft: "none" }}>
-                  {totalPrice}
+                  {digitToComma(totalPrice)} <span>تومان</span>
                 </Table.Cell>
               </Table.Row>
             </Table.Header>
           </Table>
         </Grid.Column>
-        <Grid.Column></Grid.Column>
       </Grid>
       &nbsp;
       <hr color="#ddd" />
