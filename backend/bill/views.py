@@ -462,9 +462,9 @@ class SupplierBillsViewSet(NafisBase, ModelViewSet):
         return Response(data, status=status.HTTP_201_CREATED)
 
 
-class SupplierBillItemViewSet(ModelViewSet):
+class SupplierBillItemViewSet(NafisBase, ModelViewSet):
     serializer_class = SupplierBillItemSerializer
-    # permission_classes = (LoginRequired,)
+    permission_classes = (LoginRequired,)
     queryset = SupplierBillItem.objects.all()
     non_updaters = ["cashier", "salesperson"]
     non_destroyers = ['cashier', "salesperson"]
@@ -494,9 +494,9 @@ class SupplierBillItemViewSet(ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         bill = SupplierBill.objects.get(pk=self.request.data.get('bill', None))
-        # staff = Staff.objects.get(username=request.user.username)
-        # if staff.job in self.non_creator:
-        #     raise PermissionDenied
+        staff = Staff.objects.get(username=request.user.username)
+        if staff.job in self.non_creator:
+            raise PermissionDenied
         item = self.request.data
         product_code = item['product']
         try:
