@@ -209,9 +209,7 @@ const EditFactor = () => {
                 open={popupOpen}
                 trigger={
                   <Button
-                    content="تایید فاکتور"
-                    labelPosition="right"
-                    className="yekan"
+                    circular
                     icon="add"
                     color="green"
                     onClick={togglePopupOpen}
