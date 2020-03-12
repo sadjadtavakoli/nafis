@@ -195,60 +195,61 @@ const EditFactor = () => {
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell style={{ borderLeft: "1px solid #ddd" }}>
-              <TableLabel>1</TableLabel>
-              <Popup
-                wide="very"
-                content={
-                  <AddFactorItem
-                    onClose={togglePopupOpen}
-                    onSubmit={onSubmit}
-                    pk={pk}
-                  />
-                }
-                position="top center"
-                open={popupOpen}
-                trigger={
-                  <Button
-                    circular
-                    icon="add"
-                    color="green"
-                    onClick={togglePopupOpen}
-                  />
-                }
-              />
+              <TableLabel count={1}>
+                <Popup
+                  wide="very"
+                  content={
+                    <AddFactorItem
+                      onClose={togglePopupOpen}
+                      onSubmit={onSubmit}
+                      pk={pk}
+                    />
+                  }
+                  position="top center"
+                  open={popupOpen}
+                  trigger={
+                    <Button
+                      circular
+                      icon="add"
+                      color="green"
+                      onClick={togglePopupOpen}
+                    />
+                  }
+                />
+              </TableLabel>
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <TableLabel>2</TableLabel>کد جنس
+              <TableLabel count={2}>کد جنس</TableLabel>
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <TableLabel>3</TableLabel>نام جنس
+              <TableLabel count={3}>نام جنس</TableLabel>
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <TableLabel>4</TableLabel>متراژ خرید
+              <TableLabel count={4}>متراژ خرید</TableLabel>
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <TableLabel>5</TableLabel>متراژ باقی مانده
+              <TableLabel count={5}>متراژ باقی مانده</TableLabel>
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <TableLabel>6</TableLabel>قیمت خرید
+              <TableLabel count={6}>قیمت خرید</TableLabel>
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <TableLabel>7</TableLabel>جمع کل
+              <TableLabel count={7}>جمع کل</TableLabel>
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <TableLabel>8</TableLabel>قیمت فروش
+              <TableLabel count={8}>قیمت فروش</TableLabel>
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <TableLabel>9</TableLabel>نوع طرح
+              <TableLabel count={9}>نوع طرح</TableLabel>
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <TableLabel>10</TableLabel>جنس
+              <TableLabel count={10}>جنس</TableLabel>
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <TableLabel>11</TableLabel>رنگ زمینه
+              <TableLabel count={11}>رنگ زمینه</TableLabel>
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <TableLabel>12</TableLabel>رنگ طرح
+              <TableLabel count={12}>رنگ طرح</TableLabel>
             </Table.HeaderCell>
             <Table.HeaderCell>عملیات</Table.HeaderCell>
           </Table.Row>
@@ -262,54 +263,58 @@ const EditFactor = () => {
                     id="norm-latin"
                     style={{ borderLeft: "1px solid #ddd" }}
                   >
-                    <TableLabel>1</TableLabel>
-                    {index + 1}
+                    <TableLabel count={1}>{index + 1}</TableLabel>
                   </Table.Cell>
                   <Table.Cell id="norm-latin">
-                    <TableLabel>2</TableLabel>
-                    {item.product.code}
+                    <TableLabel count={2}>{item.product.code}</TableLabel>
                   </Table.Cell>
                   <Table.Cell id="norm-latin">
-                    <TableLabel>3</TableLabel>
-                    {item.product.name}
+                    <TableLabel count={3}>{item.product.name}</TableLabel>
                   </Table.Cell>
                   <Table.Cell id="norm-latin">
-                    <TableLabel>4</TableLabel>
-                    {item.amount}
+                    <TableLabel count={4}>{item.amount}</TableLabel>
                   </Table.Cell>
                   <Table.Cell id="norm-latin">
-                    <TableLabel>5</TableLabel>
-                    {item.product.stock_amount}
+                    <TableLabel count={5}>
+                      {item.product.stock_amount}
+                    </TableLabel>
                   </Table.Cell>
                   <Table.Cell id="norm-latin">
-                    <TableLabel>6</TableLabel>
-                    {digitToComma(item.product.buying_price)}
+                    <TableLabel count={6}>
+                      {digitToComma(item.product.buying_price)}
+                    </TableLabel>
                   </Table.Cell>
                   <Table.Cell id="norm-latin">
-                    <TableLabel>7</TableLabel>
-                    {digitToComma(
-                      Number(item.product.buying_price) * Number(item.amount)
-                    )}
+                    <TableLabel count={7}>
+                      {digitToComma(
+                        Number(item.product.buying_price) * Number(item.amount)
+                      )}
+                    </TableLabel>
                   </Table.Cell>
                   <Table.Cell id="norm-latin">
-                    <TableLabel>8</TableLabel>
-                    {digitToComma(item.product.selling_price)}
+                    <TableLabel count={8}>
+                      {digitToComma(item.product.selling_price)}
+                    </TableLabel>
                   </Table.Cell>
                   <Table.Cell>
-                    <TableLabel>9</TableLabel>
-                    {item.product.f_type.name}
+                    <TableLabel count={9}>
+                      {item.product.f_type.name}
+                    </TableLabel>
                   </Table.Cell>
                   <Table.Cell>
-                    <TableLabel>10</TableLabel>
-                    {item.product.material.name}
+                    <TableLabel count={10}>
+                      {item.product.material.name}
+                    </TableLabel>
                   </Table.Cell>
                   <Table.Cell>
-                    <TableLabel>11</TableLabel>
-                    {item.product.background_color.name}
+                    <TableLabel count={11}>
+                      {item.product.background_color.name}
+                    </TableLabel>
                   </Table.Cell>
                   <Table.Cell>
-                    <TableLabel>12</TableLabel>
-                    {item.product.design_color.name}
+                    <TableLabel count={12}>
+                      {item.product.design_color.name}
+                    </TableLabel>
                   </Table.Cell>
                   <Table.Cell>
                     <Button
@@ -374,16 +379,13 @@ const EditFactor = () => {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell className="table-border-left">
-                <TableLabel>1</TableLabel>
-                تاریخ ایجاد
+                <TableLabel count={1}>تاریخ ایجاد</TableLabel>
               </Table.HeaderCell>
               <Table.HeaderCell>
-                <TableLabel>2</TableLabel>
-                مبلغ پرداختی
+                <TableLabel count={2}>مبلغ پرداختی</TableLabel>
               </Table.HeaderCell>
               <Table.HeaderCell>
-                <TableLabel>3</TableLabel>
-                نوع پرداخت
+                <TableLabel count={3}>نوع پرداخت</TableLabel>
               </Table.HeaderCell>
               <Table.HeaderCell className="table-border-left-none">
                 عملیات
@@ -395,18 +397,21 @@ const EditFactor = () => {
               return (
                 <Table.Row>
                   <Table.Cell className="table-border-left" id="norm-latin">
-                    <TableLabel>1</TableLabel>
-                    {standardTimeToJalaali(payment.create_date)}
+                    <TableLabel count={1}>
+                      {standardTimeToJalaali(payment.create_date)}
+                    </TableLabel>
                   </Table.Cell>
                   <Table.Cell id="norm-latin">
-                    <TableLabel>2</TableLabel>
-                    {digitToComma(payment.amount)}
+                    <TableLabel count={2}>
+                      {digitToComma(payment.amount)}
+                    </TableLabel>
                   </Table.Cell>
                   <Table.Cell>
-                    <TableLabel>3</TableLabel>
-                    {payment.type === "card" ? "کارت" : null}
-                    {payment.type === "cash" ? "نقد" : null}
-                    {payment.type === "cheque" ? "چک" : null}
+                    <TableLabel count={3}>
+                      {payment.type === "card" ? "کارت" : null}
+                      {payment.type === "cash" ? "نقد" : null}
+                      {payment.type === "cheque" ? "چک" : null}
+                    </TableLabel>
                   </Table.Cell>
                   <Table.Cell className="table-border-left-none">
                     <Button

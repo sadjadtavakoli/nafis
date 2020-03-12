@@ -55,23 +55,22 @@ class FactorsTab extends Component {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell className="d-table-border">
-                <TableLabel>1</TableLabel>
-                شماره
+                <TableLabel count={1}>شماره</TableLabel>
               </Table.HeaderCell>
               <Table.HeaderCell>
-                <TableLabel>2</TableLabel>بانک
+                <TableLabel count={2}>بانک</TableLabel>
               </Table.HeaderCell>
               <Table.HeaderCell>
-                <TableLabel>3</TableLabel>تاریخ صدور
+                <TableLabel count={3}>تاریخ صدور</TableLabel>
               </Table.HeaderCell>
               <Table.HeaderCell>
-                <TableLabel>4</TableLabel>تاریخ انقضا
+                <TableLabel count={4}>تاریخ انقضا</TableLabel>
               </Table.HeaderCell>
               <Table.HeaderCell>
-                <TableLabel>5</TableLabel>مبلغ
+                <TableLabel count={5}>مبلغ</TableLabel>
               </Table.HeaderCell>
               <Table.HeaderCell>
-                <TableLabel>6</TableLabel>وضعیت
+                <TableLabel count={6}>وضعیت</TableLabel>
               </Table.HeaderCell>
             </Table.Row>
           </Table.Header>
@@ -81,29 +80,31 @@ class FactorsTab extends Component {
                 return (
                   <Table.Row>
                     <Table.Cell className="d-table-border">
-                      <TableLabel>1</TableLabel>
-                      {item.number}
+                      <TableLabel count={1}>{item.number}</TableLabel>
                     </Table.Cell>
                     <Table.Cell>
-                      <TableLabel>2</TableLabel>
-                      {item.bank}
+                      <TableLabel count={2}>{item.bank}</TableLabel>
                     </Table.Cell>
                     <Table.Cell className="norm-latin">
-                      <TableLabel>3</TableLabel>
-                      <span>{standardTimeToJalaali(item.issue_date)}</span>
+                      <TableLabel count={3}>
+                        <span>{standardTimeToJalaali(item.issue_date)}</span>
+                      </TableLabel>
                     </Table.Cell>
                     <Table.Cell className="norm-latin">
-                      <TableLabel>4</TableLabel>
-                      <span>{standardTimeToJalaali(item.expiry_date)}</span>
+                      <TableLabel count={4}>
+                        <span>{standardTimeToJalaali(item.expiry_date)}</span>
+                      </TableLabel>
                     </Table.Cell>
                     <Table.Cell className="norm-latin">
-                      <TableLabel>5</TableLabel>
-                      <span>{digitToComma(item.amount)} </span>
-                      <span className="yekan">تومان</span>
+                      <TableLabel count={5}>
+                        <span>{digitToComma(item.amount)} </span>
+                        <span className="yekan">تومان</span>
+                      </TableLabel>
                     </Table.Cell>
                     <Table.Cell>
-                      <TableLabel>6</TableLabel>
-                      {item.status === "remained" ? "باقی مانده" : "بسته شده"}
+                      <TableLabel count={6}>
+                        {item.status === "remained" ? "باقی مانده" : "بسته شده"}
+                      </TableLabel>
                     </Table.Cell>
                   </Table.Row>
                 );

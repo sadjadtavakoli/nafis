@@ -87,20 +87,16 @@ class CashRegisterTable extends React.Component {
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell className="table-border-left">
-                    <TableLabel>1</TableLabel>
-                    موبایل خریدار
+                    <TableLabel count={1}>موبایل خریدار</TableLabel>
                   </Table.HeaderCell>
                   <Table.HeaderCell>
-                    <TableLabel>2</TableLabel>
-                    اسم فروشنده
+                    <TableLabel count={2}>اسم فروشنده</TableLabel>
                   </Table.HeaderCell>
                   <Table.HeaderCell>
-                    <TableLabel>3</TableLabel>
-                    مبلغ نهایی فاکتور
+                    <TableLabel count={3}>مبلغ نهایی فاکتور</TableLabel>
                   </Table.HeaderCell>
                   <Table.HeaderCell>
-                    <TableLabel>4</TableLabel>
-                    تاریخ فاکتور
+                    <TableLabel count={4}>تاریخ فاکتور</TableLabel>
                   </Table.HeaderCell>
                   <Table.HeaderCell>عملیات فاکتور</Table.HeaderCell>
                 </Table.Row>
@@ -114,25 +110,30 @@ class CashRegisterTable extends React.Component {
                         className="table-border-left"
                         style={{ fontFamily: "arial" }}
                       >
-                        <TableLabel>1</TableLabel>
-                        {bill.buyer.phone_number}
+                        <TableLabel count={1}>
+                          {bill.buyer.phone_number}
+                        </TableLabel>
                       </Table.Cell>
                       <Table.Cell>
-                        <TableLabel>2</TableLabel>
-                        {bill.seller.first_name}
+                        <TableLabel count={2}>
+                          {bill.seller.first_name}
+                        </TableLabel>
                         &nbsp;
                         {bill.seller.last_name}
                       </Table.Cell>
                       <Table.Cell
                         style={{ fontFamily: "arial", fontWeight: "bold" }}
                       >
-                        <TableLabel>3</TableLabel>
-                        {digitToComma(bill.final_price)}&nbsp;
+                        <TableLabel count={3}>
+                          {digitToComma(bill.final_price)}&nbsp;
+                        </TableLabel>
+
                         <span className="yekan">تومان</span>
                       </Table.Cell>
                       <Table.Cell style={{ fontFamily: "arial" }}>
-                        <TableLabel>4</TableLabel>
-                        {standardTimeToJalaali(bill.create_date)}
+                        <TableLabel count={4}>
+                          {standardTimeToJalaali(bill.create_date)}
+                        </TableLabel>
                       </Table.Cell>
                       <Table.Cell>
                         <Button

@@ -58,100 +58,112 @@ const DailyReport = () => {
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell className="text-center">
-                  <TableLabel>12</TableLabel>
-                  تعداد کل فاکتور ها
+                  <TableLabel count={12}>تعداد کل فاکتور ها</TableLabel>
                 </Table.HeaderCell>
                 {window.localStorage.type === "admin" ? (
                   <Table.HeaderCell className="text-center">
-                    <TableLabel>11</TableLabel> سود کل
+                    <TableLabel count={11}> سود کل</TableLabel>
                   </Table.HeaderCell>
                 ) : null}
                 <Table.HeaderCell className="text-center">
-                  <TableLabel>10</TableLabel>
-                  فاکتورهای مانده‌حساب
+                  <TableLabel count={10}> فاکتورهای مانده‌حساب</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  <TableLabel>9</TableLabel> مانده‌ حساب
+                  <TableLabel count={9}> مانده‌ حساب</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  <TableLabel>8</TableLabel> کل پرداخت
+                  <TableLabel count={8}> کل پرداخت</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  <TableLabel>7</TableLabel> پرداخت‌های کارت
+                  <TableLabel count={7}> پرداخت‌های کارت</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  <TableLabel>6</TableLabel> پرداخت‌های نقد
+                  <TableLabel count={6}> پرداخت‌های نقد</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  <TableLabel>5</TableLabel> پرداخت‌های چک
+                  <TableLabel count={5}> پرداخت‌های چک</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  <TableLabel>4</TableLabel> کل تخفیف داده‌شده
+                  <TableLabel count={4}> کل تخفیف داده‌شده</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  <TableLabel>3</TableLabel> مبلغ خالص فروش
+                  <TableLabel count={3}> مبلغ خالص فروش</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  <TableLabel>2</TableLabel> مبلغ خام فروش
+                  <TableLabel count={2}> مبلغ خام فروش</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  <TableLabel>1</TableLabel> تعداد اقلام
+                  <TableLabel count={1}> تعداد اقلام</TableLabel>
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
               <Table.Row>
                 <Table.Cell className="text-center norm-latin" collapsing>
-                  <TableLabel>12</TableLabel>
-                  <span>{priceToPersian(report.bills_data.length)}</span>
+                  <TableLabel count={12}>
+                    <span>{priceToPersian(report.bills_data.length)}</span>
+                  </TableLabel>
                 </Table.Cell>
                 {window.localStorage.type === "admin" ? (
                   <Table.Cell className="text-center norm-latin" collapsing>
-                    <TableLabel>11</TableLabel>
-                    <span>{priceToPersian(report.total_profit)}</span>
+                    <TableLabel count={11}>
+                      <span>{priceToPersian(report.total_profit)}</span>
+                    </TableLabel>
                   </Table.Cell>
                 ) : null}
                 <Table.Cell className="text-center norm-latin" collapsing>
-                  <TableLabel>10</TableLabel>
-                  <span>
-                    {priceToPersian(report.bills_with_reminded_status)}
-                  </span>
+                  <TableLabel count={10}>
+                    <span>
+                      {priceToPersian(report.bills_with_reminded_status)}
+                    </span>
+                  </TableLabel>
                 </Table.Cell>
                 <Table.Cell className="text-center norm-latin" collapsing>
-                  <TableLabel>9</TableLabel>
-                  <span>{priceToPersian(report.total_reminded_payments)}</span>
+                  <TableLabel count={9}>
+                    <span>
+                      {priceToPersian(report.total_reminded_payments)}
+                    </span>
+                  </TableLabel>
                 </Table.Cell>
                 <Table.Cell className="text-center norm-latin" collapsing>
-                  <TableLabel>8</TableLabel>
-                  <span>{priceToPersian(report.total_paid)}</span>
+                  <TableLabel count={8}>
+                    <span>{priceToPersian(report.total_paid)}</span>
+                  </TableLabel>
                 </Table.Cell>
                 <Table.Cell className="text-center norm-latin" collapsing>
-                  <TableLabel>7</TableLabel>
-                  <span>{priceToPersian(report.total_card_paid)}</span>
+                  <TableLabel count={7}>
+                    <span>{priceToPersian(report.total_card_paid)}</span>
+                  </TableLabel>
                 </Table.Cell>
                 <Table.Cell className="text-center norm-latin" collapsing>
-                  <TableLabel>6</TableLabel>
-                  <span>{priceToPersian(report.total_cash_paid)}</span>
+                  <TableLabel count={6}>
+                    <span>{priceToPersian(report.total_cash_paid)}</span>
+                  </TableLabel>
                 </Table.Cell>
                 <Table.Cell className="text-center norm-latin" collapsing>
-                  <TableLabel>5</TableLabel>
-                  <span>{priceToPersian(report.total_cheque_paid)}</span>
+                  <TableLabel count={5}>
+                    <span>{priceToPersian(report.total_cheque_paid)}</span>
+                  </TableLabel>
                 </Table.Cell>
                 <Table.Cell className="text-center norm-latin" collapsing>
-                  <TableLabel>44</TableLabel>
-                  <span>{priceToPersian(report.total_discount)}</span>
+                  <TableLabel count={44}>
+                    <span>{priceToPersian(report.total_discount)}</span>
+                  </TableLabel>
                 </Table.Cell>
                 <Table.Cell className="text-center norm-latin" collapsing>
-                  <TableLabel>3</TableLabel>
-                  <span>{priceToPersian(report.total_final_price)}</span>
+                  <TableLabel count={3}>
+                    <span>{priceToPersian(report.total_final_price)}</span>
+                  </TableLabel>
                 </Table.Cell>
                 <Table.Cell className="text-center norm-latin" collapsing>
-                  <TableLabel>2</TableLabel>
-                  <span>{priceToPersian(report.total_price)}</span>
+                  <TableLabel count={2}>
+                    <span>{priceToPersian(report.total_price)}</span>
+                  </TableLabel>
                 </Table.Cell>
                 <Table.Cell className="text-center norm-latin" collapsing>
-                  <TableLabel>1</TableLabel>
-                  <span>{priceToPersian(report.total_items)}</span>
+                  <TableLabel count={1}>
+                    <span>{priceToPersian(report.total_items)}</span>
+                  </TableLabel>
                 </Table.Cell>
               </Table.Row>
             </Table.Body>
@@ -177,46 +189,36 @@ const DailyReport = () => {
                   عملیات
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  <TableLabel>10</TableLabel>
-                  قیمت کل
+                  <TableLabel count={10}> قیمت کل</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  <TableLabel>9</TableLabel>
-                  قیمت خام بدون تخفیف
+                  <TableLabel count={9}> قیمت خام بدون تخفیف</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  <TableLabel>8</TableLabel>
-                  تخفیف کل
+                  <TableLabel count={8}> تخفیف کل</TableLabel>
                 </Table.HeaderCell>
                 {window.localStorage.type === "admin" ? (
                   <Table.HeaderCell className="text-center">
-                    <TableLabel>7</TableLabel>
-                    سود
+                    <TableLabel count={7}> سود</TableLabel>
                   </Table.HeaderCell>
                 ) : null}
                 <Table.HeaderCell className="text-center">
-                  <TableLabel>6</TableLabel>
-                  تعداد اقلام
+                  <TableLabel count={6}> تعداد اقلام</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  <TableLabel>5</TableLabel>
-                  تاریخ بسته شدن
+                  <TableLabel count={5}> تاریخ بسته شدن</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  <TableLabel>4</TableLabel>
-                  شماره تلفن خریدار
+                  <TableLabel count={4}> شماره تلفن خریدار</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  <TableLabel>3</TableLabel>
-                  شعبه
+                  <TableLabel count={3}> شعبه</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  <TableLabel>2</TableLabel>
-                  نام فروشنده
+                  <TableLabel count={2}> نام فروشنده</TableLabel>
                 </Table.HeaderCell>
                 <Table.HeaderCell className="text-center">
-                  <TableLabel>1</TableLabel>
-                  شماره فاکتور
+                  <TableLabel count={1}> شماره فاکتور</TableLabel>
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Header>
@@ -246,73 +248,85 @@ const DailyReport = () => {
                           className="text-center norm-latin"
                           collapsing
                         >
-                          <TableLabel>10</TableLabel>
-                          <span>{priceToPersian(item.final_price)}</span>
+                          <TableLabel count={10}>
+                            <span>{priceToPersian(item.final_price)}</span>
+                          </TableLabel>
                         </Table.Cell>
                         <Table.Cell
                           className="text-center norm-latin"
                           collapsing
                         >
-                          <TableLabel>9</TableLabel>
-                          <span>{priceToPersian(item.price)}</span>
+                          <TableLabel count={9}>
+                            <span>{priceToPersian(item.price)}</span>
+                          </TableLabel>
                         </Table.Cell>
                         <Table.Cell
                           className="text-center norm-latin"
                           collapsing
                         >
-                          <TableLabel>8</TableLabel>
-                          <span>{priceToPersian(item.total_discount)}</span>
+                          <TableLabel count={8}>
+                            <span>{priceToPersian(item.total_discount)}</span>
+                          </TableLabel>
                         </Table.Cell>
                         {window.localStorage.type === "admin" ? (
                           <Table.Cell
                             className="text-center norm-latin"
                             collapsing
                           >
-                            <TableLabel>7</TableLabel>
-                            <span>{priceToPersian(item.profit)}</span>
+                            <TableLabel count={7}>
+                              <span>{priceToPersian(item.profit)}</span>
+                            </TableLabel>
                           </Table.Cell>
                         ) : null}
                         <Table.Cell
                           className="text-center norm-latin"
                           collapsing
                         >
-                          <TableLabel>6</TableLabel>
-                          <span>{item.items_count}</span>
+                          <TableLabel count={6}>
+                            <span>{item.items_count}</span>
+                          </TableLabel>
                         </Table.Cell>
                         <Table.Cell
                           className="text-center norm-latin"
                           collapsing
                         >
-                          <TableLabel>5</TableLabel>
-                          <span>{standardTimeToJalaali(item.close_date)}</span>
+                          <TableLabel count={5}>
+                            <span>
+                              {standardTimeToJalaali(item.close_date)}
+                            </span>
+                          </TableLabel>
                         </Table.Cell>
                         <Table.Cell
                           className="text-center norm-latin"
                           collapsing
                         >
-                          <TableLabel>4</TableLabel>
-                          <span>{item.buyer.phone_number}</span>
+                          <TableLabel count={4}>
+                            <span>{item.buyer.phone_number}</span>
+                          </TableLabel>
                         </Table.Cell>
                         <Table.Cell
                           className="text-center norm-latin"
                           collapsing
                         >
-                          <TableLabel>3</TableLabel>
-                          <span>{item.branch && item.branch.name}</span>
+                          <TableLabel count={3}>
+                            <span>{item.branch && item.branch.name}</span>
+                          </TableLabel>
                         </Table.Cell>
                         <Table.Cell
                           className="text-center norm-latin"
                           collapsing
                         >
-                          <TableLabel>2</TableLabel>
-                          <span>{item.seller.username}</span>
+                          <TableLabel count={2}>
+                            <span>{item.seller.username}</span>
+                          </TableLabel>
                         </Table.Cell>
                         <Table.Cell
                           className="text-center norm-latin"
                           collapsing
                         >
-                          <TableLabel>1</TableLabel>
-                          <span>{item.bill_code}</span>
+                          <TableLabel count={1}>
+                            <span>{item.bill_code}</span>
+                          </TableLabel>
                         </Table.Cell>
                       </Table.Row>
                     );

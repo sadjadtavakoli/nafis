@@ -230,40 +230,31 @@ const ViewBillModal = () => {
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell className="table-border-left">
-                    <TableLabel>1</TableLabel>
-                    ردیف
+                    <TableLabel count={1}>ردیف</TableLabel>
                   </Table.HeaderCell>
                   <Table.HeaderCell>
-                    <TableLabel>2</TableLabel>
-                    شرح کالا
+                    <TableLabel count={2}>شرح کالا</TableLabel>
                   </Table.HeaderCell>
                   <Table.HeaderCell>
-                    <TableLabel>3</TableLabel>
-                    کد کالا
+                    <TableLabel count={3}>کد کالا</TableLabel>
                   </Table.HeaderCell>
                   <Table.HeaderCell>
-                    <TableLabel>4</TableLabel>
-                    متراژ
+                    <TableLabel count={4}>متراژ</TableLabel>
                   </Table.HeaderCell>
                   <Table.HeaderCell>
-                    <TableLabel>5</TableLabel>
-                    مبلغ واحد
+                    <TableLabel count={5}>مبلغ واحد</TableLabel>
                   </Table.HeaderCell>
                   <Table.HeaderCell>
-                    <TableLabel>6</TableLabel>
-                    تخفیف
+                    <TableLabel count={6}>تخفیف</TableLabel>
                   </Table.HeaderCell>
                   <Table.HeaderCell>
-                    <TableLabel>7</TableLabel>
-                    مبلغ خام
+                    <TableLabel count={7}>مبلغ خام</TableLabel>
                   </Table.HeaderCell>
                   <Table.HeaderCell>
-                    <TableLabel>8</TableLabel>
-                    مبلغ نهایی
+                    <TableLabel count={8}>مبلغ نهایی</TableLabel>
                   </Table.HeaderCell>
                   <Table.HeaderCell>
-                    <TableLabel>9</TableLabel>
-                    ته طاقه
+                    <TableLabel count={9}>ته طاقه</TableLabel>
                   </Table.HeaderCell>
                   <Table.HeaderCell className="table-border-left-none">
                     عملیات
@@ -282,42 +273,45 @@ const ViewBillModal = () => {
                 return (
                   <Table.Row>
                     <Table.Cell className="table-border-left" id="norm-latin">
-                      <TableLabel>1</TableLabel>
-                      {index + 1}
+                      <TableLabel count={1}>{index + 1}</TableLabel>
                     </Table.Cell>
                     <Table.Cell>
-                      <TableLabel>2</TableLabel>
-                      {item.product.name}
+                      <TableLabel count={2}>{item.product.name}</TableLabel>
                     </Table.Cell>
                     <Table.Cell id="norm-latin">
-                      <TableLabel>3</TableLabel>
-                      {item.product.code}
+                      <TableLabel count={3}>{item.product.code}</TableLabel>
                     </Table.Cell>
                     <Table.Cell id="norm-latin">
-                      <TableLabel>4</TableLabel>
-                      {item.end_of_roll_amount > 0
-                        ? item.end_of_roll_amount
-                        : item.amount}
+                      <TableLabel count={4}>
+                        {item.end_of_roll_amount > 0
+                          ? item.end_of_roll_amount
+                          : item.amount}
+                      </TableLabel>
                     </Table.Cell>
                     <Table.Cell id="norm-latin">
-                      <TableLabel>5</TableLabel>
-                      {digitToComma(item.product.selling_price)}
+                      <TableLabel count={5}>
+                        {digitToComma(item.product.selling_price)}
+                      </TableLabel>
                     </Table.Cell>
                     <Table.Cell id="norm-latin">
-                      <TableLabel>6</TableLabel>
-                      {digitToComma(item.discount)}
+                      <TableLabel count={6}>
+                        {digitToComma(item.discount)}
+                      </TableLabel>
                     </Table.Cell>
                     <Table.Cell id="norm-latin">
-                      <TableLabel>7</TableLabel>
-                      {digitToComma(item.price)}
+                      <TableLabel count={7}>
+                        {digitToComma(item.price)}
+                      </TableLabel>
                     </Table.Cell>
                     <Table.Cell id="norm-latin">
-                      <TableLabel>8</TableLabel>
-                      {digitToComma(item.final_price)}
+                      <TableLabel count={8}>
+                        {digitToComma(item.final_price)}
+                      </TableLabel>
                     </Table.Cell>
                     <Table.Cell>
-                      <TableLabel>9</TableLabel>
-                      <Checkbox toggle readOnly checked={item.end_of_roll} />
+                      <TableLabel count={9}>
+                        <Checkbox toggle readOnly checked={item.end_of_roll} />
+                      </TableLabel>
                     </Table.Cell>
                     <Table.Cell className="table-border-left-none">
                       <Button
@@ -418,16 +412,13 @@ const ViewBillModal = () => {
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell className="table-border-left">
-                    <TableLabel>1</TableLabel>
-                    تاریخ ایجاد
+                    <TableLabel count={1}>تاریخ ایجاد</TableLabel>
                   </Table.HeaderCell>
                   <Table.HeaderCell>
-                    <TableLabel>2</TableLabel>
-                    مبلغ پرداختی
+                    <TableLabel count={2}>مبلغ پرداختی</TableLabel>
                   </Table.HeaderCell>
                   <Table.HeaderCell>
-                    <TableLabel>3</TableLabel>
-                    نوع پرداخت
+                    <TableLabel count={3}>نوع پرداخت</TableLabel>
                   </Table.HeaderCell>
                   <Table.HeaderCell className="table-border-left-none">
                     عملیات
@@ -439,16 +430,19 @@ const ViewBillModal = () => {
                   return (
                     <Table.Row>
                       <Table.Cell className="table-border-left" id="norm-latin">
-                        <TableLabel>1</TableLabel>
-                        {standardTimeToJalaali(payment.create_date)}
+                        <TableLabel count={1}>
+                          {standardTimeToJalaali(payment.create_date)}
+                        </TableLabel>
                       </Table.Cell>
                       <Table.Cell id="norm-latin">
-                        <TableLabel>2</TableLabel>
-                        {digitToComma(payment.amount)}
+                        <TableLabel count={2}>
+                          {digitToComma(payment.amount)}
+                        </TableLabel>
                       </Table.Cell>
                       <Table.Cell>
-                        <TableLabel>3</TableLabel>
-                        {payment.type === "card" ? "کارت" : null}
+                        <TableLabel count={3}>
+                          {payment.type === "card" ? "کارت" : null}
+                        </TableLabel>
                         {payment.type === "cash" ? "نقد" : null}
                         {payment.type === "cheque" ? "چک" : null}
                       </Table.Cell>
