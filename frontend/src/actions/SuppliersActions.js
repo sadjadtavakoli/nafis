@@ -91,7 +91,7 @@ export const deleteFactorItem = pk => async () => {
 
 export const addFactorItem = data => async dispatch => {
   const response = await server(localStorage.getItem("token")).post(
-    `/supplier-bill-items/`,
+    `/supplier-bill-item/`,
     data
   );
   dispatch({ type: ADD_FACTOR_ITEM, payload: response.data });

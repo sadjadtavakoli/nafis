@@ -8,8 +8,7 @@ const AddFactorItem = ({ onClose, onSubmit, pk }) => {
   const [fetch, setFecth] = useState(false);
   const [code, setCode] = useState(null);
   const [amount, setAmount] = useState(null);
-  const [rawPrice, setRawPrice] = useState(null);
-  const [rejected, setRejected] = useState(false);
+  const [price, setPrice] = useState(null);
 
   const product = useSelector(state => state.suppliers.product);
   const dispatch = useDispatch();
@@ -23,12 +22,9 @@ const AddFactorItem = ({ onClose, onSubmit, pk }) => {
       alert("کد محصول نمیتواند خالی باشد.");
     } else {
       let data = {
-        name: product.name,
         product: Number(product.code),
-        selling_price: Number(product.selling_price),
         amount: Number(amount),
-        price: Number(rawPrice),
-        rejected,
+        price: Number(price),
         bill: pk
       };
       onSubmit(data);
@@ -96,14 +92,8 @@ const AddFactorItem = ({ onClose, onSubmit, pk }) => {
               label="قیمت خام"
               type="number"
               min={0}
-              value={rawPrice}
-              onChange={e => setRawPrice(e.target.value)}
-            />
-            <Form.Radio
-              toggle
-              label="مرجوع"
-              value={rejected}
-              onChange={() => setRejected(!rejected)}
+              value={price}
+              onChange={e => setPrice(e.target.value)}
             />
           </Form.Group>
           <div className="text-center">
