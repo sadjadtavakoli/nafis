@@ -88,8 +88,6 @@ const AddPaymentModal = ({
   const handleSubmit = () => {
     let prepareData = {};
     if (editFactor) {
-      let issue_date = convertToG(issueDate);
-      let expiry_date = convertToG(expiryDate);
       if (type === "cash") {
         prepareData = {
           amount: cashAmount,
@@ -103,6 +101,8 @@ const AddPaymentModal = ({
         };
       }
       if (type === "cheque") {
+        let issue_date = convertToG(issueDate);
+        let expiry_date = convertToG(expiryDate);
         prepareData = {
           bank,
           issue_date,

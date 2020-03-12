@@ -90,7 +90,6 @@ class Add extends Component {
       };
       this.props.setNewSupplier(prepareData).then(() => {
         this.props.onClose();
-        this.props.refetch();
         toastr.success(
           "ثبت تامین کننده جدید",
           "تامین کننده جدید با موفقیت ثبت شد"
