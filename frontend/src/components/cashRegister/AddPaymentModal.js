@@ -8,7 +8,15 @@ import { enToFa } from "../utils/numberUtils";
 import { toastr } from "react-redux-toastr";
 import SingleDatePickerModal from "../utils/SingleDatePickerModal";
 
-const AddPaymentModal = ({ open, onClose, price, pk, refetch, editFactor }) => {
+const AddPaymentModal = ({
+  open,
+  scrollToBottom,
+  onClose,
+  price,
+  pk,
+  refetch,
+  editFactor
+}) => {
   const [inputNameForDatePicker, setInputNameForDatePicker] = useState(null);
   const [titleForDatePicker, setTitleForDatePicker] = useState(null);
   const [calendarIsOpen, setCalendarIsOpen] = useState(false);
@@ -141,32 +149,27 @@ const AddPaymentModal = ({ open, onClose, price, pk, refetch, editFactor }) => {
           toastr.error("خطا در فرایند عملیات اضافه کردن پرداخت");
         });
     }
+    scrollToBottom();
     onClose();
   };
 
-  // const setDate = (inputName, selectedDate) => {
-  //   this.setState({
-  //     [inputName]: selectedDate,
-  //     calendarIsOpen: false
-  //   });
-  // };
+  const setDate = (inputName, selectedDate) => {
+    console.log(inputName);
+    setCalendarIsOpen(false);
+    if (inputName === "issue_date") setIssueDate(selectedDate);
+    else if (inputName === "expiry_date") setExpiryDate(selectedDate);
+  };
 
   const calendarIconRenderer = (status, title) => {
     return (
       <Icon
         style={{ paddingTop: "0.3em" }}
-        // onClick={() => {
-        //   this.setState(
-        //     {
-        //       inputNameForDatePicker: status,
-        //       anyChange: true,
-        //       titleForDatePicker: `انتخاب ${title}`
-        //     },
-        //     () => {
-        //       this.handleCalendarClick(true);
-        //     }
-        //   );
-        // }}
+        onClick={() => {
+          setInputNameForDatePicker(status);
+          setTitleForDatePicker(`انتخاب ${title}`);
+
+          handleCalendarClick(true);
+        }}
         name="calendar alternate outline"
         color="teal"
         size="big"
@@ -184,7 +187,7 @@ const AddPaymentModal = ({ open, onClose, price, pk, refetch, editFactor }) => {
         onClose={() => handleCalendarClick(false)}
         isOpen={calendarIsOpen}
         inputName={inputNameForDatePicker}
-        // setDate={setDate}
+        setDate={setDate}
       />
       <Modal
         dimmer="blurring"

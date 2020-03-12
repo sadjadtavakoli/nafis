@@ -30,6 +30,7 @@ import history from "../../history";
 import { updateBill } from "../../actions/SaleActions";
 
 const ViewBillModal = () => {
+  var messagesEnd;
   const userData = JSON.parse(localStorage.getItem("user"));
   const [classType, setClassType] = useState(null);
   const [fetch, setFetch] = useState(false);
@@ -48,6 +49,7 @@ const ViewBillModal = () => {
 
   useEffect(() => {
     getBill();
+    scrollToBottom();
   }, [fetch]);
 
   const getBill = () => {
@@ -110,7 +112,9 @@ const ViewBillModal = () => {
         toastr.error("امتیاز استفاده شده بیشتر از حد مجاز است");
       });
   };
-
+  const scrollToBottom = () => {
+    messagesEnd.scrollIntoView({ behavior: "smooth" });
+  };
   const handleToggleChange = () => setToggle(!toggle);
 
   return (
@@ -432,7 +436,7 @@ const ViewBillModal = () => {
               </Table.Body>
             </Table>
           )}
-          
+
           <div className="text-center padded">
             <Button
               circular
@@ -502,6 +506,7 @@ const ViewBillModal = () => {
 
           {openAddPayment && (
             <AddPaymentModal
+              scrollToBottom={scrollToBottom}
               open={openAddPayment}
               onClose={toggleAddPaymentModal}
               price={Number(bill.remaining_payment) - Number(usedPoints)}
@@ -521,6 +526,12 @@ const ViewBillModal = () => {
       ) : (
         <LoadingBar />
       )}
+      <div
+        style={{ float: "left", clear: "both" }}
+        ref={el => {
+          messagesEnd = el;
+        }}
+      ></div>
     </Container>
   );
 };
