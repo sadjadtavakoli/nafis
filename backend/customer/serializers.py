@@ -33,3 +33,22 @@ class CustomerDetailedSerializer(serializers.ModelSerializer):
                   'marriage_date', 'points', 'class_type')
 
 
+class CustomerTypeDropDownSerializer(serializers.ModelSerializer):
+    key = serializers.IntegerField(source='pk')
+    value = serializers.IntegerField(source='pk')
+    text = serializers.CharField(source='name')
+
+    class Meta:
+        model = CustomerType
+        fields = ('key', 'value', 'text')
+
+
+class CityDropDownSerializer(serializers.ModelSerializer):
+    key = serializers.IntegerField(source='pk')
+    value = serializers.IntegerField(source='pk')
+    text = serializers.CharField(source='name')
+
+    class Meta:
+        model = City
+        fields = ('key', 'value', 'text')
+

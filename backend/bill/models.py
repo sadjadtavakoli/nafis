@@ -19,6 +19,8 @@ class Bill(models.Model):
     branch = models.ForeignKey('branch.Branch', related_name='bills', on_delete=DO_NOTHING, blank=True, null=True)
     bill_image = models.ImageField(null=True, blank=True)
     bill_code = models.IntegerField(default=0)
+    closande = models.ForeignKey('staff.Staff', related_name='closed_bills', on_delete=DO_NOTHING, blank=True,
+                                 null=True)
 
     def check_status(self):
         if round(self.remaining_payment) > 5000:
@@ -291,6 +293,7 @@ class SupplierBill(models.Model):
         choices=(('ریال', 'ریال'), ('درهم', 'درهم'), ('دلار', 'دلار'), ('روپیه', 'روپیه'),
                  ('یوان', 'یوان')),
         max_length=20, default="ریال")
+    bill_code = models.IntegerField(default=0)
 
     @property
     def price(self):
@@ -327,7 +330,7 @@ class SupplierBillItem(models.Model):
 
     @property
     def price(self):
-        return int(self.raw_price) * int(self.currency_price)
+        return int(float(self.amount) * float(self.raw_price) * float(self.currency_price))
 
     def reject(self):
         self.rejected = True
@@ -339,7 +342,7 @@ class Payment(models.Model):
     create_date = models.DateTimeField(blank=True, null=True)
     amount = models.IntegerField()
     type = models.CharField(choices=settings.PAYMENT_TYPES,
-                            max_length=10, default="نقد")
+                            max_length=10, default="cash")
 
 
 class CustomerPayment(Payment):

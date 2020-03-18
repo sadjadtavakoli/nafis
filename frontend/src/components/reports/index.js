@@ -20,8 +20,10 @@ import {
   toGregorian,
   getTodayJalaali
 } from "../utils/jalaaliUtils";
-import DatePickerModal from "./DatePickerModal";
-import NotFound from '../utils/notFound'
+import DatePickerModal from "../utils/DatePickerModal";
+import NotFound from "../utils/notFound";
+import { digitToComma } from "../utils/numberUtils";
+
 const colors = {
   blue: "#2185d0",
   orange: "#f2711c",
@@ -359,7 +361,6 @@ class Reports extends React.Component {
 
     let from = `${choosenFrom.year}-${choosenFrom.month}-${choosenFrom.day}`;
     let to = `${choosenTo.year}-${choosenTo.month}-${choosenTo.day}`;
-    console.log(from, to);
     this.setState({
       gregorianFromDate,
       gregorianToDate,
@@ -488,11 +489,19 @@ class Reports extends React.Component {
       <React.Fragment>
         <Container>
           <Segment stacked className="rtl">
-            <form onSubmit={this.sendDate}>
-              <span className="padded">از تاریخ</span>
-              <Input value={this.state.dateRange.fromDate} readOnly />
-              <span className="padded">تا تاریخ</span>
-              <Input value={this.state.dateRange.toDate} readOnly />
+            <form onSubmit={this.sendDate} id="r-form">
+              <span className="r-form-span-padding">از تاریخ</span>
+              <Input
+                value={this.state.dateRange.fromDate}
+                className="r-input"
+                readOnly
+              />
+              <span className="r-form-span-padding">تا تاریخ</span>
+              <Input
+                value={this.state.dateRange.toDate}
+                className="r-input"
+                readOnly
+              />
               <Icon
                 onClick={() => this.handleCalendarClick(true)}
                 name="calendar alternate outline"
@@ -525,63 +534,74 @@ class Reports extends React.Component {
                 </Table.HeaderCell>
               </Table.Row>
 
-              {this.props.intervalReports && (<Table.Row>
-                <Table.HeaderCell className="table-border-left">
-                  مجموع سود
-                </Table.HeaderCell>
-                <Table.HeaderCell>تخفیف</Table.HeaderCell>
-                <Table.HeaderCell>مبلغ</Table.HeaderCell>
-                <Table.HeaderCell>مبلغ نهایی</Table.HeaderCell>
-                <Table.HeaderCell>مجموع اقلام</Table.HeaderCell>
-                <Table.HeaderCell>مجموع فاکتورها</Table.HeaderCell>
-                <Table.HeaderCell>مجموع چک های پرداخت شده</Table.HeaderCell>
-                <Table.HeaderCell>مجموع پرداخت های نقدی</Table.HeaderCell>
-                <Table.HeaderCell>مجموع پرداخت های کارتی</Table.HeaderCell>
-                <Table.HeaderCell>مجموع پرداخت ها</Table.HeaderCell>
-                <Table.HeaderCell>مجموع پرداخت های باقی مانده</Table.HeaderCell>
-                <Table.HeaderCell>فاکتورهای پرداخت نشده</Table.HeaderCell>
-              </Table.Row>)}
+              {this.props.intervalReports && (
+                <Table.Row>
+                  <Table.HeaderCell className="table-border-left">
+                    مجموع سود
+                  </Table.HeaderCell>
+                  <Table.HeaderCell>تخفیف</Table.HeaderCell>
+                  <Table.HeaderCell>مبلغ</Table.HeaderCell>
+                  <Table.HeaderCell>مبلغ نهایی</Table.HeaderCell>
+                  <Table.HeaderCell>مجموع اقلام</Table.HeaderCell>
+                  <Table.HeaderCell>مجموع فاکتورها</Table.HeaderCell>
+                  <Table.HeaderCell>مجموع چک های پرداخت شده</Table.HeaderCell>
+                  <Table.HeaderCell>مجموع پرداخت های نقدی</Table.HeaderCell>
+                  <Table.HeaderCell>مجموع پرداخت های کارتی</Table.HeaderCell>
+                  <Table.HeaderCell>مجموع پرداخت ها</Table.HeaderCell>
+                  <Table.HeaderCell>
+                    مجموع پرداخت های باقی مانده
+                  </Table.HeaderCell>
+                  <Table.HeaderCell>فاکتورهای پرداخت نشده</Table.HeaderCell>
+                </Table.Row>
+              )}
               {!this.props.intervalReports && <NotFound />}
             </Table.Header>
 
             <Table.Body>
               {this.props.intervalReports && (
                 <Table.Row>
-                  <Table.Cell className="table-border-left">
-                    {this.props.intervalReports.total_profit}
+                  <Table.Cell
+                    className="table-border-left"
+                    style={{ fontFamily: "arial" }}
+                  >
+                    {digitToComma(this.props.intervalReports.total_profit)}
                   </Table.Cell>
-                  <Table.Cell>
-                    {this.props.intervalReports.total_discount}
+                  <Table.Cell style={{ fontFamily: "arial" }}>
+                    {digitToComma(this.props.intervalReports.total_discount)}
                   </Table.Cell>
-                  <Table.Cell>
-                    {this.props.intervalReports.total_price}
+                  <Table.Cell style={{ fontFamily: "arial" }}>
+                    {digitToComma(this.props.intervalReports.total_price)}
                   </Table.Cell>
-                  <Table.Cell>
-                    {this.props.intervalReports.total_final_price}
+                  <Table.Cell style={{ fontFamily: "arial" }}>
+                    {digitToComma(this.props.intervalReports.total_final_price)}
                   </Table.Cell>
-                  <Table.Cell>
-                    {this.props.intervalReports.total_items}
+                  <Table.Cell style={{ fontFamily: "arial" }}>
+                    {digitToComma(this.props.intervalReports.total_items)}
                   </Table.Cell>
-                  <Table.Cell>
-                    {this.props.intervalReports.total_bills}
+                  <Table.Cell style={{ fontFamily: "arial" }}>
+                    {digitToComma(this.props.intervalReports.total_bills)}
                   </Table.Cell>
-                  <Table.Cell>
-                    {this.props.intervalReports.total_cheque_paid}
+                  <Table.Cell style={{ fontFamily: "arial" }}>
+                    {digitToComma(this.props.intervalReports.total_cheque_paid)}
                   </Table.Cell>
-                  <Table.Cell>
-                    {this.props.intervalReports.total_cash_paid}
+                  <Table.Cell style={{ fontFamily: "arial" }}>
+                    {digitToComma(this.props.intervalReports.total_cash_paid)}
                   </Table.Cell>
-                  <Table.Cell>
-                    {this.props.intervalReports.total_card_paid}
+                  <Table.Cell style={{ fontFamily: "arial" }}>
+                    {digitToComma(this.props.intervalReports.total_card_paid)}
                   </Table.Cell>
-                  <Table.Cell>
-                    {this.props.intervalReports.total_paid}
+                  <Table.Cell style={{ fontFamily: "arial" }}>
+                    {digitToComma(this.props.intervalReports.total_paid)}
                   </Table.Cell>
-                  <Table.Cell>
-                    {this.props.intervalReports.total_reminded_payments}
+                  <Table.Cell style={{ fontFamily: "arial" }}>
+                    {digitToComma(
+                      this.props.intervalReports.total_reminded_payments
+                    )}
                   </Table.Cell>
-                  <Table.Cell>
-                    {this.props.intervalReports.bills_with_reminded_status}
+                  <Table.Cell style={{ fontFamily: "arial" }}>
+                    {digitToComma(
+                      this.props.intervalReports.bills_with_reminded_status
+                    )}
                   </Table.Cell>
                 </Table.Row>
               )}
@@ -602,8 +622,8 @@ class Reports extends React.Component {
             </Table.Header>
 
             <Table.Body>
-              <Grid column={2} className="grid-padding">
-                <Grid.Column width={16}>
+              <Grid column={1} className="grid-padding" doubling>
+                <Grid.Column computer={16} mobile={16}>
                   <Segment>
                     <Label
                       color="teal"
@@ -621,7 +641,7 @@ class Reports extends React.Component {
                   </Segment>
                 </Grid.Column>
 
-                <Grid.Column width={8}>
+                <Grid.Column computer={8} mobile={16}>
                   <Segment>
                     <Label
                       color="teal"
@@ -639,7 +659,7 @@ class Reports extends React.Component {
                   </Segment>
                 </Grid.Column>
 
-                <Grid.Column className="grid-left" width={8}>
+                <Grid.Column className="grid-left" computer={8} mobile={16}>
                   <Segment>
                     <Label color="teal" ribbon>
                       رنگ پس‌زمینه
@@ -653,7 +673,7 @@ class Reports extends React.Component {
                   </Segment>
                 </Grid.Column>
 
-                <Grid.Column width={8}>
+                <Grid.Column computer={8} mobile={16}>
                   <Segment>
                     <Label
                       color="teal"
@@ -671,7 +691,7 @@ class Reports extends React.Component {
                   </Segment>
                 </Grid.Column>
 
-                <Grid.Column className="grid-left" width={8}>
+                <Grid.Column className="grid-left" computer={8} mobile={16}>
                   <Segment>
                     <Label color="teal" ribbon>
                       متریال
@@ -685,7 +705,7 @@ class Reports extends React.Component {
                   </Segment>
                 </Grid.Column>
 
-                <Grid.Column width={8}>
+                <Grid.Column computer={8} mobile={16}>
                   <Segment>
                     <Label
                       color="teal"
@@ -700,7 +720,7 @@ class Reports extends React.Component {
                   </Segment>
                 </Grid.Column>
 
-                <Grid.Column className="grid-left" width={8}>
+                <Grid.Column className="grid-left" computer={8} mobile={16}>
                   <Segment>
                     <Label color="teal" ribbon>
                       نوع مشتری

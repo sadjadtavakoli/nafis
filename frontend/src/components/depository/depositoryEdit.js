@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import {
   Form,
-  Label,
-  Icon,
   Container,
   Segment,
-  Header
+  Header,
+  Button,
+  Message
 } from "semantic-ui-react";
 import { connect } from "react-redux";
 import {
@@ -14,17 +14,18 @@ import {
   getProductFields
 } from "../../actions/DepositoryActions";
 import { toastr } from "react-redux-toastr";
+import history from "../../history";
 
-class depositoryEdit extends Component {
+class DepositoryEdit extends Component {
   state = {
-    // Initial Values
     code: null,
     pk: null,
+    // Initial Values
     name: null,
     stock_amount: null,
     selling_price: null,
     buying_price: null,
-    background_color: "",
+    background_color: null,
     design_color: null,
     material: null,
     f_type: null,
@@ -36,20 +37,24 @@ class depositoryEdit extends Component {
     background_color_Options: {},
     design_color_Options: {},
     // Booleans
-    name_b: false,
-    stock_amount_b: false,
-    selling_price_b: false,
-    buying_price_b: false,
-    f_type_Options_b: false,
-    design_Options_b: false,
-    material_Options_b: false,
-    background_color_Options_b: false,
-    design_color_Options_b: false
+    boolean: {
+      name: false,
+      stock_amount: false,
+      selling_price: false,
+      buying_price: false,
+      background_color: false,
+      design_color: false,
+      material: false,
+      f_type: false,
+      design: false
+    },
+    // Changes
+    changed: false,
+    isEmpty: false
   };
 
   componentDidMount() {
     this.props.getProductsByCode(this.props.match.params.code).then(() => {
-      console.log(this.props.depositoryProduct);
       this.setState({
         code: this.props.match.params.code,
         pk: this.props.match.params.pk,
@@ -65,7 +70,6 @@ class depositoryEdit extends Component {
       });
     });
     this.props.getProductFields().then(() => {
-      console.log(this.props.productFields);
       this.setState({
         background_color_Options: this.props.productFields.background_color,
         design_color_Options: this.props.productFields.design_color,
@@ -76,159 +80,116 @@ class depositoryEdit extends Component {
     });
   }
 
-  convertStatus_b = status => {
-    return status.concat("_b");
-  };
-
   convertStatus_Options = status => {
     return status.concat("_Options");
   };
 
-  handleEdit = status => {
-    const convertStatus_b = this.convertStatus_b(status);
+  handleProductChange = (_, { name, value }) => {
     this.setState({
-      [convertStatus_b]: true
+      [name]: value,
+      changed: true
     });
   };
 
-  handleProductChange = (status, e) => {
+  handleInputChange = (status, e) => {
     this.setState({
-      ...this.state,
-      [status]: e.target.value
+      [status]: e.target.value,
+      changed: true
     });
   };
 
   selectChange = (_, { status, value }) => {
     this.setState({
-      [status]: value
+      [status]: value,
+      changed: true
     });
   };
 
-  handleSubmit = status => {
-    this.props
-      .updateProduct(this.state.pk, {
-        [status]: this.state[status]
-      })
-      .then(res => {
-        this.setState({ [status]: res.data[status] });
-        toastr.success(".عملیات ویرایش موفقیت آمیز بود");
-      })
-      .catch(() => {
-        toastr.error(
-          "عملیات ویرایش موفقیت آمیز نبود. لطفا با تیم پشتیبانی در تماس باشید"
-        );
-      });
-    const convertStatus_b = this.convertStatus_b(status);
+  handleSubmit = () => {
+    if (
+      !this.state.name ||
+      !this.state.stock_amount ||
+      !this.state.selling_price ||
+      !this.state.buying_price ||
+      !this.state.background_color ||
+      !this.state.design_color ||
+      !this.state.material ||
+      !this.state.f_type ||
+      !this.state.design
+    ) {
+      this.setState({ isEmpty: true });
+    } else {
+      let prepareData = {
+        name: this.state.name,
+        stock_amount: this.state.stock_amount,
+        selling_price: this.state.selling_price,
+        buying_price: this.state.buying_price,
+        background_color: this.state.background_color,
+        design_color: this.state.design_color,
+        material: this.state.material,
+        f_type: this.state.f_type,
+        design: this.state.design
+      };
+      this.props
+        .updateProduct(this.state.pk, prepareData)
+        .then(() => {
+          toastr.success(".عملیات ویرایش موفقیت آمیز بود");
+          this.setState({ changed: false });
+        })
+        .catch(() => {
+          toastr.error(
+            "عملیات ویرایش موفقیت آمیز نبود.",
+            " لطفا با تیم پشتیبانی در تماس باشید"
+          );
+        });
+    }
+  };
+
+  handleSelect = status => {
     this.setState({
-      [convertStatus_b]: false
+      boolean: {
+        [status]: true
+      }
     });
   };
 
-  getTheValue = status => {
-    this.props.getProductsByCode(this.props.match.params.code).then(() => {
-      this.setState({
-        [status]: this.props.depositoryProduct[status].id
-      });
+  handleBlur = status => {
+    this.setState({
+      boolean: {
+        [status]: false
+      }
     });
   };
 
   createInput = (status, title) => {
-    const convertStatus_b = this.convertStatus_b(status);
     return (
       <Form.Input
-        error={!this.state[convertStatus_b]}
         className={"text-right"}
-        label={
-          <React.Fragment>
-            <span className="us-em-span">{title}</span>
-            <Label
-              className="pointer"
-              size="mini"
-              color={`${this.state[convertStatus_b] ? "green" : "teal"}`}
-              style={{ marginBottom: "3px", marginRight: "5px" }}
-              onClick={() => {
-                this.state[convertStatus_b]
-                  ? this.handleSubmit(status)
-                  : this.handleEdit(status);
-              }}
-            >
-              <Icon
-                name={`${this.state[convertStatus_b] ? "checkmark" : "edit"}`}
-              />
-              {`${this.state[convertStatus_b] ? "اعمال" : "ویرایش"}`}
-            </Label>
-          </React.Fragment>
-        }
-        value={this.state[status]}
-        readOnly={!this.state[convertStatus_b]}
-        onChange={e => this.handleProductChange(status, e)}
+        style={{ "margin-top": "5px" }}
+        label={<span className="us-em-span">{title}</span>}
+        defaultValue={!this.state.boolean[status] ? this.state[status] : null}
+        placeholder={this.state.boolean[status] ? this.state[status] : null}
+        onChange={e => this.handleInputChange(status, e)}
+        onSelect={() => this.handleSelect(status)}
+        onBlur={() => this.handleBlur(status)}
       />
     );
   };
 
   createSelect = (status, title) => {
-    const convertStatus_b = this.convertStatus_b(status);
-    const convertStatus_Options = this.convertStatus_Options(status);
-    if (!this.state[convertStatus_b]) {
-      return (
-        <Form.Select
-          value={this.state[status]}
-          error
-          fluid
-          selection
-          search
-          disabled
-          label={
-            <React.Fragment>
-              <span className="us-em-span">{title}</span>
-              <Label
-                className="pointer"
-                size="mini"
-                color="teal"
-                style={{ marginBottom: "3px", marginRight: "5px" }}
-                onClick={() => {
-                  this.handleEdit(status);
-                }}
-              >
-                <Icon name="edit" />
-                ویرایش
-              </Label>
-            </React.Fragment>
-          }
-          options={this.props.productFields && this.props.productFields[status]}
-        />
-      );
-    }
-    if (this.state[convertStatus_b]) {
-      return (
-        <Form.Select
-          status={status}
-          options={this.state[convertStatus_Options]}
-          onChange={this.selectChange}
-          fluid
-          selection
-          search
-          label={
-            <React.Fragment>
-              <span className="us-em-span">{title}</span>
-              <Label
-                className="pointer"
-                size="mini"
-                color="green"
-                style={{ marginBottom: "3px", marginRight: "5px" }}
-                onClick={() => {
-                  this.handleSubmit(status);
-                }}
-              >
-                <Icon name="checkmark" />
-                اعمال
-              </Label>
-            </React.Fragment>
-          }
-          placeholder="THIS IS A PLACEHOLDER"
-        />
-      );
-    }
+    return (
+      <Form.Select
+        fluid
+        selection
+        search
+        style={{ "margin-top": "5px" }}
+        value={this.state[status]}
+        name={status}
+        label={<span className="us-em-span">{title}</span>}
+        options={this.props.productFields && this.props.productFields[status]}
+        onChange={this.handleProductChange}
+      />
+    );
   };
 
   render() {
@@ -238,26 +199,37 @@ class depositoryEdit extends Component {
           <Header as="h3" block style={{ wordSpacing: "3px" }}>
             ویرایش اطلاعات محصول {this.state.name}
           </Header>
+          {this.state.isEmpty ? (
+            <Message color="red">
+              <p>فیلد ها نمیتوانند خالی باشند.</p>
+            </Message>
+          ) : null}
           <Form>
-            <Form.Group unstackable widths={2}>
+            <Form.Group unstackable widths="equal">
               {this.createInput("name", "نام محصول")}
               {this.createInput("stock_amount", "مقدار باقی مانده")}
-            </Form.Group>
-            <Form.Group unstackable widths={2}>
               {this.createInput("selling_price", "قیمت فروش")}
-              {this.createInput("buying_price", "قیمت خرید")}
             </Form.Group>
-            <Form.Group unstackable widths={2}>
+            <Form.Group unstackable widths="equal">
+              {this.createInput("buying_price", "قیمت خرید")}
               {this.createSelect("background_color", "رنگ پس زمینه")}
               {this.createSelect("design_color", "رنگ طرح")}
             </Form.Group>
-            <Form.Group unstackable widths={2}>
+            <Form.Group unstackable widths="equal">
               {this.createSelect("material", "جنس")}
               {this.createSelect("f_type", "نوع پارچه")}
-            </Form.Group>
-            <Form.Group unstackable widths={2}>
               {this.createSelect("design", "نوع طرح")}
             </Form.Group>
+            <Button
+              color="green"
+              disabled={!this.state.changed ? true : false}
+              onClick={this.handleSubmit}
+            >
+              <span>اعمال</span>
+            </Button>
+            <Button onClick={() => history.push(`/depository/`)}>
+              <span>بازگشت</span>
+            </Button>
           </Form>
         </Segment>
       </Container>
@@ -276,4 +248,4 @@ export default connect(mapStateToProps, {
   getProductsByCode,
   updateProduct,
   getProductFields
-})(depositoryEdit);
+})(DepositoryEdit);

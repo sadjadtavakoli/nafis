@@ -13,12 +13,23 @@
   font-weight: normal;
   font-style: normal;
 }
+.font-weight-bold {
+  font-weight: bold !important;
+}
 .pointer {
   cursor: pointer;
 }
-.yekan,
+.yekan {
+  font-family: yekan !important;
+}
 .header {
   font-family: yekan !important;
+}
+.text-yekan {
+  font-family: yekan !important;
+  * {
+    font-family: yekan !important;
+  }
 }
 .m-auto {
   margin: auto;
@@ -40,6 +51,9 @@
     font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
   }
 }
+#norm-latin {
+  font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
 .ui.pointing.menu {
   direction: rtl;
 }
@@ -49,6 +63,14 @@
   }
   @media (max-width: 768px) {
     display: block !important;
+  }
+  &.d-flex {
+    @media (min-width: 768px) {
+      display: none !important;
+    }
+    @media (max-width: 768px) {
+      display: inline-flex !important;
+    }
   }
 }
 .only-desktop {
@@ -101,6 +123,15 @@ div[role="combobox"] {
 }
 .text-right {
   text-align: right !important;
+  * {
+    text-align: right !important;
+  }
+}
+.text-left {
+  text-align: left !important;
+  * {
+    text-align: left !important;
+  }
 }
 .field {
   &.text-right {
@@ -121,14 +152,23 @@ div[role="combobox"] {
 .d-flex {
   display: flex !important;
 }
+.d-inline-flex {
+  display: inline-flex !important;
+}
 .d-none {
   display: none;
 }
 .m-0 {
   margin: 0 !important;
 }
+.m-1 {
+  margin: 0.25em !important;
+}
 .invisible {
   visibility: hidden;
+}
+.hidden {
+  display: none;
 }
 .placeholder-rtl {
   ::placeholder {
@@ -191,11 +231,15 @@ label {
   }
 }
 
-// REPORT STYLE SHEET \\
-
 .table-border-left {
   border-left: 1px solid #ddd !important;
 }
+
+.table-border-left-none {
+  border-left: none !important;
+}
+
+// REPORT STYLE SHEET \\
 
 .grid-padding {
   padding: 20px !important;
@@ -249,10 +293,6 @@ label {
   padding: 0 1.5em;
 }
 
-.us-em-span {
-  margin-right: 5px;
-}
-
 .d-segment {
   margin-top: 10px !important;
 }
@@ -263,14 +303,10 @@ label {
 
 // SUPPLIERS
 
-.error input {
-  background-color: #f3f4f5 !important;
-  color: rgb(100, 100, 100) !important;
-  border-color: #aaaaaa !important;
-}
 .s-h2-padding {
   padding: 0 1em;
 }
+
 // DEPOSITORY EDIT
 
 #depository-edit {
@@ -295,4 +331,83 @@ label {
   .ui.dropdown {
     text-align: right;
   }
+}
+
+// Bug Fix Reports
+
+#r-form {
+  .r-input {
+    width: 110px !important;
+  }
+  .r-form-span-padding {
+    padding: 0 10px;
+  }
+}
+
+// Bug Fix Sale
+
+#s-showInfromationModel {
+  .form-message {
+    margin: 0;
+    margin-right: 20px;
+    padding: 10px;
+    font-weight: 100;
+    font-size: 12px;
+  }
+}
+
+.blurring.dimmed.dimmable > .popup:not(.dimmer) {
+  filter: unset !important;
+}
+.bg-table {
+  background: #f9fafb;
+  font-weight: bold;
+}
+#customer {
+  font-family: yekan;
+  text-align: right;
+  direction: rtl;
+}
+
+#customer-latin {
+  font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
+  text-align: left;
+  direction: ltr;
+}
+
+.nafis-logo {
+  width: 128px;
+  height: 128px;
+  padding-right: 0;
+}
+
+.sale-mobile {
+  #add-bill
+    > div.scrolling.content
+    > form
+    > div.unstackable.one.fields
+    > div.field.ltr.placeholder-rtl.text-right
+    > label {
+    margin: 100px;
+  }
+  #add-bill
+    > div.scrolling.content
+    > form
+    > div.unstackable.one.fields
+    > div.field.ltr.placeholder-rtl.text-right
+    > label {
+    margin-top: 10px;
+  }
+}
+
+.customer-padding {
+  padding: 0 1em;
+}
+
+#text-right {
+  text-align: right !important;
+}
+
+body > div.ui.top.center.popup.transition.visible > div > div.header > div {
+  padding: 10px;
 }

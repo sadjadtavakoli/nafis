@@ -1,78 +1,163 @@
-import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
-import { Container, Segment, Button } from "semantic-ui-react";
-import AddBillModal from "./AddBillModal";
+import React, { useState, useEffect } from "react";
+import { Container, Segment, Button, Table, Grid } from "semantic-ui-react";
 import history from "../../history";
-
-import BillLists from "./BillLists";
-import { getAllActiveBills } from "../../actions/BillActions";
+import { getActiveBills, deleteBill } from "../../actions/CashRegisterActions";
+import { digitToComma } from "../utils/numberUtils";
+import { standardTimeToJalaali, convertToJalaali } from "../utils/jalaaliUtils";
+import NotFound from "../utils/notFound";
 import LoadingBar from "../utils/loadingBar";
-import BillDoneModal from "./BillDoneModal";
-import BillDeleteModal from "./BillDeleteModal";
-import { useToggle } from "../../utils/Hooks";
+import { toastr } from "react-redux-toastr";
+import TableLabel from "../utils/tableLabelGenerator";
+import { useSelector, useDispatch } from "react-redux";
 
-const CashRegister = ({
-  getAllActiveBills,
-  activeBills,
-  loading,
-  currentUser
-}) => {
-  const [modal, toggleModal] = useToggle(false);
+const Cashregister = () => {
+  const [fetch, setFetch] = useState(false);
 
-  const [billPK, setBillPK] = useState(undefined);
-
-  const [doneDialog, setDoneDialog] = useState(false);
-  const closeDoneDialog = () => setDoneDialog(false);
-
-  const [deleteDialog, setDeleteDialog] = useState(false);
-  const closeDeleteDialog = () => setDeleteDialog(false);
+  const bills = useSelector(state => state.cash.activeBills);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    getAllActiveBills();
-  }, []);
+    dispatch(getActiveBills()).then(() => {
+      setFetch(true);
+      console.log(bills);
+    });
+  }, [fetch]);
+
   return (
     <Container>
       <Segment stacked className="rtl">
-        <Button className="yekan" onClick={() => history.push('/daily-report/')} color="yellow" content='مشاهده گزارش روزانه' icon='print' labelPosition='right' />
+        <Grid verticalAlign="middle">
+          <Grid.Column floated="right" computer={5} mobile={5}>
+            <h2 className="yekan">صندوق</h2>
+          </Grid.Column>
+          <Grid.Column floated="left" computer={1} mobile={4}>
+            <Button
+              circular
+              icon="left arrow"
+              onClick={() => window.history.back()}
+            />
+          </Grid.Column>
+        </Grid>
       </Segment>
-      <AddBillModal
-        open={modal}
-        onClose={toggleModal}
-        billPK={billPK}
-        setDoneDialog={setDoneDialog}
-      />
-      <BillDoneModal dialog={doneDialog} closeDialog={closeDoneDialog} />
-      <BillDeleteModal dialog={deleteDialog} closeDialog={closeDeleteDialog} />
-      {loading ? (
-        <LoadingBar />
-      ) : (
-          <BillLists
-          refetch={getAllActiveBills}
-          title="لیست فاکتور‌های فعال"
-          headerTitles={[
-            "موبایل خریدار",
-            "اسم فروشنده",
-            "مبلغ نهایی فاکتور",
-            "تاریخ فاکتور",
-            "عملیات فاکتور"
-          ]}
-          currentUser={currentUser}
-          dataProvider={activeBills}
-          togglePreviewModal={toggleModal}
-          setBillPK={setBillPK}
-          setDeleteDialog={setDeleteDialog}
-        />
-      )}
+
+      <Table celled className="rtl text-center">
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell className="text-right" colSpan="5">
+              <Grid verticalAlign="middle">
+                <Grid.Column computer={5} mobile={16} floated="right">
+                  <h3 className="yekan">لیست فاکتورهای فعال</h3>
+                </Grid.Column>
+                <Grid.Column computer={4} mobile={16} floated="left">
+                  <Button
+                    onClick={() => history.push("/daily-report/")}
+                    color="teal"
+                    content="مشاهده گزارش روزانه"
+                    icon="print"
+                    labelPosition="right"
+                    className="yekan"
+                  />
+                </Grid.Column>
+              </Grid>
+            </Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+
+        {fetch && bills.count ? (
+          <React.Fragment>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell className="table-border-left">
+                  <TableLabel count={1}>موبایل خریدار</TableLabel>
+                </Table.HeaderCell>
+                <Table.HeaderCell>
+                  <TableLabel count={2}>اسم فروشنده</TableLabel>
+                </Table.HeaderCell>
+                <Table.HeaderCell>
+                  <TableLabel count={3}>مبلغ نهایی فاکتور</TableLabel>
+                </Table.HeaderCell>
+                <Table.HeaderCell>
+                  <TableLabel count={4}>تاریخ فاکتور</TableLabel>
+                </Table.HeaderCell>
+                <Table.HeaderCell>عملیات فاکتور</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+
+            <Table.Body>
+              {bills.results.map(bill => {
+                return (
+                  <Table.Row>
+                    <Table.Cell
+                      className="table-border-left"
+                      style={{ fontFamily: "arial" }}
+                    >
+                      <TableLabel count={1}>
+                        {bill.buyer.phone_number}
+                      </TableLabel>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <TableLabel count={2}>
+                        {bill.seller.first_name} {bill.seller.last_name}
+                      </TableLabel>
+                    </Table.Cell>
+                    <Table.Cell
+                      style={{ fontFamily: "arial", fontWeight: "bold" }}
+                    >
+                      <TableLabel count={3}>
+                        <span className="yekan">تومان</span>
+                        {digitToComma(bill.final_price)}&nbsp;
+                      </TableLabel>
+                    </Table.Cell>
+                    <Table.Cell style={{ fontFamily: "arial" }}>
+                      <TableLabel count={4}>
+                        {convertToJalaali(bill.create_date)}
+                      </TableLabel>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Button
+                        icon="info"
+                        labelPosition="right"
+                        color="teal"
+                        content="مشاهده"
+                        className="yekan"
+                        size="mini"
+                        onClick={() => {
+                          history.push(`/cashregister/${bill.pk}`);
+                        }}
+                      />
+                      <Button
+                        icon="trash"
+                        labelPosition="right"
+                        color="red"
+                        content="حذف"
+                        className="yekan"
+                        size="mini"
+                        onClick={() => {
+                          deleteBill(bill.pk)
+                            .then(() => {
+                              toastr.success(
+                                "حذف فاکتور با موفقیت انجام شد",
+                                "فاکتور با موفقیت حذف گردید"
+                              );
+                              this.props.getActiveBills();
+                            })
+                            .catch(() => {
+                              toastr.error("عملیات حذف ناموفق بود");
+                            });
+                        }}
+                      />
+                    </Table.Cell>
+                  </Table.Row>
+                );
+              })}
+            </Table.Body>
+          </React.Fragment>
+        ) : null}
+      </Table>
+      {!fetch ? <LoadingBar /> : null}
+      {fetch && !bills.count ? <NotFound /> : null}
     </Container>
   );
 };
 
-export default connect(
-  state => ({
-    currentUser: state.auth.currentUser,
-    loading: state.bills.loading,
-    activeBills:
-      state.bills.bills.filter(bill => bill.status === "active") || []
-  }),
-  { getAllActiveBills }
-)(CashRegister);
+export default Cashregister;
