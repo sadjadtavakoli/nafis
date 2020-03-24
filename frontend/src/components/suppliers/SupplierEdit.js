@@ -1,41 +1,136 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { Component } from "react";
 import { Button, Table, Input, Label } from "semantic-ui-react";
+import { connect } from "react-redux";
 import { getTheSupplier, updateSupplier } from "../../actions/SuppliersActions";
 import { toastr } from "react-redux-toastr";
 
-const SupplierEdit = () => {
-  const pk = Number(window.location.href.split("/")[5]);
-  const [fetch, setFetch] = useState(false);
-  const [first_name, setfirst_name] = useState("");
-  const [last_name, setlast_name] = useState("");
-  const [email, setemail] = useState("");
-  const [phone_number, setphone_number] = useState("");
-  const [mobile_number, setmobile_number] = useState("");
-  const [address, setaddress] = useState("");
-  const [sotre, setstore] = useState("");
+class SupplierEdit extends Component {
+  state = {
+    pk: null,
 
-  const supplier = useSelector(state => state.suppliers.supplier);
-  const dispatch = useDispatch();
+    first_name: "",
+    last_name: "",
+    email: "",
+    phone_number: "",
+    mobile_number: "",
+    address: "",
+    store: "",
 
-  useEffect(() => {
-    dispatch(getTheSupplier(pk)).then(() => {
-      setFetch(true);
-      setfirst_name(supplier.first_name);
-      setlast_name(supplier.last_name);
-      setemail(supplier.email);
-      setphone_number(supplier.phone_number);
-      setmobile_number(supplier.mobile_number);
-      setaddress(supplier.address);
-      setstore(supplier.sotre);
-    });
-  }, []);
+    first_name_b: false,
+    last_name_b: false,
+    email_b: false,
+    phone_number_b: false,
+    mobile_number_b: false,
+    address_b: false,
+    store_b: false,
 
-  const handleEditChange = (status, e) => {
-    // set[status](e.target.value);
+    hasErrors: false,
+    hasChanged: false
   };
 
-  const createInput = (title, status, className, type = "text") => {
+  componentDidMount() {
+    this.props
+      .getTheSupplier(Number(window.location.href.split("/")[5]))
+      .then(() => {
+        this.setState({
+          pk: Number(window.location.href.split("/")[5]),
+          first_name: this.props.supplier.first_name,
+          last_name: this.props.supplier.last_name,
+          email: this.props.supplier.email,
+          phone_number: this.props.supplier.phone_number,
+          mobile_number: this.props.supplier.mobile_number,
+          address: this.props.supplier.address,
+          store: this.props.supplier.store
+        });
+      });
+  }
+
+  handleEdit = status => {
+    const convertedStatus = this.convertStatus(status);
+    this.setState({
+      [convertedStatus]: true
+    });
+  };
+
+  handleEditChange = (status, e) => {
+    this.setState({
+      [status]: e.target.value,
+      hasChanged: true
+    });
+  };
+
+  handleSubmit = () => {
+    let hasErrors = false;
+    if (String(this.state.first_name).length < 1) {
+      this.setState({
+        first_name_b: true
+      });
+      hasErrors = true;
+    }
+    if (String(this.state.last_name).length < 1) {
+      this.setState({
+        last_name_b: true
+      });
+      hasErrors = true;
+    }
+    if (String(this.state.email).length < 1) {
+      this.setState({
+        email_b: true
+      });
+      hasErrors = true;
+    }
+    if (String(this.state.phone_number).length < 1) {
+      this.setState({
+        phone_number_b: true
+      });
+      hasErrors = true;
+    }
+    if (String(this.state.mobile_number).length < 1) {
+      this.setState({
+        mobile_number_b: true
+      });
+      hasErrors = true;
+    }
+    if (String(this.state.address).length < 1) {
+      this.setState({
+        address_b: true
+      });
+      hasErrors = true;
+    }
+    if (String(this.state.store).length < 1) {
+      this.setState({
+        store_b: true
+      });
+      hasErrors = true;
+    }
+    if (!hasErrors) {
+      let prepareData = {
+        first_name: this.state.first_name,
+        last_name: this.state.last_name,
+        email: this.state.email,
+        phone_number: this.state.phone_number,
+        mobile_number: this.state.mobile_number,
+        address: this.state.address,
+        store: this.state.store
+      };
+      this.props
+        .updateSupplier(this.state.pk, prepareData)
+        .then(() => {
+          toastr.success(".عملیات ویرایش موفقیت آمیز بود");
+        })
+        .catch(() => {
+          toastr.error(
+            ".عملیات ویرایش موفقیت آمیز نبود. لطفا با تیم پشتیبانی در تماس باشید"
+          );
+        });
+      this.setState({
+        hasChanged: false
+      });
+    }
+  };
+
+  createInput = (title, status, className, type = "text") => {
+    let b = status.concat("_b");
     return (
       <React.Fragment>
         <Label style={{ backgroundColor: "white" }}>{title}</Label>
@@ -43,90 +138,106 @@ const SupplierEdit = () => {
         <Input
           fluid
           className={className}
-          onChange={e => handleEditChange(status, e)}
-          defaultValue={supplier[status]}
-          // error={state.hasErrors}
+          onChange={e => this.handleEditChange(status, e)}
+          defaultValue={this.state[status]}
+          error={this.state[b]}
           type={type}
         />
       </React.Fragment>
     );
   };
 
-  return (
-    <React.Fragment>
-      {fetch && (
-        <Table className="text-right">
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell colSpan="2">
-                نمایش و ویرایش اطلاعات تامین کننده {supplier.first_name}
-                &nbsp;
-                {supplier.last_name}
-              </Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            <Table.Row>
-              <Table.Cell>
-                {createInput(
-                  "نام خانوادگی",
-                  "last_name",
-                  "rtl text-right text-yekan"
-                )}
-              </Table.Cell>
-              <Table.Cell>
-                {createInput("نام", "first_name", "rtl text-right text-yekan")}
-              </Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell>
-                {createInput("فروشگاه", "store", "rtl text-right text-yekan")}
-              </Table.Cell>
-              <Table.Cell>
-                {createInput("ایمیل", "email", "ltr text-left")}
-              </Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell>
-                {createInput(
-                  "شماره موبایل",
-                  "mobile_number",
-                  "ltr text-left norm-latin",
-                  "number"
-                )}
-              </Table.Cell>
-              <Table.Cell>
-                {createInput(
-                  "شماره تلفن",
-                  "phone_number",
-                  "ltr text-left norm-latin",
-                  "number"
-                )}
-              </Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell></Table.Cell>
-              <Table.Cell>
-                {createInput("آدرس", "address", "rtl text-right text-yekan")}
-              </Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell></Table.Cell>
-              <Table.Cell>
-                {/* <Button
-                  className="yekan"
-                  content="اعمال"
-                  color="green"
-                  onClick={handleSubmit}
-                  disabled={state.hasChanged && !state.hasErrors ? false : true}
-                /> */}
-              </Table.Cell>
-            </Table.Row>
-          </Table.Body>
-        </Table>
-      )}
-    </React.Fragment>
-  );
+  render() {
+    return (
+      <Table className="text-right">
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell colSpan="2">
+              نمایش و ویرایش اطلاعات تامین کننده {this.state.first_name}
+              &nbsp;
+              {this.state.last_name}
+            </Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          <Table.Row>
+            <Table.Cell>
+              {this.createInput(
+                "نام خانوادگی",
+                "last_name",
+                "rtl text-right text-yekan"
+              )}
+            </Table.Cell>
+            <Table.Cell>
+              {this.createInput(
+                "نام",
+                "first_name",
+                "rtl text-right text-yekan"
+              )}
+            </Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>
+              {this.createInput(
+                "فروشگاه",
+                "store",
+                "rtl text-right text-yekan"
+              )}
+            </Table.Cell>
+            <Table.Cell>
+              {this.createInput("ایمیل", "email", "ltr text-left")}
+            </Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>
+              {this.createInput(
+                "شماره موبایل",
+                "mobile_number",
+                "ltr text-left norm-latin",
+                "number"
+              )}
+            </Table.Cell>
+            <Table.Cell>
+              {this.createInput(
+                "شماره تلفن",
+                "phone_number",
+                "ltr text-left norm-latin",
+                "number"
+              )}
+            </Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell></Table.Cell>
+            <Table.Cell>
+              {this.createInput("آدرس", "address", "rtl text-right text-yekan")}
+            </Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell></Table.Cell>
+            <Table.Cell>
+              <Button
+                className="yekan"
+                content="اعمال"
+                color="green"
+                onClick={this.handleSubmit}
+                disabled={
+                  this.state.hasChanged && !this.state.hasErrors ? false : true
+                }
+              />
+            </Table.Cell>
+          </Table.Row>
+        </Table.Body>
+      </Table>
+    );
+  }
+}
+
+const mapStateToProps = state => {
+  return {
+    supplier: state.suppliers.supplier
+  };
 };
 
-export default SupplierEdit;
+export default connect(mapStateToProps, { getTheSupplier, updateSupplier })(
+  SupplierEdit
+);
