@@ -6,13 +6,13 @@ import { toastr } from "react-redux-toastr";
 
 class Add extends Component {
   state = {
-    first_name: null,
-    last_name: null,
-    email: null,
-    phone_number: null,
-    mobile_number: null,
-    address: null,
-    store: null,
+    first_name: "",
+    last_name: "",
+    email: "",
+    phone_number: "",
+    mobile_number: "",
+    address: "",
+    store: "",
 
     first_name_b: false,
     last_name_b: false,
