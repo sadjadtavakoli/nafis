@@ -22,6 +22,7 @@ const AddFactorItem = ({ onClose, onSubmit, pk }) => {
         .then(() => {
           setFecth(true);
           setNotFound(false);
+          console.log("procudt", product);
         })
         .catch(() => {
           setFecth(true);
@@ -38,7 +39,8 @@ const AddFactorItem = ({ onClose, onSubmit, pk }) => {
       alert("کد محصول نمیتواند خالی باشد.");
     } else {
       let data = {
-        product: Number(product.code),
+        name: String(product.name),
+        code: Number(product.code),
         amount: Number(amount),
         price: Number(price),
         bill: pk

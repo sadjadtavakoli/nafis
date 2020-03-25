@@ -163,6 +163,7 @@ const AddSupplierFactorModal = ({ open, onClose, pk, addCount }) => {
             </div>
             {items
               ? items.map((item, index) => {
+                  console.log("map item", item);
                   return (
                     <Card fluid key={index}>
                       <Card.Content>
@@ -208,7 +209,7 @@ const AddSupplierFactorModal = ({ open, onClose, pk, addCount }) => {
                               className="ltr placeholder-rtl"
                               readOnly
                               fluid
-                              defaultValue={enToFa(item.selling_price)}
+                              defaultValue={enToFa(item.price)}
                               label="قیمت واحد"
                             />
                             <Form.Input
@@ -217,13 +218,6 @@ const AddSupplierFactorModal = ({ open, onClose, pk, addCount }) => {
                               fluid
                               defaultValue={enToFa(item.amount)}
                               label={`مقدار(متر)`}
-                            />
-                            <Form.Radio
-                              toggle
-                              readOnly
-                              fluid
-                              defaultChecked={item.rejected}
-                              label="مرجوع"
                             />
                           </Form.Group>
                         </Form>

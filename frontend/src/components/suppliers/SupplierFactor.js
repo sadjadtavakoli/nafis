@@ -183,7 +183,7 @@ const SupplierFactor = ({ pk }) => {
                             }}
                           >
                             <Button
-                              content="ویرایش"
+                              content="مشاهده"
                               color="teal"
                               className="yekan"
                               icon="edit"
