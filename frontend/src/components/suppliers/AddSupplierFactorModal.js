@@ -18,15 +18,15 @@ import AddFactorItem from "./AddFactorItem";
 import { priceToPersian, enToFa } from "../utils/numberUtils";
 
 const AddSupplierFactorModal = ({ open, onClose, pk, addCount }) => {
-  const [currency, setCurrency] = useState("ریال");
-  const [price, setPrice] = useState(0);
+  const [currency, setCurrency] = useState("تومان");
+  const [price, setPrice] = useState(1);
   const [billCode, setBillCode] = useState(null);
   const [status, setStatus] = useState("تسویه");
   const [popupOpen, setPopupOpen] = useState(false);
   const [items, setItems] = useState([]);
 
   const options = [
-    { text: "ریال", value: "ریال" },
+    { text: "تومان", value: "تومان" },
     { text: "دلار", value: "دلار" },
     { text: "روپیه", value: "روپیه" },
     { text: "درهم", value: "درهم" },
@@ -115,7 +115,7 @@ const AddSupplierFactorModal = ({ open, onClose, pk, addCount }) => {
               onChange={e => setCurrency(e.target.textContent)}
             />
             <Form.Input
-              className="rtl text-right yekan placeholder-rtl"
+              className="rtl text-right placeholder-rtl"
               label="قیمت"
               placeholder={price}
               type="number"
