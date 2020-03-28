@@ -15,7 +15,6 @@ import {
 import { useDispatch } from "react-redux";
 import { addSupplierFactor } from "../../actions/SuppliersActions";
 import AddFactorItem from "./AddFactorItem";
-import { priceToPersian, enToFa } from "../utils/numberUtils";
 
 const AddSupplierFactorModal = ({ open, onClose, pk, addCount }) => {
   const [currency, setCurrency] = useState("تومان");
@@ -38,6 +37,8 @@ const AddSupplierFactorModal = ({ open, onClose, pk, addCount }) => {
     { text: "عدم تسویه", value: "عدم تسویه" }
   ];
 
+  const dispatch = useDispatch();
+
   const togglePopupOpen = () => {
     setPopupOpen(!popupOpen);
   };
@@ -45,12 +46,6 @@ const AddSupplierFactorModal = ({ open, onClose, pk, addCount }) => {
   const onSubmit = data => {
     setItems([...items, data]);
   };
-
-  useEffect(() => {
-    console.log("items", items);
-  }, [items]);
-
-  const dispatch = useDispatch();
 
   const addFactor = pk => {
     let _status = null;
@@ -63,7 +58,6 @@ const AddSupplierFactorModal = ({ open, onClose, pk, addCount }) => {
     let data = {
       currency,
       currency_price: price,
-      items: null,
       bill_code: billCode,
       status: _status,
       items
@@ -71,27 +65,23 @@ const AddSupplierFactorModal = ({ open, onClose, pk, addCount }) => {
 
     if (!data.bill_code) {
       alert("شماره فاکتور نمیتواند خالی باشد");
+    } else {
+      dispatch(addSupplierFactor(pk, data))
+        .then(() => {
+          addCount();
+          onClose();
+        })
+        .catch(() => {
+          addCount();
+          onClose();
+        });
     }
-
-    dispatch(addSupplierFactor(pk, data))
-      .then(() => {
-        addCount();
-        onClose();
-      })
-      .catch(() => {
-        addCount();
-        onClose();
-      });
   };
 
   const deleteItem = index => {
-    var confirm = window.confirm("آیا از حذف این قلم مطمئن هستید؟");
-    if (confirm) {
-      for (var i = 0; i < items.length; i++) {
-        if (i === index) {
-          items.splice(i, 1);
-        }
-      }
+    let i = window.confirm("آیا از حذف این آیتم مطمئن هستید؟");
+    if (i) {
+      setItems(items.filter((_, _index) => _index !== index));
     }
   };
 
@@ -115,7 +105,8 @@ const AddSupplierFactorModal = ({ open, onClose, pk, addCount }) => {
               onChange={e => setCurrency(e.target.textContent)}
             />
             <Form.Input
-              className="rtl text-right placeholder-rtl"
+              className="rtl text-right"
+              id="norm-latin"
               label="قیمت"
               placeholder={price}
               type="number"
@@ -161,11 +152,11 @@ const AddSupplierFactorModal = ({ open, onClose, pk, addCount }) => {
                 }
               />
             </div>
-            {items
+
+            {Number(items.length)
               ? items.map((item, index) => {
-                  console.log("map item", item);
                   return (
-                    <Card fluid key={index}>
+                    <Card fluid>
                       <Card.Content>
                         <Card.Header className="yekan">
                           {item.name}
@@ -191,33 +182,28 @@ const AddSupplierFactorModal = ({ open, onClose, pk, addCount }) => {
                         <Form>
                           <Form.Group widths="equal">
                             <Form.Input
-                              className="ltr placeholder-rtl text-yekan"
-                              readOnly
+                              className="rtl placeholder-rtl"
                               fluid
-                              defaultValue={item.name}
-                              label="نام محصول"
-                            />
-                            <Form.Input
-                              className="ltr placeholder-rtl"
-                              readOnly
-                              fluid
-                              defaultValue={enToFa(item.code)}
+                              value={item.product}
                               label="کد محصول"
+                              type="number"
                               readOnly
                             />
                             <Form.Input
-                              className="ltr placeholder-rtl"
-                              readOnly
+                              className="rtl placeholder-rtl"
                               fluid
-                              defaultValue={enToFa(item.price)}
+                              value={item.price}
                               label="قیمت واحد"
+                              type="number"
+                              readOnly
                             />
                             <Form.Input
-                              className="ltr placeholder-rtl"
-                              readOnly
+                              className="rtl placeholder-rtl"
                               fluid
-                              defaultValue={enToFa(item.amount)}
+                              value={item.amount}
                               label={`مقدار(متر)`}
+                              type="number"
+                              readOnly
                             />
                           </Form.Group>
                         </Form>

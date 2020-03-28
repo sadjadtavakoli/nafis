@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Card, Header, Form, Button, Label, Icon } from "semantic-ui-react";
 import { useSelector, useDispatch } from "react-redux";
 import { getProductsByCode } from "../../actions/SuppliersActions";
-import { enToFa } from "../utils/numberUtils";
 
 const AddFactorItem = ({ onClose, onSubmit, pk }) => {
   const [fetch, setFecth] = useState(false);
@@ -22,7 +21,6 @@ const AddFactorItem = ({ onClose, onSubmit, pk }) => {
         .then(() => {
           setFecth(true);
           setNotFound(false);
-          console.log("procudt", product);
         })
         .catch(() => {
           setFecth(true);
@@ -40,7 +38,7 @@ const AddFactorItem = ({ onClose, onSubmit, pk }) => {
     } else {
       let data = {
         name: String(product.name),
-        code: Number(product.code),
+        product: Number(product.code),
         amount: Number(amount),
         price: Number(price),
         bill: pk
@@ -76,12 +74,12 @@ const AddFactorItem = ({ onClose, onSubmit, pk }) => {
               </p>
               <p>
                 <span>مقدار باقی مانده:</span>&nbsp;
-                <span>{enToFa(product.stock_amount)}</span>&nbsp;
+                <span id="norm-latin">{product.stock_amount}</span>&nbsp;
                 <span>متر</span>
               </p>
               <p>
                 <span>قیمت هر متر:</span>&nbsp;
-                <span>{enToFa(product.selling_price)}</span>
+                <span id="norm-latin">{product.selling_price}</span>
                 &nbsp;
                 <span>تومان</span>
               </p>
@@ -96,25 +94,28 @@ const AddFactorItem = ({ onClose, onSubmit, pk }) => {
             </Label>
           </div>
         ) : null}
-        <Form>
+        <Form className="rtl">
           <Form.Group widths={2}>
             <Form.Input
-              label="مقدار خریداری شده"
-              type="number"
-              min={0}
-              value={amount}
-              onChange={e => setAmount(e.target.value)}
-            />
-            <Form.Input
+              className="text-right"
               label="کد محصول"
               type="number"
               value={code}
               min={1}
               onChange={e => handleCodeChange(e)}
             />
+            <Form.Input
+              className="text-right"
+              label="مقدار خریداری شده"
+              type="number"
+              min={0}
+              value={amount}
+              onChange={e => setAmount(e.target.value)}
+            />
           </Form.Group>
           <Form.Group widths={2}>
             <Form.Input
+              className="text-right"
               label="قیمت خام"
               type="number"
               min={0}
@@ -122,7 +123,7 @@ const AddFactorItem = ({ onClose, onSubmit, pk }) => {
               onChange={e => setPrice(e.target.value)}
             />
           </Form.Group>
-          <div className="text-center">
+          <div className="text-center ltr">
             <Button.Group className="text-yekan text-center">
               <Button onClick={onClose}>بستن</Button>
               <Button.Or text="یا" />

@@ -114,14 +114,15 @@ const SupplierFactor = ({ pk }) => {
               {factors.results.map((factor, index) => {
                 return (
                   <Table.Row>
-                    <Table.Cell
-                      id="norm-latin"
-                      style={{ borderLeft: "1px solid #ddd" }}
-                    >
-                      <TableLabel count={1}>{index + 1}</TableLabel>
+                    <Table.Cell style={{ borderLeft: "1px solid #ddd" }}>
+                      <TableLabel count={1} id="norm-latin">
+                        {index + 1}
+                      </TableLabel>
                     </Table.Cell>
                     <Table.Cell id="norm-latin">
-                      <TableLabel count={2}>{factor.pk}</TableLabel>
+                      <TableLabel count={2} id="norm-latin">
+                        {factor.pk}
+                      </TableLabel>
                     </Table.Cell>
                     <Table.Cell>
                       <TableLabel count={3}>
