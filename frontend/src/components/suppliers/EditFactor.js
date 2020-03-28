@@ -146,14 +146,17 @@ const EditFactor = () => {
                     position="top center"
                     open={popupOpen}
                     trigger={
-                      <Button
-                        icon="add"
-                        color="green"
-                        onClick={togglePopupOpen}
-                        content="اضافه کردن آیتم"
-                        labelPosition="right"
-                        className="yekan"
-                      />
+                      <div>
+                        <Button
+                          icon="add"
+                          color="green"
+                          onClick={togglePopupOpen}
+                          content="اضافه کردن آیتم"
+                          labelPosition="right"
+                          className="yekan"
+                          id="button-stick"
+                        />
+                      </div>
                     }
                   />
                 </Grid.Column>
