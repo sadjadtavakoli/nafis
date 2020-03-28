@@ -437,7 +437,7 @@ const EditFactor = () => {
           content="بازگشت"
           labelPosition="right"
           className="yekan"
-          size="huge"
+          size="large"
           icon="arrow left"
           onClick={() => window.history.back()}
         />
@@ -445,7 +445,7 @@ const EditFactor = () => {
           content="افزودن پرداخت"
           labelPosition="right"
           className="yekan"
-          size="huge"
+          size="large"
           icon="plus"
           color="teal"
           onClick={() => setOpenModal(true)}
@@ -454,7 +454,7 @@ const EditFactor = () => {
           content="تایید فاکتور"
           labelPosition="right"
           className="yekan"
-          size="huge"
+          size="large"
           icon="check"
           color="green"
           // onClick={() => }
