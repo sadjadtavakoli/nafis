@@ -69,6 +69,17 @@ export const getSupplierFactors = (pk, page = 1) => async dispatch => {
   return response;
 };
 
+export const getUndoneSupplierFactors = (pk, page = 1) => async dispatch => {
+  const response = await server(localStorage.getItem("token")).get(
+    `/suppliers/${pk}/remained-bills/`,
+    {
+      params: { page }
+    }
+  );
+  dispatch({ type: GET_SUPPLIER_FACTORS, payload: response.data });
+  return response;
+};
+
 export const deleteSupplierFactor = pk => async dispatch => {
   const response = await server(localStorage.getItem("token")).delete(
     `/supplier-bills/${pk}/`

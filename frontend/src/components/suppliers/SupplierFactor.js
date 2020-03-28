@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Table, Grid, Search, Button, Pagination } from "semantic-ui-react";
+import {
+  Table,
+  Grid,
+  Search,
+  Button,
+  Pagination,
+  Checkbox
+} from "semantic-ui-react";
 import AddSupplierFactorModal from "./AddSupplierFactorModal";
 import { useSelector, useDispatch } from "react-redux";
 import {
   getSupplierFactors,
-  deleteSupplierFactor
+  deleteSupplierFactor,
+  getUndoneSupplierFactors
 } from "../../actions/SuppliersActions";
 import LoadingBar from "../utils/loadingBar";
 import NotFound from "../utils/notFound";
@@ -17,6 +25,7 @@ const SupplierFactor = ({ pk }) => {
   const [openModal, setOpenModal] = useState(false);
   const [fetch, setFetch] = useState(false);
   const [count, setCount] = useState(0);
+  const [undone, setUndone] = useState(false);
 
   const closeModal = () => setOpenModal(false);
   const addCount = () => {
@@ -29,6 +38,15 @@ const SupplierFactor = ({ pk }) => {
   useEffect(() => {
     dispatch(getSupplierFactors(pk)).then(() => setFetch(true));
   }, [count]);
+
+  const getUndone = () => {
+    setUndone(!undone);
+    if (undone) {
+      dispatch(getSupplierFactors(pk)).then(() => setFetch(true));
+    } else {
+      dispatch(getUndoneSupplierFactors(pk)).then(() => setFetch(true));
+    }
+  };
 
   const deleteFactor = pk => {
     let confirm = window.confirm("آیا از حذف این فاکتور مطمئن هستید؟");
@@ -53,15 +71,23 @@ const SupplierFactor = ({ pk }) => {
         <Table.Header className="text-right">
           <Table.Row>
             <Table.HeaderCell colSpan="9">
-              <Grid stackable>
-                <Grid.Column width={13}>
+              <Grid stackable verticalAlign="center">
+                <Grid.Column width={4}>
                   <Search
                     placeholder="جست و جو..."
                     className="placeholder-rtl yekan"
                     id="text-right"
                   />
                 </Grid.Column>
-                <Grid.Column width={3}>
+                <Grid.Column width={4}>
+                  <Checkbox
+                    toggle
+                    label="فاکتور های تسویه نشده"
+                    className="yekan"
+                    onClick={getUndone}
+                  />
+                </Grid.Column>
+                <Grid.Column width={3} floated="left">
                   <Button
                     content="ثبت فاکتور جدید"
                     className="yekan"
