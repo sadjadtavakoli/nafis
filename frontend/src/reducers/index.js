@@ -6,10 +6,12 @@ import saleReducer from "./saleReducer";
 import depositoryReducer from "./depositoryReducer";
 import billReducer from "./billReducer";
 import reportsReducer from "./reportsReducer";
-import customers from "./customers";
+import customers from "./customersReducer";
 import suppliersReducer from "./suppliersReducer";
+import cashReducer from "./cashReducer";
 
 export default combineReducers({
+  cash: cashReducer,
   auth: authReducer,
   sale: saleReducer,
   depository: depositoryReducer,

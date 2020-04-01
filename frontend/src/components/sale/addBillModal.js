@@ -105,7 +105,7 @@ class AddBillModal extends React.Component {
                 fluid
                 defaultValue={data.product}
                 label="کد محصول"
-                placeholder=""
+                readOnly
               />
               <Form.Input
                 className="ltr placeholder-rtl"
@@ -113,7 +113,6 @@ class AddBillModal extends React.Component {
                 fluid
                 defaultValue={priceToPersian(data.selling_price)}
                 label="قیمت واحد"
-                placeholder=""
               />
               <Form.Input
                 className="ltr placeholder-rtl"
@@ -121,7 +120,6 @@ class AddBillModal extends React.Component {
                 fluid
                 defaultValue={data.amount}
                 label={`مقدار(متر)`}
-                placeholder=""
               />
               <Form.Input
                 className="ltr placeholder-rtl"
@@ -129,7 +127,6 @@ class AddBillModal extends React.Component {
                 fluid
                 defaultValue={priceToPersian(data.discount)}
                 label="تخفیف"
-                placeholder=""
               />
             </Form.Group>
             <Form.Group widths="3">
@@ -192,12 +189,11 @@ class AddBillModal extends React.Component {
     );
   };
 
-  sumProductTotalPrice = item => {
+  sumProductTotalPrice = () => {
     let preSumArray = [];
     let sum = 0;
     if (this.state.itemsDataSheet)
       preSumArray = this.state.itemsDataSheet.map(item => {
-        console.log(item);
         let finalAmount = item.end_of_roll_amount
           ? item.end_of_roll_amount
           : item.amount;

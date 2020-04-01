@@ -1,10 +1,12 @@
 import React from "react";
 // import animejs from "animejs";
 import { connect } from "react-redux";
-import { Icon, Menu, Segment, Sidebar, Button } from "semantic-ui-react";
+import { Icon, Menu, Segment, Sidebar, Button, Popup } from "semantic-ui-react";
 import history from "../../history";
 import { logOut } from "../../actions/LoginActions";
+import HomeButton from "../utils/HomeButton";
 import { isPermit } from "../mainPage/permission";
+import userAvatar from "../../assets/user-avatar.png";
 class SideBar extends React.Component {
   state = {
     visible: false,
@@ -16,7 +18,6 @@ class SideBar extends React.Component {
     this.updateWindowDimensions();
     window.addEventListener("resize", this.updateWindowDimensions);
     this.setJob();
-    console.log("user", JSON.parse(localStorage.getItem("user")));
   }
 
   componentWillReceiveProps() {
@@ -36,7 +37,10 @@ class SideBar extends React.Component {
   };
 
   logOut = () => {
-    this.props.logOut();
+    var r = window.confirm("آیا برای خروج از سامانه مطمئن هستید؟");
+    if (r == true) {
+      this.props.logOut();
+    }
   };
 
   goTo = page => {
@@ -60,22 +64,48 @@ class SideBar extends React.Component {
                 onClick={() => this.setVisible(!this.state.visible)}
                 icon="bars"
               />
-              <Menu.Item fitted={true} onClick={this.logOut}>
-                <Button icon labelPosition="left">
-                  <span>خروج</span>
-                  <Icon name="sign-out" />
-                </Button>
+
+              <Menu.Item fitted={true}>
+                <HomeButton />
               </Menu.Item>
             </Menu.Menu>
             <Menu.Menu position="right">
-              <Menu.Item style={{ paddingRight: 0 }}>
-                {this.state.userData.first_name +
-                  " " +
-                  this.state.userData.last_name}
+              <Menu.Item style={{ padding: 0 }}>
+                <Popup
+                  flowing
+                  hoverable
+                  position="bottom right"
+                  content={
+                    <Menu.Item
+                      className="pointer"
+                      as="p"
+                      fitted={true}
+                      onClick={this.logOut}
+                    >
+                      <p>خروج از سامانه</p>
+                    </Menu.Item>
+                  }
+                  trigger={
+                    <div
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        padding: "0.4em"
+                      }}
+                    >
+                      {this.state.userData.first_name +
+                        " " +
+                        this.state.userData.last_name}
+                      <img
+                        src={userAvatar}
+                        style={{ paddingLeft: "0.4em" }}
+                        height="42"
+                      />
+                    </div>
+                  }
+                />
               </Menu.Item>
-              <Menu.Item style={{ paddingLeft: 0 }}>
-                <img src="http://uupload.ir/files/6dzr_business-user-account-png-image-min.png" />
-              </Menu.Item>
+              <Menu.Item style={{ paddingLeft: 0 }}></Menu.Item>
             </Menu.Menu>
           </Menu>
         </div>
@@ -168,7 +198,7 @@ class SideBar extends React.Component {
           </Sidebar>
 
           <Sidebar.Pusher>
-            <Segment disabled={this.state.visible}>
+            <Segment original="" disabled={this.state.visible}>
               {this.props.children}
             </Segment>
           </Sidebar.Pusher>

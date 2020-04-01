@@ -20,9 +20,9 @@ import {
   toGregorian,
   getTodayJalaali
 } from "../utils/jalaaliUtils";
-import DatePickerModal from "./DatePickerModal";
+import DatePickerModal from "../utils/DatePickerModal";
 import NotFound from "../utils/notFound";
-import history from "../../history";
+import { digitToComma } from "../utils/numberUtils";
 
 const colors = {
   blue: "#2185d0",
@@ -463,14 +463,6 @@ class Reports extends React.Component {
     });
     this.props.getChartsReport(1, getTodayGregorian(), getTodayGregorian());
     this.props.getIntervalReports(1, getTodayGregorian(), getTodayGregorian());
-    if (
-      typeof window.orientation !== "undefined" ||
-      navigator.userAgent.indexOf("IEMobile") !== -1
-    ) {
-      console.log("mobile");
-    } else {
-      console.log("desktop");
-    }
   }
 
   componentDidUpdate() {
@@ -527,12 +519,6 @@ class Reports extends React.Component {
                 <span>نمایش گزارش</span>
                 <Icon name="search" />
               </Button>
-              <Button
-                style={{ float: "left" }}
-                onClick={() => history.push("/")}
-                color="teal"
-                icon="home"
-              />
             </form>
           </Segment>
 
@@ -574,41 +560,48 @@ class Reports extends React.Component {
             <Table.Body>
               {this.props.intervalReports && (
                 <Table.Row>
-                  <Table.Cell className="table-border-left">
-                    {this.props.intervalReports.total_profit}
+                  <Table.Cell
+                    className="table-border-left"
+                    style={{ fontFamily: "arial" }}
+                  >
+                    {digitToComma(this.props.intervalReports.total_profit)}
                   </Table.Cell>
-                  <Table.Cell>
-                    {this.props.intervalReports.total_discount}
+                  <Table.Cell style={{ fontFamily: "arial" }}>
+                    {digitToComma(this.props.intervalReports.total_discount)}
                   </Table.Cell>
-                  <Table.Cell>
-                    {this.props.intervalReports.total_price}
+                  <Table.Cell style={{ fontFamily: "arial" }}>
+                    {digitToComma(this.props.intervalReports.total_price)}
                   </Table.Cell>
-                  <Table.Cell>
-                    {this.props.intervalReports.total_final_price}
+                  <Table.Cell style={{ fontFamily: "arial" }}>
+                    {digitToComma(this.props.intervalReports.total_final_price)}
                   </Table.Cell>
-                  <Table.Cell>
-                    {this.props.intervalReports.total_items}
+                  <Table.Cell style={{ fontFamily: "arial" }}>
+                    {digitToComma(this.props.intervalReports.total_items)}
                   </Table.Cell>
-                  <Table.Cell>
-                    {this.props.intervalReports.total_bills}
+                  <Table.Cell style={{ fontFamily: "arial" }}>
+                    {digitToComma(this.props.intervalReports.total_bills)}
                   </Table.Cell>
-                  <Table.Cell>
-                    {this.props.intervalReports.total_cheque_paid}
+                  <Table.Cell style={{ fontFamily: "arial" }}>
+                    {digitToComma(this.props.intervalReports.total_cheque_paid)}
                   </Table.Cell>
-                  <Table.Cell>
-                    {this.props.intervalReports.total_cash_paid}
+                  <Table.Cell style={{ fontFamily: "arial" }}>
+                    {digitToComma(this.props.intervalReports.total_cash_paid)}
                   </Table.Cell>
-                  <Table.Cell>
-                    {this.props.intervalReports.total_card_paid}
+                  <Table.Cell style={{ fontFamily: "arial" }}>
+                    {digitToComma(this.props.intervalReports.total_card_paid)}
                   </Table.Cell>
-                  <Table.Cell>
-                    {this.props.intervalReports.total_paid}
+                  <Table.Cell style={{ fontFamily: "arial" }}>
+                    {digitToComma(this.props.intervalReports.total_paid)}
                   </Table.Cell>
-                  <Table.Cell>
-                    {this.props.intervalReports.total_reminded_payments}
+                  <Table.Cell style={{ fontFamily: "arial" }}>
+                    {digitToComma(
+                      this.props.intervalReports.total_reminded_payments
+                    )}
                   </Table.Cell>
-                  <Table.Cell>
-                    {this.props.intervalReports.bills_with_reminded_status}
+                  <Table.Cell style={{ fontFamily: "arial" }}>
+                    {digitToComma(
+                      this.props.intervalReports.bills_with_reminded_status
+                    )}
                   </Table.Cell>
                 </Table.Row>
               )}

@@ -27,15 +27,11 @@ class SupplierViewSet(NafisBase, ModelViewSet):
     @action(methods=['get'], detail=False, url_path="search")
     def get_suppliers(self, request, **kwargs):
         data = self.request.query_params
-        phone = data.get('phone', None)
-        store = data.get('store', None)
-        name = data.get('name', None)
-        if phone:
-            suppliers = Supplier.objects.filter(Q(phone_number=phone) | Q(mobile_number=phone))
-        elif store:
-            suppliers = Supplier.objects.filter(store__contains=store)
-        elif name:
-            suppliers = Supplier.objects.filter(Q(first_name__contains=name) | Q(last_name__contains=name))
+        query = data.get('query', None)
+        if query:
+            suppliers = Supplier.objects.filter(
+                Q(phone_number__contains=query) | Q(mobile_number__contains=query) | Q(store__contains=query) | Q(
+                    first_name__contains=query) | Q(last_name__contains=query))
         else:
             suppliers = Supplier.objects.all()
         suppliers = SupplierSerializer(suppliers, many=True)
@@ -49,8 +45,9 @@ class SupplierViewSet(NafisBase, ModelViewSet):
         currency_price = data.get('currency_price', 1)
         currency = data.get('currency', 'ریال')
         bill_code = data.get('bill_code')
+        statuss = data.get('status', 'remained')
         bill = SupplierBill.objects.create(supplier=supplier, currency_price=currency_price, currency=currency,
-                                           bill_code=bill_code)
+                                           bill_code=bill_code, status=statuss)
 
         for item in items:
             product_code = item['product']
