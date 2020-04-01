@@ -13,27 +13,11 @@ import { digitToComma } from "../utils/numberUtils";
 class GeneralStatistics extends Component {
   state = { intervalReports: [] };
   componentDidMount() {
-    console.log("ok on th emain", this.props.fetch);
-    if (!this.props.fetch) {
-      this.setState({
-        gregorianFromDate: getTodayGregorian(),
-        gregorianToDate: getTodayGregorian()
-      });
-      this.props.getIntervalReports(
-        1,
-        getTodayGregorian(),
-        getTodayGregorian()
-      );
-    } else {
-      // this.props.fetch === true
-      this.setState({
-        intervalReports: this.props.intervalReports
-      });
-    }
+    this.setState({
+      intervalReports: this.props.intervalReports
+    });
   }
   componentWillReceiveProps(newProps, newState) {
-    console.log("i got new props", newProps.fetch);
-
     this.setState({
       intervalReports: newProps.intervalReports
     });
