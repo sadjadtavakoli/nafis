@@ -505,8 +505,9 @@ class SupplierBillItemViewSet(NafisBase, ModelViewSet):
             raise ValidationError('محصولی با کد‌ {} وجود ندارد.'.format(product_code))
         amount = item['amount']
         raw_price = item.get('price', 0)
+        if hasattr(product, 'supplier_bill_item') and product.supplier_bill_item is not None:
+            raise ValidationError('این محصول قبلا فاکتور شده است.')
         SupplierBillItem.objects.create(product=product, amount=amount, bill=bill, raw_price=raw_price)
-
         serializer = SupplierBillSerializer(bill)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

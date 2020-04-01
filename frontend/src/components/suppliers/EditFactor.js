@@ -128,12 +128,39 @@ const EditFactor = () => {
           </Grid.Column>
         </Grid>
       </Segment>
-      <Table celled className="rtl text-center">
+      <Table celled className="rtl text-right">
         <Table.Header className="text-right">
           <Table.Row>
             <Table.HeaderCell colSpan="13">
-              <Grid stackable>
+              <Grid stackable verticalAlign="bottom">
                 <Grid.Column width={4} floated="right">
+                  <Popup
+                    wide="very"
+                    content={
+                      <AddFactorItem
+                        onClose={togglePopupOpen}
+                        onSubmit={onSubmit}
+                        pk={pk}
+                      />
+                    }
+                    position="top center"
+                    open={popupOpen}
+                    trigger={
+                      <div>
+                        <Button
+                          icon="add"
+                          color="green"
+                          onClick={togglePopupOpen}
+                          content="اضافه کردن آیتم"
+                          labelPosition="right"
+                          className="yekan"
+                          id="button-stick"
+                        />
+                      </div>
+                    }
+                  />
+                </Grid.Column>
+                <Grid.Column width={4} floated="left">
                   <Card className="yekan rtl">
                     <Card.Content>
                       <Grid>
@@ -196,28 +223,7 @@ const EditFactor = () => {
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell style={{ borderLeft: "1px solid #ddd" }}>
-              <TableLabel count={1}>
-                <Popup
-                  wide="very"
-                  content={
-                    <AddFactorItem
-                      onClose={togglePopupOpen}
-                      onSubmit={onSubmit}
-                      pk={pk}
-                    />
-                  }
-                  position="top center"
-                  open={popupOpen}
-                  trigger={
-                    <Button
-                      circular
-                      icon="add"
-                      color="green"
-                      onClick={togglePopupOpen}
-                    />
-                  }
-                />
-              </TableLabel>
+              <TableLabel count={1}>ردیف</TableLabel>
             </Table.HeaderCell>
             <Table.HeaderCell>
               <TableLabel count={2}>کد جنس</TableLabel>
@@ -437,7 +443,7 @@ const EditFactor = () => {
           content="بازگشت"
           labelPosition="right"
           className="yekan"
-          size="huge"
+          size="large"
           icon="arrow left"
           onClick={() => window.history.back()}
         />
@@ -445,7 +451,7 @@ const EditFactor = () => {
           content="افزودن پرداخت"
           labelPosition="right"
           className="yekan"
-          size="huge"
+          size="large"
           icon="plus"
           color="teal"
           onClick={() => setOpenModal(true)}
@@ -454,7 +460,7 @@ const EditFactor = () => {
           content="تایید فاکتور"
           labelPosition="right"
           className="yekan"
-          size="huge"
+          size="large"
           icon="check"
           color="green"
           // onClick={() => }

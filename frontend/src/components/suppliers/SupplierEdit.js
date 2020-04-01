@@ -8,13 +8,13 @@ class SupplierEdit extends Component {
   state = {
     pk: null,
 
-    first_name: null,
-    last_name: null,
-    email: null,
-    phone_number: null,
-    mobile_number: null,
-    address: null,
-    store: null,
+    first_name: "",
+    last_name: "",
+    email: "",
+    phone_number: "",
+    mobile_number: "",
+    address: "",
+    store: "",
 
     first_name_b: false,
     last_name_b: false,
@@ -45,10 +45,6 @@ class SupplierEdit extends Component {
       });
   }
 
-  convertStatus = status => {
-    return status.concat("_b");
-  };
-
   handleEdit = status => {
     const convertedStatus = this.convertStatus(status);
     this.setState({
@@ -64,42 +60,50 @@ class SupplierEdit extends Component {
   };
 
   handleSubmit = () => {
-    if (!this.state.first_name) {
+    let hasErrors = false;
+    if (String(this.state.first_name).length < 1) {
       this.setState({
-        first_name_b_b: true
+        first_name_b: true
       });
+      hasErrors = true;
     }
-    if (!this.state.last_name) {
+    if (String(this.state.last_name).length < 1) {
       this.setState({
-        last_name_b_b: true
+        last_name_b: true
       });
+      hasErrors = true;
     }
-    if (!this.state.email) {
+    if (String(this.state.email).length < 1) {
       this.setState({
         email_b: true
       });
+      hasErrors = true;
     }
-    if (!this.state.phone_number) {
+    if (String(this.state.phone_number).length < 1) {
       this.setState({
         phone_number_b: true
       });
+      hasErrors = true;
     }
-    if (!this.state.mobile_number) {
+    if (String(this.state.mobile_number).length < 1) {
       this.setState({
         mobile_number_b: true
       });
+      hasErrors = true;
     }
-    if (!this.state.address) {
+    if (String(this.state.address).length < 1) {
       this.setState({
         address_b: true
       });
+      hasErrors = true;
     }
-    if (!this.state.store) {
+    if (String(this.state.store).length < 1) {
       this.setState({
         store_b: true
       });
+      hasErrors = true;
     }
-    if (!this.state.hasErrors) {
+    if (!hasErrors) {
       let prepareData = {
         first_name: this.state.first_name,
         last_name: this.state.last_name,
@@ -126,6 +130,7 @@ class SupplierEdit extends Component {
   };
 
   createInput = (title, status, className, type = "text") => {
+    let b = status.concat("_b");
     return (
       <React.Fragment>
         <Label style={{ backgroundColor: "white" }}>{title}</Label>
@@ -135,7 +140,7 @@ class SupplierEdit extends Component {
           className={className}
           onChange={e => this.handleEditChange(status, e)}
           defaultValue={this.state[status]}
-          error={this.state.hasErrors}
+          error={this.state[b]}
           type={type}
         />
       </React.Fragment>
