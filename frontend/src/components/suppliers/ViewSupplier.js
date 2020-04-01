@@ -32,7 +32,7 @@ const ViewSupplier = React.memo(() => {
       <Tab
         menu={{ secondary: true, pointing: true }}
         panes={panes}
-        // defaultActiveIndex={1}
+        defaultActiveIndex={1}
       />
     </Container>
   );

@@ -9,6 +9,7 @@ import LoadingBar from "../utils/loadingBar";
 import { toastr } from "react-redux-toastr";
 import TableLabel from "../utils/tableLabelGenerator";
 import { useSelector, useDispatch } from "react-redux";
+import RepeatButton from "../utils/RepeatButton";
 
 const Cashregister = () => {
   const [fetch, setFetch] = useState(false);
@@ -45,8 +46,11 @@ const Cashregister = () => {
           <Table.Row>
             <Table.HeaderCell className="text-right" colSpan="5">
               <Grid verticalAlign="middle">
-                <Grid.Column computer={5} mobile={16} floated="right">
+                <Grid.Column computer={3} mobile={16}>
                   <h3 className="yekan">لیست فاکتورهای فعال</h3>
+                </Grid.Column>
+                <Grid.Column computer={3} mobile={16}>
+                  <RepeatButton onClick={() => dispatch(getActiveBills())} />
                 </Grid.Column>
                 <Grid.Column computer={4} mobile={16} floated="left">
                   <Button

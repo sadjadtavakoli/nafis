@@ -442,8 +442,8 @@ const ViewBillModal = () => {
                       <Table.Cell>
                         <TableLabel count={3}>
                           {payment.type === "card" ? "کارت" : null}
-                        {payment.type === "cash" ? "نقد" : null}
-                        {payment.type === "cheque" ? "چک" : null}
+                          {payment.type === "cash" ? "نقد" : null}
+                          {payment.type === "cheque" ? "چک" : null}
                         </TableLabel>
                       </Table.Cell>
                       <Table.Cell className="table-border-left-none">
@@ -470,7 +470,7 @@ const ViewBillModal = () => {
               labelPosition="right"
               className="yekan"
               onClick={() => setOpen(true)}
-              size="huge"
+              size="large"
               color="green"
               icon="check"
             />
@@ -480,7 +480,7 @@ const ViewBillModal = () => {
               className="yekan"
               onClick={() => toggleAddPaymentModal()}
               color="teal"
-              size="huge"
+              size="large"
               icon="add"
               disabled={
                 Number(bill.remaining_payment) - Number(usedPoints) === 0
@@ -493,7 +493,7 @@ const ViewBillModal = () => {
               labelPosition="right"
               className="yekan"
               onClick={() => window.history.back()}
-              size="huge"
+              size="large"
               icon="arrow left"
             />
           </div>

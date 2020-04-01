@@ -411,3 +411,8 @@ label {
 body > div.ui.top.center.popup.transition.visible > div > div.header > div {
   padding: 10px;
 }
+
+#button-stick {
+  position: sticky;
+  top: 40px;
+}
