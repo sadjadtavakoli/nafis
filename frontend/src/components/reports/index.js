@@ -10,6 +10,7 @@ import {
   Input,
   Button,
   Table,
+  Tab,
   Grid,
   Label,
   Icon
@@ -21,8 +22,7 @@ import {
   getTodayJalaali
 } from "../utils/jalaaliUtils";
 import DatePickerModal from "../utils/DatePickerModal";
-import NotFound from "../utils/notFound";
-import { digitToComma } from "../utils/numberUtils";
+import GeneralStatistics from "./GeneralStatistics";
 
 const colors = {
   blue: "#2185d0",
@@ -36,6 +36,33 @@ const getLabel = _label =>
 
 class Reports extends React.Component {
   state = {
+    panes: [
+      {
+        menuItem: "آمارکلی",
+        render: () => (
+          <Tab.Pane attached={false}>
+            <GeneralStatistics fetch={this.state.fetch} />
+          </Tab.Pane>
+        )
+      },
+      {
+        menuItem: "نمودارها",
+        render: () => (
+          <Tab.Pane attached={false}>
+            {/* <ProductTable edit={false} /> */}
+          </Tab.Pane>
+        )
+      },
+      {
+        menuItem: "فاکتورها",
+        render: () => (
+          <Tab.Pane attached={false}>
+            {/* <ProductTable edit={false} /> */}
+          </Tab.Pane>
+        )
+      }
+    ],
+    fetch: false,
     options: {
       responsive: true,
       tooltips: {
@@ -457,12 +484,15 @@ class Reports extends React.Component {
   };
 
   componentDidMount() {
-    this.setState({
-      gregorianFromDate: getTodayGregorian(),
-      gregorianToDate: getTodayGregorian()
-    });
-    this.props.getChartsReport(1, getTodayGregorian(), getTodayGregorian());
-    this.props.getIntervalReports(1, getTodayGregorian(), getTodayGregorian());
+    this.setState(
+      {
+        gregorianFromDate: getTodayGregorian(),
+        gregorianToDate: getTodayGregorian()
+      },
+      () => {
+        this.handleFetchData();
+      }
+    );
   }
 
   componentDidUpdate() {
@@ -471,25 +501,39 @@ class Reports extends React.Component {
   }
 
   handleFetchData = e => {
-    e.preventDefault();
-    this.props.getChartsReport(
-      1,
-      this.state.gregorianFromDate,
-      this.state.gregorianToDate
-    );
-    this.props.getIntervalReports(
-      1,
-      this.state.gregorianFromDate,
-      this.state.gregorianToDate
-    );
+    this.setState({ fetch: false }, () => {
+      this.getIntervalReports();
+      this.getChartsReport();
+    });
   };
-
+  getIntervalReports = () => {
+    this.props
+      .getIntervalReports(
+        1,
+        this.state.gregorianFromDate,
+        this.state.gregorianToDate
+      )
+      .then(() => {
+        this.setState({ fetch: true });
+      });
+  };
+  getChartsReport = () => {
+    this.props
+      .getChartsReport(
+        1,
+        this.state.gregorianFromDate,
+        this.state.gregorianToDate
+      )
+      .then(() => {
+        this.setState({ fetch: false });
+      });
+  };
   render() {
     return (
       <React.Fragment>
         <Container>
           <Segment stacked className="rtl">
-            <form onSubmit={this.sendDate} id="r-form">
+            <React.Fragment onSubmit={this.sendDate} id="r-form">
               <span className="r-form-span-padding">از تاریخ</span>
               <Input
                 value={this.state.dateRange.fromDate}
@@ -519,94 +563,15 @@ class Reports extends React.Component {
                 <span>نمایش گزارش</span>
                 <Icon name="search" />
               </Button>
-            </form>
+            </React.Fragment>
           </Segment>
-
-          <Table celled className="rtl text-center yekan">
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell colSpan="12" className="rtl text-right">
-                  <Grid>
-                    <Grid.Column>
-                      <span>آمار کلی</span>
-                    </Grid.Column>
-                  </Grid>
-                </Table.HeaderCell>
-              </Table.Row>
-
-              {this.props.intervalReports && (
-                <Table.Row>
-                  <Table.HeaderCell className="table-border-left">
-                    مجموع سود
-                  </Table.HeaderCell>
-                  <Table.HeaderCell>تخفیف</Table.HeaderCell>
-                  <Table.HeaderCell>مبلغ</Table.HeaderCell>
-                  <Table.HeaderCell>مبلغ نهایی</Table.HeaderCell>
-                  <Table.HeaderCell>مجموع اقلام</Table.HeaderCell>
-                  <Table.HeaderCell>مجموع فاکتورها</Table.HeaderCell>
-                  <Table.HeaderCell>مجموع چک های پرداخت شده</Table.HeaderCell>
-                  <Table.HeaderCell>مجموع پرداخت های نقدی</Table.HeaderCell>
-                  <Table.HeaderCell>مجموع پرداخت های کارتی</Table.HeaderCell>
-                  <Table.HeaderCell>مجموع پرداخت ها</Table.HeaderCell>
-                  <Table.HeaderCell>
-                    مجموع پرداخت های باقی مانده
-                  </Table.HeaderCell>
-                  <Table.HeaderCell>فاکتورهای پرداخت نشده</Table.HeaderCell>
-                </Table.Row>
-              )}
-              {!this.props.intervalReports && <NotFound />}
-            </Table.Header>
-
-            <Table.Body>
-              {this.props.intervalReports && (
-                <Table.Row>
-                  <Table.Cell
-                    className="table-border-left"
-                    style={{ fontFamily: "arial" }}
-                  >
-                    {digitToComma(this.props.intervalReports.total_profit)}
-                  </Table.Cell>
-                  <Table.Cell style={{ fontFamily: "arial" }}>
-                    {digitToComma(this.props.intervalReports.total_discount)}
-                  </Table.Cell>
-                  <Table.Cell style={{ fontFamily: "arial" }}>
-                    {digitToComma(this.props.intervalReports.total_price)}
-                  </Table.Cell>
-                  <Table.Cell style={{ fontFamily: "arial" }}>
-                    {digitToComma(this.props.intervalReports.total_final_price)}
-                  </Table.Cell>
-                  <Table.Cell style={{ fontFamily: "arial" }}>
-                    {digitToComma(this.props.intervalReports.total_items)}
-                  </Table.Cell>
-                  <Table.Cell style={{ fontFamily: "arial" }}>
-                    {digitToComma(this.props.intervalReports.total_bills)}
-                  </Table.Cell>
-                  <Table.Cell style={{ fontFamily: "arial" }}>
-                    {digitToComma(this.props.intervalReports.total_cheque_paid)}
-                  </Table.Cell>
-                  <Table.Cell style={{ fontFamily: "arial" }}>
-                    {digitToComma(this.props.intervalReports.total_cash_paid)}
-                  </Table.Cell>
-                  <Table.Cell style={{ fontFamily: "arial" }}>
-                    {digitToComma(this.props.intervalReports.total_card_paid)}
-                  </Table.Cell>
-                  <Table.Cell style={{ fontFamily: "arial" }}>
-                    {digitToComma(this.props.intervalReports.total_paid)}
-                  </Table.Cell>
-                  <Table.Cell style={{ fontFamily: "arial" }}>
-                    {digitToComma(
-                      this.props.intervalReports.total_reminded_payments
-                    )}
-                  </Table.Cell>
-                  <Table.Cell style={{ fontFamily: "arial" }}>
-                    {digitToComma(
-                      this.props.intervalReports.bills_with_reminded_status
-                    )}
-                  </Table.Cell>
-                </Table.Row>
-              )}
-            </Table.Body>
-          </Table>
+          <div>
+            <Tab
+              renderActiveOnly={true}
+              menu={{ pointing: true }}
+              panes={this.state.panes}
+            />
+          </div>
 
           <Table celled className="rtl text-right yekan">
             <Table.Header>
