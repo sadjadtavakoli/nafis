@@ -24,6 +24,7 @@ import {
 import DatePickerModal from "../utils/DatePickerModal";
 import GeneralStatistics from "./GeneralStatistics";
 import Charts from "./Charts";
+import FilterSegment from "./filterSegments/filterSegment";
 
 class Reports extends React.Component {
   state = {
@@ -165,6 +166,7 @@ class Reports extends React.Component {
                 <Icon name="search" />
               </Button>
             </React.Fragment>
+            <FilterSegment />
           </Segment>
           <Tab
             renderActiveOnly={true}
