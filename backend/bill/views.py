@@ -24,7 +24,7 @@ from staff.models import Staff
 
 class BillsViewSet(NafisBase, ModelViewSet):
     serializer_class = BillSerializer
-    # permission_classes = (LoginRequired,)
+    permission_classes = (LoginRequired,)
     queryset = Bill.objects.all().order_by('-pk')
     non_updaters = []
     non_destroyers = ['cashier', 'salesperson', 'storekeeper', 'accountant']
@@ -201,6 +201,19 @@ class BillsViewSet(NafisBase, ModelViewSet):
         serializer = self.get_serializer(bill)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    @action(methods=['GET'], detail=False, url_path="interval-bills")
+    def get_interval_bills(self, request, **kwargs):
+        start_date = self.request.query_params.get('start_date', None)
+        end_date = self.request.query_params.get('end_date', None)
+        bills = Bill.objects.filter(close_date__date__range=[start_date, end_date], status__in=["done", "remained"])
+        page = self.paginate_queryset(bills)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(bills, many=True)
+        return Response(serializer.data)
 
     @action(methods=['GET'], detail=False, url_path="daily-report")
     def daily_report(self, request):
