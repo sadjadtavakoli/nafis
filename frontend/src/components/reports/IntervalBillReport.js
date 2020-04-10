@@ -23,14 +23,12 @@ class IntervalBillReport extends Component {
     totalPageCount: 1,
     activePage: 1,
     report: undefined,
-    nextUrl: undefined,
   };
-  componentDidMount() {
-    this.getIntervalBillReport();
-  }
-  getIntervalBillReport = () => {
-    this.props.getIntervalBillReport(this.state.activePage).then(res => {
+  getIntervalBillReport = (page = 1, start_date, end_date) => {
+    this.setState({ fetch: false });
+    this.props.getIntervalBillReport(page, start_date, end_date).then(res => {
       this.setState({
+        activePage: page,
         report: this.props.intervalBillReport,
         fetch: true,
         totalPageCount: Math.ceil(this.props.intervalBillReport.count / 25),
@@ -43,16 +41,30 @@ class IntervalBillReport extends Component {
       totalPageCount: Math.ceil(newProps.intervalBillReport.count / 25),
     });
   }
+  findGetParameter = (_URL, parameterName) => {
+    let url = new URL(_URL);
+    let params = new URLSearchParams(url.search);
+    let result = params.get(parameterName);
+    return result;
+  };
   changePage = (_, { activePage }) => {
-    this.setState({ activePage });
-    // getActiveBill(activePage);
+    this.setState({ activePage }, () => {
+      let next = this.state.report.next;
+      let start_date = this.findGetParameter(next, "start_date");
+      let end_date = this.findGetParameter(next, "end_date");
+      this.getIntervalBillReport(this.state.activePage, start_date, end_date);
+    });
+  };
+  fetchHandler = status => {
+    this.setState({
+      fetch: status,
+    });
   };
   render() {
     return (
       <Container>
         <DateRange
-          nextUrl={this.state.nextUrl}
-          activePage={this.state.activePage}
+          fetchHandler={this.fetchHandler}
           pageName={"IntervalBillReport"}
         />
 
@@ -64,7 +76,7 @@ class IntervalBillReport extends Component {
               </Table.HeaderCell>
             </Table.Row>
           </Table.Header>
-          {fetch &&
+          {this.state.fetch &&
           this.state.report &&
           Object.keys(this.state.report.results).length ? (
             <React.Fragment>
@@ -109,7 +121,7 @@ class IntervalBillReport extends Component {
               </Table.Header>
 
               <Table.Body>
-                {fetch &&
+                {this.state.fetch &&
                 this.state.report &&
                 Object.keys(this.state.report.results).length
                   ? this.state.report.results.map(item => {
@@ -222,10 +234,11 @@ class IntervalBillReport extends Component {
               </Table.Body>
               <Table.Footer fullWidth hidden={this.state.totalPageCount < 2}>
                 <Table.Row>
-                  <Table.HeaderCell colSpan={7} className="norm-latin">
+                  <Table.HeaderCell colSpan={11} className="norm-latin">
                     <Pagination
                       className="norm-latin"
                       defaultActivePage={1}
+                      activePage={this.state.activePage}
                       onPageChange={this.changePage}
                       totalPages={this.state.totalPageCount}
                     />
@@ -234,8 +247,8 @@ class IntervalBillReport extends Component {
               </Table.Footer>
             </React.Fragment>
           ) : null}
-          {!fetch ? <LoadingBar /> : null}
-          {fetch &&
+          {!this.state.fetch ? <LoadingBar /> : null}
+          {this.state.fetch &&
           this.state.report &&
           !Object.keys(this.state.report.results).length ? (
             <NotFound />

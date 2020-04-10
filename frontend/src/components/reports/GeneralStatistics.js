@@ -5,27 +5,38 @@ import { getIntervalReports } from "../../actions/ReportsActions";
 import {
   getTodayGregorian,
   toGregorian,
-  getTodayJalaali
+  getTodayJalaali,
 } from "../utils/jalaaliUtils";
 import LoadingBar from "../utils/loadingBar";
 import NotFound from "../utils/notFound";
 import { digitToComma } from "../utils/numberUtils";
+import DateRange from "./DateRange";
 class GeneralStatistics extends Component {
-  state = { intervalReports: [] };
+  state = { intervalReports: [], fetch: false };
   componentDidMount() {
     this.setState({
-      intervalReports: this.props.intervalReports
+      intervalReports: this.props.intervalReports,
     });
   }
   componentWillReceiveProps(newProps, newState) {
     this.setState({
-      intervalReports: newProps.intervalReports
+      intervalReports: newProps.intervalReports,
+      fetch: newProps.fetch,
     });
   }
+  fetchHandler = status => {
+    this.setState({
+      fetch: status,
+    });
+  };
   render() {
     return (
       <React.Fragment>
-        {this.props.fetch ? (
+        <DateRange
+          fetchHandler={this.fetchHandler}
+          pageName={"GeneralStatistics"}
+        />
+        {this.state.fetch ? (
           <Table celled className="rtl text-center yekan">
             <Table.Header>
               {this.state.intervalReports && (
@@ -110,9 +121,9 @@ class GeneralStatistics extends Component {
 }
 const mapStateToProps = state => {
   return {
-    intervalReports: state.reports.intervalReports
+    intervalReports: state.reports.intervalReports,
   };
 };
 export default connect(mapStateToProps, {
-  getIntervalReports
+  getIntervalReports,
 })(GeneralStatistics);

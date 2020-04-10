@@ -58,7 +58,9 @@ class DateRange extends Component {
   }
 
   handleFetchData = e => {
-    if (this.props.pageName === "GeneralStatistics") this.getIntervalReports();
+    if (this.props.pageName === "GeneralStatistics") {
+      this.getIntervalReports();
+    }
     if (this.props.pageName === "IntervalBillReport") {
       console.log("getIntervalBillReport");
       this.getIntervalBillReport(this.props.activePage);
@@ -71,35 +73,28 @@ class DateRange extends Component {
   };
 
   getIntervalReports = () => {
+    this.props.fetchHandler(false);
     this.props
       .getIntervalReports(
         1,
         this.state.gregorianFromDate,
         this.state.gregorianToDate
       )
-      .then(() => {});
-  };
-  findGetParameter = (url, parameterName) => {
-    var result = null,
-      tmp = [];
-    url
-      .substr(1)
-      .split("&")
-      .forEach(function (item) {
-        tmp = item.split("=");
-        if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+      .then(() => {
+        this.props.fetchHandler(true);
       });
-    return result;
   };
+
   getIntervalBillReport = (
     activePage,
     start_date = this.state.gregorianFromDate,
     end_date = this.state.gregorianToDate
   ) => {
+    this.props.fetchHandler(false);
     this.props
       .getIntervalBillReport(activePage, start_date, end_date)
       .then(res => {
-        console.log("res dailyReport", res.data);
+        this.props.fetchHandler(true);
       });
   };
   getChartsReport = () => {
