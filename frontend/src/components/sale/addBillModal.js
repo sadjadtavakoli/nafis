@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import NewBillPopup from "./newBillPopup";
 import {
   setNewBill,
-  getCustomerByPhoneNumber
+  getCustomerByPhoneNumber,
 } from "../../actions/SaleActions";
 import { enToFa, priceToPersian, digitToComma } from "../utils/numberUtils";
 import {
@@ -17,10 +17,9 @@ import {
   Popup,
   Icon,
   Message,
-  Label
+  Label,
 } from "semantic-ui-react";
 import { toastr } from "react-redux-toastr";
-
 const INITIAL_STATE = {
   sumProductTotalPrice: 0,
   isOpenAddItem: false,
@@ -28,7 +27,7 @@ const INITIAL_STATE = {
     phone_number: false,
     branch: false,
     discount: false,
-    items: false
+    items: false,
   },
   phone_number: "",
   branch: 1,
@@ -36,7 +35,7 @@ const INITIAL_STATE = {
   itemsDOM: [],
   itemsDataSheet: [],
   branchOptions: [{ key: "1", value: "1", flag: "ir", text: "شعبه یک" }],
-  customerData: {}
+  customerData: {},
 };
 
 class AddBillModal extends React.Component {
@@ -49,12 +48,19 @@ class AddBillModal extends React.Component {
   deleteItem = id => {
     var r = window.confirm("آیا از حذف این مورد مطمئن هستید؟");
     if (r == true) {
-      let itemsDataSheet = this.state.itemsDataSheet;
+      let itemsDataSheet = JSON.parse(
+        JSON.stringify(this.state.itemsDataSheet)
+      );
+      console.log(this.state.itemsDataSheet);
       let itemsDOM = this.state.itemsDOM;
       for (var i = 0; i < itemsDataSheet.length; i++) {
+        console.log(id, i, itemsDataSheet);
         if (i === id) {
-          itemsDataSheet.splice(i, 1);
-          itemsDOM.splice(i, 1);
+          delete itemsDataSheet[id];
+          // itemsDataSheet.splice(id, 1);
+          console.log("after splice", itemsDataSheet);
+          // itemsDataSheet[id].isHide = true;
+          // itemsDOM.splice(i, 1);
         }
       }
       this.setState({ itemsDataSheet, itemsDOM }, () => {
@@ -77,13 +83,13 @@ class AddBillModal extends React.Component {
                 className="pointer"
                 style={{ marginRight: 10 }}
               >
-                <Icon name="trash" /> حذف آیتم
+                <Icon name="trash" /> حذف قلم
               </Label>
             </span>
           </Card.Header>
           <Card.Description className="yekan">
             <Message compact size="mini" color="teal">
-              داده های زیر صرفا جهت خواندن هستن و برای جلوگیری از اشتباهات
+              داده های زیر صرفا جهت خواندن هستند و برای جلوگیری از اشتباهات
               انسانی قابل تغییر نمی باشند.{" "}
             </Message>
           </Card.Description>
@@ -155,7 +161,7 @@ class AddBillModal extends React.Component {
       {
         itemsDOM: [itemDOM, ...this.state.itemsDOM],
         itemsDataSheet: [data, ...this.state.itemsDataSheet],
-        formValidation: { ...this.state.formValidation, items: false }
+        formValidation: { ...this.state.formValidation, items: false },
       },
       () => {
         this.sumProductTotalPrice();
@@ -175,7 +181,7 @@ class AddBillModal extends React.Component {
   inputChange = (event, inputName) => {
     this.setState(
       {
-        [inputName]: event.target.value
+        [inputName]: event.target.value,
       },
       () => {
         if (inputName === "phone_number") {
@@ -214,27 +220,30 @@ class AddBillModal extends React.Component {
           ...this.state.formValidation,
           discount: false,
           phone_number: false,
-          items: false
-        }
+          items: false,
+        },
       },
       () => {
         let hasError = false;
         if (this.state.phone_number.length !== 11) {
           this.setState({
-            formValidation: { ...this.state.formValidation, phone_number: true }
+            formValidation: {
+              ...this.state.formValidation,
+              phone_number: true,
+            },
           });
           hasError = true;
         }
 
         if (this.state.discount.length < 1) {
           this.setState({
-            discount: 0
+            discount: 0,
           });
           hasError = true;
         }
         if (this.state.itemsDataSheet.length < 1) {
           this.setState({
-            formValidation: { ...this.state.formValidation, items: true }
+            formValidation: { ...this.state.formValidation, items: true },
           });
           hasError = true;
         }
@@ -243,7 +252,7 @@ class AddBillModal extends React.Component {
             phone_number: this.state.phone_number,
             discount: this.state.discount,
             branch: this.state.branch,
-            items: this.state.itemsDataSheet
+            items: this.state.itemsDataSheet,
           };
           this.props.setNewBill(prepareData).then(() => {
             this.setState(INITIAL_STATE);
@@ -254,7 +263,17 @@ class AddBillModal extends React.Component {
       }
     );
   };
-
+  isHideHandler = id => {
+    console.log("in isHideHandler", this.state.itemsDataSheet[id]);
+    if (
+      this.state.itemsDataSheet[id] &&
+      this.state.itemsDataSheet[id].isHide === false
+    ) {
+      return "block";
+    } else {
+      return "none";
+    }
+  };
   render() {
     return (
       <React.Fragment>
@@ -352,7 +371,17 @@ class AddBillModal extends React.Component {
                     />
                   </div>
                   {this.state.itemsDOM.map((item, index) => {
-                    return <Card.Group key={index}>{item}</Card.Group>;
+                    return (
+                      <Card.Group key={index}>
+                        <div
+                          style={{
+                            display: this.isHideHandler(index),
+                          }}
+                        >
+                          {item}
+                        </div>
+                      </Card.Group>
+                    );
                   })}
                 </Segment>
                 <Form.Group widths={2}>

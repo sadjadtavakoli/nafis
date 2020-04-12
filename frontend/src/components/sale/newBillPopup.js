@@ -6,7 +6,7 @@ import { addNewItem } from "../../actions/SaleActions";
 import {
   enToFa,
   phoneNumberBeautifier,
-  priceToPersian
+  priceToPersian,
 } from "../utils/numberUtils";
 import { toastr } from "react-redux-toastr";
 
@@ -22,7 +22,7 @@ class NewBillPopup extends React.Component {
     end_of_roll_amount: 0,
     disabled: true,
     notFound: NaN,
-    productData: {}
+    productData: {},
   };
 
   changeInput = (event, inputName) => {
@@ -42,7 +42,7 @@ class NewBillPopup extends React.Component {
   toggleIsEndOfRoll = () => {
     this.setState(prevState => ({
       end_of_roll: !prevState.end_of_roll,
-      end_of_roll_amount: ""
+      end_of_roll_amount: "",
     }));
   };
 
@@ -63,7 +63,8 @@ class NewBillPopup extends React.Component {
         end_of_roll: this.state.end_of_roll,
         discount: this.state.discount,
         end_of_roll_amount: this.state.end_of_roll_amount,
-        selling_price: this.state.productData.selling_price
+        selling_price: this.state.productData.selling_price,
+        isHide: false,
       };
       if (this.props.pk) {
         this.props.addNewItem(prepareData).then(res => {
@@ -90,14 +91,14 @@ class NewBillPopup extends React.Component {
           .then(() => {
             this.setState({
               notFound: false,
-              productData: this.props.productsList
+              productData: this.props.productsList,
             });
           })
           .catch(() => {
             this.setState({
               notFound: true,
               disabled: true,
-              productData: {}
+              productData: {},
             });
           });
       }
@@ -221,7 +222,7 @@ class NewBillPopup extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    productsList: state.depository.productsList
+    productsList: state.depository.productsList,
   };
 };
 
