@@ -321,12 +321,6 @@ class BillsViewSet(NafisBase, ModelViewSet):
     def pie_chart_data(self, request, **kwargs):
         start_date = self.request.query_params.get('start_date', None)
         end_date = self.request.query_params.get('end_date', None)
-        data = self.get_filter_kwargs()
-        bg_colors = data.get('bg_color[]', None)
-        design_colors = data.get('design_color[]', None)
-        designs = data.get('design[]', None)
-        f_types = data.get('f_type[]', None)
-        materials = data.get('material[]', None)
         result = dict()
         query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
                                         bill__status__in=["done", "remained"], rejected=False)
