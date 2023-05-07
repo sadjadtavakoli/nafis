@@ -12,7 +12,6 @@ import logo from "../../assets/logo.png";
 import history from "../../history";
 
 import { login } from "../../actions/LoginActions";
-// import {toastr} from 'react-redux-toastr'
 
 class Login extends React.Component {
   state = {
@@ -28,19 +27,15 @@ class Login extends React.Component {
     });
   };
   onSubmit = () => {
-    // console.log(this.state);
-
     this.setState({ isPendingToRecieveData: true });
     this.props
       .login(this.state.username, this.state.password)
       .then(() => {
         this.setState({ isPendingToRecieveData: false });
         history.push("/");
-        // toastr.success('ورود موفق آمیز','ورود با موفقیت انجام شد')
       })
       .catch(() => {
         this.setState({ isPendingToRecieveData: false, hasError: true });
-        // toastr.error('خطا','چنین کاربری در سامانه موجود نمی باشد')
       });
   };
 

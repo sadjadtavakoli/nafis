@@ -1,40 +1,40 @@
-import React, { Component } from "react";
-import { Segment, Table, Dropdown, Button } from "semantic-ui-react";
-import { connect } from "react-redux";
-import { getProductFields } from "../../actions/DepositoryActions";
-const SELECT_ALL_TEXT = "همه موارد";
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Button, Dropdown, Segment, Table } from 'semantic-ui-react'
+import { getProductFields } from '../../actions/DepositoryActions'
+const SELECT_ALL_TEXT = 'همه موارد'
 const INITAL_OPTIONS = {
   branch: [],
   background_color: [],
   design_color: [],
   material: [],
   design: [],
-  f_type: []
-};
+  f_type: [],
+}
 class FilterSegment extends Component {
   state = {
-    noResultsMessage: "نتیجه ای یافت نشد",
+    noResultsMessage: 'نتیجه ای یافت نشد',
     selectedItems: [],
-    options: INITAL_OPTIONS
-  };
+    options: INITAL_OPTIONS,
+  }
   componentDidMount() {
-    this.props.getProductFields().then(response => {
-      this.setState({ ...this.state, options: this.props.productFields });
-    });
+    this.props.getProductFields().then((response) => {
+      this.setState({ ...this.state, options: this.props.productFields })
+    })
   }
   clearFilter = () => {
     this.setState({ selectedItems: INITAL_OPTIONS }, () => {
-      this.setState({ selectedItems: new Array() });
-    });
-  };
+      this.setState({ selectedItems: new Array() })
+    })
+  }
   dropDownHandleChange = (_, { id, value }) => {
     this.setState({
-      selectedItems: { ...this.state.selectedItems, [id]: value }
-    });
-  };
+      selectedItems: { ...this.state.selectedItems, [id]: value },
+    })
+  }
   submitFilter = () => {
-    this.props.submitFilter(this.state.selectedItems);
-  };
+    this.props.submitFilter({ ...this.state.selectedItems, page: 1 })
+  }
   render() {
     return (
       <div className="d-segment pt-5">
@@ -158,13 +158,13 @@ class FilterSegment extends Component {
           </div>
         </Segment>
       </div>
-    );
+    )
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    productFields: state.depository.productFields
-  };
-};
-export default connect(mapStateToProps, { getProductFields })(FilterSegment);
+    productFields: state.depository.productFields,
+  }
+}
+export default connect(mapStateToProps, { getProductFields })(FilterSegment)

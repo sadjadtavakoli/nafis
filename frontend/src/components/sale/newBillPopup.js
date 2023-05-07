@@ -1,58 +1,62 @@
-import React from "react";
-import { connect } from "react-redux";
-import { Button, Form, Card, Label, Icon } from "semantic-ui-react";
-import { getProductsByCode } from "../../actions/DepositoryActions";
-import { addNewItem } from "../../actions/SaleActions";
+import React from 'react'
+import { connect } from 'react-redux'
+import { toastr } from 'react-redux-toastr'
+import { Button, Card, Form, Icon, Label } from 'semantic-ui-react'
+import { getProductsByCode } from '../../actions/DepositoryActions'
+import { addNewItem } from '../../actions/SaleActions'
 import {
   enToFa,
   phoneNumberBeautifier,
-  priceToPersian
-} from "../utils/numberUtils";
-import { toastr } from "react-redux-toastr";
+  priceToPersian,
+} from '../utils/numberUtils'
 
 class NewBillPopup extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
   state = {
-    product: "",
-    amount: "",
+    product: '',
+    amount: '',
     end_of_roll: false,
     discount: 0,
     end_of_roll_amount: 0,
     disabled: true,
     notFound: NaN,
-    productData: {}
-  };
+    productData: {},
+  }
+
   changeInput = (event, inputName) => {
-    let value = Number(event.target.value);
-    this.setState({ [inputName]: value }, () => {
-      if (inputName === "product") {
-        console.log(this.state.product);
-        this.handleSearchChange(this.state.product);
-      }
-      if (this.state.amount <= Number(this.state.productData.stock_amount)) {
-        this.setState({ disabled: false });
-      } else {
-        this.setState({ disabled: true });
-      }
-    });
-  };
+    const NumberRegex = /^[0-9]+\.?[0-9]*$/
+    let value = Math.abs(Number(String(event.target.value)))
+    if (value === '' || NumberRegex.test(value)) {
+      this.setState({ [inputName]: value }, () => {
+        if (inputName === 'product') {
+          this.handleSearchChange(this.state.product)
+        }
+        if (this.state.amount <= Number(this.state.productData.stock_amount)) {
+          this.setState({ disabled: false })
+        } else {
+          this.setState({ disabled: true })
+        }
+      })
+    }
+  }
+
   toggleIsEndOfRoll = () => {
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       end_of_roll: !prevState.end_of_roll,
-      end_of_roll_amount: ""
-    }));
-  };
+      end_of_roll_amount: '',
+    }))
+  }
+
   submitForm = () => {
-    console.log("submitForm", this.props.pk);
     if (
       String(this.state.product).length < 1 ||
       String(this.state.amount).length < 1 ||
       String(this.state.discount).length < 1 ||
       (this.state.end_of_roll && this.state.end_of_roll_amount.length < 1)
     ) {
-      alert("فرم افزودن آیتم معتبر نبوده است");
+      alert('فرم افزودن آیتم معتبر نبوده است')
     } else {
       let prepareData = {
         name: this.state.productData.name,
@@ -62,54 +66,48 @@ class NewBillPopup extends React.Component {
         end_of_roll: this.state.end_of_roll,
         discount: this.state.discount,
         end_of_roll_amount: this.state.end_of_roll_amount,
-        selling_price: this.state.productData.selling_price
-      };
+        selling_price: this.state.productData.selling_price,
+        isHide: false,
+      }
       if (this.props.pk) {
-        this.props.addNewItem(this.props.pk, prepareData).then(res => {
-          this.props.refetch(res);
-          setTimeout(() => {
-            toastr.success("ثبت آیتم جدید", "ثبت آیتم جدید با موفقیت انجام شد");
-            this.props.onClose();
-          }, 500);
-        });
+        this.props.addNewItem(prepareData).then((res) => {
+          toastr.success('ثبت آیتم جدید', 'ثبت آیتم جدید با موفقیت انجام شد')
+          this.props.getOneBill()
+          this.props.onClose()
+        })
       } else {
-        this.props.onSubmit(prepareData);
+        this.props.onSubmit(prepareData)
       }
     }
-  };
-  handleSearchChange = value => {
+  }
+
+  handleSearchChange = (value) => {
     this.setState({ product: Number(value) }, () => {
-      setTimeout(() => {
-        if (
-          String(this.state.product).length < 1 ||
-          String(this.state.product) === "0"
-        ) {
-          this.setState({ disabled: true, notFound: NaN });
-        } else {
-          this.props
-            .getProductsByCode(this.state.product)
-            .then(() => {
-              this.setState(
-                {
-                  notFound: false,
-                  productData: this.props.productsList
-                },
-                () => {
-                  console.log("this.state.productData", this.state.productData);
-                }
-              );
+      if (
+        String(this.state.product).length < 1 ||
+        String(this.state.product) === '0'
+      ) {
+        this.setState({ disabled: true, notFound: NaN })
+      } else {
+        this.props
+          .getProductsByCode(this.state.product)
+          .then(() => {
+            this.setState({
+              notFound: false,
+              productData: this.props.productsList,
             })
-            .catch(() => {
-              this.setState({
-                notFound: true,
-                disabled: true,
-                productData: {}
-              });
-            });
-        }
-      }, 300);
-    });
-  };
+          })
+          .catch(() => {
+            this.setState({
+              notFound: true,
+              disabled: true,
+              productData: {},
+            })
+          })
+      }
+    })
+  }
+
   render() {
     return (
       <Card className="rtl" fluid key={0}>
@@ -117,7 +115,7 @@ class NewBillPopup extends React.Component {
           <Card.Header className="d-flex">
             <h3
               className="yekan d-flex"
-              style={{ alignItems: "center", marginBottom: 0 }}
+              style={{ alignItems: 'center', marginBottom: 0 }}
             >
               افزودن آیتم جدید
             </h3>
@@ -166,24 +164,25 @@ class NewBillPopup extends React.Component {
                 type="number"
                 fluid
                 label="کد محصول"
-                onChange={e => this.changeInput(e, "product")}
-                placeholder=""
+                onChange={(e) => this.changeInput(e, 'product')}
               />
               <Form.Input
                 className="ltr placeholder-rtl"
                 type="number"
                 fluid
                 label="مقدار(متر)"
-                onChange={e => this.changeInput(e, "amount")}
-                placeholder=""
+                onKeyPress={(event) => event.charCode >= 48}
+                step="0.1"
+                min={0}
+                max={Number(this.state.productData?.stock_amount)}
+                onChange={(e) => this.changeInput(e, 'amount')}
               />
               <Form.Input
                 className="ltr placeholder-rtl"
                 type="number"
                 fluid
                 label="تخفیف"
-                onChange={e => this.changeInput(e, "discount")}
-                placeholder=""
+                onChange={(e) => this.changeInput(e, 'discount')}
               />
             </Form.Group>
             <Form.Group widths="equal">
@@ -197,9 +196,9 @@ class NewBillPopup extends React.Component {
               <Form.Input
                 type="number"
                 className={`ltr placeholder-rtl ${
-                  this.state.end_of_roll ? "" : "invisible"
+                  this.state.end_of_roll ? '' : 'invisible'
                 }`}
-                onChange={e => this.changeInput(e, "end_of_roll_amount")}
+                onChange={(e) => this.changeInput(e, 'end_of_roll_amount')}
                 label="مقدار حساب شده"
                 placeholder="مقدار حساب شده"
               />
@@ -208,7 +207,7 @@ class NewBillPopup extends React.Component {
             <div className="text-center">
               <Button.Group className="ltr">
                 <Button className="yekan" onClick={this.props.onClose}>
-                  بستن&nbsp;&nbsp;&nbsp;
+                  بستن
                 </Button>
                 <Button.Or text="یا" />
                 <Button
@@ -224,15 +223,16 @@ class NewBillPopup extends React.Component {
           </Form>
         </Card.Content>
       </Card>
-    );
+    )
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    productsList: state.depository.productsList
-  };
-};
+    productsList: state.depository.productsList,
+  }
+}
+
 export default connect(mapStateToProps, { getProductsByCode, addNewItem })(
   NewBillPopup
-);
+)

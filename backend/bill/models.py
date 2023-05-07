@@ -19,6 +19,8 @@ class Bill(models.Model):
     branch = models.ForeignKey('branch.Branch', related_name='bills', on_delete=DO_NOTHING, blank=True, null=True)
     bill_image = models.ImageField(null=True, blank=True)
     bill_code = models.IntegerField(default=0)
+    closande = models.ForeignKey('staff.Staff', related_name='closed_bills', on_delete=DO_NOTHING, blank=True,
+                                 null=True)
 
     def check_status(self):
         if round(self.remaining_payment) > 5000:
@@ -105,116 +107,132 @@ class Bill(models.Model):
         return self.items.count()
 
     @staticmethod
-    def sells_per_design_color(start_date, end_date):
+    def sale_calculation(bill_items):
+        profit = 0
+        price = 0
+        amount = 0
+        for bill_item in bill_items:
+            profit += bill_item.profit
+            price += bill_item.price
+            amount += bill_item.amount
+        return dict(amount=amount, profit=profit, price=price)
+
+    @staticmethod
+    def separated_query(starter_query, separation):
         result = dict()
-        query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
-                                        bill__status__in=["done", "remained"], rejected=False)
-        for design_color in set(Color.objects.all().values_list("name", flat=True)):
-            bill_items = query.filter(product__design_color__name=design_color)
-            profit = 0
-            price = 0
-            amount = 0
-            for bill_item in bill_items:
-                profit += bill_item.profit
-                price += bill_item.price
-                amount += bill_item.amount
-            result[design_color] = dict(amount=amount, profit=profit, price=price)
+        if separation == "customerType":
+            for customer_type in CustomerType.objects.all():
+                bill_items = starter_query.filter(bill__buyer__class_type=customer_type)
+                result[customer_type.name] = Bill.sale_calculation(bill_items)
+        if separation == "bg_color":
+            for bg_color in set(Color.objects.all().values_list("name", flat=True)):
+                bill_items = starter_query.filter(product__background_color__name=bg_color)
+                result[bg_color] = Bill.sale_calculation(bill_items)
+        if separation == "design_color":
+            for design_color in set(Color.objects.all().values_list("name", flat=True)):
+                bill_items = starter_query.filter(product__design_color__name=design_color)
+                result[design_color] = Bill.sale_calculation(bill_items)
+        if separation == "age":
+            yo_55 = timezone.now().year - 55
+            yo_40 = timezone.now().year - 40
+            yo_30 = timezone.now().year - 30
+            yo_20 = timezone.now().year - 20
+            result["55 سال و بیشتر"] = Bill.sale_calculation(
+                starter_query.filter(bill__buyer__birth_date__year__lte=yo_55 + 1))
+            result["40 الی 55"] = Bill.sale_calculation(
+                starter_query.filter(bill__buyer__birth_date__year__range=[yo_55 + 1, yo_40]))
+            result["30 الی 40"] = Bill.sale_calculation(
+                starter_query.filter(bill__buyer__birth_date__year__range=[yo_40 + 1, yo_30]))
+            result["20 الی 30"] = Bill.sale_calculation(
+                starter_query.filter(bill__buyer__birth_date__year__range=[yo_30 + 1, yo_20]))
+            result["کمتر از 20"] = Bill.sale_calculation(
+                starter_query.filter(bill__buyer__birth_date__year__gte=yo_20 + 1))
         return result
 
     @staticmethod
-    def sells_per_bg_color(start_date, end_date):
+    def sells_per_design_color(query, design_colors, separation):
         result = dict()
-        query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
-                                        bill__status__in=["done", "remained"], rejected=False)
-        for bg_color in set(Color.objects.all().values_list("name", flat=True)):
-            bill_items = query.filter(product__background_color__name=bg_color)
-            profit = 0
-            price = 0
-            amount = 0
-            for bill_item in bill_items:
-                profit += bill_item.profit
-                price += bill_item.price
-                amount += bill_item.amount
-            result[bg_color] = dict(amount=amount, profit=profit, price=price)
+        for design_color in set(Color.objects.filter(pk__in=design_colors).values_list("name", flat=True)):
+            design_color_query = query.filter(product__design_color__name=design_color)
+            result[design_color] = Bill.sale_calculation(design_color_query)
+            result[design_color].update(Bill.separated_query(design_color_query, separation))
         return result
 
     @staticmethod
-    def sells_per_f_type(start_date, end_date):
+    def sells_per_bg_color(query, bg_colors, separation):
         result = dict()
-        query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
-                                        bill__status__in=["done", "remained"], rejected=False)
+        for bg_color in set(Color.objects.filter(pk__in=bg_colors).values_list("name", flat=True)):
+            bg_color_query = query.filter(product__background_color__name=bg_color)
+            result[bg_color] = Bill.sale_calculation(bg_color_query)
+            result[bg_color].update(Bill.separated_query(bg_color_query, separation))
+        return result
+
+    @staticmethod
+    def sells_per_f_type(query, f_types, separation):
+        result = dict()
+        for f_type in FType.objects.filter(pk__in=f_types):
+            f_type_query = query.filter(product__f_type=f_type)
+            result[f_type.name] = Bill.sale_calculation(f_type_query)
+            result[f_type.name].update(Bill.separated_query(f_type_query, separation))
+        return result
+
+    @staticmethod
+    def sells_per_material(query, materials, separation):
+        result = dict()
+        for material in Material.objects.filter(pk__in=materials):
+            material_query = query.filter(product__material=material)
+            result[material.name] = Bill.sale_calculation(material_query)
+            result[material.name].update(Bill.separated_query(material_query, separation))
+        return result
+
+    @staticmethod
+    def sells_per_design(query, designs, separation):
+        result = dict()
+        for design in Design.objects.filter(pk__in=designs):
+            design_query = query.filter(product__design=design)
+            result[design.name] = Bill.sale_calculation(design_query)
+            result[design.name].update(Bill.separated_query(design_query, separation))
+        return result
+
+    @staticmethod
+    def sells_per_all_f_type(query):
+        result = dict()
         for f_type in FType.objects.all():
-            bill_items = query.filter(product__f_type=f_type)
-            profit = 0
-            price = 0
-            amount = 0
-            for bill_item in bill_items:
-                profit += bill_item.profit
-                price += bill_item.price
-                amount += bill_item.amount
-            result[f_type.name] = dict(amount=amount, profit=profit, price=price)
+            f_type_query = query.filter(product__f_type=f_type)
+            result[f_type.name] = dict()
+            result[f_type.name] = Bill.sale_calculation(f_type_query)
+            if result[f_type.name]['amount'] is not None and int(result[f_type.name]['amount']) > 0:
+                result[f_type.name]['age'] = Bill.separated_query(f_type_query, "age")
+                result[f_type.name]['customerType'] = Bill.separated_query(f_type_query, "customerType")
+                result[f_type.name]['bg_color'] = Bill.separated_query(f_type_query, "bg_color")
+                result[f_type.name]['design_color'] = Bill.separated_query(f_type_query, "design_color")
         return result
 
     @staticmethod
-    def sells_per_material(start_date, end_date):
+    def sells_per_all_material(query):
         result = dict()
-        query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
-                                        bill__status__in=["done", "remained"], rejected=False)
         for material in Material.objects.all():
-            bill_items = query.filter(product__material=material)
-            profit = 0
-            price = 0
-            amount = 0
-            for bill_item in bill_items:
-                profit += bill_item.profit
-                price += bill_item.price
-                amount += bill_item.amount
-            result[material.name] = dict(amount=amount, profit=profit, price=price)
+            material_query = query.filter(product__material=material)
+            result[material.name] = dict()
+            result[material.name] = Bill.sale_calculation(material_query)
+            if result[material.name]['amount'] is not None and int(result[material.name]['amount']) > 0:
+                result[material.name]['age'] = Bill.separated_query(material_query, "age")
+                result[material.name]['customerType'] = Bill.separated_query(material_query, "customerType")
+                result[material.name]['bg_color'] = Bill.separated_query(material_query, "bg_color")
+                result[material.name]['design_color'] = Bill.separated_query(material_query, "design_color")
         return result
 
     @staticmethod
-    def sells_per_design(start_date, end_date):
+    def sells_per_all_design(query):
         result = dict()
-        query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
-                                        bill__status__in=["done", "remained"], rejected=False)
         for design in Design.objects.all():
-            bill_items = query.filter(product__design=design)
-            profit = 0
-            price = 0
-            amount = 0
-            for bill_item in bill_items:
-                profit += bill_item.profit
-                price += bill_item.price
-                amount += bill_item.amount
-            result[design.name] = dict(amount=amount, profit=profit, price=price)
-        return result
-
-    @staticmethod
-    def profit_per_customer_age(start_date, end_date):
-        result = dict()
-        query = Bill.objects.filter(close_date__date__range=[start_date, end_date],
-                                    status__in=["done", "remained"])
-        for birth_date in set(Customer.objects.all().values_list("birth_date", flat=True)):
-            if birth_date is not None:
-                customers = Customer.objects.filter(birth_date=birth_date)
-                bills = query.filter(buyer__in=customers)
-                profit = 0
-                for bill in bills:
-                    profit += bill.profit
-                result[timezone.now().year - birth_date.year] = dict(profit=profit)
-        return result
-
-    @staticmethod
-    def profit_per_customer_type(start_date, end_date):
-        result = dict()
-        query = Bill.objects.filter(close_date__date__range=[start_date, end_date],
-                                    status__in=["done", "remained"])
-        for customer_type in CustomerType.objects.all():
-            bills = query.filter(buyer__class_type=customer_type)
-            profit = 0
-            for bill in bills:
-                profit += bill.profit
-            result[customer_type.name] = dict(profit=profit)
+            design_query = query.filter(product__design=design)
+            result[design.name] = Bill.sale_calculation(design_query)
+            if result[design.name]['amount'] is not None and int(result[design.name]['amount']) > 0:
+                result[design.name]['age'] = Bill.separated_query(design_query, "age")
+                result[design.name]['customerType'] = Bill.separated_query(design_query, "customerType")
+                result[design.name]['bg_color'] = Bill.separated_query(design_query, "bg_color")
+                result[design.name]['design_color'] = Bill.separated_query(design_query, "design_color")
         return result
 
 
@@ -291,6 +309,7 @@ class SupplierBill(models.Model):
         choices=(('ریال', 'ریال'), ('درهم', 'درهم'), ('دلار', 'دلار'), ('روپیه', 'روپیه'),
                  ('یوان', 'یوان')),
         max_length=20, default="ریال")
+    bill_code = models.IntegerField(default=0)
 
     @property
     def price(self):
@@ -327,7 +346,7 @@ class SupplierBillItem(models.Model):
 
     @property
     def price(self):
-        return int(self.raw_price) * int(self.currency_price)
+        return int(float(self.amount) * float(self.raw_price) * float(self.currency_price))
 
     def reject(self):
         self.rejected = True
@@ -339,7 +358,7 @@ class Payment(models.Model):
     create_date = models.DateTimeField(blank=True, null=True)
     amount = models.IntegerField()
     type = models.CharField(choices=settings.PAYMENT_TYPES,
-                            max_length=10, default="نقد")
+                            max_length=10, default="cash")
 
 
 class CustomerPayment(Payment):

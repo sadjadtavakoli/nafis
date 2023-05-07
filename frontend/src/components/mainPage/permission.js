@@ -18,7 +18,7 @@ export const isPermit = (section, job) => {
     case "suppliers":
       return job === "admin" || job === "accountant";
 
-    case "adminOnly":
+    case "admin":
       return job === "admin";
 
     default:

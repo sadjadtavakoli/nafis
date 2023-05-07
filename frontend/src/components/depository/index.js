@@ -8,6 +8,7 @@ import {
   getProductsByFilter
 } from "../../actions/DepositoryActions";
 import FilterSegment from "./filterSegment";
+import history from "../../history";
 
 class Depository extends React.Component {
   state = {
@@ -34,9 +35,7 @@ class Depository extends React.Component {
     });
   };
   getProductsByFilter = filterParams => {
-    this.props.getProductsByFilter(filterParams).then(response => {
-      console.log("response", response.data);
-    });
+    this.props.getProductsByFilter(filterParams);
   };
   render() {
     return (
@@ -60,7 +59,7 @@ class Depository extends React.Component {
               <Button
                 className="yekan"
                 onClick={() => this.openFilter(!this.state.filterOpen)}
-                color={this.state.filterOpen ? "yellow" : "gray"}
+                color={this.state.filterOpen ? "yellow" : "grey"}
                 content="فیلتر"
                 icon="filter"
                 labelPosition="right"
@@ -69,7 +68,7 @@ class Depository extends React.Component {
                 <FilterSegment submitFilter={this.getProductsByFilter} />
               ) : null}
             </Segment>
-            <ProductTable />
+            <ProductTable edit={true} />
           </div>
         </Container>
       </React.Fragment>

@@ -1,25 +1,22 @@
-import React from "react";
-import { connect } from "react-redux";
-import NewBillPopup from "./newBillPopup";
-import {
-  setNewBill,
-  getCustomerByPhoneNumber
-} from "../../actions/SaleActions";
-import { enToFa, priceToPersian, digitToComma } from "../utils/numberUtils";
+import React from 'react'
+import { connect } from 'react-redux'
+import { toastr } from 'react-redux-toastr'
 import {
   Button,
-  Modal,
-  Divider,
-  Header,
-  Segment,
-  Form,
   Card,
-  Popup,
+  Divider,
+  Form,
+  Header,
   Icon,
+  Label,
   Message,
-  Label
-} from "semantic-ui-react";
-import { toastr } from "react-redux-toastr";
+  Modal,
+  Popup,
+  Segment,
+} from 'semantic-ui-react'
+import { getCustomerByPhoneNumber, setNewBill } from '../../actions/SaleActions'
+import { digitToComma, enToFa, priceToPersian } from '../utils/numberUtils'
+import NewBillPopup from './newBillPopup'
 const INITIAL_STATE = {
   sumProductTotalPrice: 0,
   isOpenAddItem: false,
@@ -27,50 +24,48 @@ const INITIAL_STATE = {
     phone_number: false,
     branch: false,
     discount: false,
-    items: false
+    items: false,
   },
-  phone_number: "",
+  phone_number: '',
   branch: 1,
   discount: 0,
-  itemsDOM: [],
   itemsDataSheet: [],
-  branchOptions: [{ key: "1", value: "1", flag: "ir", text: "شعبه یک" }],
-  customerData: {}
-};
+  branchOptions: [{ key: '1', value: '1', flag: 'ir', text: 'شعبه یک' }],
+  customerData: {},
+}
+
 class AddBillModal extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  componentDidMount() {
-    // toastr.success('asdf','sadfsdfdfssdf')
-  }
-  state = INITIAL_STATE;
+  state = INITIAL_STATE
+
   toggleAddItemPopup = () => {
-    this.setState(prevState => ({ isOpenAddItem: !prevState.isOpenAddItem }));
-  };
-  deleteItem = id => {
-    var r = window.confirm("آیا از حذف این مورد مطمئن هستید؟");
-    if (r == true) {
-      let itemsDataSheet = this.state.itemsDataSheet;
-      let itemsDOM = this.state.itemsDOM;
+    this.setState((prevState) => ({ isOpenAddItem: !prevState.isOpenAddItem }))
+  }
+
+  deleteItem = (id) => {
+    var r = window.confirm('آیا از حذف این مورد مطمئن هستید؟')
+    if (!!r) {
+      let _newItemsDataSheet = []
+      let itemsDataSheet = JSON.parse(JSON.stringify(this.state.itemsDataSheet))
+      console.log(this.state.itemsDataSheet)
       for (var i = 0; i < itemsDataSheet.length; i++) {
-        if (i === id) {
-          itemsDataSheet.splice(i, 1);
-          itemsDOM.splice(i, 1);
+        console.log(id, i, itemsDataSheet)
+        if (i !== id) {
+          _newItemsDataSheet.push(itemsDataSheet[i])
         }
       }
-      this.setState({ itemsDataSheet, itemsDOM }, () => {
-        this.sumProductTotalPrice();
-      });
+      console.log('_newItemsDataSheet', _newItemsDataSheet, id)
+      this.setState({ itemsDataSheet: _newItemsDataSheet }, () => {
+        this.sumProductTotalPrice()
+      })
     }
-  };
-  submitItemPopup = data => {
-    let id = this.state.itemsDataSheet.length;
-    const itemDOM = (
+  }
+
+  Item = (data, id) => {
+    return (
       <Card fluid key={id}>
         <Card.Content>
-          <Card.Header className="yekan">
-            {data.name}
+          <Card.Header className="yekan bill-header-title">
+            <span>{data.name}</span>
             <span>
               <Label
                 color="red"
@@ -78,14 +73,14 @@ class AddBillModal extends React.Component {
                 className="pointer"
                 style={{ marginRight: 10 }}
               >
-                <Icon name="trash" /> حذف آیتم
+                <Icon name="trash" /> حذف قلم
               </Label>
             </span>
           </Card.Header>
           <Card.Description className="yekan">
             <Message compact size="mini" color="teal">
-              داده های زیر صرفا جهت خواندن هستن و برای جلوگیری از اشتباهات
-              انسانی قابل تغییر نمی باشند.{" "}
+              داده های زیر صرفا جهت خواندن هستند و برای جلوگیری از اشتباهات
+              انسانی قابل تغییر نمی باشند.{' '}
             </Message>
           </Card.Description>
         </Card.Content>
@@ -96,7 +91,7 @@ class AddBillModal extends React.Component {
                 className="ltr placeholder-rtl"
                 readOnly
                 fluid
-                defaultValue={data.name}
+                value={data.name}
                 label="نام محصول"
                 placeholder=""
               />
@@ -104,33 +99,35 @@ class AddBillModal extends React.Component {
                 className="ltr placeholder-rtl"
                 readOnly
                 fluid
-                defaultValue={data.product}
+                value={data.product}
                 label="کد محصول"
-                placeholder=""
+                readOnly
               />
               <Form.Input
                 className="ltr placeholder-rtl"
                 readOnly
                 fluid
-                defaultValue={priceToPersian(data.selling_price)}
+                value={priceToPersian(data.selling_price)}
                 label="قیمت واحد"
-                placeholder=""
               />
               <Form.Input
                 className="ltr placeholder-rtl"
                 readOnly
+                type="number"
                 fluid
-                defaultValue={data.amount}
+                value={data?.amount}
+                step="0.1"
+                min={0}
+                max={Number(data?.stock_amount)}
+                onKeyPress={(event) => event.charCode >= 48}
                 label={`مقدار(متر)`}
-                placeholder=""
               />
               <Form.Input
                 className="ltr placeholder-rtl"
                 readOnly
                 fluid
-                defaultValue={priceToPersian(data.discount)}
+                value={priceToPersian(data.discount)}
                 label="تخفیف"
-                placeholder=""
               />
             </Form.Group>
             <Form.Group widths="3">
@@ -143,10 +140,10 @@ class AddBillModal extends React.Component {
               />
               <Form.Input
                 className={`ltr placeholder-rtl ${
-                  data.end_of_roll ? "" : "invisible"
+                  data.end_of_roll ? '' : 'invisible'
                 }`}
                 readOnly
-                defaultValue={data.end_of_roll_amount}
+                value={data.end_of_roll_amount}
                 label="مقدار حساب شده"
                 placeholder="مقدار حساب شده"
               />
@@ -154,60 +151,65 @@ class AddBillModal extends React.Component {
           </Form>
         </Card.Content>
       </Card>
-    );
+    )
+  }
+
+  submitItemPopup = (data) => {
     this.setState(
       {
-        itemsDOM: [itemDOM, ...this.state.itemsDOM],
         itemsDataSheet: [data, ...this.state.itemsDataSheet],
-        formValidation: { ...this.state.formValidation, items: false }
+        formValidation: { ...this.state.formValidation, items: false },
       },
       () => {
-        this.sumProductTotalPrice();
+        this.sumProductTotalPrice()
       }
-    );
-    this.toggleAddItemPopup();
-  };
+    )
+    this.toggleAddItemPopup()
+  }
+
   getCustomerData(phone_number) {
     if (phone_number.length === 11) {
       this.props.getCustomerByPhoneNumber(phone_number).then(({ data }) => {
-        this.setState({ customerData: data });
-      });
+        this.setState({ customerData: data })
+      })
     }
   }
+
   inputChange = (event, inputName) => {
     this.setState(
       {
-        [inputName]: event.target.value
+        [inputName]: event.target.value,
       },
       () => {
-        if (inputName === "phone_number") {
+        if (inputName === 'phone_number') {
           if (this.state.phone_number.length === 11) {
-            this.getCustomerData(this.state.phone_number);
+            this.getCustomerData(this.state.phone_number)
           } else {
-            this.setState({ customerData: {} });
+            this.setState({ customerData: {} })
           }
         }
       }
-    );
-  };
-  sumProductTotalPrice = item => {
-    let preSumArray = [];
-    let sum = 0;
+    )
+  }
+
+  sumProductTotalPrice = () => {
+    let preSumArray = []
+    let sum = 0
     if (this.state.itemsDataSheet)
-      preSumArray = this.state.itemsDataSheet.map(item => {
-        console.log(item);
-        let finalAmount = item.end_of_roll_amount
-          ? item.end_of_roll_amount
-          : item.amount;
+      preSumArray = this.state?.itemsDataSheet.map((item) => {
+        let finalAmount = !!item?.end_of_roll_amount
+          ? item?.end_of_roll_amount
+          : item?.amount
         return Number(
-          item.selling_price * finalAmount - item.discount * finalAmount
-        );
-      });
-    preSumArray.forEach(item => {
-      sum += item;
-    });
-    this.setState({ sumProductTotalPrice: sum });
-  };
+          item?.selling_price * finalAmount - item?.discount * finalAmount
+        )
+      })
+    preSumArray.forEach((item) => {
+      sum += item
+    })
+    this.setState({ sumProductTotalPrice: sum })
+  }
+
   formSubmitHandler = () => {
     this.setState(
       {
@@ -215,49 +217,63 @@ class AddBillModal extends React.Component {
           ...this.state.formValidation,
           discount: false,
           phone_number: false,
-          items: false
-        }
+          items: false,
+        },
       },
       () => {
-        let hasError = false;
+        let hasError = false
         if (this.state.phone_number.length !== 11) {
           this.setState({
-            formValidation: { ...this.state.formValidation, phone_number: true }
-          });
-          hasError = true;
+            formValidation: {
+              ...this.state.formValidation,
+              phone_number: true,
+            },
+          })
+          hasError = true
         }
 
         if (this.state.discount.length < 1) {
           this.setState({
-            formValidation: { ...this.state.formValidation, discount: true }
-          });
-          hasError = true;
+            discount: 0,
+          })
+          hasError = true
         }
         if (this.state.itemsDataSheet.length < 1) {
           this.setState({
-            formValidation: { ...this.state.formValidation, items: true }
-          });
-          hasError = true;
+            formValidation: { ...this.state.formValidation, items: true },
+          })
+          hasError = true
         }
         if (!hasError) {
           const prepareData = {
             phone_number: this.state.phone_number,
             discount: this.state.discount,
             branch: this.state.branch,
-            items: this.state.itemsDataSheet
-          };
+            items: this.state.itemsDataSheet,
+          }
           this.props.setNewBill(prepareData).then(() => {
-            this.setState(INITIAL_STATE);
-            this.props.onClose();
-            toastr.success("ثبت فاکتور جدید", "فاکتور جدید با موفقیت ثبت شد");
-          });
+            this.setState(INITIAL_STATE)
+            this.props.onClose()
+            toastr.success('ثبت فاکتور جدید', 'فاکتور جدید با موفقیت ثبت شد')
+          })
         }
       }
-    );
-  };
+    )
+  }
+  isHideHandler = (id) => {
+    console.log('in isHideHandler', this.state.itemsDataSheet[id])
+    if (
+      this.state.itemsDataSheet[id] &&
+      this.state.itemsDataSheet[id].isHide === false
+    ) {
+      return 'block'
+    } else {
+      return 'none'
+    }
+  }
   render() {
     return (
-      <div>
+      <React.Fragment>
         <Modal
           id="add-bill"
           closeOnDimmerClick={false}
@@ -287,12 +303,12 @@ class AddBillModal extends React.Component {
                     label="شماره تلفن همراه"
                     type="number"
                     error={this.state.formValidation.phone_number}
-                    onChange={e => this.inputChange(e, "phone_number")}
+                    onChange={(e) => this.inputChange(e, 'phone_number')}
                     placeholder="شماره تلفن همراه"
                   />
                   <Form.Dropdown
                     className="ltr placeholder-rtl text-right"
-                    defaultValue={"1"}
+                    defaultValue={'1'}
                     placeholder="شعبه"
                     selection
                     label="شعبه"
@@ -301,7 +317,7 @@ class AddBillModal extends React.Component {
                 </Form.Group>
                 <Segment>
                   <Header as="h3" floated="right">
-                    <span>اقلام</span>{" "}
+                    <span>اقلام</span>{' '}
                     <Label className="norm-latin">
                       <span className="yekan">مبلغ کل اقلام:&nbsp;</span>
                       <span>
@@ -316,7 +332,7 @@ class AddBillModal extends React.Component {
                   <Divider clearing />
                   <Message
                     negative
-                    className={this.state.formValidation.items ? "" : "d-none"}
+                    className={this.state.formValidation.items ? '' : 'd-none'}
                   >
                     <Message.Header className="yekan">
                       خطا در تکمیل فاکتور
@@ -342,7 +358,7 @@ class AddBillModal extends React.Component {
                         <Button
                           circular
                           onClick={() => {
-                            this.toggleAddItemPopup(this.state.isOpenAddItem);
+                            this.toggleAddItemPopup(this.state.isOpenAddItem)
                           }}
                           color="green"
                           size="huge"
@@ -351,8 +367,19 @@ class AddBillModal extends React.Component {
                       }
                     />
                   </div>
-                  {this.state.itemsDOM.map((item, index) => {
-                    return <Card.Group key={index}>{item}</Card.Group>;
+                  {this.state.itemsDataSheet.map((item, index) => {
+                    return (
+                      <Card.Group key={index}>
+                        <div
+                          style={{
+                            display: this.isHideHandler(index),
+                            margin: '4px 8px',
+                          }}
+                        >
+                          {this.Item(item, index)}
+                        </div>
+                      </Card.Group>
+                    )
                   })}
                 </Segment>
                 <Form.Group widths={2}>
@@ -361,7 +388,7 @@ class AddBillModal extends React.Component {
                     label="تخفیف کلی"
                     type="number"
                     error={this.state.formValidation.discount}
-                    onChange={e => this.inputChange(e, "discount")}
+                    onChange={(e) => this.inputChange(e, 'discount')}
                     placeholder="مقدار تخفیف"
                   />
                   <Form.Input
@@ -382,17 +409,6 @@ class AddBillModal extends React.Component {
 
           <Modal.Actions>
             <Button
-              color="black"
-              onClick={() => {
-                this.props.onClose();
-                this.setState(INITIAL_STATE, () => {
-                  console.log(this.state);
-                });
-              }}
-            >
-              <span>بستن</span>
-            </Button>
-            <Button
               className="yekan"
               positive
               icon="checkmark"
@@ -400,29 +416,22 @@ class AddBillModal extends React.Component {
               content="ثبت فاکتور"
               onClick={this.formSubmitHandler}
             />
+            <Button
+              color="black"
+              onClick={() => {
+                this.props.onClose()
+                this.setState(INITIAL_STATE)
+              }}
+            >
+              <span>بستن</span>
+            </Button>
           </Modal.Actions>
         </Modal>
-      </div>
-    );
+      </React.Fragment>
+    )
   }
 }
 
-const mapStateToProps = state => {
-  //   return {
-  //     nextReceipt: state.receipts.nextReceipt,
-  //     currentUser: state.auth.currentUser
-  //       ? state.auth.currentUser
-  //       : localStorage.getItem("user")
-  //       ? localStorage.getItem("user")
-  //       : "",
-  //     type: state.auth.type
-  //       ? state.auth.type
-  //       : localStorage.getItem("type")
-  //       ? localStorage.getItem("type")
-  //       : ""
-  //   };
-};
-
 export default connect(null, { setNewBill, getCustomerByPhoneNumber })(
   AddBillModal
-);
+)

@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError, PermissionDenied
 from rest_framework.response import Response
+from rest_framework.status import HTTP_404_NOT_FOUND
 from rest_framework.viewsets import ModelViewSet
 
 from bill.models import Bill, BillItem, CustomerPayment, CustomerCheque, OurCheque, SupplierBill, OurPayment, \
@@ -23,7 +24,7 @@ from staff.models import Staff
 
 class BillsViewSet(NafisBase, ModelViewSet):
     serializer_class = BillSerializer
-    # permission_classes = (LoginRequired,)
+    permission_classes = (LoginRequired,)
     queryset = Bill.objects.all().order_by('-pk')
     non_updaters = []
     non_destroyers = ['cashier', 'salesperson', 'storekeeper', 'accountant']
@@ -53,10 +54,39 @@ class BillsViewSet(NafisBase, ModelViewSet):
     def close_all(self, request):
         for bill in Bill.objects.filter(status="active"):
             bill.check_status()
+            try:
+                staff = Staff.objects.get(username=request.user.username)
+                bill.closande = staff
+                bill.save()
+            except ObjectDoesNotExist:
+                pass
             if not (bill.items_special_discount or bill.buyer_special_discount):
                 bill.buyer.points += int(bill.final_price) * int(Point.objects.first().amount) / 100
                 bill.buyer.save()
         return Response({'ok': True})
+
+    @action(methods=['post'], detail=True, url_path='done', permission_classes=(CloseBillPermission,))
+    def close_bill(self, request, **kwargs):
+        instance = self.get_object()
+        if instance.status == "active":
+            instance.check_status()
+            try:
+                staff = Staff.objects.get(username=request.user.username)
+                instance.closande = staff
+                instance.save()
+            except ObjectDoesNotExist:
+                pass
+            send_message = self.request.data.get('send_message', True)
+            if send_message:
+                try:
+                    sms = SendSMS()
+                    sms.group_sms(create_message(instance), [instance.buyer.phone_number], instance.buyer.phone_number)
+                except:
+                    pass
+            if not (instance.items_special_discount or instance.buyer_special_discount):
+                instance.buyer.points += int(instance.final_price) * int(Point.objects.first().amount) / 100
+                instance.buyer.save()
+        return Response({'status': instance.status})
 
     @action(url_path='actives', detail=False, methods=['get'], permission_classes=())
     def get_actives(self, request):
@@ -92,7 +122,8 @@ class BillsViewSet(NafisBase, ModelViewSet):
             card_amount = self.request.data.get('card_amount', 0)
             if cash_amount:
                 payment_type = "cash"
-                CustomerPayment.objects.create(create_date=timezone.now(), amount=float(cash_amount),
+                CustomerPayment.objects.create(create_date=timezone.now(),
+                                               amount=float(cash_amount),
                                                bill=bill,
                                                type=payment_type)
             if card_amount:
@@ -118,23 +149,6 @@ class BillsViewSet(NafisBase, ModelViewSet):
 
         data = BillSerializer(Bill.objects.get(pk=bill.pk)).data
         return Response(data, status=status.HTTP_201_CREATED)
-
-    @action(methods=['post'], detail=True, url_path='done', permission_classes=(CloseBillPermission,))
-    def close_bill(self, request, **kwargs):
-        instance = self.get_object()
-        if instance.status == "active":
-            instance.check_status()
-            send_message = self.request.data.get('send_message', True)
-            if send_message:
-                try:
-                    sms = SendSMS()
-                    sms.group_sms(create_message(instance), [instance.buyer.phone_number], instance.buyer.phone_number)
-                except:
-                    pass
-            if not (instance.items_special_discount or instance.buyer_special_discount):
-                instance.buyer.points += int(instance.final_price) * int(Point.objects.first().amount) / 100
-                instance.buyer.save()
-        return Response({'status': instance.status})
 
     def update(self, request, *args, **kwargs):
         if self.request.data.get('used_points', None):
@@ -188,6 +202,19 @@ class BillsViewSet(NafisBase, ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
+    @action(methods=['GET'], detail=False, url_path="interval-bills")
+    def get_interval_bills(self, request, **kwargs):
+        start_date = self.request.query_params.get('start_date', None)
+        end_date = self.request.query_params.get('end_date', None)
+        bills = Bill.objects.filter(close_date__date__range=[start_date, end_date], status__in=["done", "remained"])
+        page = self.paginate_queryset(bills)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(bills, many=True)
+        return Response(serializer.data)
+
     @action(methods=['GET'], detail=False, url_path="daily-report")
     def daily_report(self, request):
         total_benefit, total_discount, total_price, total_final_price, total_items, total_bills = 0, 0, 0, 0, 0, 0
@@ -206,7 +233,8 @@ class BillsViewSet(NafisBase, ModelViewSet):
             total_cheque_paid += bill.cheque_paid
             total_cash_paid += bill.cash_paid
             total_card_paid += bill.card_paid
-            reminded_payments += bill.remaining_payment
+            if bill.status == "remained":
+                reminded_payments += bill.remaining_payment
         data['bills_data'] = BillSerializer(bills, many=True).data
         data['total_profit'] = total_benefit
         data['total_discount'] = total_discount
@@ -232,7 +260,6 @@ class BillsViewSet(NafisBase, ModelViewSet):
         bills_with_reminded_status = bills.filter(status="remained").count()
         total_bills = bills.count()
         data = {}
-        print(bills.filter(status="remained"))
         for bill in bills:
             total_sales += bill.price
             total_final_price += bill.final_price
@@ -258,24 +285,62 @@ class BillsViewSet(NafisBase, ModelViewSet):
         data['bills_with_reminded_status'] = bills_with_reminded_status
         return Response(data)
 
-    @action(methods=["GET"], detail=False, url_path="charts")
-    def chart_data(self, request, **kwargs):
+    def get_filter_kwargs(self):
+        data = self.request.query_params
+        data = {k: (data.getlist(k) if k.endswith('[]') else data.get(k))
+                for k in data}
+        return data
+
+    @action(methods=["GET"], detail=False, url_path="bar-charts")
+    def bar_chart_data(self, request, **kwargs):
         start_date = self.request.query_params.get('start_date', None)
         end_date = self.request.query_params.get('end_date', None)
-        print(start_date)
-        print(end_date)
+        separation = self.request.query_params.get('separation', None)
+        data = self.get_filter_kwargs()
+        bg_colors = data.get('bg_color[]', None)
+        design_colors = data.get('design_color[]', None)
+        designs = data.get('design[]', None)
+        f_types = data.get('f_type[]', None)
+        materials = data.get('material[]', None)
         result = dict()
-        result['sells_per_design'] = Bill.sells_per_design(start_date, end_date)
-        result['sells_per_design_color'] = Bill.sells_per_design_color(start_date, end_date)
-        result['sells_per_bg_color'] = Bill.sells_per_bg_color(start_date, end_date)
-        result['sells_per_f_type'] = Bill.sells_per_f_type(start_date, end_date)
-        result['sells_per_material'] = Bill.sells_per_material(start_date, end_date)
-        result['sells_per_customer_age'] = Bill.profit_per_customer_age(start_date, end_date)
-        result['sells_per_customer_type'] = Bill.profit_per_customer_type(start_date, end_date)
+        query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
+                                        bill__status__in=["done", "remained"], rejected=False)
+        if bg_colors is not None and len(bg_colors):
+            result['sells_per_bg_color'] = Bill.sells_per_bg_color(query, bg_colors, separation)
+        if design_colors is not None and len(design_colors):
+            result['sells_per_design_color'] = Bill.sells_per_design_color(query, design_colors, separation)
+        if designs is not None and len(designs):
+            result['sells_per_design'] = Bill.sells_per_design(query, designs, separation)
+        if f_types is not None and len(f_types):
+            result['sells_per_f_type'] = Bill.sells_per_f_type(query, f_types, separation)
+        if materials is not None and len(materials):
+            result['sells_per_material'] = Bill.sells_per_material(query, materials, separation)
+        return Response(result)
+
+    @action(methods=["GET"], detail=False, url_path="pie-charts")
+    def pie_chart_data(self, request, **kwargs):
+        start_date = self.request.query_params.get('start_date', None)
+        end_date = self.request.query_params.get('end_date', None)
+        data = self.get_filter_kwargs()
+        bg_colors = data.get('bg_color[]', None)
+        design_colors = data.get('design_color[]', None)
+        designs = data.get('design[]', None)
+        f_types = data.get('f_type[]', None)
+        materials = data.get('material[]', None)
+        result = dict()
+        query = BillItem.objects.filter(bill__close_date__date__range=[start_date, end_date],
+                                        bill__status__in=["done", "remained"], rejected=False)
+
+        # if designs is not None and len(designs):
+        result['sells_per_design'] = Bill.sells_per_all_design(query)
+        # if f_types is not None and len(f_types):
+        result['sells_per_f_type'] = Bill.sells_per_all_f_type(query)
+        # if materials is not None and len(materials):
+        result['sells_per_material'] = Bill.sells_per_all_material(query)
         return Response(result)
 
 
-class BillItemViewSet(ModelViewSet):
+class BillItemViewSet(NafisBase, ModelViewSet):
     serializer_class = BillItemSerializer
     permission_classes = (LoginRequired,)
     queryset = BillItem.objects.all()
@@ -294,7 +359,9 @@ class BillItemViewSet(ModelViewSet):
         bill_item_product = self.get_object().product
         bill_item_amount = self.get_object().amount
         if bill.seller.username != request.user.username or bill.status != "active":
-            raise PermissionDenied
+            staff = Staff.objects.get(username=request.user.username)
+            if staff.job != "admin":
+                raise PermissionDenied
         super(BillItemViewSet, self).destroy(request, *args, **kwargs)
         bill_item_product.update_stock_amount(-1 * (bill_item_amount + 0.05))
         serializer = BillSerializer(bill)
@@ -305,6 +372,32 @@ class BillItemViewSet(ModelViewSet):
         bill = self.get_object().bill
         if bill.seller.username != request.user.username or bill.status != "active":
             raise PermissionDenied
+        old_amount = self.get_object().amount
+        data = self.request.data
+        product = data.get('product', None)
+        amount = data.get('amount', None)
+        if product is None or int(product) == self.get_object().product.code:
+            bill_item_product = self.get_object().product
+            if amount and float(amount) != old_amount:
+                stock_amount = bill_item_product.stock_amount + old_amount
+                if float(stock_amount) < float(amount):
+                    raise ValidationError("مقدار کافی از این پارچه موجود نمی‌باشد")
+                bill_item_product.update_stock_amount(-1 * (old_amount - float(amount)))
+        else:
+            try:
+                product_item = Product.objects.get(code=product)
+                instance = self.get_object()
+                if amount is None:
+                    amount = old_amount
+                if float(amount) > float(product_item.stock_amount):
+                    raise ValidationError("مقدار کافی از این پارچه موجود نمی‌باشد")
+                bill_item_product = self.get_object().product
+                bill_item_product.update_stock_amount(-1 * (self.get_object().amount + 0.05))
+                product_item.update_stock_amount(float(amount) + 0.05)
+                instance.product = product_item
+                instance.save()
+            except ObjectDoesNotExist:
+                Response({'چنین محصولی یافت نشد.'}, status=HTTP_404_NOT_FOUND)
         super(BillItemViewSet, self).update(request, *args, **kwargs)
         serializer = BillSerializer(bill)
         headers = self.get_success_headers(serializer.data)
@@ -374,7 +467,7 @@ class CustomerPaymentViewSet(NafisBase, ModelViewSet):
 
 class SupplierBillsViewSet(NafisBase, ModelViewSet):
     serializer_class = SupplierBillSerializer
-    # permission_classes = (LoginRequired,)
+    permission_classes = (LoginRequired,)
     queryset = SupplierBill.objects.all().order_by('-pk')
     non_updaters = ['cashier', 'salesperson', 'storekeeper']
     non_destroyers = ['cashier', 'salesperson', 'storekeeper']
@@ -420,28 +513,6 @@ class SupplierBillsViewSet(NafisBase, ModelViewSet):
         data = SupplierBillSerializer(SupplierBill.objects.get(pk=bill.pk)).data
         return Response(data, status=status.HTTP_201_CREATED)
 
-    def create(self, request, *args, **kwargs):
-        data = self.request.data
-        items = data.get('items')
-        supplier = data.get('supplier')
-        currency_price = data.get('currency_price', 1)
-        currency = data.get('currency', 'ریال')
-        bill = SupplierBill.objects.create(supplier=supplier, currency_price=currency_price, currency=currency)
-
-        for item in items:
-            product_code = item['product']
-            try:
-                product = Product.objects.get(code=product_code)
-            except ObjectDoesNotExist:
-                raise ValidationError('محصولی با کد‌ {} وجود ندارد.'.format(product_code))
-            amount = item['amount']
-            raw_price = item.get('price', 0)
-            SupplierBillItem.objects.create(product=product, amount=amount, bill=bill, raw_price=raw_price)
-
-        serializer = self.get_serializer(bill)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
 
 class SupplierBillItemViewSet(NafisBase, ModelViewSet):
     serializer_class = SupplierBillItemSerializer
@@ -474,7 +545,7 @@ class SupplierBillItemViewSet(NafisBase, ModelViewSet):
         return Response(serializer.data, headers=headers)
 
     def create(self, request, *args, **kwargs):
-        bill = Bill.objects.get(pk=self.request.data.get('bill', None))
+        bill = SupplierBill.objects.get(pk=self.request.data.get('bill', None))
         staff = Staff.objects.get(username=request.user.username)
         if staff.job in self.non_creator:
             raise PermissionDenied
@@ -486,8 +557,9 @@ class SupplierBillItemViewSet(NafisBase, ModelViewSet):
             raise ValidationError('محصولی با کد‌ {} وجود ندارد.'.format(product_code))
         amount = item['amount']
         raw_price = item.get('price', 0)
+        if hasattr(product, 'supplier_bill_item') and product.supplier_bill_item is not None:
+            raise ValidationError('این محصول قبلا فاکتور شده است.')
         SupplierBillItem.objects.create(product=product, amount=amount, bill=bill, raw_price=raw_price)
-
         serializer = SupplierBillSerializer(bill)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

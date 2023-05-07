@@ -17,10 +17,10 @@ class Command(BaseCommand):
                 self.stdout.write(line)
 
     def handle(self, *args, **options):
-        with open('customer/management/commands/customers_data.json', encoding='UTF-8') as json_file:
+        with open('customer/management/commands/data/customers_data.json', encoding='UTF-8') as json_file:
             data = json.load(json_file)
             for item in data:
-                customer_type, created = CustomerType.objects.get_or_create(name=item['customer_class'])
+                customer_type, _ = CustomerType.objects.get_or_create(name=item['customer_class'])
                 address = ""
                 if item['region'] is not None:
                     address = item['region']
@@ -36,36 +36,36 @@ class Command(BaseCommand):
                                         marriage_date=item['marriage_date_date'],
                                         points=item['points'], class_type=customer_type)
 
-        with open('customer/management/commands/products_data.json', encoding='UTF-8') as json_file:
+        with open('customer/management/commands/data/products_data.json', encoding='UTF-8') as json_file:
             data = json.load(json_file)
             for item in data:
                 creation_data = {}
                 if item['material'] is not None:
-                    creation_data['material'], created = Material.objects.get_or_create(name=item['material'])
+                    creation_data['material'], _ = Material.objects.get_or_create(name=item['material'])
                 if item['bg_color'] is not None:
                     try:
                         bg_color_parts = item['bg_color'].split(' ')
-                        creation_data['background_color'], created = Color.objects.get_or_create(
+                        creation_data['background_color'], _ = Color.objects.get_or_create(
                             rgb=bg_color_parts[0],
                             name=bg_color_parts[1])
                     except IndexError:
-                        creation_data['background_color'], created = Color.objects.get_or_create(
+                        creation_data['background_color'], _ = Color.objects.get_or_create(
                             name=bg_color_parts[0],
                             rgb=bg_color_parts[0])
                 if item['design_color'] is not None:
                     try:
                         design_color_parts = item['design_color'].split(' ')
-                        creation_data['design_color'], created = Color.objects.get_or_create(rgb=design_color_parts[0],
+                        creation_data['design_color'], _ = Color.objects.get_or_create(rgb=design_color_parts[0],
                                                                                              name=design_color_parts[1])
                     except IndexError:
-                        creation_data['design_color'], created = Color.objects.get_or_create(name=design_color_parts[0],
+                        creation_data['design_color'], _ = Color.objects.get_or_create(name=design_color_parts[0],
                                                                                              rgb=design_color_parts[0])
 
                 if item['f_type'] is not None:
-                    creation_data['f_type'], created = FType.objects.get_or_create(name=item['f_type'])
+                    creation_data['f_type'], _ = FType.objects.get_or_create(name=item['f_type'])
                 if item['design_type'] is not None:
-                    creation_data['design'], created = Design.objects.get_or_create(name=item['design_type'])
-                creation_data['branch'], created = Branch.objects.get_or_create(name='گاندی')
+                    creation_data['design'], _ = Design.objects.get_or_create(name=item['design_type'])
+                creation_data['branch'], _ = Branch.objects.get_or_create(name='گاندی')
                 ProductId.objects.create()
                 creation_data['code'] = ProductId.objects.last().pk
                 Product.objects.create(name=item['name'], selling_price=item['stock_price'],
@@ -77,7 +77,7 @@ class Command(BaseCommand):
     #     for item in data:
     #         pass
     #
-        with open('customer/management/commands/staffs_data.json', encoding='UTF-8') as json_file:
+        with open('customer/management/commands/data/staffs_data.json', encoding='UTF-8') as json_file:
 
             data = json.load(json_file)
             job_mapping = {'admin': 'admin',
@@ -91,7 +91,7 @@ class Command(BaseCommand):
                                      job=job_mapping[item['group_type']], email=item['email'],
                                      branch=Branch.objects.first())
 
-        with open('customer/management/commands/suppliers_data.json', encoding='UTF-8') as json_file:
+        with open('customer/management/commands/data/suppliers_data.json', encoding='UTF-8') as json_file:
             data = json.load(json_file)
             for item in data:
                 Supplier.objects.create(full_name=item['name'], email='', phone_number=item['phone_number'])
